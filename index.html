@@ -9,33 +9,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- 1. DEĞİŞKENLER VE SIFIRLAMA --- */
-        :root { 
-            --gold: #d4af37; 
+        /* =====================================================
+           1. DEĞİŞKENLER VE SIFIRLAMA
+        ===================================================== */
+        :root {
+            --gold: #d4af37;
             --gold-dark: #b8860b;
-            --dark: #0f1a24; 
-            --parchment: #f4e7c8; 
-            --v-red: #8b0000; 
+            --gold-soft: rgba(212,175,55,0.3);
+            --dark: #0f1a24;
+            --parchment: #f4e7c8;
+            --v-red: #8b0000;
             --nav-height: 100px;
+            --radius: 12px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Playfair Display', serif;
-            background: #fdf5e6 url("assets/background.jpg") fixed center/cover;
+            background: #fdf5e6 url("assets/background.jpg") fixed center / cover;
             color: #2b2b2b;
             padding-top: calc(var(--nav-height) + 20px);
             line-height: 1.6;
         }
 
-        /* --- 2. NAVİGASYON (MASAÜSTÜ & MOBİL) --- */
-        .nav-wrapper { 
-            width: 100%; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            z-index: 2000; 
+        /* =====================================================
+           2. NAVİGASYON
+        ===================================================== */
+        .nav-wrapper {
+            width: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 2000;
             padding: 0 15px;
         }
 
@@ -55,918 +62,1286 @@
             min-height: var(--nav-height);
         }
 
-        .logo-box { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
-        .logo-img { height: 65px; width: auto; transition: 0.3s; }
-        .logo-text-group { color: var(--gold); display: flex; flex-direction: column; overflow: hidden; }
-        .logo-title { font-weight: bold; font-size: clamp(9px, 2vw, 11px); letter-spacing: 1px; white-space: nowrap; }
-        .logo-subtitle { font-family: 'Cinzel'; font-size: clamp(10px, 2.5vw, 14px); font-weight: 700; }
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 0;
+        }
 
-        .menu-btn { 
-            background: transparent; 
-            border: 1px solid var(--gold); 
-            color: var(--gold); 
-            cursor: pointer; 
-            padding: 10px 20px; 
-            font-family: 'Cinzel'; 
-            border-radius: 4px; 
-            transition: 0.3s;
+        .logo-img {
+            height: 65px;
+            width: auto;
+            transition: transform 0.3s;
+        }
+        .logo-img:hover { transform: scale(1.05); }
+
+        .logo-text-group {
+            color: var(--gold);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .logo-title {
+            font-weight: bold;
+            font-size: clamp(9px, 2vw, 11px);
+            letter-spacing: 1px;
             white-space: nowrap;
+        }
+
+        .logo-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(10px, 2.5vw, 14px);
+            font-weight: 700;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-family: 'Cinzel', serif;
+            border-radius: 4px;
+            transition: background 0.3s, color 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .menu-btn:hover { background: var(--gold); color: #fff; }
 
         #globalDropdown {
-            display: none; position: absolute; right: 20px; top: 100%;
-            background: var(--dark); border: 2px solid var(--gold);
-            min-width: 280px; max-height: 80vh; overflow-y: auto;
-            border-radius: 8px; z-index: 3000; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 100%;
+            background: var(--dark);
+            border: 2px solid var(--gold);
+            min-width: 280px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            z-index: 3000;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
         }
-        #globalDropdown.active { display: block; }
-        .dropdown-link { 
-            display: block; padding: 12px 25px; color: var(--gold); 
-            text-decoration: none; font-family: 'Cinzel'; font-size: 13px; 
-            border-bottom: 1px solid rgba(212,175,55,0.1); transition: 0.3s; 
-        }
-        .dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; color: #fff; }
+        #globalDropdown.active { display: block; animation: dropIn 0.2s ease; }
 
-        /* --- 3. BANNER --- */
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 12px 25px;
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+            transition: background 0.2s, padding-left 0.2s, color 0.2s;
+        }
+        .dropdown-link:hover {
+            background: rgba(212,175,55,0.15);
+            padding-left: 30px;
+            color: #fff;
+        }
+
+        /* =====================================================
+           3. ANA KONTEYNER
+        ===================================================== */
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 25px;
+            padding: 0 20px;
+        }
+
+        /* =====================================================
+           4. BANNER
+        ===================================================== */
         .banner {
             grid-column: 1 / -1;
             position: relative;
             width: 100%;
-            height: clamp(180px, 40vw, 400px); /* Ekran küçüldükçe boyutu korur */
-            border-radius: 12px;
+            height: clamp(180px, 40vw, 400px);
+            border-radius: var(--radius);
             border: 2px solid var(--gold);
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0,0,0,0.25);
             margin-bottom: 10px;
         }
-        .banner img.media { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-        .banner img.frame { position: absolute; top:0; left:0; width:100%; height:100%; object-fit:fill; pointer-events:none; z-index:5; }
 
-        /* --- 4. ANA KONTEYNER VE KARTLAR --- */
-        .container { 
-            max-width: 1240px; 
-            margin: 0 auto; 
-            display: grid; 
-            grid-template-columns: 1fr 2fr 1fr; 
-            gap: 25px; 
-            padding: 0 20px; 
+        .banner img.media {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
+        .banner img.frame {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: fill;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* =====================================================
+           5. KARTLAR
+        ===================================================== */
         .card {
-            background: var(--parchment); border: 2px solid var(--gold);
-            border-radius: 12px; position: relative; margin-bottom: 20px; overflow: hidden;
-            transition: 0.3s; display: flex; flex-direction: column;
+            background: var(--parchment);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius);
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
         }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        
-        .card h2, .card h3 {
-            background: linear-gradient(#1b2b3a,#0e1922); color: var(--gold);
-            font-family: 'Cinzel'; font-size: 14px; padding: 15px; text-align: center;
-            border-bottom: 2px solid var(--gold);
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.22);
         }
 
-        .card-content { padding: 15px; font-size: 14px; }
+        .card h2, .card h3 {
+            background: linear-gradient(180deg, #1b2b3a, #0e1922);
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            letter-spacing: 0.5px;
+        }
+
+        .card-content {
+            padding: 15px;
+            font-size: 14px;
+            flex: 1;
+        }
+
         .card ul { list-style: none; }
-        .card ul li { padding: 10px 0; border-bottom: 1px dashed rgba(212,175,55,0.3); }
-        .card a { text-decoration: none; color: inherit; transition: 0.2s; }
+        .card ul li {
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--gold-soft);
+        }
+        .card ul li:last-child { border-bottom: none; }
+        .card a { text-decoration: none; color: inherit; transition: color 0.2s; }
         .card a:hover { color: var(--v-red); }
 
-        /* Köşe Süsleri */
-        .c-f { position: absolute; width: 35px; height: 35px; background-size: contain; z-index: 20; pointer-events: none; }
-        .t-l { top: 5px; left: 5px; background-image: url("assets/cornerleftup.png"); }
-        .t-r { top: 5px; right: 5px; background-image: url("assets/cornerrightup.png"); }
-        .b-l { bottom: 5px; left: 5px; background-image: url("assets/cornerleft.png"); }
+        /* Köşe süsleri */
+        .c-f {
+            position: absolute;
+            width: 35px; height: 35px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .t-l { top: 5px; left: 5px;   background-image: url("assets/cornerleftup.png"); }
+        .t-r { top: 5px; right: 5px;  background-image: url("assets/cornerrightup.png"); }
+        .b-l { bottom: 5px; left: 5px;  background-image: url("assets/cornerleft.png"); }
         .b-r { bottom: 5px; right: 5px; background-image: url("assets/cornerright.png"); }
 
-        /* --- 5. ORTA KOLON VE DİNAMİK ALANLAR --- */
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
-        .dynamic-cards-container { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; 
+        /* Resimli kartlar */
+        .img-card-link {
+            display: block;
+            text-decoration: none;
         }
-        .dynamic-feed li { display: flex; flex-direction: column; gap: 4px; }
-        .ann-date-small { font-family: 'Cinzel'; font-size: 9px; color: var(--v-red); font-weight: bold; }
-        .ann-text-small { font-size: 11.5px; line-height: 1.3; color: #333; }
+        .img-card-link img {
+            width: 100%;
+            display: block;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+        .img-card-link:hover img { transform: scale(1.03); }
 
-        /* --- 6. SPLASH SCREEN --- */
-     #splash-screen {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background-color: #03080c;
-        z-index: 9999;
-        display: flex; justify-content: center; align-items: center;
-        transition: opacity 1.2s ease, visibility 1.2s ease;
-        overflow: hidden;
-    }
+        /* =====================================================
+           6. VİDEO
+        ===================================================== */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 0;
+        }
 
-    .water-wrapper {
-        position: relative; width: 100%; height: 100%;
-        display: flex; justify-content: center; align-items: center;
-    }
+        /* =====================================================
+           7. DİNAMİK KARTLAR (DUYURU / HABER / BASIN)
+        ===================================================== */
+        .dynamic-cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 25px;
+        }
 
-    #water-canvas {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    }
+        .dynamic-feed {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            min-height: 80px;
+        }
 
-    .splash-container {
-        position: relative; z-index: 10;
-        pointer-events: none;
-        display: flex; flex-direction: column; align-items: center;
-    }
+        .dynamic-feed li {
+            padding: 6px 0 !important;
+            border-bottom: 1px dashed var(--gold-soft) !important;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .dynamic-feed li:last-child { border-bottom: none !important; }
 
-    .circle-wrapper {
-        position: relative; width: 500px; height: 500px;
-        display: flex; justify-content: center; align-items: center;
-    }
+        .ann-date-small {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            color: var(--v-red);
+            font-weight: bold;
+        }
 
-    /* DIŞ HALKA KONTEYNERI */
-    .ring-2-container {
-        position: absolute;
-        width: 310px; height: 310px;
-        display: flex; justify-content: center; align-items: center;
-    }
+        .ann-text-small {
+            font-size: 11.5px;
+            line-height: 1.3;
+            color: #333;
+        }
 
-    /* BULUT GİBİ DIŞARI YAYILAN PARLAMA (Sadece Dış Halkanın Dışına) */
-    .sun-cloud-glow {
-        position: absolute;
-        width: 310px; height: 310px; /* Dış halka ile aynı boyda başlar */
-        border-radius: 50%;
-        /* İç kısmı boş, sadece dışa doğru renk veren degrade */
-        background: radial-gradient(circle, transparent 50%, rgba(212, 175, 55, 0.4) 60%, rgba(212, 175, 55, 0.1) 80%, transparent 100%);
-        filter: blur(25px);
-        z-index: 1;
-        animation: cloudExpand 4s infinite ease-out;
-    }
+        .more-link-box {
+            margin-top: 10px;
+            text-align: center;
+            border-top: 1px solid rgba(212,175,55,0.15);
+            padding-top: 6px;
+        }
+        .more-link-box a {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--gold) !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+        .more-link-box a:hover { color: #fff !important; }
 
-    .delay-glow {
-        animation-delay: 2s;
-    }
+        /* =====================================================
+           8. ZİYARETÇİ SAYACI
+        ===================================================== */
+        .counter-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
 
-    .intro-circle {
-        width: 260px; height: 260px;
-        border-radius: 50%;
-        overflow: hidden;
-        z-index: 10;
-        border: 2px solid rgba(212, 175, 55, 0.2);
-        box-shadow: 0 0 40px rgba(0,0,0,0.9);
-    }
+        .digit-sep {
+            color: var(--gold-dark);
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 700;
+            align-self: center;
+            opacity: 0.6;
+            margin: 0 1px;
+        }
 
-    .splash-intro-img {
-        width: 100%; height: 100%; object-fit: cover;
-    }
+        .d-box {
+            background: linear-gradient(180deg, #1b2b3a 0%, #0e1922 50%, #1b2b3a 100%);
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            font-weight: 700;
+            width: 34px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--gold-dark);
+            border-radius: 5px;
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(212,175,55,0.25),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
 
-    .orbit-ring {
-        position: absolute; border-radius: 50%;
-        border: 1px solid var(--gold); opacity: 0.3;
-        z-index: 8;
-    }
-    .ring-1 { width: 280px; height: 280px; }
-    .ring-2 { width: 310px; height: 310px; border-width: 1.5px; opacity: 0.5; }
+        .d-box::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 1px;
+            background: rgba(212,175,55,0.2);
+        }
 
-    .circular-loader {
-        position: absolute; width: 295px; height: 295px;
-        border-radius: 50%; border: 2px solid transparent;
-        border-top: 2px solid var(--gold);
-        filter: drop-shadow(0 0 10px var(--gold));
-        animation: rotateLoader 2s linear infinite;
-        z-index: 9;
-    }
+        .d-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 40%;
+            background: rgba(255,255,255,0.04);
+        }
 
-    .splash-text {
-        color: var(--gold); font-family: 'Cinzel';
-        margin-top: 50px; letter-spacing: 4px; font-size: 16px;
-        text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
-    }
+        .counter-label {
+            font-size: 10px;
+            font-family: 'Cinzel', serif;
+            opacity: 0.65;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+        }
 
-    .loading-bar-container {
-        width: 220px; height: 1px; background: rgba(212, 175, 55, 0.1);
-        margin-top: 30px; position: relative; overflow: hidden;
-    }
+        .counter-since {
+            font-size: 9px;
+            font-style: italic;
+            opacity: 0.55;
+            margin-top: 3px;
+        }
 
-    .loading-line {
-        position: absolute; left: -100%; width: 100%; height: 100%;
-        background: var(--gold);
-        box-shadow: 0 0 8px var(--gold);
-        animation: loadingProgress 3s forwards linear;
-    }
+        /* =====================================================
+           9. DETAILS / SUMMARY (Ziyaret Bilgileri, İletişim)
+        ===================================================== */
+        summary { list-style: none; outline: none; cursor: pointer; }
+        summary::-webkit-details-marker { display: none; }
 
-    /* ANİMASYONLAR */
-    @keyframes rotateLoader { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes loadingProgress { to { left: 0; } }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
 
-    /* Bulutun dış halkanın dışına yayılma efekti */
-    @keyframes cloudExpand {
-        0% { transform: scale(1); opacity: 0; }
-        40% { opacity: 0.7; }
-        100% { transform: scale(2.2); opacity: 0; }
-    }
+        .summary-arrow {
+            font-size: 11px;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
 
-    @media (max-width: 600px) {
-        .circle-wrapper { width: 320px; height: 320px; }
-        .intro-circle { width: 180px; height: 180px; }
-        .ring-1 { width: 200px; height: 200px; }
-        .ring-2, .ring-2-container, .sun-cloud-glow { width: 230px; height: 230px; }
-        .circular-loader { width: 215px; height: 215px; }
-    }
+        details[open] .summary-arrow { transform: rotate(180deg); }
 
-        /* --- 7. FOOTER --- */
-      .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
-.site-footer { 
-    width: 100%; max-width: 1240px; background: var(--dark); 
-    border: 2px solid var(--gold); border-radius: 15px; 
-    padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
-}
+        details ul {
+            animation: fadeSlide 0.3s ease;
+        }
 
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
- /* --- 8. RESPONSIVE AYARLAR --- */
+        /* =====================================================
+           10. ÖDÜL KARTI
+        ===================================================== */
+        .odul-img {
+            width: 100%;
+            height: 350px;
+            display: block;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* =====================================================
+           11. SPLASH SCREEN
+        ===================================================== */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #03080c;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            overflow: hidden;
+        }
+
+        .water-wrapper {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #water-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .splash-container {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .circle-wrapper {
+            position: relative;
+            width: 500px; height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring-2-container {
+            position: absolute;
+            width: 310px; height: 310px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sun-cloud-glow {
+            position: absolute;
+            width: 310px; height: 310px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                transparent 50%,
+                rgba(212,175,55,0.4) 60%,
+                rgba(212,175,55,0.1) 80%,
+                transparent 100%
+            );
+            filter: blur(25px);
+            z-index: 1;
+            animation: cloudExpand 4s infinite ease-out;
+        }
+
+        .delay-glow { animation-delay: 2s; }
+
+        .intro-circle {
+            width: 260px; height: 260px;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 10;
+            border: 2px solid rgba(212,175,55,0.2);
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+        }
+
+        .splash-intro-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            opacity: 0.3;
+            z-index: 8;
+        }
+        .ring-1 { width: 280px; height: 280px; }
+        .ring-2 { width: 310px; height: 310px; border-width: 1.5px; opacity: 0.5; }
+
+        .circular-loader {
+            position: absolute;
+            width: 295px; height: 295px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--gold);
+            filter: drop-shadow(0 0 10px var(--gold));
+            animation: rotateLoader 2s linear infinite;
+            z-index: 9;
+        }
+
+        .splash-text {
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            margin-top: 50px;
+            letter-spacing: 4px;
+            font-size: 16px;
+            text-shadow: 0 0 15px rgba(212,175,55,0.6);
+            text-align: center;
+        }
+
+        .loading-bar-container {
+            width: 220px;
+            height: 1px;
+            background: rgba(212,175,55,0.1);
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-line {
+            position: absolute;
+            left: -100%;
+            width: 100%; height: 100%;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+            animation: loadingProgress 3s forwards linear;
+        }
+
+        @keyframes rotateLoader {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        @keyframes loadingProgress { to { left: 0; } }
+
+        @keyframes cloudExpand {
+            0%   { transform: scale(1); opacity: 0; }
+            40%  { opacity: 0.7; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        /* =====================================================
+           12. FOOTER
+        ===================================================== */
+        .site-footer-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .site-footer {
+            width: 100%;
+            max-width: 1240px;
+            background: var(--dark);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 40px;
+        }
+
+        .footer-title {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            opacity: 0.75;
+        }
+
+        .footer-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        /* =====================================================
+           13. SOSYAL MEDYA İKONLARI
+        ===================================================== */
+        .social-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            list-style: none !important;
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+        }
+
+        .social-link {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            transition: opacity 0.2s;
+        }
+        .social-link:hover { opacity: 0.75; }
+
+        .sep-line { color: #ccc; }
+
+        /* =====================================================
+           14. RESPONSIVE
+        ===================================================== */
         @media (max-width: 1100px) {
-            .container { grid-template-columns: 1fr; }
-            .dynamic-cards-container { grid-template-columns: 1fr; }
-            body { padding-top: 110px; }
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .dynamic-cards-container {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding-top: 110px;
+            }
         }
 
         @media (max-width: 600px) {
             .nav { padding: 8px 15px; }
             .logo-img { height: 45px; }
             .menu-btn { padding: 8px 15px; font-size: 12px; }
-            .site-footer { padding: 30px 15px; font-size: 12px; }
+            .site-footer { padding: 25px 15px; font-size: 12px; }
+
+            /* Splash */
+            .circle-wrapper { width: 320px; height: 320px; }
+            .intro-circle { width: 180px; height: 180px; }
+            .ring-1 { width: 200px; height: 200px; }
+            .ring-2,
+            .ring-2-container,
+            .sun-cloud-glow { width: 230px; height: 230px; }
+            .circular-loader { width: 215px; height: 215px; }
+
+            .d-box { width: 28px; height: 38px; font-size: 19px; }
         }
     </style>
 </head>
 
 <body>
+
+<!-- ================================================================
+     SPLASH SCREEN
+================================================================ -->
 <div id="splash-screen">
     <div class="water-wrapper">
         <canvas id="water-canvas"></canvas>
         <div class="splash-container">
             <div class="circle-wrapper">
-                
                 <div class="orbit-ring ring-1"></div>
-                
                 <div class="ring-2-container">
                     <div class="orbit-ring ring-2"></div>
                     <div class="sun-cloud-glow"></div>
                     <div class="sun-cloud-glow delay-glow"></div>
                 </div>
-
                 <div class="circular-loader"></div>
-                
                 <div class="intro-circle">
                     <img src="assets/splash_intro.webp" alt="Giriş" class="splash-intro-img">
                 </div>
             </div>
-
             <p class="splash-text">Sultan II. Bayezid Külliyesi Sağlık Müzesi</p>
-            
             <div class="loading-bar-container">
                 <div class="loading-line"></div>
             </div>
         </div>
     </div>
 </div>
-    <div class="nav-wrapper">
-        <nav class="nav">
-            <div class="logo-box">
-                <img src="assets/logo.png" alt="Logo" class="logo-img">
-                <div class="logo-text-group">
-                    <div class="logo-title">T.C.TRAKYA ÜNİVERSİTESİ</div>
-                    <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
-                </div>
+
+<!-- ================================================================
+     NAVİGASYON
+================================================================ -->
+<div class="nav-wrapper">
+    <nav class="nav">
+        <div class="logo-box">
+            <img src="assets/logo.png" alt="Logo" class="logo-img">
+            <div class="logo-text-group">
+                <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+                <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
             </div>
-            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
-            <div id="globalDropdown">
-                <a href="index.html" class="dropdown-link">Ana Sayfa</a>
+        </div>
+        <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+        <div id="globalDropdown">
+            <a href="index.html" class="dropdown-link">Ana Sayfa</a>
+            <a href="tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
+            <a href="bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
+            <a href="evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
+            <a href="medrese/medrese.html" class="dropdown-link">Tıp Medresesi</a>
+            <a href="hastane/hastane.html" class="dropdown-link">Darüşşifa</a>
+            <a href="imaret/imaret.html" class="dropdown-link">İmarethane</a>
+            <a href="music/music.html" class="dropdown-link">Müzikle Tedavi</a>
+            <a href="geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
+            <a href="galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
+            <a href="siir/siir.html" class="dropdown-link">Sarmaşık</a>
+            <a href="oduller/oduller.html" class="dropdown-link">Ödüller</a>
+            <a href="personel/personel.html" class="dropdown-link">Personelimiz</a>
+            <a href="haberler/haberler.html" class="dropdown-link">Haberler</a>
+            <a href="duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
+            <a href="basin/basin.html" class="dropdown-link">Basında Biz</a>
+            <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
+        </div>
+    </nav>
+</div>
 
-                <a href="tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
+<!-- ================================================================
+     ANA KONTEYNER
+================================================================ -->
+<div class="container">
 
-                <a href="bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
-
-                <a href="evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
-
-                <a href="medrese/medrese.html" class="dropdown-link">Tıp Medresesi</a>
-
-                <a href="hastane/hastane.html" class="dropdown-link">Darüşşifa</a>
-
-                <a href="imaret/imaret.html" class="dropdown-link">İmarethane</a>
-
-                <a href="music/music.html" class="dropdown-link">Müzikle Tedavi</a>
-
-                <a href="geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
-
-                <a href="galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
-
-                <a href="siir/siir.html" class="dropdown-link">Sarmaşık</a>
-
-                <a href="oduller/oduller.html" class="dropdown-link">Ödüller</a>
-
-                <a href="personel/personel.html" class="dropdown-link">Personelimiz</a>
-
-                <a href="haberler/haberler.html" class="dropdown-link">Haberler</a>
-
-                <a href="duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
-
-                 <a href="basin/basin.html" class="dropdown-link">Basında Biz</a>
-
-                <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
-            </div>
-        </nav>
+    <!-- BANNER -->
+    <div class="banner">
+        <img src="assets/banner.webp" class="media" alt="Külliye Görünümü">
+        <img src="assets/cerceve1.png" class="frame" alt="">
     </div>
 
-    <div class="container">
-        <div class="banner">
-            <img src="assets/banner.webp" class="media" alt="Külliye">
-            <img src="assets/cerceve1.png" class="frame" alt="Çerçeve">
+    <!-- ============================================================
+         SOL KOLON
+    ============================================================ -->
+    <div class="left">
+
+        <!-- Tarihçe -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>TARİHÇE</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="tarihce/tarihce.html" class="img-card-link">
+                    <img src="assets/tarihce.jpg" alt="Tarihçe">
+                </a>
+            </div>
         </div>
 
-         <!-- SOL KOLON -->
-    <div class="left">
-       <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>TARİHÇE</h3>
-    <div class="card-content" style="padding: 0;"> <!-- Padding'i sıfırladık ki resim tam otursun -->
-       <a href="tarihce/tarihce.html" style="display: block; text-decoration: none;">
-        <img src="assets/tarihce.jpg" alt="TARİHÇE" style="width: 100%; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; object-fit: cover;">
-   </a>
-    </div>
-</div>
+        <!-- Sultan II. Bayezid -->
         <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>SULTAN II.BAYEZİD</h3>
-    <div class="card-content" style="padding: 0;"> <!-- Padding'i sıfırladık ki resim tam otursun -->
-       <a href="bayezid/bayezid.html" style="display: block; text-decoration: none;">
-        <img src="assets/bayezid.jpg" alt="SULTAN II.BAYEZİD" style="width: 100%; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; object-fit: cover;">
-   </a>
-    </div>
-</div>
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>SULTAN II. BAYEZİD</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="bayezid/bayezid.html" class="img-card-link">
+                    <img src="assets/bayezid.jpg" alt="Sultan II. Bayezid">
+                </a>
+            </div>
+        </div>
 
-
+        <!-- Evliya Çelebi -->
         <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>EVLİYA ÇELEBİ (Siyahat-nâme) </h3>
-    <div class="card-content" style="padding: 0;"> <!-- Padding'i sıfırladık ki resim tam otursun -->
-       <a href="evliya/evliya.html" style="display: block; text-decoration: none;">
-        <img src="assets/evliya.jpg" alt="Evliya Çelebi" style="width: 100%; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; object-fit: cover;">
-   </a>
-    </div>
-</div>
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>EVLİYA ÇELEBİ (Seyahatnâme)</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="evliya/evliya.html" class="img-card-link">
+                    <img src="assets/evliya.jpg" alt="Evliya Çelebi">
+                </a>
+            </div>
+        </div>
 
-       <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>MÜZE BÖLÜMLERİ</h3>
-    <div class="card-content">
-       <ul>
-    <li><a href="hastane/hastane.html" style="text-decoration: none; color: inherit; font-weight: bold;">DARÜŞŞİFA (Hastane)</a></li>  
-    <li><a href="medrese/medrese.html" style="text-decoration: none; color: inherit; font-weight: bold;">TIP MEDRESESİ</a></li>
-    <li><a href="imaret/imaret.html" style="text-decoration: none; color: inherit; font-weight: bold;">İMARETHANE</a></li>
-</ul>
-    </div>
-</div>
-
-       
+        <!-- Müze Bölümleri -->
         <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>MÜZİKLE TEDAVİ</h3>
-    <div class="card-content" style="padding: 0;"> <!-- Padding'i sıfırladık ki resim tam otursun -->
-       <a href="music/music.html" style="display: block; text-decoration: none;">
-        <img src="assets/music.jpg" alt="Müzikle Tedavi" style="width: 100%; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; object-fit: cover;">
-   </a>
-    </div>
-</div>
-       
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>MÜZE BÖLÜMLERİ</h3>
+            <div class="card-content">
+                <ul>
+                    <li><a href="hastane/hastane.html" style="font-weight:bold;">DARÜŞŞİFA (Hastane)</a></li>
+                    <li><a href="medrese/medrese.html" style="font-weight:bold;">TIP MEDRESESİ</a></li>
+                    <li><a href="imaret/imaret.html" style="font-weight:bold;">İMARETHANE</a></li>
+                </ul>
+            </div>
+        </div>
 
+        <!-- Müzikle Tedavi -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>MÜZİKLE TEDAVİ</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="music/music.html" class="img-card-link">
+                    <img src="assets/music.jpg" alt="Müzikle Tedavi">
+                </a>
+            </div>
+        </div>
+
+        <!-- Gezi Planı -->
         <div class="card">
             <div class="c-f t-l"></div><div class="c-f t-r"></div>
             <div class="c-f b-l"></div><div class="c-f b-r"></div>
             <h3>MÜZE GEZİ PLANI</h3>
             <div class="card-content">
                 <ul>
-                    <li><a href="geziplani/geziplani.html" style="text-decoration: none; color: inherit;">Gezi Planı</a></li>
-                     <li><a href="galeri/galeri.html" style="text-decoration: none; color: inherit;">Görsel Galeri</a></li>
+                    <li><a href="geziplani/geziplani.html">Gezi Planı</a></li>
+                    <li><a href="galeri/galeri.html">Görsel Galeri</a></li>
                 </ul>
             </div>
         </div>
- 
-    </div>
 
-    <!-- ORTA KOLON -->
+    </div><!-- /left -->
+
+    <!-- ============================================================
+         ORTA KOLON
+    ============================================================ -->
     <div class="center">
-        <div class="column">
-    <div class="card">
-        <div class="c-f t-l"></div><div class="c-f t-r"></div>
-        <div class="c-f b-l"></div><div class="c-f b-r"></div>
-        <h2>KÜLLİYE TANITIM VİDEOSU</h2>
-        
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/YUw2S2MrHow?start=1" allowfullscreen></iframe>
+
+        <!-- Video -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h2>KÜLLİYE TANITIM VİDEOSU</h2>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/YUw2S2MrHow?start=1" allowfullscreen></iframe>
+            </div>
         </div>
+
+        <!-- İnteraktif Rehber -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h2>İNTERAKTİF MÜZE REHBERİ</h2>
+            <div class="card-content">
+                <ul>
+                    <li style="text-align:center;">
+                        <a href="nav/rehber.html" style="font-weight:bold;">
+                            SULTAN II. BAYEZİD KÜLLİYESİ İNTERAKTİF GEZİ REHBERİ
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-</div>
-<div class="card">
-        <div class="c-f t-l"></div><div class="c-f t-r"></div>
-        <div class="c-f b-l"></div><div class="c-f b-r"></div>
-        <h2>İNTERAKTİF MÜZE REHBERİ</h2>
-          <div class="card-content">
-       <ul>
-    <li>
-  <a href="nav/rehber.html" style="display: block; text-align: center; text-decoration: none; color: inherit; font-weight: bold;">
-    SULTAN II.BAYEZİD KÜLLİYESİ İNTERAKTİF GEZİ REHBERİ
-  </a>
-</li>
-    
-</ul>
-    </div>
-</div>
+
+        <!-- Dinamik Kartlar: Duyurular / Haberler / Basında Biz -->
         <div class="dynamic-cards-container">
-    <div class="card">
-        <div class="c-f t-l"></div><div class="c-f t-r"></div>
-        <div class="c-f b-l"></div><div class="c-f b-r"></div>
-        <h3>DUYURULAR</h3>
-        <div class="card-content">
-            <ul id="list-duyurular" class="dynamic-feed">
-                <li class="loading">Yükleniyor...</li>
-            </ul> 
-            <div class="more-link-box">
-                <a href="duyurular/duyurular.html">TÜMÜ →</a>
-            </div>
-        </div>
-    </div>
 
-    <div class="card">
-        <div class="c-f t-l"></div><div class="c-f t-r"></div>
-        <div class="c-f b-l"></div><div class="c-f b-r"></div>
-        <h3>HABERLER</h3>
-        <div class="card-content">
-            <ul id="list-haberler" class="dynamic-feed">
-                <li class="loading">Yükleniyor...</li>
-            </ul> 
-            <div class="more-link-box">
-                <a href="haberler/haberler.html">TÜMÜ →</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="c-f t-l"></div><div class="c-f t-r"></div>
-        <div class="c-f b-l"></div><div class="c-f b-r"></div>
-        <h3>BASINDA BİZ</h3>
-        <div class="card-content">
-            <ul id="list-basinda" class="dynamic-feed">
-                <li class="loading">Yükleniyor...</li>
-            </ul> 
-            <div class="more-link-box">
-                <a href="basinda/basinda.html">TÜMÜ →</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    /* Orta Kolon Yerleşimi */
-    .dynamic-cards-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* Orta kolonu 3 eşit parçaya böler */
-        gap: 15px;
-        width: 100%;
-        margin-bottom: 25px;
-    }
-
-    /* Kart İçeriği Düzenlemesi */
-    .dynamic-feed {
-        list-style: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        min-height: 100px;
-    }
-    
-    .dynamic-feed li {
-        padding: 6px 0 !important;
-        border-bottom: 1px dashed rgba(212, 175, 55, 0.3) !important;
-        display: flex;
-        flex-direction: column; /* Dar alan olduğu için tarih üstte metin altta */
-        gap: 2px;
-    }
-
-    .ann-date-small {
-        font-family: 'Cinzel', serif;
-        font-size: 9px;
-        color: var(--v-red);
-        font-weight: bold;
-    }
-
-    .ann-text-small {
-        font-family: 'Playfair Display', serif;
-        font-size: 11.5px;
-        color: #333;
-        line-height: 1.2;
-    }
-
-    .more-link-box {
-        margin-top: 10px;
-        text-align: center;
-        border-top: 1px solid rgba(212, 175, 55, 0.1);
-        padding-top: 5px;
-    }
-
-    .more-link-box a {
-        font-family: 'Cinzel';
-        font-size: 10px;
-        font-weight: bold;
-        color: var(--gold) !important;
-    }
-
-    /* Tablet ve Mobil Uyumluluk */
-    @media (max-width: 1100px) {
-        .dynamic-cards-container {
-            grid-template-columns: 1fr; /* Genişlik daralınca kartlar alt alta geçer */
-        }
-    }
-</style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script>
-    const sheetSettings = [
-        {
-            id: 'list-duyurular',
-            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=0&single=true&output=csv'
-        },
-        {
-            id: 'list-haberler',
-            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=995325209&single=true&output=csv'
-        },
-        {
-            id: 'list-basinda',
-            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=1712536451&single=true&output=csv'
-        }
-    ];
-
-    function loadSheets() {
-        sheetSettings.forEach(sheet => {
-            Papa.parse(sheet.url, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    const listElement = document.getElementById(sheet.id);
-                    if (!listElement) return;
-
-                    listElement.innerHTML = '';
-                    // En güncel 3 kaydı al
-                    const rows = results.data.reverse().slice(0, 3);
-
-                    rows.forEach(row => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `
-                            <span class="ann-date-small">${row['TARİH'] || ''}</span>
-                            <span class="ann-text-small">${row['DUYURU METNİ'] || ''}</span>
-                        `;
-                        listElement.appendChild(li);
-                    });
-                }
-            });
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', loadSheets);
-</script>
-        
-  <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>🥇 🏆ÖDÜLLERİMİZ🏆 🥇</h3>
-    <div class="card-content" style="padding: 0; overflow: hidden;"> <a href="oduller/oduller.html" style="display: block; text-decoration: none;">
-            <img src="assets/odul.webp" alt="ÖDÜL" 
-                 style="width: 100%; 
-                        height: 350px; /* Buradan yüksekliği kısaltabilirsin */
-                        display: block; 
-                        border-bottom-left-radius: 10px; 
-                        border-bottom-right-radius: 10px; 
-                        object-fit: cover; /* Resmin oranını koruyarak kutuyu doldurmasını sağlar */
-                        object-position: center; /* Resmin tam ortasını odaklar */">
-        </a>
-    </div>
-</div>
-  <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>KONUM ULAŞIM VE İLETİŞİM BİLGİLERİ</h3>
-    
-    <div class="card-content">
-        <ul style="list-style: none; padding: 0; margin: 0; color: inherit;">
-            <li>
-                <details style="cursor: pointer; color: inherit;">
-                    <summary style="list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 10px;">
-                        <span>İletişim Bilgileri</span>
-                        <span style="font-size: 12px; transition: 0.3s;">▼</span>
-                    </summary>
-                    
-                    <ul style="list-style: none; padding: 5px 0 0 0; margin: 0; color: inherit; line-height: 1.8;">
-                        <li style="margin-bottom: 10px;">
-                            <a href="https://maps.app.goo.gl/bzReF3jYhArMYWi86" target="_blank" style="text-decoration: none; color: inherit;">📍 Haritada Görüntüle ve Yol Tarifi Al</a>
-                        </li>
-                        <li style="margin-bottom: 10px;">
-                            🏠 Adres: Sultan II. Bayezid Külliyesi Sağlık Müzesi, Yeniimaret/EDİRNE
-                        </li>
-                        <li style="margin-bottom: 10px;">
-                            📞 Telefon: <a href="tel:02842240922" style="text-decoration: none; color: inherit;">0 284 224 0922</a> 
-                       </li>
-                        <li style="margin-bottom: 10px;">
-                            🚌 ETUS 3A hat numaralı şehir içi midibüsler ile müzemize ulaşabilir.
-                            </li>
-                        <li style="display: flex; align-items: center; gap: 12px; padding-top: 10px; flex-wrap: wrap; list-style: none;">
-    <a href="https://www.instagram.com/edirnesaglikmuzesi/" target="_blank" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-        <i class="fab fa-instagram" style="font-size: 1.1em; color: #E1306C;"></i>
-        <span>Instagram</span>
-    </a>
-
-    <span style="color: #ccc;">|</span>
-
-    <a href="https://www.facebook.com/people/Edirne-Saglik-Muzesi/100079601388695/" target="_blank" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-        <i class="fab fa-facebook" style="font-size: 1.1em; color: #1877F2;"></i>
-        <span>Facebook</span>
-    </a>
-
-    <span style="color: #ccc;">|</span>
-
-    <a href="https://x.com/saglikmuzesi" target="_blank" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color: #000;">
-            <path d="M12.643 15C13.979 15 15 13.845 15 12.512V3.488C15 2.155 13.979 1 12.643 1H3.357C2.021 1 1 2.155 1 3.488V12.512C1 13.845 2.021 15 3.357 15H12.643ZM6.074 4.101H7.729L10.556 8.165L14.013 4.101H15.539L11.219 9.183L16 16H14.345L11.219 11.51L7.781 16H6.255L10.556 10.51L6.074 4.101Z" fill-rule="evenodd"/>
-            <path d="M12.68 1h-1.93l-3.06 3.72L4.63 1H1l4.74 5.75L1 13h1.93l3.35-4.08L9.37 13h3.63l-5.02-6.09L12.68 1zm-1.66 10.93h-1.12L4.04 2.55h1.19l5.79 9.38z"/>
-        </svg>
-        <span>@saglikmuzesi</span>
-    </a>
-</li>
-                   <li style="margin-bottom: 10px;">
-    <a href="mailto:saglikmuze@trakya.edu.tr" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
-        <span>✉️</span> 
-        <span>saglikmuze@trakya.edu.tr</span>
-    </a>
-</li>
+            <div class="card">
+                <div class="c-f t-l"></div><div class="c-f t-r"></div>
+                <div class="c-f b-l"></div><div class="c-f b-r"></div>
+                <h3>DUYURULAR</h3>
+                <div class="card-content">
+                    <ul id="list-duyurular" class="dynamic-feed">
+                        <li><span class="ann-text-small">Yükleniyor…</span></li>
                     </ul>
-                </details>
-            </li>
-        </ul>
-    </div>
-</div>
+                    <div class="more-link-box">
+                        <a href="duyurular/duyurular.html">TÜMÜ →</a>
+                    </div>
+                </div>
+            </div>
 
-<style>
-    /* Oku gizle ve açıldığında döndür */
-    summary::-webkit-details-marker { display: none; }
-    details[open] summary span:last-child {
-        transform: rotate(180deg);
-    }
-    
-    /* Ziyaret bilgileriyle aynı açılış efekti */
-    details ul {
-        animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-5px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
- <!-- SAĞ KOLON -->
-</div> <div class="right">
-         <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>ZİYARET BİLGİLERİ</h3>
-    <div class="card-content">
-        <ul style="list-style: none; padding: 0; margin: 0; color: inherit;">
-            <li style="font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 10px; color: inherit;">Gün Ve Saatler</li>
-            <li>Pazartesi: <span style="float:right">Kapalı</span></li>
-            <li style="margin-bottom: 15px;">Diğer Günler <span style="float:right">09:30-18:00</span></li>
-            
-            <li style="font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 10px; color: inherit;">Giriş Ücretleri</li>
-            <li>Yerli Ziyaretçi <span style="float:right">60 TL.</span></li>
-            <li>Yabancı Ziyaretçi <span style="float:right">120 TL.</span></li>
-            <li style="margin-bottom: 15px; font-style: italic; font-size: 0.9em; opacity: 0.7;">*Müze Kart Geçerli Değildir</li>
-
-            <li>
-                <details style="cursor: pointer; color: inherit;">
-                    <summary style="padding: 0; font-weight: bold; outline: none; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                        <span>Ücretsiz Giriş Listesi</span>
-                        <span style="font-size: 12px;">▼</span>
-                    </summary>
-                    <ul style="list-style: none; padding: 10px 0 0 10px; margin: 0; color: inherit; font-size: 0.95em; line-height: 1.6;">
-                        <li>• 17 Yaş Altı</li>
-                        <li>• 65 Yaş Üzeri</li>
-                        <li>• Akademisyenler</li>
-                        <li>• Basın Kart Sahipleri</li>
-                        <li>• Gaziler, Gazi ve Şehit Yakınları</li>
-                        <li>• Er ve Erbaşlar</li>
-                        <li>• Engelliler ve Bir Refakatçisi</li>
-                        <li>• Kokart Sahibi Rehberler</li>
-                        <li>• Kültür Bakanlığı Personelleri</li>
-                        <li>• ICOM, ICOMOS ve UNESCO Kartı Sahipleri</li>
-                        <li>• Trakya Üniversitesi Öğrenci, Personel ve Emeklileri</li>
-                        <li>• TÜ Genel Sekreterlik İzni Olanlar</li>
+            <div class="card">
+                <div class="c-f t-l"></div><div class="c-f t-r"></div>
+                <div class="c-f b-l"></div><div class="c-f b-r"></div>
+                <h3>HABERLER</h3>
+                <div class="card-content">
+                    <ul id="list-haberler" class="dynamic-feed">
+                        <li><span class="ann-text-small">Yükleniyor…</span></li>
                     </ul>
-                </details>
-            </li>
-        </ul>
-    </div>
-</div>
+                    <div class="more-link-box">
+                        <a href="haberler/haberler.html">TÜMÜ →</a>
+                    </div>
+                </div>
+            </div>
 
-<style>
-    /* Standart görünüm için summary marker'ı gizle */
-    summary::-webkit-details-marker { display: none; }
-    
-    /* Açıldığında oku döndür */
-    details[open] summary span:last-child {
-        transform: rotate(180deg);
-    }
-    
-    details ul {
-        animation: fadeIn 0.3s ease;
-    }
+            <div class="card">
+                <div class="c-f t-l"></div><div class="c-f t-r"></div>
+                <div class="c-f b-l"></div><div class="c-f b-r"></div>
+                <h3>BASINDA BİZ</h3>
+                <div class="card-content">
+                    <ul id="list-basinda" class="dynamic-feed">
+                        <li><span class="ann-text-small">Yükleniyor…</span></li>
+                    </ul>
+                    <div class="more-link-box">
+                        <a href="basin/basin.html">TÜMÜ →</a>
+                    </div>
+                </div>
+            </div>
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-</style>
-<div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>AĞAÇLA SARMAŞIK</h3>
-    <div class="card-content" style="padding: 0;"> <!-- Padding'i sıfırladık ki resim tam otursun -->
-       <a href="siir/siir.html" style="display: block; text-decoration: none;">
-        <img src="assets/sarmasik.jpeg" alt="AĞAÇLA SARMAŞIK" style="width: 100%; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; object-fit: cover;">
-   </a>
-    </div>
-</div>
-    <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>
-  <span>EDİRNE'YE ADANMIŞ BİR ÖMÜR</span>
-  <span>DR.RATİP KAZANCIGİL</span>
-</h3>
-            <div class="card-content" style="padding: 0;"> <!-- Padding'i sıfırladık ki resim tam otursun -->
-       <a href="kazancigil/kazancigil.html" style="display: block; text-decoration: none;">
-        <img src="assets/kazancigil.jpg" alt="DR.RATİP KAZANCIGİL" style="width: 100%; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; object-fit: cover;">
-   </a>
-    </div>
-</div>
-      <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>MÜZE KADROMUZ</h3>
-    <div class="card-content">
-        <ul style="list-style: none; padding: 0;"> 
-            <li style="margin-bottom: 5px; text-align: center;">
-                <span style="font-style: italic; opacity: 0.9;">
-                    Müzeye Hayat Verenler
-                </span>
-            </li>
+        </div><!-- /dynamic-cards-container -->
 
-            <li style="text-align: left; padding-left: 15px;"> <a href="personel/personel.html" style="text-decoration: none; color: inherit;">
-                    Personelimiz
+        <!-- Ödüller -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>🥇 🏆 ÖDÜLLERİMİZ 🏆 🥇</h3>
+            <div class="card-content" style="padding:0; overflow:hidden;">
+                <a href="oduller/oduller.html" class="img-card-link">
+                    <img src="assets/odul.webp" alt="Ödüller" class="odul-img">
                 </a>
-            </li>
-        </ul>
-    </div>
-</div>
-      
-   <div class="card">
+            </div>
+        </div>
+
+        <!-- Konum & İletişim -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>KONUM, ULAŞIM VE İLETİŞİM BİLGİLERİ</h3>
+            <div class="card-content">
+                <ul>
+                    <li>
+                        <details>
+                            <summary>
+                                <div class="summary-row">
+                                    <span>İletişim Bilgileri</span>
+                                    <span class="summary-arrow">▼</span>
+                                </div>
+                            </summary>
+                            <ul style="list-style:none; padding: 5px 0 0 0; line-height:1.9;">
+                                <li>
+                                    <a href="https://maps.app.goo.gl/bzReF3jYhArMYWi86" target="_blank">
+                                        📍 Haritada Görüntüle ve Yol Tarifi Al
+                                    </a>
+                                </li>
+                                <li>🏠 Sultan II. Bayezid Külliyesi Sağlık Müzesi, Yeniimaret / EDİRNE</li>
+                                <li>
+                                    📞 <a href="tel:02842240922">0 284 224 09 22</a>
+                                </li>
+                                <li>🚌 ETUS 3A hat numaralı şehir içi midibüsler ile müzemize ulaşabilirsiniz.</li>
+                                <li class="social-row" style="padding-top:10px;">
+                                    <a href="https://www.instagram.com/edirnesaglikmuzesi/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram" style="color:#E1306C;"></i> Instagram
+                                    </a>
+                                    <span class="sep-line">|</span>
+                                    <a href="https://www.facebook.com/people/Edirne-Saglik-Muzesi/100079601388695/" target="_blank" class="social-link">
+                                        <i class="fab fa-facebook" style="color:#1877F2;"></i> Facebook
+                                    </a>
+                                    <span class="sep-line">|</span>
+                                    <a href="https://x.com/saglikmuzesi" target="_blank" class="social-link">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M12.643 15C13.979 15 15 13.845 15 12.512V3.488C15 2.155 13.979 1 12.643 1H3.357C2.021 1 1 2.155 1 3.488V12.512C1 13.845 2.021 15 3.357 15H12.643ZM6.074 4.101H7.729L10.556 8.165L14.013 4.101H15.539L11.219 9.183L16 16H14.345L11.219 11.51L7.781 16H6.255L10.556 10.51L6.074 4.101Z" fill-rule="evenodd"/>
+                                        </svg>
+                                        @saglikmuzesi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mailto:saglikmuze@trakya.edu.tr" class="social-link">
+                                        ✉️ saglikmuze@trakya.edu.tr
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- /center -->
+
+    <!-- ============================================================
+         SAĞ KOLON
+    ============================================================ -->
+    <div class="right">
+
+        <!-- Ziyaret Bilgileri -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>ZİYARET BİLGİLERİ</h3>
+            <div class="card-content">
+                <ul>
+                    <li style="font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); margin-bottom:10px;">Gün ve Saatler</li>
+                    <li>Pazartesi <span style="float:right;">Kapalı</span></li>
+                    <li style="margin-bottom:15px;">Diğer Günler <span style="float:right;">09:30 – 18:00</span></li>
+
+                    <li style="font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); margin-bottom:10px;">Giriş Ücretleri</li>
+                    <li>Yerli Ziyaretçi <span style="float:right;">60 TL</span></li>
+                    <li>Yabancı Ziyaretçi <span style="float:right;">120 TL</span></li>
+                    <li style="font-style:italic; font-size:0.88em; opacity:0.7; margin-bottom:10px;">* Müze Kart geçerli değildir.</li>
+
+                    <li>
+                        <details>
+                            <summary>
+                                <div class="summary-row" style="border:none; margin:0; padding:0;">
+                                    <span>Ücretsiz Giriş Listesi</span>
+                                    <span class="summary-arrow">▼</span>
+                                </div>
+                            </summary>
+                            <ul style="list-style:none; padding: 10px 0 0 10px; font-size:0.93em; line-height:1.7;">
+                                <li>• 17 Yaş Altı</li>
+                                <li>• 65 Yaş Üzeri</li>
+                                <li>• Akademisyenler</li>
+                                <li>• Basın Kart Sahipleri</li>
+                                <li>• Gaziler, Gazi ve Şehit Yakınları</li>
+                                <li>• Er ve Erbaşlar</li>
+                                <li>• Engelliler ve Bir Refakatçisi</li>
+                                <li>• Kokart Sahibi Rehberler</li>
+                                <li>• Kültür Bakanlığı Personelleri</li>
+                                <li>• ICOM, ICOMOS ve UNESCO Kart Sahipleri</li>
+                                <li>• Trakya Üniversitesi Öğrenci, Personel ve Emeklileri</li>
+                                <li>• TÜ Genel Sekreterlik İzni Olanlar</li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ağaçla Sarmaşık -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>AĞAÇLA SARMAŞIK</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="siir/siir.html" class="img-card-link">
+                    <img src="assets/sarmasik.jpeg" alt="Ağaçla Sarmaşık">
+                </a>
+            </div>
+        </div>
+
+        <!-- Dr. Ratip Kazancıgil -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>EDİRNE'YE ADANMIŞ BİR ÖMÜR — DR. RATİP KAZANCIGİL</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="kazancigil/kazancigil.html" class="img-card-link">
+                    <img src="assets/kazancigil.jpg" alt="Dr. Ratip Kazancıgil">
+                </a>
+            </div>
+        </div>
+
+        <!-- Müze Kadrosu -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>MÜZE KADROMUZ</h3>
+            <div class="card-content">
+                <ul>
+                    <li style="text-align:center; font-style:italic; opacity:0.85;">Müzeye Hayat Verenler</li>
+                    <li><a href="personel/personel.html">Personelimiz</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Trakya Üniversitesi -->
+        <div class="card">
             <div class="c-f t-l"></div><div class="c-f t-r"></div>
             <div class="c-f b-l"></div><div class="c-f b-r"></div>
             <h3>TRAKYA ÜNİVERSİTESİ</h3>
             <div class="card-content">
                 <ul>
                     <li>
-                        <a href="https://www.trakya.edu.tr" target="_blank" style="text-decoration: none; color: inherit;">
-                            Üniversite Web Sayfası
-                        </a>
+                        <a href="https://www.trakya.edu.tr" target="_blank">Üniversite Web Sayfası</a>
                     </li>
                     <li>
-                        <a href="duyurular/google.html" style="text-decoration: none; color: inherit;">
-                            Yönetim Paneli
-                        </a>
+                        <a href="duyurular/google.html">Yönetim Paneli</a>
                     </li>
                 </ul>
             </div>
         </div>
-   <div class="card">
-    <div class="c-f t-l"></div><div class="c-f t-r"></div>
-    <div class="c-f b-l"></div><div class="c-f b-r"></div>
-    <h3>ZİYARETÇİ İSTATİSTİĞİ</h3>
-    <div class="card-content" style="text-align: center;">
-        <div style="font-size: 12px; opacity: 0.8; margin-bottom: 5px;">Toplam Ziyaretçi Sayısı</div>
-        <div id="visitor-count">
-            <img src="https://hitwebcounter.com/counter/counter.php?page=kulliye_muze_2026_ozel&style=0005&nbdigits=6&type=page&initCount=1" 
-                 title="Ziyaretçi Sayacı" 
-                 alt="web counter" 
-                 border="0" 
-                 style="filter: sepia(1) hue-rotate(15deg) saturate(1.5); height: 32px;">
+
+        <!-- ====================================================
+             ZİYARETÇİ SAYACI — YENİ ÇALIŞAN SÜRÜM
+        ==================================================== -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>ZİYARETÇİ İSTATİSTİĞİ</h3>
+            <div class="card-content" style="text-align:center; padding: 18px 12px;">
+                <div class="counter-label">Toplam Web Ziyaretçisi</div>
+                <div class="counter-wrap" id="counter-wrap">
+                    <!-- Rakamlar JS ile oluşturulur -->
+                </div>
+                <div class="counter-since">Nisan 2026 itibarıyla</div>
+            </div>
         </div>
-        <div style="font-size: 10px; margin-top: 8px; font-style: italic;">Nisan 2026 itibarıyla</div>
-   <div style="font-size: 10px; margin-top: 8px; font-style: italic;">Toplam Ziyaretçi Sayımız</div>
-    </div>
+
+    </div><!-- /right -->
+
+</div><!-- /container -->
+
+<!-- ================================================================
+     FOOTER
+================================================================ -->
+<div class="site-footer-wrapper">
+    <footer class="site-footer">
+        <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+        <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+        <p style="font-size:11px; margin-top:15px; opacity:0.65;">&copy; 2026 — Tüm Hakları Saklıdır</p>
+    </footer>
 </div>
-       
-    </div> </div><div class="site-footer-wrapper">
-        <footer class="site-footer">
-            <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
-            <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
-            <p style="font-size: 11px; margin-top: 15px; opacity: 0.7;">&copy; 2026 TÜM HAKLARI SAKLIDIR</p>
-        </footer>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-           /**
-     * GERÇEKÇİ SU DALGASI ALGORİTMASI
-     */
-// Su Dalgalanma Simülasyonu
-    const canvas = document.getElementById('water-canvas');
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
 
-    const size = width * height;
-    const buffer1 = new Int32Array(size);
-    const buffer2 = new Int32Array(size);
-    let currentBuffer = buffer1, nextBuffer = buffer2;
+<!-- ================================================================
+     PapaParse (Google Sheets CSV)
+================================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
-    function dropAt(x, y) {
-        if (x < 1 || x >= width - 1 || y < 1 || y >= height - 1) return;
-        currentBuffer[Math.floor(x) + Math.floor(y) * width] = 512;
-    }
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-    function processWater() {
-        const imgData = ctx.createImageData(width, height);
-        const data = imgData.data;
-        for (let y = 1; y < height - 1; y++) {
-            for (let x = 1; x < width - 1; x++) {
-                const i = x + y * width;
-                nextBuffer[i] = ((currentBuffer[i-1] + currentBuffer[i+1] + currentBuffer[i-width] + currentBuffer[i+width]) >> 1) - nextBuffer[i];
-                nextBuffer[i] -= nextBuffer[i] >> 5;
-                const val = nextBuffer[i];
-                const p = i * 4;
-                data[p] = 10 + (val >> 3);
-                data[p+1] = 18 + (val >> 2);
-                data[p+2] = 28 + (val >> 1);
-                data[p+3] = 255;
-            }
+    /* --------------------------------------------------
+       1. SPLASH — Su dalgası + kapanma
+    -------------------------------------------------- */
+    (function initSplash() {
+        const canvas = document.getElementById('water-canvas');
+        const ctx    = canvas.getContext('2d');
+        let W = canvas.width  = window.innerWidth;
+        let H = canvas.height = window.innerHeight;
+
+        let buf1 = new Int32Array(W * H);
+        let buf2 = new Int32Array(W * H);
+
+        function drop(x, y) {
+            x = Math.floor(x); y = Math.floor(y);
+            if (x < 1 || x >= W-1 || y < 1 || y >= H-1) return;
+            buf1[x + y * W] = 512;
         }
-        ctx.putImageData(imgData, 0, 0);
-        [currentBuffer, nextBuffer] = [nextBuffer, currentBuffer];
-    }
 
-    function animate() { processWater(); requestAnimationFrame(animate); }
-    setInterval(() => dropAt(Math.random()*width, Math.random()*height), 450);
-    window.addEventListener('mousemove', (e) => dropAt(e.clientX, e.clientY));
-    animate();
-
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            const s = document.getElementById('splash-screen');
-            if(s) {
-                s.style.opacity = '0';
-                setTimeout(() => { 
-                    s.style.visibility = 'hidden'; 
-                    s.remove(); 
-                }, 1200);
-            }
-        }, 3000); // 3sn yükleme + 0.5sn geçiş
-    });
-            // 2. Menü Kontrolü
-            const menuBtn = document.getElementById('menuBtn');
-            const dropdown = document.getElementById('globalDropdown');
-            menuBtn.onclick = (e) => {
-                e.stopPropagation();
-                dropdown.classList.toggle('active');
-            };
-            document.onclick = (e) => {
-                if (!dropdown.contains(e.target) && e.target !== menuBtn) {
-                    dropdown.classList.remove('active');
+        function step() {
+            const img  = ctx.createImageData(W, H);
+            const data = img.data;
+            for (let y = 1; y < H-1; y++) {
+                for (let x = 1; x < W-1; x++) {
+                    const i = x + y * W;
+                    buf2[i] = ((buf1[i-1] + buf1[i+1] + buf1[i-W] + buf1[i+W]) >> 1) - buf2[i];
+                    buf2[i] -= buf2[i] >> 5;
+                    const v = buf2[i];
+                    const p = i * 4;
+                    data[p]   = 10 + (v >> 3);
+                    data[p+1] = 18 + (v >> 2);
+                    data[p+2] = 28 + (v >> 1);
+                    data[p+3] = 255;
                 }
-            };
+            }
+            ctx.putImageData(img, 0, 0);
+            [buf1, buf2] = [buf2, buf1];
+        }
 
-            // 3. Duyuru Çekme
-            fetch('duyurular/duyurular.json')
-                .then(res => res.json())
-                .then(data => {
-                    const liste = document.getElementById('ana-sayfa-duyurular');
-                    if (!liste) return;
-                    liste.innerHTML = '';
-                    const sonUc = data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).slice(0, 3);
-                    sonUc.forEach(d => {
-                        const tarih = new Date(d.tarih).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
-                        liste.innerHTML += `
-                            <li style="display: flex; align-items: baseline; padding: 10px 0; border-bottom: 1px dashed var(--gold-soft);">
-                                <span style="font-size: 11px; color: var(--gold); font-weight: bold; min-width: 80px;">${tarih}</span>
-                                <a href="duyurular/tum-duyurular.html" style="font-size: 13px; color: #2b2b2b;">${d.baslik}</a>
-                            </li>`;
-                    });
-                }).catch(() => { document.getElementById('ana-sayfa-duyurular').innerHTML = "Duyurular yüklenemedi."; });
+        (function loop() { step(); requestAnimationFrame(loop); })();
+        setInterval(() => drop(Math.random()*W, Math.random()*H), 450);
+        window.addEventListener('mousemove', e => drop(e.clientX, e.clientY));
+
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                const s = document.getElementById('splash-screen');
+                if (!s) return;
+                s.style.opacity = '0';
+                setTimeout(() => s.remove(), 1200);
+            }, 3000);
         });
-    </script>
+    })();
+
+    /* --------------------------------------------------
+       2. MENÜ TOGGLE
+    -------------------------------------------------- */
+    const menuBtn  = document.getElementById('menuBtn');
+    const dropdown = document.getElementById('globalDropdown');
+
+    menuBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!dropdown.contains(e.target) && e.target !== menuBtn) {
+            dropdown.classList.remove('active');
+        }
+    });
+
+    /* --------------------------------------------------
+       3. GOOGLE SHEETS — Duyuru / Haber / Basın
+    -------------------------------------------------- */
+    const sheetSettings = [
+        {
+            id:  'list-duyurular',
+            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=0&single=true&output=csv'
+        },
+        {
+            id:  'list-haberler',
+            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=995325209&single=true&output=csv'
+        },
+        {
+            id:  'list-basinda',
+            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=1712536451&single=true&output=csv'
+        }
+    ];
+
+    sheetSettings.forEach(function (sheet) {
+        Papa.parse(sheet.url, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+                const el = document.getElementById(sheet.id);
+                if (!el) return;
+                el.innerHTML = '';
+                const rows = results.data.reverse().slice(0, 3);
+                if (!rows.length) {
+                    el.innerHTML = '<li><span class="ann-text-small">Kayıt bulunamadı.</span></li>';
+                    return;
+                }
+                rows.forEach(function (row) {
+                    const li = document.createElement('li');
+                    li.innerHTML =
+                        '<span class="ann-date-small">' + (row['TARİH'] || '') + '</span>' +
+                        '<span class="ann-text-small">'  + (row['DUYURU METNİ'] || '') + '</span>';
+                    el.appendChild(li);
+                });
+            },
+            error: function () {
+                const el = document.getElementById(sheet.id);
+                if (el) el.innerHTML = '<li><span class="ann-text-small">Yüklenemedi.</span></li>';
+            }
+        });
+    });
+
+    /* --------------------------------------------------
+       4. ZİYARETÇİ SAYACI
+         — localStorage ile kalıcı, sessionStorage ile
+           aynı oturumda tek artış.
+         — BASE_COUNT: sitenizin mevcut sayısını yazın.
+    -------------------------------------------------- */
+    (function initCounter() {
+        const BASE_COUNT   = 14320;   // ← mevcut ziyaretçi sayınıza göre ayarlayın
+        const STORE_KEY    = 'kulliye_visit_total_v2';
+        const SESSION_KEY  = 'kulliye_visit_session';
+        const GROUP_SIZE   = 3;        // Her kaç rakamda bir ayraç (opsiyonel)
+
+        function readCount() {
+            const v = localStorage.getItem(STORE_KEY);
+            return v ? parseInt(v, 10) : BASE_COUNT;
+        }
+
+        function writeCount(n) {
+            localStorage.setItem(STORE_KEY, String(n));
+        }
+
+        // Yeni oturum mu? → bir artır
+        let count = readCount();
+        if (!sessionStorage.getItem(SESSION_KEY)) {
+            sessionStorage.setItem(SESSION_KEY, '1');
+            count += 1;
+            writeCount(count);
+        }
+
+        // Render
+        function render(n) {
+            const wrap = document.getElementById('counter-wrap');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+
+            const str = String(n).padStart(6, '0');
+
+            str.split('').forEach(function (digit, i) {
+                // Her 3 hanede bir ayraç (isteğe bağlı, sol taraftan)
+                if (i > 0 && (str.length - i) % GROUP_SIZE === 0) {
+                    const sep = document.createElement('span');
+                    sep.className = 'digit-sep';
+                    sep.textContent = '.';
+                    wrap.appendChild(sep);
+                }
+
+                const box = document.createElement('div');
+                box.className = 'd-box';
+                box.textContent = digit;
+
+                // Giriş animasyonu: yukarıdan aşağı, sıralı
+                box.style.opacity   = '0';
+                box.style.transform = 'translateY(-12px)';
+                box.style.transition =
+                    'opacity 0.45s ease ' + (i * 0.07) + 's, ' +
+                    'transform 0.45s ease ' + (i * 0.07) + 's';
+
+                wrap.appendChild(box);
+
+                // Bir tick bekleyip animasyonu başlat
+                setTimeout(function () {
+                    box.style.opacity   = '1';
+                    box.style.transform = 'translateY(0)';
+                }, 30);
+            });
+        }
+
+        render(count);
+    })();
+
+});
+</script>
+
 </body>
 </html>
