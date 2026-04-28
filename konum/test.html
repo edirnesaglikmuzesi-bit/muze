@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Müze Navigasyon v1</title>
+
+<style>
+html,body{
+margin:0;
+height:100%;
+overflow:hidden;
+background:black;
+font-family:Arial;
+}
+
+#camera{
+position:fixed;
+width:100%;
+height:100%;
+object-fit:cover;
+filter:brightness(0.55);
+}
+
+/* UI CENTER */
+#ui{
+position:fixed;
+width:100%;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* OUTER GUIDE */
+.outer{
+width:360px;
+height:360px;
+border-radius:50%;
+border:2px solid rgba(255,255,255,0.2);
+position:absolute;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* TARGET MARK */
+.target{
+position:absolute;
+width:2px;
+height:170px;
+background:lime;
+top:10px;
+}
+
+/* COMPASS RING */
+.ring{
+width:260px;
+height:260px;
+border-radius:50%;
+border:2px solid rgba(0,255,200,0.25);
+position:absolute;
+transform-origin:center;
+will-change:transform;
+}
+
+/* ARROW */
+.arrow{
+position:absolute;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+width:0;
+height:0;
+border-left:14px solid transparent;
+border-right:14px solid transparent;
+border-bottom:40px solid red;
+}
+
+/* CENTER DOT */
+.dot{
+width:10px;
+height:10px;
+background:white;
+border-radius:50%;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+/* TEXT */
+#status{
+position:absolute;
+bottom:90px;
+color:white;
+font-size:22px;
+font-weight:bold;
+text-shadow:0 0 10px black;
+}
+
+#dist{
+position:absolute;
+bottom:55px;
+color:rgba(255,255,255,0.7);
+font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<video id="camera" autoplay playsinline></video>
+
+<div id="ui">
+
+<div class="outer">
+<div class="target"></div>
+</div>
+
+<div class="ring" id="ring">
+<div class="arrow"></div>
+<div class="dot"></div>
+</div>
+
+<div id="status">Başlatılıyor...</div>
+<div id="dist"></div>
+
+</div>
+
+<script>
+
+/* =========================
+   🎯 HEDEF
+========================= */
+const targetLat = 37.8596227;
+const targetLng = 27.2728099;
+
+/* =========================
+   📷 CAMERA
+========================= */
+navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}})
+.then(s=>{
+document.getElementById("camera").srcObject = s;
+});
+
+/* =========================
+   🧠 MATH ENGINE
+========================= */
+const MathEngine = {
+
+toRad(d){return d*Math.PI/180;},
+toDeg(r){return r*180/Math.PI;},
+
+bearing(lat1,lng1,lat2,lng2){
+let dLng=this.toRad(lng2-lng1);
+
+let y=Math.sin(dLng)*Math.cos(this.toRad(lat2));
+let x=Math.cos(this.toRad(lat1))*Math.sin(this.toRad(lat2))-
+Math.sin(this.toRad(lat1))*Math.cos(this.toRad(lat2))*Math.cos(dLng);
+
+return (this.toDeg(Math.atan2(y,x))+360)%360;
+},
+
+distance(lat1,lng1,lat2,lng2){
+const R=6371000;
+let dLat=this.toRad(lat2-lat1);
+let dLng=this.toRad(lng2-lng1);
+
+let a=Math.sin(dLat/2)**2 +
+Math.cos(this.toRad(lat1))*Math.cos(this.toRad(lat2))*
+Math.sin(dLng/2)**2;
+
+return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+},
+
+angleDiff(a,b){
+return ((b-a+540)%360)-180;
+}
+
+};
+
+/* =========================
+   📍 STATE
+========================= */
+let heading = 0;
+let bearing = 0;
+
+/* =========================
+   🔁 SMOOTH FILTER (CRITICAL)
+========================= */
+function smoothAngle(current, target){
+let diff = MathEngine.angleDiff(current, target);
+
+// hız limiti (stabilizasyon)
+const maxStep = 3;
+diff = Math.max(-maxStep, Math.min(maxStep, diff));
+
+return current + diff;
+}
+
+/* =========================
+   📡 GPS
+========================= */
+navigator.geolocation.watchPosition(pos=>{
+
+let lat = pos.coords.latitude;
+let lng = pos.coords.longitude;
+
+bearing = MathEngine.bearing(
+lat,lng,
+targetLat,targetLng
+);
+
+let dist = MathEngine.distance(
+lat,lng,
+targetLat,targetLng
+);
+
+document.getElementById("dist").innerText =
+"Mesafe: " + dist.toFixed(1) + " m";
+
+},{enableHighAccuracy:true});
+
+/* =========================
+   🧭 COMPASS
+========================= */
+window.addEventListener("deviceorientation",e=>{
+
+let h = e.alpha;
+if(e.webkitCompassHeading) h = e.webkitCompassHeading;
+if(h == null) return;
+
+/* stabilize heading */
+heading = smoothAngle(heading, h);
+
+/* relative angle */
+let diff = MathEngine.angleDiff(heading, bearing);
+
+/* rotate UI */
+document.getElementById("ring").style.transform =
+`rotate(${-diff}deg)`;
+
+/* decision */
+let status = document.getElementById("status");
+
+if(Math.abs(diff) <= 10){
+status.innerText = "👉 İLERLEYİNİZ";
+status.style.color = "lime";
+}
+else if(Math.abs(diff) <= 25){
+status.innerText = "Yaklaştınız";
+status.style.color = "orange";
+}
+else{
+status.innerText = "Hizalanıyor...";
+status.style.color = "white";
+}
+
+});
+
+</script>
+
+</body>
+</html>

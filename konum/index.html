@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Müze Rehberi</title>
+
+<style>
+body{margin:0;background:#111;font-family:sans-serif;}
+
+.map{
+  position:relative;
+  max-width:900px;
+  margin:auto;
+}
+
+.map img{
+  width:100%;
+  display:block;
+}
+
+#pin{
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:red;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 12px red;
+  display:none;
+}
+
+/* pulse efekti */
+#pin::after{
+  content:"";
+  position:absolute;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:red;
+  opacity:0.3;
+  top:-11px;
+  left:-11px;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(0.5);opacity:0.6;}
+  100%{transform:scale(1.5);opacity:0;}
+}
+
+.controls{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#000c;
+  padding:12px;
+  text-align:center;
+}
+
+button{
+  padding:12px 20px;
+  font-size:16px;
+  border:none;
+  background:#c9a84c;
+  color:#000;
+  border-radius:8px;
+}
+
+#info{
+  color:#fff;
+  margin-top:10px;
+  font-size:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="map">
+  <img src="harita.png" id="map">
+  <div id="pin"></div>
+</div>
+
+<div class="controls">
+  <button onclick="baslat()">📍 NEREDEYİM</button>
+  <div id="info">Takip başlatılmadı</div>
+</div>
+
+<script>
+
+// 🔴 ALANLAR
+const areas = [
+{name:"MEDRESE",coords:[[41.68558374393316,26.54270664906614],[41.68533022177119,26.542980131993296],[41.6857704644034,26.542999207966872],[41.68551807548888,26.54327815770988]]},
+{name:"GİRİŞ BAHÇE",coords:[[41.68582254453236,26.542977750294337],[41.685580171266025,26.543235242364805],[41.68601283695287,26.543307662009624],[41.685800510636795,26.54357588291636]]},
+{name:"DARÜŞŞİFA 1. AVLU",coords:[[41.68562223611326,26.54332911968216],[41.68534781256669,26.54361879826144],[41.685790495227224,26.543594658379835],[41.68548001675714,26.543921887886057]]},
+{name:"DARÜŞŞİFA 2. AVLU",coords:[[41.685325778508535,26.543640255933983],[41.68519323328664,26.543778182729717],[41.68553175344533,26.543882496181823],[41.68537594940942,26.544049397705194]]},
+{name:"DARÜŞŞİFA",coords:[[41.68520739734571,26.543755423431076],[41.685091251969226,26.543998189283247],[41.68539152982998,26.544038018055872],[41.68517906922443,26.54414991794086]]},
+{name:"CAMİ",coords:[[41.686055342889446,26.543380304966412],[41.685188006077034,26.54431907814],[41.68645395335136,26.544120594668488],[41.68569879476613,26.545021816915135]]},
+{name:"İMARETHANE",coords:[[41.68641589517322,26.544085725950612],[41.685692785511065,26.544957443897516],[41.68661419806502,26.544407591038702],[41.685903109104125,26.545276626776538]]},
+{name:"TABHANE",coords:[[41.6856246805812,26.544581934628084],[41.68549247668799,26.544750913799326],[41.68573485028468,26.544758960426527],[41.68560665279357,26.54491452855244]]}
+];
+
+// 🔴 HARİTA SINIRI
+const bounds={
+minLat:41.685091251969226,
+maxLat:41.68661419806502,
+minLng:26.54270664906614,
+maxLng:26.545276626776538
+};
+
+const map=document.getElementById("map");
+const pin=document.getElementById("pin");
+const info=document.getElementById("info");
+
+let watchId=null;
+let lastArea="";
+
+// 📍 GPS → PIXEL
+function convert(lat,lng){
+  const r=map.getBoundingClientRect();
+  const x=((lng-bounds.minLng)/(bounds.maxLng-bounds.minLng))*r.width;
+  const y=((bounds.maxLat-lat)/(bounds.maxLat-bounds.minLat))*r.height;
+  return {x,y};
+}
+
+// 📍 POLYGON
+function insidePolygon(point, vs){
+  let x=point[0], y=point[1];
+  let inside=false;
+  for(let i=0,j=vs.length-1;i<vs.length;j=i++){
+    let xi=vs[i][0], yi=vs[i][1];
+    let xj=vs[j][0], yj=vs[j][1];
+    let intersect=((yi>y)!=(yj>y)) &&
+      (x < (xj-xi)*(y-yi)/(yj-yi)+xi);
+    if(intersect) inside=!inside;
+  }
+  return inside;
+}
+
+// 📍 ALAN BUL
+function findArea(lat,lng){
+  for(let a of areas){
+    if(insidePolygon([lat,lng],a.coords)){
+      return a.name;
+    }
+  }
+  return "Bilinmeyen Alan";
+}
+
+// 🚀 BAŞLAT
+function baslat(){
+
+  if(watchId!==null){
+    navigator.geolocation.clearWatch(watchId);
+  }
+
+  watchId = navigator.geolocation.watchPosition(pos=>{
+
+    const lat=pos.coords.latitude;
+    const lng=pos.coords.longitude;
+
+    const p=convert(lat,lng);
+
+    pin.style.left=p.x+"px";
+    pin.style.top=p.y+"px";
+    pin.style.display="block";
+
+    const area=findArea(lat,lng);
+
+    if(area!==lastArea){
+      info.innerHTML="📍 ŞU AN <b>"+area+"</b>'DASINIZ";
+      lastArea=area;
+    }
+
+  },()=>{
+    info.innerHTML="Konum alınamadı";
+  },{
+    enableHighAccuracy:true,
+    maximumAge:0,
+    timeout:5000
+  });
+
+}
+
+</script>
+
+</body>
+</html>
