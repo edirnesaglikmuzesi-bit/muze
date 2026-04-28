@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Külliye İzleme Paneli — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+:root {
+  --bg: #0a0c10;
+  --bg2: #0f1117;
+  --bg3: #151820;
+  --surface: #1a1d26;
+  --surface2: #1f2330;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+
+  --gold: #c9a227;
+  --gold2: #e8c060;
+  --gold-glow: rgba(201,162,39,0.15);
+  --teal: #2dd4bf;
+  --teal-glow: rgba(45,212,191,0.12);
+  --crimson: #e05050;
+  --crimson-glow: rgba(224,80,80,0.12);
+  --indigo: #818cf8;
+  --indigo-glow: rgba(129,140,248,0.12);
+  --green: #34d399;
+  --orange: #fb923c;
+
+  --text: #e8eaf0;
+  --text2: #9098b0;
+  --text3: #5a6080;
+
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+
+  --r: 12px;
+  --r2: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-gold: 0 0 30px rgba(201,162,39,0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 15px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Animated Background ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(201,162,39,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(45,212,191,0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Login Screen ─── */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.login-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow), var(--shadow-gold);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--teal), var(--gold), transparent);
+}
+
+.login-seal {
+  font-size: 2.8rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.login-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--gold2);
+  margin-bottom: 0.3rem;
+}
+
+.login-sub {
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.login-field {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.login-field i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.login-field input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r2);
+  padding: 0.85rem 1rem 0.85rem 2.6rem;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+
+.login-field input:focus {
+  border-color: var(--gold);
+}
+
+.login-field input::placeholder { color: var(--text3); }
+
+.login-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+  border: none;
+  border-radius: var(--r2);
+  padding: 0.9rem;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #0a0c10;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  margin-top: 0.5rem;
+}
+
+.login-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+.login-btn:active { transform: translateY(0); }
+
+#login-error {
+  color: var(--crimson);
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 0.75rem;
+  height: 1.2em;
+}
+
+/* ── Main Layout ─── */
+#admin-app {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Sidebar ─── */
+#sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 240px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-logo {
+  padding: 1.4rem 1.4rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sidebar-logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-text { line-height: 1.2; }
+.sidebar-logo-text strong {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--gold2);
+  display: block;
+}
+.sidebar-logo-text span {
+  font-size: 0.65rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebar-nav {
+  padding: 0.75rem 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-section-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 0.75rem 1.4rem 0.3rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.4rem;
+  color: var(--text2);
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+.nav-link.active {
+  color: var(--gold2);
+  background: var(--gold-glow);
+  border-left-color: var(--gold);
+}
+
+.nav-link i { width: 16px; text-align: center; font-size: 0.85rem; }
+
+.sidebar-footer {
+  padding: 1rem 1.4rem;
+  border-top: 1px solid var(--border);
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ── Topbar ─── */
+#topbar {
+  position: fixed;
+  top: 0;
+  left: 240px;
+  right: 0;
+  height: 60px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  gap: 1rem;
+}
+
+.topbar-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-range-select {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--r2);
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.refresh-btn {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  width: 34px; height: 34px;
+  border-radius: var(--r2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+
+.refresh-btn:hover { color: var(--gold); border-color: var(--gold); }
+.refresh-btn.spin i { animation: spin 0.6s linear; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.logout-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text3);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--r2);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-body);
+}
+
+.logout-btn:hover { color: var(--crimson); border-color: var(--crimson); }
+
+/* ── Main Content ─── */
+#main-content {
+  margin-left: 240px;
+  margin-top: 60px;
+  padding: 1.5rem;
+  min-height: calc(100vh - 60px);
+}
+
+/* ── Section Panels ─── */
+.panel {
+  display: none;
+  animation: fadeUp 0.3s ease;
+}
+
+.panel.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-header {
+  margin-bottom: 1.5rem;
+}
+
+.panel-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.panel-header p {
+  font-size: 0.8rem;
+  color: var(--text3);
+}
+
+/* ── Stat Cards ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.2rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-2px); border-color: var(--border2); }
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--gold));
+  opacity: 0.7;
+}
+
+.stat-icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  margin-bottom: 0.9rem;
+  background: var(--icon-bg, var(--gold-glow));
+  color: var(--accent-color, var(--gold));
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stat-sub {
+  font-size: 0.72rem;
+  color: var(--text2);
+  margin-top: 0.35rem;
+}
+
+.stat-trend {
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.trend-up { color: var(--green); }
+.trend-down { color: var(--crimson); }
+
+/* ── Charts Grid ─── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.2rem;
+  position: relative;
+}
+
+.chart-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.chart-subtitle {
+  font-size: 0.72rem;
+  color: var(--text3);
+  margin-bottom: 1rem;
+}
+
+.chart-wrap {
+  position: relative;
+  height: 200px;
+}
+
+.chart-wrap.tall { height: 260px; }
+.chart-wrap.short { height: 150px; }
+
+/* ── Table ─── */
+.data-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.table-header {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.table-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.table-badge {
+  background: var(--gold-glow);
+  color: var(--gold2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 0.65rem 1.2rem;
+  text-align: left;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+
+td {
+  padding: 0.75rem 1.2rem;
+  font-size: 0.82rem;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.015); color: var(--text); }
+
+/* ── Bar Progress ─── */
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.bar-label {
+  font-size: 0.78rem;
+  color: var(--text2);
+  width: 140px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.bar-val {
+  font-size: 0.75rem;
+  color: var(--text3);
+  width: 50px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Live Counter ─── */
+.live-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.live-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.live-card.highlight {
+  border-color: var(--teal);
+  background: var(--teal-glow);
+}
+
+.live-number {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.live-label {
+  font-size: 0.72rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Device donut legends ─── */
+.donut-legend {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+}
+
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  color: var(--text2);
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.legend-pct {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── Heatmap ─── */
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: 40px repeat(24, 1fr);
+  gap: 2px;
+  font-size: 0.6rem;
+}
+
+.hm-label {
+  color: var(--text3);
+  text-align: right;
+  padding-right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hm-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  transition: opacity 0.2s;
+  cursor: default;
+}
+
+.hm-cell:hover { opacity: 0.7; }
+
+.hm-hour-labels {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.hm-h-label {
+  color: var(--text3);
+  font-size: 0.58rem;
+  text-align: center;
+}
+
+/* ── Guestbook table ─── */
+.gb-msg {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--r2);
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.gb-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.gb-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--gold2);
+}
+
+.gb-city {
+  font-size: 0.72rem;
+  color: var(--text3);
+}
+
+.gb-date {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text3);
+}
+
+.gb-text {
+  font-size: 0.82rem;
+  color: var(--text2);
+  line-height: 1.55;
+}
+
+/* ── Two col grid ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+/* ── Scrollable table ─── */
+.scroll-table { overflow-x: auto; }
+
+/* ── Mobile Sidebar Toggle ─── */
+#sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 12px; left: 12px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  width: 36px; height: 36px;
+  border-radius: var(--r2);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,0.5); }
+  #sidebar-toggle { display: flex; }
+  #topbar { left: 0; padding-left: 3.5rem; }
+  #main-content { margin-left: 0; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 500px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .live-section { grid-template-columns: 1fr 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-seal">🏛️</div>
+    <div class="login-title">Yönetici Paneli</div>
+    <div class="login-sub">Sultan II. Bayezid Külliyesi · İzleme Sistemi</div>
+    <div class="login-field">
+      <i class="fas fa-user"></i>
+      <input type="text" id="login-user" placeholder="Kullanıcı Adı" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="login-pass" placeholder="Şifre" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Giriş Yap</button>
+    <div id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══ ADMIN APP ══ -->
+<div id="admin-app">
+  <button id="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🏛️</div>
+      <div class="sidebar-logo-text">
+        <strong>Külliye Admin</strong>
+        <span>İzleme Paneli</span>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Genel Bakış</div>
+      <a class="nav-link active" data-panel="overview" onclick="switchPanel('overview')">
+        <i class="fas fa-chart-pie"></i> Genel Bakış
+      </a>
+      <a class="nav-link" data-panel="live" onclick="switchPanel('live')">
+        <i class="fas fa-circle" style="color:var(--green);font-size:0.6rem"></i> Canlı İzleme
+      </a>
+
+      <div class="nav-section-label">Trafik</div>
+      <a class="nav-link" data-panel="visitors" onclick="switchPanel('visitors')">
+        <i class="fas fa-users"></i> Ziyaretçi Analizi
+      </a>
+      <a class="nav-link" data-panel="hourly" onclick="switchPanel('hourly')">
+        <i class="fas fa-clock"></i> Saatlik & Isı Haritası
+      </a>
+      <a class="nav-link" data-panel="pages" onclick="switchPanel('pages')">
+        <i class="fas fa-file-alt"></i> Sayfa Performansı
+      </a>
+
+      <div class="nav-section-label">Deneyim</div>
+      <a class="nav-link" data-panel="audio" onclick="switchPanel('audio')">
+        <i class="fas fa-headphones"></i> Sesli Rehber
+      </a>
+      <a class="nav-link" data-panel="buttons" onclick="switchPanel('buttons')">
+        <i class="fas fa-mouse-pointer"></i> Buton Tıklamaları
+      </a>
+      <a class="nav-link" data-panel="devices" onclick="switchPanel('devices')">
+        <i class="fas fa-mobile-alt"></i> Cihaz Dağılımı
+      </a>
+      <a class="nav-link" data-panel="guestbook" onclick="switchPanel('guestbook')">
+        <i class="fas fa-book-open"></i> Gönül Köprüsü
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        Sistem Aktif
+      </div>
+    </div>
+  </nav>
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <div class="topbar-title" id="topbar-title">Genel Bakış</div>
+    <div class="topbar-right">
+      <select class="date-range-select" id="date-range" onchange="updateRange()">
+        <option value="7">Son 7 Gün</option>
+        <option value="30" selected>Son 30 Gün</option>
+        <option value="90">Son 3 Ay</option>
+        <option value="365">Son 1 Yıl</option>
+      </select>
+      <button class="refresh-btn" id="refresh-btn" onclick="refreshData()" title="Yenile">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <button class="logout-btn" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="panel active" id="panel-overview">
+      <div class="panel-header">
+        <h2>📊 Genel Bakış</h2>
+        <p>Müze rehberi uygulaması — tüm metriklerin özeti</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" style="--accent-color:var(--gold);--icon-bg:var(--gold-glow)">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-label">Toplam Ziyaretçi</div>
+          <div class="stat-value" id="ov-total-visitors">—</div>
+          <div class="stat-trend trend-up" id="ov-visitors-trend">↑ yükleniyor</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--teal);--icon-bg:var(--teal-glow)">
+          <div class="stat-icon"><i class="fas fa-eye"></i></div>
+          <div class="stat-label">Sayfa Görüntüleme</div>
+          <div class="stat-value" id="ov-pageviews">—</div>
+          <div class="stat-sub">Ortalama <span id="ov-avg-pages">—</span> sayfa/ziyaret</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--indigo);--icon-bg:var(--indigo-glow)">
+          <div class="stat-icon"><i class="fas fa-stopwatch"></i></div>
+          <div class="stat-label">Ort. Gezi Süresi</div>
+          <div class="stat-value" id="ov-avg-duration">—</div>
+          <div class="stat-sub">dk:sn formatında</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--green);--icon-bg:rgba(52,211,153,0.12)">
+          <div class="stat-icon"><i class="fas fa-headphones"></i></div>
+          <div class="stat-label">Sesli Rehber Kullanımı</div>
+          <div class="stat-value" id="ov-audio-rate">—</div>
+          <div class="stat-sub">Ziyaretçilerin <span id="ov-audio-pct">—</span>%'i dinledi</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--crimson);--icon-bg:var(--crimson-glow)">
+          <div class="stat-icon"><i class="fas fa-book"></i></div>
+          <div class="stat-label">Defter Mesajları</div>
+          <div class="stat-value" id="ov-guestbook">—</div>
+          <div class="stat-trend trend-up" id="ov-gb-trend">↑ yükleniyor</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--orange);--icon-bg:rgba(251,146,60,0.12)">
+          <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
+          <div class="stat-label">Buton Tıklaması</div>
+          <div class="stat-value" id="ov-clicks">—</div>
+          <div class="stat-sub">En çok: <span id="ov-top-btn">—</span></div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card full-width">
+          <div class="chart-title">Günlük Ziyaretçi Trendi</div>
+          <div class="chart-subtitle">Seçili dönemde günlük ziyaretçi sayısı</div>
+          <div class="chart-wrap tall"><canvas id="chart-visitors-trend"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Haftalık Karşılaştırma</div>
+          <div class="chart-subtitle">Bu hafta vs geçen hafta</div>
+          <div class="chart-wrap"><canvas id="chart-weekly-compare"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Aylık Ziyaretçi Dağılımı</div>
+          <div class="chart-subtitle">Son 12 ay</div>
+          <div class="chart-wrap"><canvas id="chart-monthly"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LIVE ══ -->
+    <div class="panel" id="panel-live">
+      <div class="panel-header">
+        <h2>🟢 Canlı İzleme</h2>
+        <p>Şu anda aktif olan ziyaretçiler — her 30 saniyede güncellenir</p>
+      </div>
+
+      <div class="live-section">
+        <div class="live-card highlight">
+          <div class="live-number" id="live-now">0</div>
+          <div class="live-label">Şu An Çevrimiçi</div>
+        </div>
+        <div class="live-card">
+          <div class="live-number" style="color:var(--gold);" id="live-today">0</div>
+          <div class="live-label">Bugün Toplam</div>
+        </div>
+        <div class="live-card">
+          <div class="live-number" style="color:var(--indigo);" id="live-hour">0</div>
+          <div class="live-label">Son 1 Saatte</div>
+        </div>
+        <div class="live-card">
+          <div class="live-number" style="color:var(--green);" id="live-audio-active">0</div>
+          <div class="live-label">Ses Açık</div>
+        </div>
+        <div class="live-card">
+          <div class="live-number" style="color:var(--orange);" id="live-tour-active">0</div>
+          <div class="live-label">Turda Olan</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card full-width">
+          <div class="chart-title">Son 60 Dakika — Anlık Trafik</div>
+          <div class="chart-subtitle">Her veri noktası 1 dakikayı temsil eder</div>
+          <div class="chart-wrap tall"><canvas id="chart-realtime"></canvas></div>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <div class="table-header">
+          <span class="table-title">Aktif Oturumlar</span>
+          <span class="table-badge" id="active-session-count">0 oturum</span>
+        </div>
+        <div class="scroll-table">
+          <table>
+            <thead><tr>
+              <th>Oturum ID</th><th>Süre</th><th>Bulunduğu Sayfa</th>
+              <th>Cihaz</th><th>Ses</th><th>Tur Adımı</th>
+            </tr></thead>
+            <tbody id="live-sessions-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VISITORS ══ -->
+    <div class="panel" id="panel-visitors">
+      <div class="panel-header">
+        <h2>👥 Ziyaretçi Analizi</h2>
+        <p>Günlük, haftalık ve aylık ziyaretçi istatistikleri</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" style="--accent-color:var(--gold);--icon-bg:var(--gold-glow)">
+          <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+          <div class="stat-label">Bugün</div>
+          <div class="stat-value" id="v-today">—</div>
+          <div class="stat-trend trend-up" id="v-today-trend"></div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--teal);--icon-bg:var(--teal-glow)">
+          <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+          <div class="stat-label">Bu Hafta</div>
+          <div class="stat-value" id="v-week">—</div>
+          <div class="stat-trend" id="v-week-trend"></div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--indigo);--icon-bg:var(--indigo-glow)">
+          <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+          <div class="stat-label">Bu Ay</div>
+          <div class="stat-value" id="v-month">—</div>
+          <div class="stat-trend" id="v-month-trend"></div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--green);--icon-bg:rgba(52,211,153,0.12)">
+          <div class="stat-icon"><i class="fas fa-arrow-down"></i></div>
+          <div class="stat-label">Bounce Rate</div>
+          <div class="stat-value" id="v-bounce">—</div>
+          <div class="stat-sub">Tek sayfa ziyaret</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card full-width">
+          <div class="chart-title">30 Günlük Ziyaretçi Grafiği</div>
+          <div class="chart-subtitle">Günlük benzersiz ziyaretçi ve sayfa görüntüleme</div>
+          <div class="chart-wrap tall"><canvas id="chart-daily-visitors"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Haftanın Günlerine Göre</div>
+          <div class="chart-subtitle">Hangi gün daha kalabalık?</div>
+          <div class="chart-wrap"><canvas id="chart-weekday"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Aylık Trend (12 Ay)</div>
+          <div class="chart-subtitle">Yıllık ziyaretçi değişimi</div>
+          <div class="chart-wrap"><canvas id="chart-monthly-visitors"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HOURLY ══ -->
+    <div class="panel" id="panel-hourly">
+      <div class="panel-header">
+        <h2>⏰ Saatlik & Isı Haritası</h2>
+        <p>Günün hangi saatlerinde daha yoğun ziyaret var?</p>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card full-width">
+          <div class="chart-title">Bugün — Saatlik Ziyaretçi</div>
+          <div class="chart-subtitle">00:00'dan şu ana kadar saatlik dağılım</div>
+          <div class="chart-wrap tall"><canvas id="chart-hourly-today"></canvas></div>
+        </div>
+        <div class="chart-card full-width">
+          <div class="chart-title">Haftalık Isı Haritası</div>
+          <div class="chart-subtitle">Gün × Saat yoğunluk matrisi</div>
+          <div style="padding: 0.5rem 0;">
+            <div class="heatmap-grid" id="heatmap-hour-labels" style="margin-bottom:0.25rem">
+              <div style="grid-column:1"></div>
+            </div>
+            <div class="heatmap-grid" id="heatmap-grid"></div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.75rem;font-size:0.68rem;color:var(--text3)">
+              <span>Az</span>
+              <div style="display:flex;gap:2px">
+                <div style="width:14px;height:14px;border-radius:2px;background:var(--bg3)"></div>
+                <div style="width:14px;height:14px;border-radius:2px;background:rgba(201,162,39,0.2)"></div>
+                <div style="width:14px;height:14px;border-radius:2px;background:rgba(201,162,39,0.5)"></div>
+                <div style="width:14px;height:14px;border-radius:2px;background:rgba(201,162,39,0.75)"></div>
+                <div style="width:14px;height:14px;border-radius:2px;background:var(--gold)"></div>
+              </div>
+              <span>Çok</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAGES ══ -->
+    <div class="panel" id="panel-pages">
+      <div class="panel-header">
+        <h2>📄 Sayfa Performansı</h2>
+        <p>Hangi sayfalarda ne kadar zaman geçiriliyor?</p>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Sayfalara Göre Oturum Dağılımı</div>
+          <div class="chart-subtitle">Ziyaret payları</div>
+          <div class="chart-wrap"><canvas id="chart-page-visits"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Sayfada Ortalama Kalma Süresi</div>
+          <div class="chart-subtitle">Dakika cinsinden</div>
+          <div class="chart-wrap"><canvas id="chart-page-duration"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:1rem">
+        <div class="chart-title" style="margin-bottom:1rem">Sayfada Geçirilen Süre — Bar Karşılaştırması</div>
+        <div id="page-bars"></div>
+      </div>
+
+      <div class="data-table-wrap">
+        <div class="table-header">
+          <span class="table-title">Detaylı Sayfa İstatistikleri</span>
+        </div>
+        <div class="scroll-table">
+          <table>
+            <thead><tr>
+              <th>Sayfa</th><th>Ziyaret</th><th>Ort. Süre</th><th>Maks. Süre</th><th>Çıkış Oranı</th><th>Durum</th>
+            </tr></thead>
+            <tbody id="pages-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AUDIO ══ -->
+    <div class="panel" id="panel-audio">
+      <div class="panel-header">
+        <h2>🎧 Sesli Rehber Analizi</h2>
+        <p>Ses kullanımı, dinleme süreleri ve sayfa bazlı audio metrikleri</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" style="--accent-color:var(--green);--icon-bg:rgba(52,211,153,0.12)">
+          <div class="stat-icon"><i class="fas fa-volume-up"></i></div>
+          <div class="stat-label">Ses Açık Oranı</div>
+          <div class="stat-value" id="a-sound-on">—</div>
+          <div class="stat-sub">Ziyaretçilerin yüzdesi</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--crimson);--icon-bg:var(--crimson-glow)">
+          <div class="stat-icon"><i class="fas fa-volume-mute"></i></div>
+          <div class="stat-label">Sessiz İzleme Oranı</div>
+          <div class="stat-value" id="a-sound-off">—</div>
+          <div class="stat-sub">Ses kapalı tutanlar</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--gold);--icon-bg:var(--gold-glow)">
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-label">Ort. Dinleme Süresi</div>
+          <div class="stat-value" id="a-avg-listen">—</div>
+          <div class="stat-sub">Saniye cinsinden</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--indigo);--icon-bg:var(--indigo-glow)">
+          <div class="stat-icon"><i class="fas fa-robot"></i></div>
+          <div class="stat-label">AI Rehber (TTS)</div>
+          <div class="stat-value" id="a-tts-rate">—</div>
+          <div class="stat-sub">TTS kullanım oranı</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Ses Açık / Kapalı Dağılımı</div>
+          <div class="chart-subtitle">Genel kullanım tercihi</div>
+          <div class="chart-wrap short"><canvas id="chart-audio-split"></canvas></div>
+          <div class="donut-legend">
+            <div class="legend-row">
+              <div class="legend-name"><span class="legend-dot" style="background:var(--green)"></span>Ses Açık</div>
+              <div class="legend-pct" id="legend-sound-on">—</div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-name"><span class="legend-dot" style="background:var(--crimson)"></span>Sessiz İzleme</div>
+              <div class="legend-pct" id="legend-sound-off">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Sayfalara Göre Audio Kullanım Süresi</div>
+          <div class="chart-subtitle">Ortalama saniye</div>
+          <div class="chart-wrap"><canvas id="chart-audio-pages"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:1rem">
+        <div class="chart-title" style="margin-bottom:1rem">Sayfa Bazlı Ortalama Sesli Rehber Dinleme Süresi (sn)</div>
+        <div id="audio-bars"></div>
+      </div>
+    </div>
+
+    <!-- ══ BUTTONS ══ -->
+    <div class="panel" id="panel-buttons">
+      <div class="panel-header">
+        <h2>🖱️ Buton Tıklama Analizi</h2>
+        <p>Hangi butonlara ne sıklıkla basılıyor?</p>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Buton Tıklama Dağılımı</div>
+          <div class="chart-subtitle">En çok basılan butonlar</div>
+          <div class="chart-wrap"><canvas id="chart-btn-pie"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Buton Tıklamaları — Günlük Trend</div>
+          <div class="chart-subtitle">Son 7 gün</div>
+          <div class="chart-wrap"><canvas id="chart-btn-trend"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:1rem">
+        <div class="chart-title" style="margin-bottom:1rem">Buton Tıklama Oranları</div>
+        <div id="button-bars"></div>
+      </div>
+
+      <div class="data-table-wrap">
+        <div class="table-header">
+          <span class="table-title">Buton Detayları</span>
+        </div>
+        <div class="scroll-table">
+          <table>
+            <thead><tr>
+              <th>Buton</th><th>Sayfa</th><th>Toplam Tıklama</th><th>Günlük Ort.</th><th>CTR</th>
+            </tr></thead>
+            <tbody id="buttons-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DEVICES ══ -->
+    <div class="panel" id="panel-devices">
+      <div class="panel-header">
+        <h2>📱 Cihaz Dağılımı</h2>
+        <p>Ziyaretçilerin kullandığı platform ve tarayıcılar</p>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Platform Dağılımı</div>
+          <div class="chart-subtitle">Android / iOS / PC</div>
+          <div class="chart-wrap short"><canvas id="chart-device-type"></canvas></div>
+          <div class="donut-legend" id="device-legend"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Tarayıcı Dağılımı</div>
+          <div class="chart-subtitle">Kullanılan tarayıcılar</div>
+          <div class="chart-wrap short"><canvas id="chart-browser"></canvas></div>
+          <div class="donut-legend" id="browser-legend"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Ekran Çözünürlüğü</div>
+          <div class="chart-subtitle">En yaygın ekran boyutları</div>
+          <div class="chart-wrap short"><canvas id="chart-screen-size"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Ort. Gezi Süresi — Cihaza Göre</div>
+          <div class="chart-subtitle">Hangi cihazda daha uzun ziyaret?</div>
+          <div class="chart-wrap short"><canvas id="chart-duration-device"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ GUESTBOOK ══ -->
+    <div class="panel" id="panel-guestbook">
+      <div class="panel-header">
+        <h2>🖋️ Gönül Köprüsü — Ziyaretçi Defteri</h2>
+        <p>Mesaj istatistikleri ve son kayıtlar</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" style="--accent-color:var(--gold);--icon-bg:var(--gold-glow)">
+          <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+          <div class="stat-label">Toplam Mesaj</div>
+          <div class="stat-value" id="gb-total">—</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--teal);--icon-bg:var(--teal-glow)">
+          <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+          <div class="stat-label">Bu Ay</div>
+          <div class="stat-value" id="gb-month">—</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--indigo);--icon-bg:var(--indigo-glow)">
+          <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+          <div class="stat-label">Dönüşüm Oranı</div>
+          <div class="stat-value" id="gb-rate">—</div>
+          <div class="stat-sub">Ziyaretçi → mesaj bırakan</div>
+        </div>
+        <div class="stat-card" style="--accent-color:var(--green);--icon-bg:rgba(52,211,153,0.12)">
+          <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="stat-label">En Çok Şehir</div>
+          <div class="stat-value" style="font-size:1.2rem" id="gb-top-city">—</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card full-width">
+          <div class="chart-title">Günlük Mesaj Sayısı</div>
+          <div class="chart-subtitle">Son 30 gün</div>
+          <div class="chart-wrap"><canvas id="chart-gb-daily"></canvas></div>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <div class="table-header">
+          <span class="table-title">Son Mesajlar</span>
+          <span class="table-badge" id="gb-count-badge">— mesaj</span>
+        </div>
+        <div id="gb-messages-list" style="padding: 0.75rem 1rem;"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   FIREBASE CONFIG
+══════════════════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",
+  authDomain: "edirnesaglikmuze.firebaseapp.com",
+  projectId: "edirnesaglikmuze",
+  storageBucket: "edirnesaglikmuze.firebasestorage.app",
+  messagingSenderId: "707402210781",
+  appId: "1:707402210781:web:fb65c71ca2557575e4aa34"
+};
+
+let db = null;
+try {
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+} catch(e) { console.warn('Firebase init failed:', e); }
+
+/* ══════════════════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════════════════ */
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'kulliye2025';
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value.trim();
+  const err = document.getElementById('login-error');
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-app').style.display = 'block';
+    sessionStorage.setItem('admin_auth', '1');
+    initDashboard();
+  } else {
+    err.textContent = '⚠️ Kullanıcı adı veya şifre yanlış.';
+    setTimeout(() => err.textContent = '', 3000);
+  }
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogout() {
+  sessionStorage.removeItem('admin_auth');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-app').style.display = 'none';
+  document.getElementById('login-pass').value = '';
+}
+
+if (sessionStorage.getItem('admin_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-app').style.display = 'block';
+  document.addEventListener('DOMContentLoaded', initDashboard);
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════ */
+const PANEL_TITLES = {
+  overview: 'Genel Bakış',
+  live: '🟢 Canlı İzleme',
+  visitors: 'Ziyaretçi Analizi',
+  hourly: 'Saatlik & Isı Haritası',
+  pages: 'Sayfa Performansı',
+  audio: 'Sesli Rehber Analizi',
+  buttons: 'Buton Tıklamaları',
+  devices: 'Cihaz Dağılımı',
+  guestbook: 'Gönül Köprüsü',
+};
+
+let currentPanel = 'overview';
+
+function switchPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id)?.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.panel === id);
+  });
+  document.getElementById('topbar-title').textContent = PANEL_TITLES[id] || id;
+  currentPanel = id;
+  document.getElementById('sidebar')?.classList.remove('open');
+  renderPanel(id);
+}
+
+/* ══════════════════════════════════════════════════════
+   DATA GENERATION (Simulated + Firebase merge)
+══════════════════════════════════════════════════════ */
+
+function seed(val) {
+  let s = val;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+const rng = seed(42);
+
+function genVisitorTrend(days) {
+  const data = [];
+  let base = 80 + Math.floor(rng() * 60);
+  for (let i = 0; i < days; i++) {
+    base += (rng() - 0.48) * 20;
+    base = Math.max(20, Math.min(300, base));
+    const dow = new Date(Date.now() - (days - i) * 86400000).getDay();
+    const weekend = (dow === 0 || dow === 6) ? 1.4 : 1;
+    data.push(Math.round(base * weekend));
+  }
+  return data;
+}
+
+function getLast30Days() {
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000);
+    days.push(d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' }));
+  }
+  return days;
+}
+
+const DATA = {
+  visitors30: genVisitorTrend(30),
+  visitors12months: [520, 610, 580, 720, 890, 1100, 980, 850, 760, 680, 590, 640],
+  weekdays: [95, 120, 135, 145, 160, 210, 195],
+  hourly: Array.from({length:24}, (_,i) => {
+    if (i < 8) return Math.floor(rng()*8);
+    if (i < 10) return 20 + Math.floor(rng()*30);
+    if (i < 13) return 60 + Math.floor(rng()*50);
+    if (i < 15) return 70 + Math.floor(rng()*60);
+    if (i < 18) return 50 + Math.floor(rng()*40);
+    if (i < 20) return 20 + Math.floor(rng()*20);
+    return Math.floor(rng()*10);
+  }),
+  pages: {
+    labels: ['Müze Girişi','Sesli Tur','Darüşşifa','Medrese','İmaret','Cami','Gönül Köprüsü'],
+    visits: [1240, 980, 860, 620, 540, 490, 380],
+    avgDuration: [1.2, 8.4, 6.2, 4.8, 3.5, 3.1, 5.6],
+    maxDuration: [4.5, 28.0, 22.0, 18.5, 12.0, 11.0, 20.0],
+    exitRate: [8, 12, 15, 22, 28, 30, 45],
+  },
+  audio: {
+    soundOnPct: 64,
+    avgListen: { 'Müze Girişi':18,'Sesli Tur':145,'Darüşşifa':112,'Medrese':88,'İmaret':72,'Cami':65,'Gönül Köprüsü':95 }
+  },
+  buttons: {
+    labels: ['Turu Başlat','İleri →','← Geri','Ses Aç/Kapa','AI Rehber','Defter Gönder','Galeri ❯','Galeri ❮'],
+    clicks: [980, 3420, 2180, 640, 290, 380, 1250, 890],
+    pages: ['Müze Girişi','Sesli Tur','Sesli Tur','Tüm Sayfalar','Sesli Tur','Gönül Köprüsü','Sesli Tur','Sesli Tur'],
+  },
+  devices: {
+    types: ['Android', 'iOS', 'PC / Mac'],
+    counts: [480, 320, 200],
+    colors: ['#34d399','#818cf8','#fb923c'],
+    browsers: ['Chrome','Safari','Firefox','Samsung Browser','Edge','Diğer'],
+    browserCounts: [540, 280, 90, 70, 50, 30],
+    screenSizes: ['360-480px','481-768px','769-1024px','1025px+'],
+    screenCounts: [420, 380, 120, 80],
+    avgDuration: [7.4, 8.1, 6.2],
+  },
+  guestbook: {
+    total: 0, // will be loaded from Firebase
+    monthly: 28,
+    cities: {'İstanbul':45,'Ankara':32,'İzmir':28,'Edirne':22,'Bursa':18,'Diğer':55},
+    daily30: Array.from({length:30}, () => Math.floor(rng()*6)),
+  },
+};
+
+/* ══════════════════════════════════════════════════════
+   CHART DEFAULTS
+══════════════════════════════════════════════════════ */
+Chart.defaults.color = '#9098b0';
+Chart.defaults.font.family = "'Space Grotesk', sans-serif";
+Chart.defaults.font.size = 11;
+
+const GRID = {
+  color: 'rgba(255,255,255,0.04)',
+  drawBorder: false,
+};
+
+const AXIS_STYLE = {
+  grid: GRID,
+  ticks: { color: '#5a6080', maxTicksLimit: 6 },
+  border: { display: false },
+};
+
+let charts = {};
+
+function makeChart(id, cfg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (charts[id]) { charts[id].destroy(); }
+  charts[id] = new Chart(el, cfg);
+  return charts[id];
+}
+
+/* ══════════════════════════════════════════════════════
+   PANEL RENDERERS
+══════════════════════════════════════════════════════ */
+
+function renderPanel(id) {
+  switch(id) {
+    case 'overview':   renderOverview(); break;
+    case 'live':       renderLive(); break;
+    case 'visitors':   renderVisitors(); break;
+    case 'hourly':     renderHourly(); break;
+    case 'pages':      renderPages(); break;
+    case 'audio':      renderAudio(); break;
+    case 'buttons':    renderButtons(); break;
+    case 'devices':    renderDevices(); break;
+    case 'guestbook':  renderGuestbook(); break;
+  }
+}
+
+/* ── OVERVIEW ── */
+function renderOverview() {
+  const total = DATA.visitors30.reduce((a,b)=>a+b,0);
+  setText('ov-total-visitors', total.toLocaleString('tr'));
+  setText('ov-visitors-trend', '↑ geçen aya göre +12%');
+  setText('ov-pageviews', (total * 3.2).toFixed(0).toLocaleString('tr'));
+  setText('ov-avg-pages', '3.2');
+  setText('ov-avg-duration', '06:48');
+  setText('ov-audio-rate', '64%');
+  setText('ov-audio-pct', '64');
+  setText('ov-guestbook', '—');
+  setText('ov-clicks', '9.950');
+  setText('ov-top-btn', 'İleri →');
+
+  loadGuestbookTotal(n => {
+    setText('ov-guestbook', n);
+    setText('ov-gb-trend', '↑ bu ay +' + DATA.guestbook.monthly + ' yeni mesaj');
+  });
+
+  const days = getLast30Days();
+  const visitors = DATA.visitors30;
+  const pageviews = visitors.map(v => Math.round(v * (3 + rng() * 0.5)));
+
+  makeChart('chart-visitors-trend', {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: [{
+        label: 'Ziyaretçi',
+        data: visitors,
+        borderColor: '#c9a227',
+        backgroundColor: 'rgba(201,162,39,0.08)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 2,
+        borderWidth: 2,
+      },{
+        label: 'Sayfa Görüntüleme',
+        data: pageviews,
+        borderColor: '#2dd4bf',
+        backgroundColor: 'rgba(45,212,191,0.05)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 2,
+        borderWidth: 2,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10}}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+
+  const thisWeek = visitors.slice(-7);
+  const lastWeek = visitors.slice(-14,-7);
+  const wDays = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  makeChart('chart-weekly-compare', {
+    type: 'bar',
+    data: {
+      labels: wDays,
+      datasets: [{
+        label: 'Bu Hafta',
+        data: thisWeek,
+        backgroundColor: 'rgba(201,162,39,0.7)',
+        borderRadius: 4,
+      },{
+        label: 'Geçen Hafta',
+        data: lastWeek,
+        backgroundColor: 'rgba(45,212,191,0.35)',
+        borderRadius: 4,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10}}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+
+  const months = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  makeChart('chart-monthly', {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Aylık Ziyaretçi',
+        data: DATA.visitors12months,
+        backgroundColor: months.map((_,i) => `rgba(201,162,39,${0.3 + i*0.06})`),
+        borderRadius: 5,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+}
+
+/* ── LIVE ── */
+let liveInterval = null;
+
+function renderLive() {
+  clearInterval(liveInterval);
+  updateLiveNumbers();
+  renderRealtimeChart();
+  renderLiveSessions();
+  liveInterval = setInterval(() => {
+    updateLiveNumbers();
+    updateRealtimeChart();
+  }, 30000);
+}
+
+function updateLiveNumbers() {
+  const now = 3 + Math.floor(Math.random() * 8);
+  setText('live-now', now);
+  const hour = Math.floor(DATA.visitors30[29] * 0.3 + Math.random() * 15);
+  setText('live-today', DATA.visitors30[29]);
+  setText('live-hour', hour);
+  setText('live-audio-active', Math.floor(now * 0.65));
+  setText('live-tour-active', Math.floor(now * 0.8));
+}
+
+const realtimeData = Array.from({length:60}, (_,i) => {
+  const h = new Date().getHours();
+  const base = DATA.hourly[h] || 5;
+  return Math.max(0, Math.round(base * (0.5 + Math.random())));
+});
+const realtimeLabels = Array.from({length:60}, (_,i) => {
+  const m = new Date(Date.now() - (59 - i) * 60000);
+  return m.getMinutes() + ':' + String(m.getSeconds()).padStart(2,'0');
+}).map((_,i) => i % 10 === 0 ? _ : '');
+
+function renderRealtimeChart() {
+  makeChart('chart-realtime', {
+    type: 'line',
+    data: {
+      labels: Array.from({length:60},(_,i)=>i%10===0?`-${60-i}dk`:''),
+      datasets: [{
+        label: 'Aktif Kullanıcı',
+        data: realtimeData,
+        borderColor: '#2dd4bf',
+        backgroundColor: 'rgba(45,212,191,0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      animation: { duration: 500 },
+      plugins:{ legend:{display:false} },
+      scales:{ x: AXIS_STYLE, y: { ...AXIS_STYLE, min:0 } }
+    }
+  });
+}
+
+function updateRealtimeChart() {
+  realtimeData.shift();
+  const h = new Date().getHours();
+  const base = DATA.hourly[h] || 5;
+  realtimeData.push(Math.max(0, Math.round(base * (0.5 + Math.random()))));
+  if (charts['chart-realtime']) {
+    charts['chart-realtime'].data.datasets[0].data = [...realtimeData];
+    charts['chart-realtime'].update('none');
+  }
+  updateLiveNumbers();
+}
+
+const PAGES_NAMES = ['Müze Girişi','Sesli Tur — Giriş','Darüşşifa','Medrese','İmaret','Gönül Köprüsü'];
+const DEVICE_NAMES = ['📱 Android','🍎 iOS','💻 PC'];
+
+function renderLiveSessions() {
+  const tbody = document.getElementById('live-sessions-body');
+  const count = 3 + Math.floor(Math.random() * 5);
+  setText('active-session-count', count + ' oturum');
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    const secs = Math.floor(Math.random() * 600 + 30);
+    const min = Math.floor(secs/60), sec = secs%60;
+    const page = PAGES_NAMES[Math.floor(Math.random()*PAGES_NAMES.length)];
+    const dev = DEVICE_NAMES[Math.floor(Math.random()*3)];
+    const sound = Math.random() > 0.35 ? '<span style="color:var(--green)">🔊 Açık</span>' : '<span style="color:var(--text3)">🔇 Kapalı</span>';
+    const step = Math.floor(Math.random()*9)+1;
+    html += `<tr>
+      <td style="color:var(--text3);font-family:monospace;font-size:0.7rem">#${Math.random().toString(36).substr(2,8).toUpperCase()}</td>
+      <td>${min}:${String(sec).padStart(2,'0')}</td>
+      <td>${page}</td>
+      <td style="font-size:0.82rem">${dev}</td>
+      <td>${sound}</td>
+      <td style="color:var(--gold2)">${step}/9</td>
+    </tr>`;
+  }
+  tbody.innerHTML = html;
+}
+
+/* ── VISITORS ── */
+function renderVisitors() {
+  const days = getLast30Days();
+  const v = DATA.visitors30;
+  const total = v.reduce((a,b)=>a+b,0);
+  const week = v.slice(-7).reduce((a,b)=>a+b,0);
+  const month = total;
+
+  setText('v-today', v[v.length-1]);
+  setText('v-week', week);
+  setText('v-month', month.toLocaleString('tr'));
+  setText('v-bounce', '%' + (18 + Math.floor(rng()*8)));
+  document.getElementById('v-today-trend').textContent = '↑ dünden +' + Math.floor(rng()*15) + '%';
+  document.getElementById('v-today-trend').className = 'stat-trend trend-up';
+  document.getElementById('v-week-trend').textContent = '↑ geçen haftadan +8%';
+  document.getElementById('v-week-trend').className = 'stat-trend trend-up';
+  document.getElementById('v-month-trend').textContent = '↑ geçen aydan +12%';
+  document.getElementById('v-month-trend').className = 'stat-trend trend-up';
+
+  makeChart('chart-daily-visitors', {
+    type: 'bar',
+    data: {
+      labels: days,
+      datasets: [{
+        label: 'Ziyaretçi',
+        data: v,
+        backgroundColor: 'rgba(201,162,39,0.6)',
+        borderRadius: 3,
+        order: 2,
+      },{
+        type:'line',
+        label: 'Trend',
+        data: v.map((_,i,a) => {
+          const s = a.slice(Math.max(0,i-3), i+4);
+          return s.reduce((x,y)=>x+y)/s.length;
+        }),
+        borderColor: '#2dd4bf',
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.4,
+        fill: false,
+        order: 1,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10}}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+
+  const wDays = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  makeChart('chart-weekday', {
+    type: 'radar',
+    data: {
+      labels: wDays,
+      datasets: [{
+        label: 'Ortalama Ziyaret',
+        data: DATA.weekdays,
+        borderColor: '#c9a227',
+        backgroundColor: 'rgba(201,162,39,0.15)',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#c9a227',
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        r:{
+          grid:{color:'rgba(255,255,255,0.06)'},
+          ticks:{display:false},
+          angleLines:{color:'rgba(255,255,255,0.06)'},
+          pointLabels:{color:'#9098b0', font:{size:11}},
+        }
+      }
+    }
+  });
+
+  const months = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  makeChart('chart-monthly-visitors', {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Aylık Ziyaretçi',
+        data: DATA.visitors12months,
+        borderColor: '#818cf8',
+        backgroundColor: 'rgba(129,140,248,0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: '#818cf8',
+        borderWidth: 2,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+}
+
+/* ── HOURLY ── */
+function renderHourly() {
+  const h = DATA.hourly;
+  const labels = Array.from({length:24}, (_,i) => i + ':00');
+
+  makeChart('chart-hourly-today', {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Ziyaretçi',
+        data: h,
+        backgroundColor: h.map(v => {
+          const max = Math.max(...h);
+          const ratio = v / max;
+          return `rgba(201,162,39,${0.2 + ratio * 0.8})`;
+        }),
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{ x: AXIS_STYLE, y: AXIS_STYLE }
+    }
+  });
+
+  buildHeatmap();
+}
+
+function buildHeatmap() {
+  const grid = document.getElementById('heatmap-grid');
+  if (!grid) return;
+  const lbls = document.getElementById('heatmap-hour-labels');
+  if (lbls) {
+    let hHtml = '<div></div>';
+    for (let h = 0; h < 24; h++) {
+      hHtml += `<div class="hm-h-label" style="grid-column:1">${h}</div>`;
+    }
+    lbls.innerHTML = hHtml;
+    lbls.style.gridTemplateColumns = '40px repeat(24, 1fr)';
+  }
+
+  const days = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  let html = '';
+  const rng2 = seed(99);
+
+  for (let d = 0; d < 7; d++) {
+    html += `<div class="hm-label">${days[d]}</div>`;
+    for (let h = 0; h < 24; h++) {
+      const base = DATA.hourly[h] || 0;
+      const weekend = (d >= 5) ? 1.4 : 1;
+      const val = Math.round(base * weekend * (0.6 + rng2() * 0.8));
+      const max = 120;
+      const ratio = Math.min(val / max, 1);
+      let bg;
+      if (ratio < 0.01) bg = 'var(--bg3)';
+      else if (ratio < 0.25) bg = `rgba(201,162,39,${0.15 + ratio*0.8})`;
+      else if (ratio < 0.5) bg = `rgba(201,162,39,${0.35 + ratio*0.6})`;
+      else if (ratio < 0.75) bg = `rgba(201,162,39,${0.6 + ratio*0.3})`;
+      else bg = `rgba(201,162,39,${0.8 + ratio*0.2})`;
+      html += `<div class="hm-cell" style="background:${bg}" title="${days[d]} ${h}:00 — ${val} ziyaretçi"></div>`;
+    }
+  }
+  grid.innerHTML = html;
+}
+
+/* ── PAGES ── */
+function renderPages() {
+  const p = DATA.pages;
+
+  makeChart('chart-page-visits', {
+    type: 'doughnut',
+    data: {
+      labels: p.labels,
+      datasets: [{
+        data: p.visits,
+        backgroundColor: ['#c9a227','#2dd4bf','#818cf8','#34d399','#fb923c','#e05050','#f472b6'],
+        borderWidth: 2,
+        borderColor: '#151820',
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'right', labels:{boxWidth:10, font:{size:10}} } }
+    }
+  });
+
+  makeChart('chart-page-duration', {
+    type: 'bar',
+    data: {
+      labels: p.labels.map(l => l.length > 10 ? l.substr(0,10)+'…' : l),
+      datasets: [{
+        label: 'Ort. Kalma (dk)',
+        data: p.avgDuration,
+        backgroundColor: p.avgDuration.map(v => `rgba(129,140,248,${0.3 + v/10})`),
+        borderRadius: 5,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{ x: AXIS_STYLE, y: AXIS_STYLE }
+    }
+  });
+
+  const bars = document.getElementById('page-bars');
+  const maxV = Math.max(...p.avgDuration);
+  bars.innerHTML = p.labels.map((l,i) => `
+    <div class="bar-row">
+      <div class="bar-label" title="${l}">${l}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${p.avgDuration[i]/maxV*100}%;background:linear-gradient(90deg,var(--indigo),var(--teal))"></div></div>
+      <div class="bar-val">${p.avgDuration[i].toFixed(1)} dk</div>
+    </div>
+  `).join('');
+
+  const tbody = document.getElementById('pages-table-body');
+  tbody.innerHTML = p.labels.map((l,i) => `
+    <tr>
+      <td style="font-weight:600;color:var(--text)">${l}</td>
+      <td>${p.visits[i].toLocaleString('tr')}</td>
+      <td>${p.avgDuration[i].toFixed(1)} dk</td>
+      <td>${p.maxDuration[i].toFixed(1)} dk</td>
+      <td>${p.exitRate[i]}%</td>
+      <td><span style="color:${p.exitRate[i]<25?'var(--green)':p.exitRate[i]<35?'var(--orange)':'var(--crimson)'}">●</span> ${p.exitRate[i]<25?'İyi':p.exitRate[i]<35?'Orta':'Yüksek'}</td>
+    </tr>
+  `).join('');
+}
+
+/* ── AUDIO ── */
+function renderAudio() {
+  const on = DATA.audio.soundOnPct;
+  const off = 100 - on;
+  setText('a-sound-on', on + '%');
+  setText('a-sound-off', off + '%');
+  setText('a-avg-listen', '87 sn');
+  setText('a-tts-rate', '38%');
+  setText('legend-sound-on', on + '%');
+  setText('legend-sound-off', off + '%');
+
+  makeChart('chart-audio-split', {
+    type: 'doughnut',
+    data: {
+      labels: ['Ses Açık','Sessiz'],
+      datasets: [{
+        data: [on, off],
+        backgroundColor: ['#34d399','#e05050'],
+        borderWidth: 2,
+        borderColor: '#151820',
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      cutout: '68%',
+    }
+  });
+
+  const al = DATA.audio.avgListen;
+  const audioLabels = Object.keys(al);
+  const audioVals = Object.values(al);
+
+  makeChart('chart-audio-pages', {
+    type: 'bar',
+    data: {
+      labels: audioLabels.map(l => l.length > 8 ? l.substr(0,8)+'…' : l),
+      datasets: [{
+        label: 'Ort. Dinleme (sn)',
+        data: audioVals,
+        backgroundColor: audioVals.map(v => `rgba(52,211,153,${0.3 + v/200})`),
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{ x: AXIS_STYLE, y: AXIS_STYLE }
+    }
+  });
+
+  const bars = document.getElementById('audio-bars');
+  const maxV = Math.max(...audioVals);
+  bars.innerHTML = audioLabels.map((l,i) => `
+    <div class="bar-row">
+      <div class="bar-label" title="${l}">${l}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${audioVals[i]/maxV*100}%;background:linear-gradient(90deg,var(--green),var(--teal))"></div></div>
+      <div class="bar-val">${audioVals[i]} sn</div>
+    </div>
+  `).join('');
+}
+
+/* ── BUTTONS ── */
+function renderButtons() {
+  const b = DATA.buttons;
+  const total = b.clicks.reduce((a,c)=>a+c,0);
+
+  makeChart('chart-btn-pie', {
+    type: 'doughnut',
+    data: {
+      labels: b.labels,
+      datasets: [{
+        data: b.clicks,
+        backgroundColor: ['#c9a227','#2dd4bf','#818cf8','#34d399','#fb923c','#e05050','#f472b6','#facc15'],
+        borderWidth: 2,
+        borderColor: '#151820',
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'right', labels:{boxWidth:10,font:{size:10}} } }
+    }
+  });
+
+  const days7 = Array.from({length:7}, (_,i) => {
+    const d = new Date(Date.now() - (6-i)*86400000);
+    return d.toLocaleDateString('tr-TR',{weekday:'short'});
+  });
+  const trendsData = b.labels.slice(0,3).map(l => ({
+    label: l,
+    data: Array.from({length:7}, () => Math.floor(Math.random()*200+50)),
+  }));
+  const colors = ['#c9a227','#2dd4bf','#818cf8'];
+  makeChart('chart-btn-trend', {
+    type: 'line',
+    data: {
+      labels: days7,
+      datasets: trendsData.map((d,i) => ({
+        ...d,
+        borderColor: colors[i],
+        backgroundColor: 'transparent',
+        tension: 0.4,
+        pointRadius: 3,
+        borderWidth: 2,
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:10}}},
+      scales:{ x: AXIS_STYLE, y: AXIS_STYLE }
+    }
+  });
+
+  const bars = document.getElementById('button-bars');
+  bars.innerHTML = b.labels.map((l,i) => `
+    <div class="bar-row">
+      <div class="bar-label" title="${l}">${l}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${b.clicks[i]/b.clicks[0]*100}%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
+      <div class="bar-val">${b.clicks[i].toLocaleString('tr')}</div>
+    </div>
+  `).join('');
+
+  const tbody = document.getElementById('buttons-table-body');
+  tbody.innerHTML = b.labels.map((l,i) => `
+    <tr>
+      <td style="font-weight:600;color:var(--text)">${l}</td>
+      <td style="color:var(--text3)">${b.pages[i]}</td>
+      <td>${b.clicks[i].toLocaleString('tr')}</td>
+      <td>${Math.round(b.clicks[i]/30)}</td>
+      <td>${(b.clicks[i]/total*100).toFixed(1)}%</td>
+    </tr>
+  `).join('');
+}
+
+/* ── DEVICES ── */
+function renderDevices() {
+  const d = DATA.devices;
+
+  makeChart('chart-device-type', {
+    type: 'doughnut',
+    data: {
+      labels: d.types,
+      datasets: [{
+        data: d.counts,
+        backgroundColor: d.colors,
+        borderWidth: 2,
+        borderColor: '#151820',
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, cutout:'65%' }
+  });
+
+  const devLeg = document.getElementById('device-legend');
+  const devTotal = d.counts.reduce((a,b)=>a+b,0);
+  devLeg.innerHTML = d.types.map((l,i) => `
+    <div class="legend-row">
+      <div class="legend-name"><span class="legend-dot" style="background:${d.colors[i]}"></span>${l}</div>
+      <div class="legend-pct">${(d.counts[i]/devTotal*100).toFixed(0)}%</div>
+    </div>
+  `).join('');
+
+  const bColors = ['#c9a227','#818cf8','#fb923c','#34d399','#2dd4bf','#9098b0'];
+  makeChart('chart-browser', {
+    type: 'doughnut',
+    data: {
+      labels: d.browsers,
+      datasets: [{
+        data: d.browserCounts,
+        backgroundColor: bColors,
+        borderWidth: 2,
+        borderColor: '#151820',
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, cutout:'65%' }
+  });
+
+  const brTotal = d.browserCounts.reduce((a,b)=>a+b,0);
+  document.getElementById('browser-legend').innerHTML = d.browsers.map((l,i) => `
+    <div class="legend-row">
+      <div class="legend-name"><span class="legend-dot" style="background:${bColors[i]}"></span>${l}</div>
+      <div class="legend-pct">${(d.browserCounts[i]/brTotal*100).toFixed(0)}%</div>
+    </div>
+  `).join('');
+
+  makeChart('chart-screen-size', {
+    type: 'bar',
+    data: {
+      labels: d.screenSizes,
+      datasets: [{
+        label: 'Kullanıcı',
+        data: d.screenCounts,
+        backgroundColor: ['rgba(52,211,153,0.7)','rgba(129,140,248,0.7)','rgba(251,146,60,0.7)','rgba(201,162,39,0.7)'],
+        borderRadius: 4,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+
+  makeChart('chart-duration-device', {
+    type: 'bar',
+    data: {
+      labels: d.types,
+      datasets: [{
+        label: 'Ort. Süre (dk)',
+        data: d.avgDuration,
+        backgroundColor: d.colors.map(c => c + 'aa'),
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: d.colors,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+}
+
+/* ── GUESTBOOK ── */
+function renderGuestbook() {
+  const days30 = getLast30Days();
+  const gbDaily = DATA.guestbook.daily30;
+
+  makeChart('chart-gb-daily', {
+    type: 'bar',
+    data: {
+      labels: days30,
+      datasets: [{
+        label: 'Mesaj',
+        data: gbDaily,
+        backgroundColor: 'rgba(201,162,39,0.65)',
+        borderRadius: 3,
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x: AXIS_STYLE, y: AXIS_STYLE } }
+  });
+
+  loadGuestbookMessages();
+}
+
+function loadGuestbookTotal(cb) {
+  if (!db) { cb('—'); return; }
+  db.collection('ziyaretci_notlari').get()
+    .then(snap => {
+      const n = snap.size;
+      DATA.guestbook.total = n;
+      cb(n);
+    })
+    .catch(() => cb('—'));
+}
+
+function loadGuestbookMessages() {
+  if (!db) {
+    document.getElementById('gb-messages-list').innerHTML = '<p style="color:var(--text3);font-size:0.82rem">Firebase bağlantısı bekleniyor…</p>';
+    return;
+  }
+
+  setText('gb-total', '—');
+  setText('gb-month', DATA.guestbook.monthly);
+  setText('gb-rate', '%' + (DATA.guestbook.monthly / Math.round(DATA.visitors30.reduce((a,b)=>a+b,0)/30) * 100).toFixed(1));
+
+  const cities = DATA.guestbook.cities;
+  const topCity = Object.entries(cities).sort((a,b)=>b[1]-a[1])[0];
+  setText('gb-top-city', topCity ? topCity[0] : '—');
+
+  db.collection('ziyaretci_notlari')
+    .orderBy('tarih', 'desc')
+    .limit(20)
+    .get()
+    .then(snap => {
+      setText('gb-total', snap.size);
+      setText('gb-count-badge', snap.size + ' mesaj');
+      document.getElementById('gb-count-badge').textContent = snap.size + ' mesaj';
+
+      const list = document.getElementById('gb-messages-list');
+      if (snap.empty) {
+        list.innerHTML = '<p style="color:var(--text3);font-size:0.82rem;padding:0.5rem 0">Henüz mesaj yok.</p>';
+        return;
+      }
+
+      list.innerHTML = '';
+      snap.forEach(doc => {
+        const d = doc.data();
+        const ts = d.tarih ? new Date(d.tarih.seconds * 1000).toLocaleDateString('tr-TR', {day:'2-digit',month:'short',year:'numeric'}) : '';
+        const div = document.createElement('div');
+        div.className = 'gb-msg';
+        div.innerHTML = `
+          <div class="gb-meta">
+            <span class="gb-name">${esc(d.isim || 'Anonim')}</span>
+            <span class="gb-city">📍 ${esc(d.sehir || 'Belirtilmedi')}</span>
+            <span class="gb-date">${ts}</span>
+          </div>
+          <div class="gb-text">${esc(d.mesaj || '')}</div>
+        `;
+        list.appendChild(div);
+      });
+    })
+    .catch(err => {
+      document.getElementById('gb-messages-list').innerHTML = `<p style="color:var(--crimson);font-size:0.82rem">Hata: ${err.message}</p>`;
+    });
+}
+
+/* ══════════════════════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════════════════════ */
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateRange() { renderPanel(currentPanel); }
+
+function refreshData() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spin');
+  setTimeout(() => btn.classList.remove('spin'), 600);
+  renderPanel(currentPanel);
+}
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+function initDashboard() {
+  renderOverview();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('admin_auth') === '1') {
+    initDashboard();
+  }
+});
+</script>
+</body>
+</html>
