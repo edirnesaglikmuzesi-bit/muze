@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müzikle Tedavi - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+      /* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+:root { 
+    --gold: #d4af37; 
+    --gold-bright: #f1d592;
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+    background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
+    padding-top: 130px;
+    color: #2b2b2b;
+}
+
+/* --- 2. NAVİGASYON --- */
+.nav-wrapper { 
+    width: 100%; display: flex; justify-content: center; padding: 0 20px; 
+    position: fixed; top: 0; left: 0; z-index: 2000; 
+}
+
+.nav {
+    width: 100%; max-width: 1240px; background-color: var(--dark);
+    border: 2px solid var(--gold); border-top: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: var(--gold);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 30px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+}
+
+.logo-subtitle { font-family: 'Cinzel'; font-size: 16px; font-weight: 700; }
+
+.menu-btn { 
+    background: transparent; border: 1px solid var(--gold); color: var(--gold); 
+    cursor: pointer; padding: 8px 18px; font-family: 'Cinzel'; border-radius: 4px; 
+    transition: 0.3s ease;
+}
+
+.menu-btn:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 15px var(--gold); }
+
+/* DROPDOWN */
+#globalDropdown {
+    display: none; position: absolute; right: 30px; top: calc(100% + 10px);
+    background: var(--dark); border: 2px solid var(--gold);
+    min-width: 280px; max-height: 75vh; overflow-y: auto; 
+    border-radius: 8px; z-index: 3000; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
+#globalDropdown.active { display: block; }
+.dropdown-link { display: block; padding: 12px 25px; color: var(--gold) !important; text-decoration: none; font-family: 'Cinzel'; font-size: 13px; border-bottom: 1px solid rgba(212,175,55,0.1); }
+.dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; color: #fff !important; }
+
+/* --- 3. BANNER (YAZILAR DÜZELTİLDİ) --- */
+.banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.banner-box { 
+    position: relative; width: 100%; height: 400px; 
+    border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; 
+}
+
+.banner-box img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
+
+.banner-overlay { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    z-index: 5; text-align: center; color: #fff; padding: 20px;
+}
+
+.banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+.banner-overlay p { font-family: 'Cinzel'; font-size: 18px; color: var(--gold); margin-top: 15px; letter-spacing: 4px; }
+
+/* --- 4. İÇERİK KARTI VE KÖŞE SÜSLEMELERİ --- */
+.container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.full-card {
+    background: var(--parchment); border: 2px solid var(--gold);
+    border-radius: 12px; position: relative; margin-bottom: 40px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.corner-frame { position: absolute; width: 75px; height: 75px; z-index: 10; pointer-events: none; }
+.t-l { top: 0; left: 0; }
+.t-r { top: 0; right: 0; }
+.b-l { bottom: 0; left: 0; }
+.b-r { bottom: 0; right: 0; }
+
+.main-title { padding: 45px 20px; text-align: center; font-family: 'Cinzel'; background: var(--dark); color: var(--gold); border-bottom: 2px solid var(--gold); position: relative; z-index: 2; }
+.content-area { padding: 30px 20px; line-height: 1.8; font-size: 18px; color: #2b2b2b; position: relative; z-index: 2; }
+@media (min-width: 768px) { .content-area { padding: 50px 100px; } }
+
+/* --- 5. 3D KABARTMA GÖRSEL --- */
+.small-img-wrapper { padding: 50px 15px; text-align: center; display: flex; justify-content: center; perspective: 1000px; }
+.small-img-wrapper img { 
+    width: 600px; height: 400px; object-fit: cover; border-radius: 6px; 
+    border: 1px solid rgba(212, 175, 55, 0.4); display: block; transition: var(--transition);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3);
+    transform: rotateX(2deg);
+}
+.small-img-wrapper img:hover {
+    transform: scale(1.04) translateY(-15px) rotateX(0deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px rgba(212, 175, 55, 0.3);
+    border-color: var(--gold-bright);
+}
+
+/* --- 6. TABLO VE KART SONU (FOOTER) --- */
+.table-wrap { overflow-x: auto; margin: 35px 0; border: 1px solid var(--gold); border-radius: 8px; background: #fff; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th { background: var(--dark); color: var(--gold); padding: 18px; text-align: left; font-family: 'Cinzel'; }
+td { padding: 15px; border-bottom: 1px solid #eee; }
+
+/* Kartın içindeki en alt kısım */
+.card-footer { 
+    padding: 40px; background: var(--dark); color: var(--gold); 
+    text-align: center; font-family: 'Cinzel'; border-top: 2px solid var(--gold); 
+    position: relative; z-index: 2;
+}
+
+/* Sayfanın en altındaki ana footer */
+.site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
+.site-footer { 
+    width: 100%; max-width: 1240px; background: var(--dark); 
+    border: 2px solid var(--gold); border-radius: 15px; 
+    padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
+}
+
+/* --- 7. MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .banner-overlay h1 { font-size: 24px; letter-spacing: 5px; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: 160px; }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+}
+    </style>
+</head>
+<body>
+
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <div class="logo">
+                <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+                <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            </div>
+            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+            <div id="globalDropdown">
+                 <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+                <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
+                <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
+                <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
+                <a href="../medrese/medrese.html" class="dropdown-link">Tıp Medresesi</a>
+                <a href="../hastane/hastane.html" class="dropdown-link">Darüşşifa</a>
+                <a href="../imaret/imaret.html" class="dropdown-link">İmarethane</a>
+                <a href="../music/music.html" class="dropdown-link">Müzikle Tedavi</a>
+                <a href="../geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
+                <a href="../galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
+                <a href="../siir/siir.html" class="dropdown-link">Sarmaşık</a>
+                <a href="../oduller/oduller.html" class="dropdown-link">Ödüller</a>
+                <a href="../personel/personel.html" class="dropdown-link">Personelimiz</a>
+                <a href="../haberler/haberler.html" class="dropdown-link">Haberler</a>
+                <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
+                 <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
+                <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
+            </div>
+        </nav>
+    </div>
+
+   <div class="banner-container">
+        <div class="banner-box">
+            <img src="../assets/banner.webp" alt="Külliye Manzarası">
+            <div class="banner-overlay">
+                <h1>MÜZİKLE TEDAVİ</h1>
+                <p>"Hastalara deva, dertlere şifa, divanelerin ruhuna gıda"</p>
+            </div>
+        </div>
+    </div>
+
+ <div class="container">
+    <div class="full-card">
+        <img src="../assets/cornerleftup.png" class="corner-frame t-l" alt="Süsleme">
+        <img src="../assets/cornerrightup.png" class="corner-frame t-r" alt="Süsleme">
+        <img src="../assets/cornerleft.png" class="corner-frame b-l" alt="Süsleme">
+        <img src="../assets/cornerright.png" class="corner-frame b-r" alt="Süsleme">
+
+        <h2 class="main-title">MÜZİĞİN ŞİFA GÜCÜ: RUHUN MUSİKİYLE ŞİFASI</h2>
+
+        <div class="content-area" style="text-align: justify;">
+            <p style="text-align: center; font-weight: bold; color: var(--v-red); margin-bottom: 35px; font-size: 22px; text-transform: uppercase;">
+                "SANAT VE TIP ARASINDA BİR KÖPRÜ"
+            </p>
+
+            <p style="margin-bottom: 25px;">
+                <strong>Müzikle tedavi</strong>, çok eski çağlardan beri çeşitli toplumlarda yardımcı tedavi araçlarından biri olarak kullanılmıştır. Türk toplumlarında da Orta Asya’dan ve Şamanlardan başlayan bu gelenek, oradan Selçuklu Darüşşifaları aracılığıyla Anadolu’ya da gelmiştir. Şam’da bulunan <strong>Nurettin Zengi Darüşşifası</strong> bunun bilinen ilk örneklerinden biridir.
+            </p>
+
+            <p style="margin-bottom: 25px;">
+                Edirne <strong>Sultan II. Bayezid Darüşşifası</strong> musikiyle hasta tedavisinin yapıldığı seçkin kurumlardan biridir. Özellikle hastane mimarisinde bir <strong>müzik sahnesinin</strong> düşünülüp uygulanmış olması son derece ilginçtir. 10 kişiden oluşan hanende ve sazende grubu haftanın belirli günlerinde bu sahnede yer alır ve çoğu müzisyen olan hekimlerin önerisiyle her hastalığa göre farklı makamlar çalıp söylerdi.
+            </p>
+
+           <div class="small-img-wrapper" style="text-align: center;">
+                 <img src="../muzik/darussifa_ic_mekan.jpg" alt="Darüşşifa Müzik Sahnesi" style="max-width: 100%; height: auto;">
+            </div>
+
+
+            <p style="margin-bottom: 25px;">
+                Osmanlı tıbbında müzik, yalnızca bir sanat değil; aynı zamanda <strong>tedavinin önemli bir parçası</strong> olarak kabul edilmiştir. Şair-hekim <strong>Şuuri Hasan Efendi</strong> (ö. 1639), <em style="color: var(--v-red);">“Tâdilü’l-Emzice”</em> adlı eserinde müzik makamlarının insan sağlığı üzerindeki etkilerini ayrıntılı biçimde ele almıştır. Her makamın, insan ruhu ve bedeni üzerinde farklı etkiler oluşturduğuna inanılmış; bu nedenle hastalıklara göre özel makamlar kullanılmıştır.
+            </p>
+
+            <h3 style="color: #000; margin-bottom: 20px; text-transform: uppercase; border-bottom: 2px solid var(--gold); padding-bottom: 5px;">HER HASTALIĞA BİR MAKAM</h3>
+            
+            <p style="margin-bottom: 25px;">
+                Osmanlı hekimliğinde belirli rahatsızlıklar için önerilen bazı makamlar ve etkileri şunlardır. Aşağıdaki listeden makamları dinleyebilir, tedavi alanlarını inceleyebilirsiniz:
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 25%; background: var(--dark); color: var(--gold);">Makam</th>
+                            <th style="width: 45%; background: var(--dark); color: var(--gold);">Tedavi Ettiği Durum / Etkisi</th>
+                            <th style="width: 30%; background: var(--dark); color: var(--gold);">Dinle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Rast Makamı</strong></td>
+                            <td>Felç ve sinirsel rahatsızlıklara iyi gelir.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/rast.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Irak Makamı</strong></td>
+                            <td>Hararetli (ateşli) mizaca, sersam (beyin iltihabı) ve çarpıntıya faydalıdır.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/irak.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>İsfahan Makamı</strong></td>
+                            <td>Zihni açar, zekâyı güçlendirir ve hafızayı tazeler.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/isfahan.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Zirefkend Makamı</strong></td>
+                            <td>Sırt ve eklem ağrıları ile kulunç tedavisinde etkilidir.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/zirefkend.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rehavi Makamı</strong></td>
+                            <td>Baş ağrısını hafifletir.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/rehavi.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Büzürk Makamı</strong></td>
+                            <td>Ateşli hastalıklara iyi gelir; vesvese, korku ve zihinsel bulanıklığı giderir.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/buzurk.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Neva Makamı</strong></td>
+                            <td>Kadın hastalıklarına iyi geldiği kabul edilir.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/neva.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Zengûle Makamı</strong></td>
+                            <td>Kalp rahatsızlıklarında kullanılır.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/zengule.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hicaz Makamı</strong></td>
+                            <td>İdrar zorluklarına iyi gelir, uyarıcı etkisi vardır.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/hicaz.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Buselik Makamı</strong></td>
+                            <td>Bel ve kulunç ağrılarını hafifletir.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/buselik.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Uşşak Makamı</strong></td>
+                            <td>Kalp, karaciğer, mide hastalıkları ve sıtmaya karşı faydalıdır.</td>
+                            <td><audio controls style="width: 100%; height: 30px;"><source src="../music/ussak.mp3" type="audio/mpeg"></audio></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="small-img-wrapper" style="text-align: center;">
+                 <img src="../muzik/enstrumanlar_sergi.jpg" alt="Tarihi Sazlar" style="max-width: 100%; height: auto;">
+            </div>
+
+
+            <p style="margin-bottom: 25px;">
+                Bu yaklaşım, Osmanlı’da tedavinin yalnızca fiziksel değil, aynı zamanda <strong>ruhsal bir süreç</strong> olarak ele alındığını gösterir. Müzik makamlarıyla yapılan bu tedavi anlayışı, sanat ile tıbbın iç içe geçtiği özgün ve ileri bir sağlık kültürünün önemli bir yansımasıdır.
+            </p>
+
+            <div class="red-line" style="text-align: center; border-left: none; border-top: 1px dashed var(--gold); border-bottom: 1px dashed var(--gold); background: rgba(212, 175, 55, 0.05);">
+                <strong>RUHUN GIDASI:</strong><br>
+                Sultan II. Bayezid Külliyesi, insanı bir bütün olarak gören bu kadim bilgeliği günümüzde de "Sağlık Müzesi" çatısı altında yaşatmaya devam etmektedir.
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <p style="font-weight: bold; letter-spacing: 2px;">SULTAN II. BAYEZİD KÜLLİYESİ</p>
+            <p style="font-size: 14px; margin-top: 10px;">Müzik • Su Sesi • Şifa • Medeniyet</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Ses oynatıcıları ve grupları için özel stil */
+    .audio-player-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 0;
+    }
+    .audio-player-group small {
+        color: #555;
+        font-weight: 600;
+        font-size: 11px;
+    }
+    audio {
+        width: 100%;
+        height: 28px;
+        background-color: #f1f3f4;
+        border-radius: 4px;
+    }
+</style>
+
+
+    <div class="site-footer-wrapper">
+        <footer class="site-footer">
+            <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+            <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            <p style="font-size: 11px; margin-top: 15px; opacity: 0.7;">&copy; 2026 TÜM HAKLARI SAKLIDIR</p>
+        </footer>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdown = document.getElementById('globalDropdown');
+
+        menuBtn.onclick = function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        };
+
+        window.onclick = function(e) {
+            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>
