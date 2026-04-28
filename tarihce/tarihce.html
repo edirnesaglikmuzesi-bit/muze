@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarihçe - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+      /* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+:root { 
+    --gold: #d4af37; 
+    --gold-bright: #f1d592;
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+    background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
+    padding-top: 130px;
+    color: #2b2b2b;
+}
+
+/* --- 2. NAVİGASYON --- */
+.nav-wrapper { 
+    width: 100%; display: flex; justify-content: center; padding: 0 20px; 
+    position: fixed; top: 0; left: 0; z-index: 2000; 
+}
+
+.nav {
+    width: 100%; max-width: 1240px; background-color: var(--dark);
+    border: 2px solid var(--gold); border-top: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: var(--gold);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 30px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+}
+
+.logo-subtitle { font-family: 'Cinzel'; font-size: 16px; font-weight: 700; }
+
+.menu-btn { 
+    background: transparent; border: 1px solid var(--gold); color: var(--gold); 
+    cursor: pointer; padding: 8px 18px; font-family: 'Cinzel'; border-radius: 4px; 
+    transition: 0.3s ease;
+}
+
+.menu-btn:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 15px var(--gold); }
+
+/* DROPDOWN */
+#globalDropdown {
+    display: none; position: absolute; right: 30px; top: calc(100% + 10px);
+    background: var(--dark); border: 2px solid var(--gold);
+    min-width: 280px; max-height: 75vh; overflow-y: auto; 
+    border-radius: 8px; z-index: 3000; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
+#globalDropdown.active { display: block; }
+.dropdown-link { display: block; padding: 12px 25px; color: var(--gold) !important; text-decoration: none; font-family: 'Cinzel'; font-size: 13px; border-bottom: 1px solid rgba(212,175,55,0.1); }
+.dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; color: #fff !important; }
+
+/* --- 3. BANNER (YAZILAR DÜZELTİLDİ) --- */
+.banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.banner-box { 
+    position: relative; width: 100%; height: 400px; 
+    border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; 
+}
+
+.banner-box img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
+
+.banner-overlay { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    z-index: 5; text-align: center; color: #fff; padding: 20px;
+}
+
+.banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+.banner-overlay p { font-family: 'Cinzel'; font-size: 18px; color: var(--gold); margin-top: 15px; letter-spacing: 4px; }
+
+/* --- 4. İÇERİK KARTI VE KÖŞE SÜSLEMELERİ --- */
+.container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.full-card {
+    background: var(--parchment); border: 2px solid var(--gold);
+    border-radius: 12px; position: relative; margin-bottom: 40px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.corner-frame { position: absolute; width: 75px; height: 75px; z-index: 10; pointer-events: none; }
+.t-l { top: 0; left: 0; }
+.t-r { top: 0; right: 0; }
+.b-l { bottom: 0; left: 0; }
+.b-r { bottom: 0; right: 0; }
+
+.main-title { padding: 45px 20px; text-align: center; font-family: 'Cinzel'; background: var(--dark); color: var(--gold); border-bottom: 2px solid var(--gold); position: relative; z-index: 2; }
+.content-area { padding: 30px 20px; line-height: 1.8; font-size: 18px; color: #2b2b2b; position: relative; z-index: 2; }
+@media (min-width: 768px) { .content-area { padding: 50px 100px; } }
+
+/* --- 5. 3D KABARTMA GÖRSEL --- */
+.small-img-wrapper { padding: 50px 15px; text-align: center; display: flex; justify-content: center; perspective: 1000px; }
+.small-img-wrapper img { 
+    width: 600px; height: 400px; object-fit: cover; border-radius: 6px; 
+    border: 1px solid rgba(212, 175, 55, 0.4); display: block; transition: var(--transition);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3);
+    transform: rotateX(2deg);
+}
+.small-img-wrapper img:hover {
+    transform: scale(1.04) translateY(-15px) rotateX(0deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px rgba(212, 175, 55, 0.3);
+    border-color: var(--gold-bright);
+}
+
+/* --- 6. TABLO VE KART SONU (FOOTER) --- */
+.table-wrap { overflow-x: auto; margin: 35px 0; border: 1px solid var(--gold); border-radius: 8px; background: #fff; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th { background: var(--dark); color: var(--gold); padding: 18px; text-align: left; font-family: 'Cinzel'; }
+td { padding: 15px; border-bottom: 1px solid #eee; }
+
+/* Kartın içindeki en alt kısım */
+.card-footer { 
+    padding: 40px; background: var(--dark); color: var(--gold); 
+    text-align: center; font-family: 'Cinzel'; border-top: 2px solid var(--gold); 
+    position: relative; z-index: 2;
+}
+
+/* Sayfanın en altındaki ana footer */
+.site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
+.site-footer { 
+    width: 100%; max-width: 1240px; background: var(--dark); 
+    border: 2px solid var(--gold); border-radius: 15px; 
+    padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
+}
+
+/* --- 7. MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .banner-overlay h1 { font-size: 24px; letter-spacing: 5px; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: 160px; }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+}
+    </style>
+</head>
+<body>
+
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <div class="logo">
+                <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+                <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            </div>
+            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+            <div id="globalDropdown">
+                <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+                <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
+                <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
+                <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
+                <a href="../medrese/medrese.html" class="dropdown-link">Tıp Medresesi</a>
+                <a href="../hastane/hastane.html" class="dropdown-link">Darüşşifa</a>
+                <a href="../imaret/imaret.html" class="dropdown-link">İmarethane</a>
+                <a href="../music/music.html" class="dropdown-link">Müzikle Tedavi</a>
+                <a href="../geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
+                <a href="../galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
+                <a href="../siir/siir.html" class="dropdown-link">Sarmaşık</a>
+                <a href="../oduller/oduller.html" class="dropdown-link">Ödüller</a>
+                <a href="../personel/personel.html" class="dropdown-link">Personelimiz</a>
+                <a href="../haberler/haberler.html" class="dropdown-link">Haberler</a>
+                <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
+                 <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
+                <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
+            </div>
+        </nav>
+    </div>
+
+<div class="banner-container">
+    <div class="banner-box">
+        <img src="../assets/banner.webp" alt="Külliye Manzarası">
+        <div class="banner-overlay">
+            <h1>TARİHÇE</h1>
+            <p>"Şifanın, Bilimin ve Merhametin Asırlık Mirası"</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="full-card">
+        <img src="../assets/cornerleftup.png" class="corner-frame t-l" alt="Frame">
+        <img src="../assets/cornerrightup.png" class="corner-frame t-r" alt="Frame">
+        <img src="../assets/cornerleft.png" class="corner-frame b-l" alt="Frame">
+        <img src="../assets/cornerright.png" class="corner-frame b-r" alt="Frame">
+
+        <h2 class="main-title">EDİRNE SULTAN II. BAYEZİD KÜLLİYESİ SAĞLIK MÜZESİ</h2>
+
+        <div class="content-area" style="text-align: justify; text-justify: inter-word;">
+            
+            <p style="text-align: center; font-weight: bold; color: var(--v-red); margin-bottom: 25px; font-size: 20px;">
+                "Şifanın, Bilimin ve Merhametin Asırlık Mirası"
+            </p>
+
+            <p><strong>1488 yılında</strong> 8. Osmanlı Padişahı Sultan II. Bayezid, şu an Ukrayna sınırları içinde olan Kili ve Akkerman Kalelerinin fethi için yapılacak sefer hazırlıklarını görmek amacıyla Edirne’ye geldiğinde, şehrin ileri gelenleri sarayın divanhanesinde padişahın huzuruna çıkarak, adaletin hâkimi ulu padişahtan bir dilekte bulunurlar.</p>
+
+            <p>Büyük bir şehir olan, yolcuların, tüccarların, seyyahların uğrak noktası Edirne’ye bir hastane yaptırmasını isterler. Sultan II. Bayezid, babası Fatih Sultan Mehmet’in doğduğu şehir olan Edirne’yi çok sevdiği için bu isteği geri çevirmez ve Tunca Nehri’nin kıyısında, yemyeşil bir arazide içinde bir <strong>darüşşifa</strong>, yani hastanenin de bulunduğu büyük bir külliye yapılmasını emreder.</p>
+
+           <div class="small-img-wrapper" style="text-align: center;">
+                 <img src="../tarihce/bayezidgenel.jpg" alt="Sultan II. Bayezid Külliyesi Genel Görünüm" style="max-width: 100%; height: auto;">
+            </div>
+
+
+            <h3 style="text-align: left;">BİR MEDENİYETİN TEMELLERİ YÜKSELİYOR</h3>
+            <p>Bu önemli görev dönemin mimarbaşısı <strong>Hayrettin</strong>’e verilir. Hemen hazırlıklara başlanır, yapılacak külliyenin planları çizilir, maketleri hazırlanır ve imparatorluğun en maharetli taş ve mermer ustaları bu iş için görevlendirilir.</p>
+
+            <div class="small-img-wrapper" style="text-align: center;">
+                  <img src="../tarihce/2.jpg" alt="Külliye İnşaat Temsili" style="max-width: 100%; height: auto;">
+            </div>
+
+
+            <p>Aynı yılın mayıs ayında, Padişahın da katıldığı görkemli bir törenle, dualar eşliğinde Külliyenin temeli atılır. Osmanlı’nın sosyal devlet anlayışının en önemli simgelerinden biri olacak o büyük külliyenin taş duvarları yavaş yavaş yükselmeye başlar. İnşaat, zamanın teknik ve ekonomik şartları düşünüldüğünde çok kısa sayılabilecek bir sürede, <strong>sadece dört yıl içinde</strong> tamamlanarak 1488 yılında büyük bir törenle hizmete açılır.</p>
+
+            <h3 style="text-align: left;">KÜLLİYENİN BİRİMLERİ</h3>
+            <p>Eski payitaht Edirne’ye çok büyük bir değer katan bu külliye, şu ana bölümlerden oluşmaktadır:</p>
+            
+            <div class="table-wrap" style="margin-top: 20px;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <tbody>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 10px; border: 1px solid #ddd;">1- <strong>Darüşşifa</strong> (Hastane)</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">7- <strong>Hamam</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">2- <strong>Tabhane</strong> (Misafirhane)</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">8- <strong>Değirmen ve Su Deposu</strong></td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 10px; border: 1px solid #ddd;">3- <strong>Tıp Medresesi</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">9- <strong>Sıbyan Mektebi</strong> (İlkokul)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">4- <strong>Camii</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">10- <strong>Mehteran Mektebi</strong></td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 10px; border: 1px solid #ddd;">5- <strong>İmaret</strong> (Mutfak, aşevi)</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">11- <strong>Muvakkithane</strong> (Zaman Merkezi)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">6- <strong>Köprü</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="text-align: left;">HİZMET DOLU ASIRLAR VE ZORLU GÜNLER</h3>
+            <p>Sadece Edirne’ye değil, çevresindeki şehir ve köylere de aralıksız olarak <strong>400 yıl gibi uzun süre</strong> hizmet vermiş olan bu şifa yurdu, Osmanlı İmparatorluğunun zayıflaması, vakıf sisteminin dağılması ve ardından gelen işgallerle önemini yitirmeye başlar.</p>
+
+            <div class="red-line" style="text-align: center; border-top: 2px solid var(--v-red); border-bottom: 2px solid var(--v-red); padding: 20px; margin: 25px 0; font-style: italic;">
+                "Edirne’nin Ruslar tarafından işgal edildiği Osmanlı-Rus Savaşı sonrası başlayan ve Balkan Savaşları ile zirveye ulaşan zorlu yıllar, külliye gibi birçok yapının da maalesef sahipsiz kalmasına yol açmıştır."
+            </div>
+
+            <h3 style="text-align: left;">YENİDEN DOĞUŞ: MÜZEYE DÖNÜŞÜM</h3>
+            <p>Cumhuriyet sonrası yaşanan ekonomik sıkıntılar nedeniyle yıkılıp yok olma tehlikesi ile karşı karşıya kalan bu abidevi yapı, <strong>1984 yılında Trakya Üniversitesi’ne</strong> devredilir. Kapsamlı bir restorasyon sonrası eğitim alanları olarak kullanılmaya başlanan binaların kaderi, Darüşşifa’nın <strong>23 Nisan 1997</strong> tarihinde Sağlık Müzesi olarak hizmete girmesiyle tamamen değişir.</p>
+
+            <div class="small-img-wrapper" style="text-align: center;">
+                  <img src="../tarihce/3.jpg" alt="Müze Canlandırma Alanları" style="max-width: 100%; height: auto;">
+            </div>
+
+            <p>Bugün Sultan II. Bayezid Külliyesi, zaman içinde ülkemizin en seçkin kültür varlıklarından biri haline gelmiş, geçmişin şifa yöntemlerini geleceğe aktaran canlı bir tarih hazinesidir.</p>
+        </div>
+
+        <div class="card-footer" style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="font-weight: bold; letter-spacing: 2px;">ŞİFAYI SANAT VE BİLİMLE BULUŞTURAN ASIRLIK MİRAS</p>
+            <p style="font-size: 14px; margin-top: 10px;">"Geçmişin Şifası, Geleceğin Mirası: İnsanlığın Hizmetinde Bir Ömür."</p>
+        </div>
+    </div>
+</div>
+
+    <div class="site-footer-wrapper">
+        <footer class="site-footer">
+            <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+            <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            <p style="font-size: 11px; margin-top: 15px; opacity: 0.7;">&copy; 2026 TÜM HAKLARI SAKLIDIR</p>
+        </footer>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdown = document.getElementById('globalDropdown');
+
+        menuBtn.onclick = function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        };
+
+        window.onclick = function(e) {
+            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>

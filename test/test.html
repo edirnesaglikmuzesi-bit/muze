@@ -1,0 +1,334 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  #ec-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 520px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 60% 80%, #f5e8c8 0%, #e8d5a3 40%, #c9a96e 100%);
+    border-radius: 16px;
+    cursor: pointer;
+    user-select: none;
+    font-family: 'Lora', serif;
+  }
+
+  #ec-bg-pattern {
+    position: absolute; inset: 0;
+    background-image: 
+      repeating-linear-gradient(45deg, rgba(139,90,43,0.04) 0px, rgba(139,90,43,0.04) 1px, transparent 1px, transparent 20px),
+      repeating-linear-gradient(-45deg, rgba(139,90,43,0.04) 0px, rgba(139,90,43,0.04) 1px, transparent 1px, transparent 20px);
+    border-radius: 16px;
+  }
+
+  #ec-title {
+    position: absolute;
+    top: 24px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #5a2d0c;
+    text-shadow: 1px 1px 0 rgba(255,220,150,0.8);
+    letter-spacing: 2px;
+    z-index: 10;
+  }
+
+  #ec-subtitle {
+    position: absolute;
+    top: 62px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    color: #7a4a1e;
+    font-style: italic;
+    z-index: 10;
+  }
+
+  #ec-hint {
+    position: absolute;
+    bottom: 20px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Lora', serif;
+    font-size: 12px;
+    color: rgba(90,45,12,0.55);
+    font-style: italic;
+    z-index: 10;
+    transition: opacity 0.5s;
+  }
+
+  #ec-char {
+    position: absolute;
+    bottom: 0;
+    width: 240px;
+    height: 360px;
+    background: url('evliya.gif') center/contain no-repeat;
+    z-index: 5;
+    transition: none;
+    filter: drop-shadow(0 8px 24px rgba(90,45,12,0.3));
+  }
+
+  #ec-char.ride {
+    animation: ride 0.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes ride {
+    from { transform: translateY(0px) rotate(-0.5deg); }
+    to   { transform: translateY(-8px) rotate(0.5deg); }
+  }
+
+  #ec-char.enter-right {
+    animation: enterRight 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  @keyframes enterRight {
+    from { right: -260px; bottom: 0; }
+    to   { right: 20px; bottom: 0; }
+  }
+
+  #ec-char.enter-left {
+    animation: enterLeft 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
+    transform: scaleX(-1);
+  }
+  @keyframes enterLeft {
+    from { left: -260px; bottom: 0; }
+    to   { left: 20px; bottom: 0; }
+  }
+
+  #ec-char.exit-right {
+    animation: exitRight 0.8s cubic-bezier(0.55,0,1,0.45) forwards;
+  }
+  @keyframes exitRight {
+    from { right: 20px; bottom: 0; }
+    to   { right: -280px; bottom: 0; }
+  }
+
+  #ec-char.exit-left {
+    animation: exitLeft 0.8s cubic-bezier(0.55,0,1,0.45) forwards;
+    transform: scaleX(-1);
+  }
+  @keyframes exitLeft {
+    from { left: 20px; bottom: 0; }
+    to   { left: -280px; bottom: 0; }
+  }
+
+  #ec-balloon {
+    position: absolute;
+    z-index: 20;
+    max-width: 280px;
+    min-width: 160px;
+    background: rgba(255,248,228,0.97);
+    border: 2px solid #c09040;
+    border-radius: 18px;
+    padding: 14px 18px;
+    font-family: 'Lora', serif;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #3d1f05;
+    box-shadow: 0 4px 20px rgba(90,45,12,0.18);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  #ec-balloon.visible { opacity: 1; }
+
+  #ec-balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    border: 7px solid transparent;
+    border-top-color: #c09040;
+  }
+
+  #ec-balloon.tail-right::after { right: 36px; }
+  #ec-balloon.tail-left::after  { left: 36px; }
+
+  #ec-balloon .balloon-source {
+    display: block;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #9a6020;
+    font-style: italic;
+    text-align: right;
+  }
+
+  #ec-ornament-l, #ec-ornament-r {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    font-size: 48px;
+    color: rgba(139,90,43,0.12);
+    z-index: 1;
+    pointer-events: none;
+  }
+  #ec-ornament-l { left: 8px; }
+  #ec-ornament-r { right: 8px; }
+
+  #ec-divider {
+    position: absolute;
+    top: 88px; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(139,90,43,0.3), transparent);
+    z-index: 2;
+  }
+</style>
+
+<div id="ec-wrap">
+  <div id="ec-bg-pattern"></div>
+  <div id="ec-ornament-l">❧</div>
+  <div id="ec-ornament-r">❧</div>
+  <div id="ec-title">Evliya Çelebi</div>
+  <div id="ec-subtitle">Büyük Seyyah · 1611 – 1682</div>
+  <div id="ec-divider"></div>
+  <div id="ec-char"></div>
+  <div id="ec-balloon"></div>
+  <div id="ec-hint">Tıkla, yolculuk başlasın ✦</div>
+</div>
+
+<script>
+const sozler = [
+  { metin: "Dünyayı gezmeden dünyayı tanıyamazsın. Ben elli yıl yolda geçirdim, hâlâ yeni şeyler öğreniyorum.", kaynak: "Seyahatnâme, Cilt I" },
+  { metin: "İstanbul öyle bir şehirdir ki; her taşı bir tarih, her köşesi bir aşk hikâyesi saklar.", kaynak: "Seyahatnâme, Cilt I" },
+  { metin: "Edirne'nin suları o kadar latiftir ki, içenin ömrü uzar, gönlü açılır.", kaynak: "Seyahatnâme, Cilt III" },
+  { metin: "Yolculuk, insanı olgunlaştırır. Her menzilde yeni bir ilim, yeni bir irfan kazanırsın.", kaynak: "Seyahatnâme, Cilt II" },
+  { metin: "Bursa'nın havasını ciğerlerime çektiğimde, sanki cennetin bir köşesinde olduğumu hissettim.", kaynak: "Seyahatnâme, Cilt II" },
+  { metin: "Kahire öyle büyük bir şehirdir ki, bir ömür dolaşsan yine de tüm sırlarını bilemezsin.", kaynak: "Seyahatnâme, Cilt X" },
+  { metin: "Bizi seven yollar unutmaz; yolları seven insanlara ise yollar kapılarını hep açar.", kaynak: "Seyahatnâme, Cilt IV" },
+  { metin: "Konya'da Mevlânâ'nın türbesini ziyaret ettim; o gün içimde kopan fırtına hiç dinmedi.", kaynak: "Seyahatnâme, Cilt III" },
+  { metin: "Evlerin güzelliği taştan değil, içindeki insanların sıcaklığından gelir.", kaynak: "Seyahatnâme, Cilt V" },
+  { metin: "Yolcu olarak geldim bu dünyaya; yolcu olarak gideceğim. Aradaki zaman ise en güzel hediyemiz.", kaynak: "Seyahatnâme, Cilt I" },
+];
+
+let currentIndex = 0;
+let isAnimating = false;
+let currentSide = 'right';
+let rideInterval = null;
+
+const wrap = document.getElementById('ec-wrap');
+const char = document.getElementById('ec-char');
+const balloon = document.getElementById('ec-balloon');
+const hint = document.getElementById('ec-hint');
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const shuffled = shuffle([...sozler]);
+
+function clearChar() {
+  char.className = '';
+  char.style.right = '';
+  char.style.left = '';
+}
+
+function startRide() {
+  char.classList.add('ride');
+}
+
+function showBalloon(side) {
+  const soz = shuffled[currentIndex % shuffled.length];
+  currentIndex++;
+
+  balloon.className = 'tail-' + side;
+  balloon.innerHTML = `"${soz.metin}" <span class="balloon-source">— ${soz.kaynak}</span>`;
+
+  if (side === 'right') {
+    const cRight = 270;
+    balloon.style.right = cRight + 'px';
+    balloon.style.left = '';
+    balloon.style.bottom = '240px';
+  } else {
+    const cLeft = 270;
+    balloon.style.left = cLeft + 'px';
+    balloon.style.right = '';
+    balloon.style.bottom = '240px';
+  }
+
+  setTimeout(() => balloon.classList.add('visible'), 50);
+}
+
+function hideBalloon() {
+  balloon.classList.remove('visible');
+}
+
+function enterChar(side) {
+  clearChar();
+  hideBalloon();
+
+  if (side === 'right') {
+    char.style.right = '-260px';
+    char.style.left = '';
+    char.classList.add('enter-right');
+  } else {
+    char.style.left = '-260px';
+    char.style.right = '';
+    char.classList.add('enter-left');
+  }
+
+  setTimeout(() => {
+    startRide();
+    showBalloon(side);
+    hint.style.opacity = '0.4';
+    isAnimating = false;
+  }, 1300);
+}
+
+function exitAndEnter() {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  hideBalloon();
+
+  const exitSide = currentSide;
+  const enterSide = Math.random() < 0.5 ? 'right' : 'left';
+  currentSide = enterSide;
+
+  char.classList.remove('ride');
+
+  if (exitSide === 'right') {
+    char.style.right = '20px';
+    char.style.left = '';
+    char.classList.remove('enter-right', 'enter-left');
+    void char.offsetWidth;
+    char.classList.add('exit-right');
+  } else {
+    char.style.left = '20px';
+    char.style.right = '';
+    char.classList.remove('enter-right', 'enter-left');
+    void char.offsetWidth;
+    char.style.transform = 'scaleX(-1)';
+    char.classList.add('exit-left');
+  }
+
+  setTimeout(() => {
+    char.style.transform = '';
+    enterChar(enterSide);
+  }, 900);
+}
+
+wrap.addEventListener('click', () => {
+  if (currentSide === null) {
+    currentSide = 'right';
+    isAnimating = true;
+    char.style.right = '-260px';
+    char.style.left = '';
+    char.classList.add('enter-right');
+    setTimeout(() => {
+      startRide();
+      showBalloon('right');
+      hint.style.opacity = '0.4';
+      isAnimating = false;
+    }, 1300);
+  } else {
+    exitAndEnter();
+  }
+});
+
+currentSide = null;
+</script>
