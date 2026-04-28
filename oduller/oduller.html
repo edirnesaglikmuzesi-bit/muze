@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müze Ödülleri - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+       /* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+:root { 
+    --gold: #d4af37; 
+    --gold-bright: #f1d592;
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+    background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
+    padding-top: 130px;
+    color: #2b2b2b;
+}
+
+/* --- 2. NAVİGASYON --- */
+.nav-wrapper { 
+    width: 100%; display: flex; justify-content: center; padding: 0 20px; 
+    position: fixed; top: 0; left: 0; z-index: 2000; 
+}
+
+.nav {
+    width: 100%; max-width: 1240px; background-color: var(--dark);
+    border: 2px solid var(--gold); border-top: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: var(--gold);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 30px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+}
+
+.logo-subtitle { font-family: 'Cinzel'; font-size: 16px; font-weight: 700; }
+
+.menu-btn { 
+    background: transparent; border: 1px solid var(--gold); color: var(--gold); 
+    cursor: pointer; padding: 8px 18px; font-family: 'Cinzel'; border-radius: 4px; 
+    transition: 0.3s ease;
+}
+
+.menu-btn:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 15px var(--gold); }
+
+/* DROPDOWN */
+#globalDropdown {
+    display: none; position: absolute; right: 30px; top: calc(100% + 10px);
+    background: var(--dark); border: 2px solid var(--gold);
+    min-width: 280px; max-height: 75vh; overflow-y: auto; 
+    border-radius: 8px; z-index: 3000; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
+#globalDropdown.active { display: block; }
+.dropdown-link { display: block; padding: 12px 25px; color: var(--gold) !important; text-decoration: none; font-family: 'Cinzel'; font-size: 13px; border-bottom: 1px solid rgba(212,175,55,0.1); }
+.dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; color: #fff !important; }
+
+/* --- 3. BANNER (YAZILAR DÜZELTİLDİ) --- */
+.banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.banner-box { 
+    position: relative; width: 100%; height: 400px; 
+    border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; 
+}
+
+.banner-box img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
+
+.banner-overlay { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    z-index: 5; text-align: center; color: #fff; padding: 20px;
+}
+
+.banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+.banner-overlay p { font-family: 'Cinzel'; font-size: 18px; color: var(--gold); margin-top: 15px; letter-spacing: 4px; }
+
+/* --- 4. İÇERİK KARTI VE KÖŞE SÜSLEMELERİ --- */
+.container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.full-card {
+    background: var(--parchment); border: 2px solid var(--gold);
+    border-radius: 12px; position: relative; margin-bottom: 40px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.corner-frame { position: absolute; width: 75px; height: 75px; z-index: 10; pointer-events: none; }
+.t-l { top: 0; left: 0; }
+.t-r { top: 0; right: 0; }
+.b-l { bottom: 0; left: 0; }
+.b-r { bottom: 0; right: 0; }
+
+.main-title { padding: 45px 20px; text-align: center; font-family: 'Cinzel'; background: var(--dark); color: var(--gold); border-bottom: 2px solid var(--gold); position: relative; z-index: 2; }
+.content-area { padding: 30px 20px; line-height: 1.8; font-size: 18px; color: #2b2b2b; position: relative; z-index: 2; }
+@media (min-width: 768px) { .content-area { padding: 50px 100px; } }
+
+/* --- 5. 3D KABARTMA GÖRSEL --- */
+.small-img-wrapper { padding: 50px 15px; text-align: center; display: flex; justify-content: center; perspective: 1000px; }
+.small-img-wrapper img { 
+    width: 600px; height: 400px; object-fit: cover; border-radius: 6px; 
+    border: 1px solid rgba(212, 175, 55, 0.4); display: block; transition: var(--transition);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3);
+    transform: rotateX(2deg);
+}
+.small-img-wrapper img:hover {
+    transform: scale(1.04) translateY(-15px) rotateX(0deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px rgba(212, 175, 55, 0.3);
+    border-color: var(--gold-bright);
+}
+
+/* --- 6. TABLO VE KART SONU (FOOTER) --- */
+.table-wrap { overflow-x: auto; margin: 35px 0; border: 1px solid var(--gold); border-radius: 8px; background: #fff; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th { background: var(--dark); color: var(--gold); padding: 18px; text-align: left; font-family: 'Cinzel'; }
+td { padding: 15px; border-bottom: 1px solid #eee; }
+
+/* Kartın içindeki en alt kısım */
+.card-footer { 
+    padding: 40px; background: var(--dark); color: var(--gold); 
+    text-align: center; font-family: 'Cinzel'; border-top: 2px solid var(--gold); 
+    position: relative; z-index: 2;
+}
+
+/* Sayfanın en altındaki ana footer */
+.site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
+.site-footer { 
+    width: 100%; max-width: 1240px; background: var(--dark); 
+    border: 2px solid var(--gold); border-radius: 15px; 
+    padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
+}
+
+/* --- 7. MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .banner-overlay h1 { font-size: 24px; letter-spacing: 5px; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: 160px; }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+}
+    </style>
+</head>
+<body>
+
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <div class="logo">
+                <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+                <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            </div>
+            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+            <div id="globalDropdown">
+                <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+                <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
+                <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
+                <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
+                <a href="../medrese/medrese.html" class="dropdown-link">Tıp Medresesi</a>
+                <a href="../hastane/hastane.html" class="dropdown-link">Darüşşifa</a>
+                <a href="../imaret/imaret.html" class="dropdown-link">İmarethane</a>
+                <a href="../music/music.html" class="dropdown-link">Müzikle Tedavi</a>
+                <a href="../geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
+                <a href="../galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
+                <a href="../siir/siir.html" class="dropdown-link">Sarmaşık</a>
+                <a href="../oduller/oduller.html" class="dropdown-link">Ödüller</a>
+                <a href="../personel/personel.html" class="dropdown-link">Personelimiz</a>
+                <a href="../haberler/haberler.html" class="dropdown-link">Haberler</a>
+                <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
+                 <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
+                <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="banner-container">
+        <div class="banner-box">
+            <img src="../assets/banner.webp" alt="Külliye Manzarası">
+            <div class="banner-overlay">
+                <h1>ÖDÜLLER</h1>
+                <p>"Başarılarla Taçlanan Mirasımız"</p>
+            </div>
+        </div>
+    </div>
+
+   <div class="container">
+    <div class="full-card">
+        <img src="../assets/cornerleftup.png" class="corner-frame t-l">
+        <img src="../assets/cornerrightup.png" class="corner-frame t-r">
+        <img src="../assets/cornerleft.png" class="corner-frame b-l">
+        <img src="../assets/cornerright.png" class="corner-frame b-r">
+
+        <h2 class="main-title">MÜZE ÖDÜLLERİMİZ</h2>
+
+        <div class="content-area" style="text-align: justify;">
+            <p style="text-align: center; font-weight: bold; color: var(--v-red); margin-bottom: 25px;">"Uluslararası Bir Başarının Hikâyesi"</p>
+
+            <h3>AVRUPA KONSEYİ 2004 YILI AVRUPA MÜZE ÖDÜLÜ</h3>
+            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, kuruluşundan yalnızca 7 yıl sonra Avrupa’nın en prestijli müzecilik ödüllerinden biri olan <strong>Avrupa Konseyi 2004 Yılı Avrupa Müze Ödülü’nü</strong> kazanarak büyük bir başarıya imza atmıştır. Ödül kararı, Konsey Başkanı <strong>Peter Schieder</strong> tarafından Müze Müdürü <strong>Enver Şengül’e</strong> resmi yazı ile bildirilmiştir.</p>
+
+            <div class="small-img-wrapper" style="text-align: center;">
+                <img src="../oduller/images/1.jpg" style="max-width: 100%; height: auto;">
+            </div>
+
+
+            <h3>RESMİ BİLDİRİM VE GEREKÇELER</h3>
+            <p>Avrupa Konseyi Parlamento Meclisi'nin resmi yazısında ödül gerekçeleri şu üç maddeyle özetlenmiştir:</p>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>◈ Müzenin, ruhsal bozuklukların psikolojik hassasiyetine yönelik örnek yaklaşımı.</li>
+                <li>◈ Tarihi tedavi yöntemlerini modern müzecilik anlayışıyla sunması.</li>
+                <li>◈ Doğu ve Batı kültürleri arasında köprü kurabilecek eşsiz coğrafi konumu.</li>
+            </ul>
+
+            <div class="red-line">
+                "Ödül; ünlü sanatçı <strong>Joan Miró</strong> tarafından yapılan bir heykel ve resmi diplomayı içermektedir. Ayrıca nakit para ödülünün müze hesabına yatırılacağı ve törenin <strong>27 Nisan 2004'te Strasbourg Palais des Rohan’da</strong> yapılacağı bildirilmiştir."
+            </div>
+
+            <div class="red-line" style="font-style: italic; background: #f9f9f9; padding: 20px; border-left: 5px solid var(--v-red);">
+                <p><strong>Avrupa Konseyi Parlamento Meclisi Resmi Yazısı</strong></p>
+                <p>Sayın Şengül,</p>
+                <p>Parlamento Meclisi’nin Kültür Bilim ve Eğitim Komitesinin 2004 Avrupa Konseyi Müze Ödülünü Sağlık Müzesi’ne verilmesine karar verdiğini onaylamak amacıyla size yazmaktan mutluluk duyuyorum. Bu ödülün verilmesindeki etkenler arasında, ruhsal bozukluğun psikolojik hassasiyeti konusuna müzenizin özellikle başarılı ve örnek yaklaşımı olmuştur. Ayrıca müzenizin doğu ve batı kültürleri arasında daha fazla köprü görevi yapabileceği coğrafi konumu da etkili olmuştur.</p>
+                <p>Ödül, Palais des Rohan, Strasbourg’da 27 Nisan 2004 akşamında düzenlenecek olan törende takdim edilecektir. Belgenizi ve kupanızı (Joan Miro tarafından yapılan bir heykel) almak için törene katılabileceğinizi umuyorum. Nakit para ödülünüzde müzenizin banka hesabına yatırılacaktır. Daha fazla bilgi için Mr. Christopher Grayson ile temas edebilirsiniz. Müzenizin başarısından dolayı sizi içtenlikle kutluyorum.</p>
+                <p style="text-align: right;"><strong>Saygılarımla,<br>Peter Schieder - Meclis Başkanı</strong></p>
+            </div>
+
+            <h3>STRASBOURG ÖDÜL TÖRENİ</h3>
+            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, <strong>27 Nisan</strong> tarihinde Fransa’nın Strasbourg kentinde düzenlenen törenle ödülünü aldı. Ülkemizin ve Edirne’nin tanıtımı açısından oldukça önemli olan bu ödülü almak için Strasbourg’a giden Trakya Üniversitesi Rektörü <strong>Prof. Dr. Osman İnci</strong>, Müzenin Kurucusu <strong>Yrd. Doç. Dr. Ratıp Kazancıgil</strong>, Müze Müdürü <strong>Enver Şengül</strong> ve diğer üniversite temsilcileri, Strasbourg’un saray müzelerinin en önemlisi olan <strong>Palace Rohan’daki</strong> ödül törenine katıldılar.</p>
+
+            <p>Törende özellikle Avrupa kültürel mirasının korunması, Doğu ve Batı kültürlerinin kaynaşması ile Türkiye’nin kültürel zenginliği ve laik yapısı vurgulanmıştır. Belediye Başkanı <strong>Fabienne Keller</strong> memnuniyetini dile getirirken, <strong>Hans Woodtli</strong> ödül gerekçelerini detaylandırmıştır. Avrupa Konseyi Parlamenterler Birliği Başkanı <strong>Schieder</strong> ise Türkiye’nin kültüre verdiği öneme değinerek, bir İslam ülkesi olan Türkiye’nin, laik yapısıyla, bu tür zenginlikleri ön plana çıkarma başarısı gösterdiğini söyledi. Konuşmasının ardından Joan Miro heykeli ile diplomayı müzemiz temsilcilerine takdim etti.</p>
+
+            <div class="table-wrap">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Törene Katılan Protokol</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Üniversite Heyeti</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; vertical-align: top;">
+                                • Peter Schieder (AKPM Başkanı)<br>
+                                • Fabienne Keller (Strasbourg Bld. Başkanı)<br>
+                                • Hans Woodtli (Avrupa Müzeler Formu Temsilcisi)<br>
+                                • Daryal Batıbey (Büyükelçi, Daimi Temsilci)<br>
+                                • Zülfü Livaneli (UNESCO İyi Niyet Elçisi)<br>
+                                • Mesut Mertcan (Avrupa Konseyi Türk Parlementerler Birliği Başkanı)
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #ddd; vertical-align: top;">
+                                • Prof. Dr. Osman İnci (Rektör)<br>
+                                • Yrd. Doç. Dr. Ratıp Kazancıgil (Kurucu)<br>
+                                • Enver Şengül (Müze Müdürü)<br>
+                                • Üniversite Temsilcileri ve Akademisyenler
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>DİPLOMATİK TEMASLAR VE ATİNA FORUMU</h3>
+            <p><strong>28 Nisan'da</strong> Avrupa Konseyi Kültür Komisyonu tarafından kabul edilen heyetimiz, müzenin tedavi yöntemleri üzerine kapsamlı bir oturum gerçekleştirmiştir. Buradaki oturumda <strong>Zülfü Livaneli</strong>, üniversite heyetini yalnız bırakmadı. Temaslar esnasında hem Avrupa Konseyi Binası hem de ödül töreninin yapıldığı Rohan Sarayı’nda açılan Edirne’yi, Üniversiteyi ve müzeyi tanıtıcı sergiler büyük ilgi görmüştür.</p>
+            <p><strong>5–8 Mayıs tarihlerinde Atina’da</strong> düzenlenen ve 48 ülkeden 58 müzenin katıldığı Avrupa Müze Forumu’nda müzemiz, <strong>ilk sunum yapan kurum</strong> olma onuruna erişmiştir. Foruma ilk görüşmeci olarak davet edilen Sağlık Müzesi’nin sunumu oldukça başarılı bulundu.</p>
+
+            <div class="small-img-wrapper" style="text-align: center;">
+                <img src="../oduller/images/2.jpg" alt="Atina Avrupa Müze Forumu" style="max-width: 100%; height: auto;">
+            </div>
+
+         
+            <h3>AVRUPA KÜLTÜREL MİRAS BİRLİĞİ</h3>
+            <h4>KÖLN: EN İYİ SUNUM ÖDÜLÜ</h4>
+            <p>Sağlık Müzesi’nin elde ettiği diğer önemli uluslararası ödül, <strong>Avrupa Kültürel Miras Birliği ve Kültürel Mirastaki En İyiler (The Best in Heritage) ve Mükemmellik Kulübü</strong> tarafından verilen <strong>“En İyi Sunum Ödülü”</strong>dür.</p>
+            
+            <p>Her yıl Avrupa genelinde değişik kategorilerde ödül alan <strong>14 ayrı ülkeden gelen 17 müze</strong> arasında “En İyi Sunum Ödülü”nü kazanma başarısı göstermiştir. Almanya’nın <strong>Köln</strong> kentinde yapılan ve Norveç (2), Portekiz, İngiltere (2), Avusturya, İsrail, Estonya (2), Rusya, Almanya, Hırvatistan, Yunanistan, Danimarka, İspanya ve Litvanya’dan gelen ödüllü müzeler, 4 gün süreyle kendilerini tanıtan stantlar açmış ve sunumlar yapmıştır.</p>
+
+            <div class="small-img-wrapper" style="text-align: center;">
+                 <img src="../oduller/images/3.jpg" alt="Köln En İyi Sunum Ödülü Töreni" style="max-width: 100%; height: auto;">
+            </div>
+
+
+            <p>Ödül töreninde ilk konuşmayı <strong>Köln Kent Konseyi Sanat ve Kültürel İlişkiler Komitesi Başkanı Dr. Lothar Theodor Lemper</strong> yapmıştır. Ardından sırasıyla Avrupa Kültürel Miras Birliği ve Mükemmellik Kulübü adına <strong>Tomislav Šola</strong>, Europa Nostra temsilcisi <strong>Prof. Emil Hadler</strong>, ICOM (Uluslararası Müzeler Konseyi) Avrupa Başkanı <strong>Udo Gößwald</strong>, Alman Müzeler Birliği Başkanı <strong>Dr. Michael Eissenhauer</strong> ve Avrupa Müze Forumu (EMF) temsilcisi <strong>Stephan Harrison</strong> birer konuşma yapmıştır.</p>
+
+            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, <strong>Rektör Yardımcısı Prof. Dr. Beyhan Karamanlıoğlu</strong> başkanlığındaki bir çalışma grubuyla temsil edilmiştir. <strong>Müze Müdürü Enver Şengül</strong> ve <strong>Müze Uluslararası İlişkiler Koordinatörü Nehir Ağırseven’in</strong> hazırladığı sunuma <strong>Kültür ve Turizm Bakanlığı</strong> da destek vermiştir. <strong>Edirne Devlet Türk Müziği Korosu Şefi Yıldıray Öztürk</strong> ve <strong>tambur sanatçısı Reyhan İllez</strong> de geçmişte tedavide kullanılan klasik Türk müziği eserleriyle sunuma eşlik etmiştir.</p>
+
+            <div class="table-wrap" style="overflow-x:auto; margin-top: 20px;">
+                <table style="width:100%; min-width: 500px; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 15px; border: 1px solid var(--gold, #c5a059); background-color: rgba(197, 160, 89, 0.1); text-align: left;">Sunum Ekibi ve Sanatçılar</th>
+                            <th style="padding: 15px; border: 1px solid var(--gold, #c5a059); background-color: rgba(197, 160, 89, 0.1); text-align: left;">Uluslararası Temsilciler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 15px; border: 1px solid var(--gold, #c5a059); line-height: 1.8; vertical-align: top;">
+                                • <strong>Prof. Dr. Beyhan Karamanlıoğlu</strong> (Rektör Yrd.)<br>
+                                • <strong>Enver Şengül</strong> (Müze Müdürü)<br>
+                                • <strong>Nehir Ağırseven</strong> (Uluslararası Koor.)<br>
+                                • <strong>Yıldıray Öztürk</strong> (Koro Şefi)<br>
+                                • <strong>Reyhan İllez</strong> (Tambur Sanatçısı)
+                            </td>
+                            <td style="padding: 15px; border: 1px solid var(--gold, #c5a059); line-height: 1.8; vertical-align: top;">
+                                • <strong>Dr. Lothar Theodor Lemper</strong> (Köln Konseyi)<br>
+                                • <strong>Tomislav Šola</strong> (Kültürel Miras Birliği Bşk.)<br>
+                                • <strong>Udo Gößwald</strong> (ICOM Avrupa Başkanı)<br>
+                                • <strong>Stephan Harrison</strong> (EMF Temsilcisi)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="red-line" style="margin-top: 25px;">
+                "Klasik Türk müziği ve görsel anlatımlarla zenginleştirilen sunum, tarihi tedavi yöntemlerini canlandırarak bütüncül bir deneyim sunmuştur. Ödül, <strong>Tomislav Šola</strong> ve <strong>Brigitte Prager</strong> tarafından takdim edilmiştir."
+            </div>
+
+            <h3>DİĞER ULUSLARARASI BAŞARILARIMIZ</h3>
+            <p>Sağlık Müzesi, Hırvatistan’ın Dubrovnik kentinde düzenlenen ödüllü müzeler buluşmasında en iyi ikinci sunumu gerçekleştiren müze olmuştur. Ayrıca Güneydoğu Avrupa Gazeteciler Derneği tarafından “Yılın Başarı Ödülü”ne layık görülmüştür.</p>
+
+            <div class="table-wrap">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Kurum / Lokasyon</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Başarı Özeti</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>UNESCO</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Dünya Geçici Miras Listesi: Külliyenin tarihi ve mimari değerinin evrensel tescili.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Dubrovnik / Hırvatistan</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Dünya Ödüllü Müzeler Buluşması: En İyi İkinci Sunum Ödülü.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Gazeteciler Derneği</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Güneydoğu Avrupa Gazeteciler Derneği: Yılın Başarı Ödülü.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kültürel Miras Birliği</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Uluslararası Temsil ve Mükemmellik Sertifikaları.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="red-line" style="margin-top: 30px;">
+                Sağlık Müzesi kuruluşundan 7 yıl sonra Avrupa’nın en prestijli müzecilik ödüllerinden olan <strong>Avrupa Konseyi 2004 Yılı Avrupa Müze Ödülü’nü</strong> alma başarısı gösterdi. Hem göze hem kulağa hitap eden sunumlarla, tarihi tedavi yöntemlerini modern müzecilik anlayışıyla dünyaya anlatan müzemiz; Doğu ile Batı arasında kurduğu kültürel köprü ile uluslararası alanda ülkemizi gururla temsil etmeye devam etmektedir.
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <p style="font-weight: bold; letter-spacing: 2px;">DÜNYANIN TAKDİR ETTİĞİ BİR ŞİFA MİRASI: SAĞLIK MÜZESİ</p>
+        </div>
+    </div>
+</div>
+    <div class="site-footer-wrapper">
+        <footer class="site-footer">
+            <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+            <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            <p style="font-size: 11px; margin-top: 15px; opacity: 0.7;">&copy; 2026 TÜM HAKLARI SAKLIDIR</p>
+        </footer>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdown = document.getElementById('globalDropdown');
+
+        menuBtn.onclick = function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        };
+
+        window.onclick = function(e) {
+            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>

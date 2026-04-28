@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ağaçla Sarmaşık - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+     /* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+:root { 
+    --gold: #d4af37; 
+    --gold-bright: #f1d592;
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+    background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
+    padding-top: 130px;
+    color: #2b2b2b;
+}
+
+/* --- 2. NAVİGASYON --- */
+.nav-wrapper { 
+    width: 100%; display: flex; justify-content: center; padding: 0 20px; 
+    position: fixed; top: 0; left: 0; z-index: 2000; 
+}
+
+.nav {
+    width: 100%; max-width: 1240px; background-color: var(--dark);
+    border: 2px solid var(--gold); border-top: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: var(--gold);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 30px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+}
+
+.logo-subtitle { font-family: 'Cinzel'; font-size: 16px; font-weight: 700; }
+
+.menu-btn { 
+    background: transparent; border: 1px solid var(--gold); color: var(--gold); 
+    cursor: pointer; padding: 8px 18px; font-family: 'Cinzel'; border-radius: 4px; 
+    transition: 0.3s ease;
+}
+
+.menu-btn:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 15px var(--gold); }
+
+/* DROPDOWN */
+#globalDropdown {
+    display: none; position: absolute; right: 30px; top: calc(100% + 10px);
+    background: var(--dark); border: 2px solid var(--gold);
+    min-width: 280px; max-height: 75vh; overflow-y: auto; 
+    border-radius: 8px; z-index: 3000; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
+#globalDropdown.active { display: block; }
+.dropdown-link { display: block; padding: 12px 25px; color: var(--gold) !important; text-decoration: none; font-family: 'Cinzel'; font-size: 13px; border-bottom: 1px solid rgba(212,175,55,0.1); }
+.dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; color: #fff !important; }
+
+/* --- 3. BANNER (YAZILAR DÜZELTİLDİ) --- */
+.banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.banner-box { 
+    position: relative; width: 100%; height: 400px; 
+    border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; 
+}
+
+.banner-box img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
+
+.banner-overlay { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    z-index: 5; text-align: center; color: #fff; padding: 20px;
+}
+
+.banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+.banner-overlay p { font-family: 'Cinzel'; font-size: 18px; color: var(--gold); margin-top: 15px; letter-spacing: 4px; }
+
+/* --- 4. İÇERİK KARTI VE KÖŞE SÜSLEMELERİ --- */
+.container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.full-card {
+    background: var(--parchment); border: 2px solid var(--gold);
+    border-radius: 12px; position: relative; margin-bottom: 40px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.corner-frame { position: absolute; width: 75px; height: 75px; z-index: 10; pointer-events: none; }
+.t-l { top: 0; left: 0; }
+.t-r { top: 0; right: 0; }
+.b-l { bottom: 0; left: 0; }
+.b-r { bottom: 0; right: 0; }
+
+.main-title { padding: 45px 20px; text-align: center; font-family: 'Cinzel'; background: var(--dark); color: var(--gold); border-bottom: 2px solid var(--gold); position: relative; z-index: 2; }
+.content-area { padding: 30px 20px; line-height: 1.8; font-size: 18px; color: #2b2b2b; position: relative; z-index: 2; }
+@media (min-width: 768px) { .content-area { padding: 50px 100px; } }
+
+/* --- 5. 3D KABARTMA GÖRSEL --- */
+.small-img-wrapper { padding: 50px 15px; text-align: center; display: flex; justify-content: center; perspective: 1000px; }
+.small-img-wrapper img { 
+    width: 600px; height: 400px; object-fit: cover; border-radius: 6px; 
+    border: 1px solid rgba(212, 175, 55, 0.4); display: block; transition: var(--transition);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3);
+    transform: rotateX(2deg);
+}
+.small-img-wrapper img:hover {
+    transform: scale(1.04) translateY(-15px) rotateX(0deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px rgba(212, 175, 55, 0.3);
+    border-color: var(--gold-bright);
+}
+
+/* --- 6. TABLO VE KART SONU (FOOTER) --- */
+.table-wrap { overflow-x: auto; margin: 35px 0; border: 1px solid var(--gold); border-radius: 8px; background: #fff; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th { background: var(--dark); color: var(--gold); padding: 18px; text-align: left; font-family: 'Cinzel'; }
+td { padding: 15px; border-bottom: 1px solid #eee; }
+
+/* Kartın içindeki en alt kısım */
+.card-footer { 
+    padding: 40px; background: var(--dark); color: var(--gold); 
+    text-align: center; font-family: 'Cinzel'; border-top: 2px solid var(--gold); 
+    position: relative; z-index: 2;
+}
+
+/* Sayfanın en altındaki ana footer */
+.site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
+.site-footer { 
+    width: 100%; max-width: 1240px; background: var(--dark); 
+    border: 2px solid var(--gold); border-radius: 15px; 
+    padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
+}
+
+/* --- 7. MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .banner-overlay h1 { font-size: 24px; letter-spacing: 5px; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: 160px; }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+}
+
+/* --- POEM CARD ANA YAPI --- */
+.poem-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px solid var(--gold);
+    border-radius: 15px;
+    padding: 20px 40px; /* Sağa sola genişlik verildi */
+    margin: 30px auto;
+    width: 95%; /* Sayfaya yayılması için */
+    max-width: 1200px; /* Maksimum yatay genişlik */
+    gap: 30px;
+    transition: var(--transition);
+    perspective: 1000px;
+}
+
+/* --- GÖRSEL KUTULARI (250x160 Sıkıştırma) --- */
+.card-image {
+    flex: 0 0 250px; 
+    width: 250px;
+    height: 160px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.left-img { transform: rotateY(10deg); }
+.right-img { transform: rotateY(-10deg); }
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 600x400 görseli buraya tam sığdırır */
+    display: block;
+}
+
+/* --- ŞİİR METNİ --- */
+.card-text {
+    flex: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    line-height: 1.7;
+    text-align: center;
+    font-style: italic;
+    color: #2b2b2b;
+}
+
+/* --- SARMAŞIK / YONCA AYIRICI --- */
+.card-spacer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    color: #2d5a27;
+    font-size: 24px;
+    letter-spacing: 15px;
+}
+
+/* --- MOBİL UYUMLULUK (Responsive) --- */
+@media (max-width: 850px) {
+    .poem-card {
+        flex-direction: column; /* Yan yana olan yapıyı alt alta çevirir */
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .card-image {
+        width: 100%; /* Mobilde görsel tam genişlik olur */
+        max-width: 320px;
+        height: 180px;
+        flex: none;
+        transform: none !important; /* Mobilde 3D efekti kapatılır */
+    }
+
+    .card-text {
+        font-size: 1.1rem;
+    }
+ /* --- 4. VİDEO ALANI (ORTALI VE STANDART) --- */
+
+.video-section {
+    width: 90%;            /* Kartın genişliğinin %90'ı kadar olsun */
+    max-width: 640px;      /* Çok devasa olmaması için sınır */
+    aspect-ratio: 16 / 9;  /* Oynatınca boyutun değişmesini engeller */
+    
+    /* Kart içerisinde TAM ortalama */
+    margin: 40px auto;     
+    display: flex;         /* İçindeki videoyu dikey/yatay ortalamak için */
+    align-items: center;
+    justify-content: center;
+    
+    border: 3px solid var(--gold);
+    border-radius: 15px;
+    background: #000;      /* Video yüklenene kadar siyah zemin */
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 5;
+}
+
+.video-section video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;    /* Videoyu çerçeveye sabitler, taşmaları önler */
+    display: block;
+}
+
+/* Mobil cihazlarda boşlukların ayarlanması */
+@media (max-width: 768px) {
+    .video-section {
+        width: 100%;       /* Mobilde kartın kenarlarına tam yaslanır */
+        margin: 20px auto; 
+        border-radius: 10px;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <div class="logo">
+                <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+                <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            </div>
+            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+            <div id="globalDropdown">
+                <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+                <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
+                <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
+                <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
+                <a href="../medrese/medrese.html" class="dropdown-link">Tıp Medresesi</a>
+                <a href="../hastane/hastane.html" class="dropdown-link">Darüşşifa</a>
+                <a href="../imaret/imaret.html" class="dropdown-link">İmarethane</a>
+                <a href="../music/music.html" class="dropdown-link">Müzikle Tedavi</a>
+                <a href="../geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
+                <a href="../galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
+                <a href="../siir/siir.html" class="dropdown-link">Sarmaşık</a>
+                <a href="../oduller/oduller.html" class="dropdown-link">Ödüller</a>
+                <a href="../personel/personel.html" class="dropdown-link">Personelimiz</a>
+                <a href="../haberler/haberler.html" class="dropdown-link">Haberler</a>
+                <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
+                 <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
+                <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
+            </div>
+        </nav>
+    </div>
+
+  <div class="banner-container">
+        <div class="banner-box">
+            <img src="../assets/banner.webp" alt="Külliye Bahçesi">
+            <div class="banner-overlay">
+                <h1>AĞAÇLA SARMAŞIK</h1>
+                <p>“Darüşşifa Bahçesinde Ölümsüz Bir Aşk Efsanesi”</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="full-card">
+            <img src="../assets/cornerleftup.png" class="corner-frame t-l" alt="Frame">
+            <img src="../assets/cornerrightup.png" class="corner-frame t-r" alt="Frame">
+            <img src="../assets/cornerleft.png" class="corner-frame b-l" alt="Frame">
+            <img src="../assets/cornerright.png" class="corner-frame b-r" alt="Frame">
+
+            <h2 class="main-title">BİR DARÜŞŞİFA EFSANESİ</h2>
+
+         <p style="text-align: center; color: var(--v-red); font-weight: bold; padding: 30px 10px; font-family: 'Cinzel';">
+                "Sıhhatle Başlayan, Sonsuzlukla Mühürlenen Bir Masal."
+            </p>
+
+          <div class="video-section" style="display: flex; justify-content: center; margin: 30px 0;">
+    <video controls playsinline poster="../siir/sarmasik.jpg" style="max-width: 90%; height: auto;">
+        <source src="../siir/1.webm" type="video/webm">
+        Tarayıcınız video oynatmayı desteklemiyor.
+    </video>
+</div>
+
+            <div class="poem-card">
+                <div class="card-text">
+                    Burada, bu eski Darüşşifa’da<br>
+                    Birbirine âşık iki genç varmış.<br>
+                    Kızın bulunduğu yer loş bir oda,<br>
+                    Oğlanın kaldığı yer daha darmış.
+                </div>
+            </div>
+
+            <div class="card-spacer">🌿 ☘ 🌿</div>
+
+            <div class="poem-card">
+                <div class="card-text">
+                    Her sabah avluda buluşurlarmış,<br>
+                    Doluncaya kadar bir kum saati,<br>
+                    Kızın etrafını periler sarmış,<br>
+                    Oğlanın altında bir sihir atı.
+                </div>
+            </div>
+
+            <div class="card-spacer">🌿 ☘ 🌿</div>
+
+            <div class="poem-card">
+                <div class="card-text">
+                    Nihayet bir zaman gelmiş, sıhhati<br>
+                    Düzelmiş bu iki sevdalı gencin<br>
+                    Bir anda kaybolmuş hayatın tadı,<br>
+                    Meğer saadetmiş bu onlar için.
+                </div>
+            </div>
+
+            <div class="card-spacer">🌿 ☘ 🌿</div>
+
+            <div class="poem-card">
+                <div class="card-text">
+                    Son defa yan yana gelmiş ikisi,<br>
+                    And içmiş bir daha ayrılmamaya;<br>
+                    Kandırıp bu iki âşık herkesi,<br>
+                    Yeniden girmişler Darüşşifa’ya.
+                </div>
+            </div>
+
+            <div class="card-spacer">🌿 ☘ 🌿</div>
+
+            <div class="poem-card">
+                <div class="card-text">
+                    İçince iksirden bu iki âşık,<br>
+                    Dünyası değişmiş her iki canın,<br>
+                    Kız bir ağaç olmuş, oğlan sarmaşık,<br>
+                    Issız bahçesinde Darüşşifa’nın.
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; text-align: center; font-family: 'Cinzel';">
+                <strong style="color: var(--dark); font-size: 1.1rem;">AHMET KUTSİ TECER</strong><br>
+                <span style="opacity: 0.7;">1957</span>
+            </div>
+
+            <div class="card-footer" style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="font-weight: bold; letter-spacing: 2px;">BİRİ CAN OLDU, DİĞERİ CANAN; DARÜŞŞİFA’NIN BAĞRINDA YEŞERDİ BU SONSUZ DEVRAN.</p>
+            <p style="font-size: 14px; margin-top: 10px;">"Aşkın gövdesi ağaç, ruhu sarmaşıktır; biri toprağa tutunur, diğeri göğe sarılır."</p>
+        </div>
+    </div>
+</div>
+
+    <div class="site-footer-wrapper">
+        <footer class="site-footer">
+            <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+            <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            <p style="font-size: 11px; margin-top: 15px; opacity: 0.7;">&copy; 2026 TÜM HAKLARI SAKLIDIR</p>
+        </footer>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdown = document.getElementById('globalDropdown');
+
+        menuBtn.onclick = function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        };
+
+        window.onclick = function(e) {
+            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>
