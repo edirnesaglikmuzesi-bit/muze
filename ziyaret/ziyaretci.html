@@ -324,7 +324,7 @@ body {
 <div class="counter-section">
     <div class="counter-card">
         <div class="counter-label-top"><span class="live-dot"></span>CANLI ZİYARETÇİ SAYACI</div>
-        <div class="counter-since" id="counterSince">1 Nisan 2026 tarihinden itibaren toplam ziyaretçi</div>
+        <div class="counter-since" id="counterSince">31 Aralık 1998 tarihinden itibaren toplam ziyaretçi</div>
         <div class="counter-display" id="counterDisplay">
             <span>—</span>
         </div>
@@ -535,17 +535,34 @@ function parseCSV(text) {
     const lines = text.trim().split('\n');
     const result = [];
     // İlk satır başlık olabilir — kontrol et
-    const startLine = isNaN(parseDate(lines[0].split(',')[0])) ? 1 : 0;
+    const firstCols = splitCSVLine(lines[0]);
+    const startLine = !parseDate(firstCols[0]) ? 1 : 0;
     for (let i = startLine; i < lines.length; i++) {
-        const parts = lines[i].split(',');
+        const parts = splitCSVLine(lines[i]);
         if (parts.length < 2) continue;
-        const rawDate = parts[0].trim().replace(/"/g, '');
-        const rawCount = parts[1].trim().replace(/"/g, '');
+        const rawDate = parts[0];
+        // Sayı: Türkçe 100.000,00 → noktaları kaldır, virgülü nokta yap → parseInt
+        const rawCount = parts[1].replace(/\./g, '').replace(',', '.');
         const d = parseDate(rawDate);
-        const c = parseInt(rawCount, 10);
+        const c = Math.round(parseFloat(rawCount));
         if (d && !isNaN(c) && c >= 0) result.push({ date: d, count: c });
     }
     return result.sort((a, b) => a.date - b.date);
+}
+
+// CSV satırını tırnak içindeki virgüllere dikkat ederek böler
+function splitCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQuotes = !inQuotes; continue; }
+        if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; continue; }
+        current += ch;
+    }
+    result.push(current.trim());
+    return result;
 }
 
 function parseDate(s) {
