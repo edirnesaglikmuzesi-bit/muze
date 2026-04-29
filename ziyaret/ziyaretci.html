@@ -549,13 +549,22 @@ function parseCSV(text) {
 }
 
 function parseDate(s) {
-    // Desteklenen formatlar: DD.MM.YYYY / YYYY-MM-DD / DD/MM/YYYY
+    // Desteklenen formatlar: DD.MM.YYYY / YYYY-MM-DD / DD/MM/YYYY / "D Ay YYYY Gün"
     if (!s) return null;
     s = s.trim();
     let m;
-    if ((m = s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+    if ((m = s.match(/^(\d{1,2})\.(\d{2})\.(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
     if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/))) return new Date(+m[1], +m[2]-1, +m[3]);
-    if ((m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+    if ((m = s.match(/^(\d{1,2})\/(\d{2})\/(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+    // Türkçe uzun format: "1 Nisan 2026 Çarşamba" veya "1 Nisan 2026"
+    const TR_MONTHS = {
+        'ocak':0,'şubat':1,'mart':2,'nisan':3,'mayıs':4,'haziran':5,
+        'temmuz':6,'ağustos':7,'eylül':8,'ekim':9,'kasım':10,'aralık':11
+    };
+    if ((m = s.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})/))) {
+        const mo = TR_MONTHS[m[2].toLowerCase()];
+        if (mo !== undefined) return new Date(+m[3], mo, +m[1]);
+    }
     return null;
 }
 
