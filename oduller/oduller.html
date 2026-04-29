@@ -66,7 +66,7 @@ body {
 .dropdown-link { display: block; padding: 12px 25px; color: var(--gold) !important; text-decoration: none; font-family: 'Cinzel'; font-size: 13px; border-bottom: 1px solid rgba(212,175,55,0.1); }
 .dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; color: #fff !important; }
 
-/* --- 3. BANNER (YAZILAR DÜZELTİLDİ) --- */
+/* --- 3. BANNER --- */
 .banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
 .banner-box { 
     position: relative; width: 100%; height: 400px; 
@@ -147,6 +147,114 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
     body { padding-top: 160px; }
     .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
 }
+
+/* --- 8. GALERİ BAŞLIK BANDI --- */
+.gallery-title-bar {
+    background: var(--dark); border-top: 2px solid var(--gold); border-bottom: 2px solid var(--gold);
+    padding: 28px 20px; text-align: center; position: relative; z-index: 2;
+}
+.gallery-title-bar h3 {
+    font-family: 'Cinzel'; color: var(--gold);
+    font-size: clamp(14px, 2.2vw, 20px); letter-spacing: 6px; margin: 0;
+}
+.gallery-title-bar p {
+    font-family: 'Playfair Display'; font-style: italic;
+    color: rgba(212,175,55,0.6); font-size: 14px; margin-top: 6px; letter-spacing: 2px;
+}
+
+/* --- 9. GALERİ SLİDER --- */
+.gallery-inner {
+    padding: 0 0 40px; position: relative; z-index: 2; background: var(--parchment);
+}
+.slider-outer { position: relative; overflow: hidden; width: 100%; }
+.slider-track { display: flex; transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); }
+
+.slide-item {
+    min-width: 100%;
+    padding: 50px 15px 0;
+    display: flex; flex-direction: column; align-items: center;
+    perspective: 1000px; cursor: pointer; position: relative;
+}
+.slide-item img {
+    width: 600px; height: 400px; object-fit: cover; border-radius: 6px;
+    border: 1px solid rgba(212, 175, 55, 0.4); display: block; transition: var(--transition);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3);
+    transform: rotateX(2deg);
+}
+.slide-item img:hover {
+    transform: scale(1.04) translateY(-15px) rotateX(0deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px rgba(212, 175, 55, 0.3);
+    border-color: var(--gold-bright);
+}
+@media (max-width: 768px) { .slide-item img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; } }
+
+.slide-caption {
+    font-family: 'Cinzel'; font-size: 12px; color: rgba(15,26,36,0.45);
+    letter-spacing: 3px; text-align: center; margin-top: 16px; padding-bottom: 5px;
+}
+.slide-counter {
+    position: absolute; top: 62px; right: calc(50% - 316px);
+    background: rgba(15,26,36,0.75); border: 1px solid var(--gold);
+    color: var(--gold); font-family: 'Cinzel'; font-size: 12px;
+    padding: 5px 12px; border-radius: 20px; letter-spacing: 2px;
+}
+@media (max-width: 768px) { .slide-counter { right: 16px; top: 18px; } }
+
+/* ok butonları */
+.slider-arrow {
+    position: absolute; top: 50%; transform: translateY(-60%);
+    background: rgba(15,26,36,0.85); border: 2px solid var(--gold);
+    color: var(--gold); cursor: pointer; z-index: 10;
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; transition: all 0.3s ease;
+}
+.slider-arrow:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 20px rgba(212,175,55,0.6); }
+.slider-arrow.prev { left: 20px; }
+.slider-arrow.next { right: 20px; }
+@media (max-width: 768px) {
+    .slider-arrow { width: 40px; height: 40px; font-size: 16px; }
+    .slider-arrow.prev { left: 8px; }
+    .slider-arrow.next { right: 8px; }
+}
+
+/* dot nav */
+.thumb-nav {
+    display: flex; justify-content: center; gap: 10px;
+    margin-top: 25px; flex-wrap: wrap; padding: 0 20px;
+}
+.thumb-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: rgba(212,175,55,0.2); border: 2px solid rgba(212,175,55,0.3);
+    cursor: pointer; transition: all 0.3s ease;
+}
+.thumb-dot.active {
+    background: var(--gold); border-color: var(--gold);
+    box-shadow: 0 0 8px rgba(212,175,55,0.7); transform: scale(1.4);
+}
+.thumb-dot:hover { background: rgba(212,175,55,0.55); }
+
+.swipe-hint {
+    text-align: center; font-family: 'Cinzel'; font-size: 11px;
+    color: rgba(15,26,36,0.35); letter-spacing: 2px; margin-top: 12px; padding-bottom: 5px;
+}
+
+/* Fullscreen overlay */
+.fs-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.97); z-index: 9999;
+    align-items: center; justify-content: center; flex-direction: column;
+}
+.fs-overlay.on { display: flex; }
+.fs-overlay img { max-width: 92vw; max-height: 85vh; object-fit: contain; border: 1px solid rgba(212,175,55,0.3); border-radius: 4px; }
+.fs-caption { color: var(--gold); font-family: 'Cinzel'; font-size: 12px; letter-spacing: 3px; margin-top: 14px; text-align: center; }
+.fs-close { position: absolute; top: 20px; right: 25px; color: var(--gold); font-size: 32px; cursor: pointer; background: none; border: none; line-height: 1; transition: 0.2s; }
+.fs-close:hover { color: #fff; transform: rotate(90deg); }
+.fs-btns { display: flex; gap: 18px; margin-top: 18px; }
+.fs-btns button { background: rgba(212,175,55,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 9px 22px; cursor: pointer; font-family: 'Cinzel'; font-size: 12px; border-radius: 4px; transition: 0.3s; }
+.fs-btns button:hover { background: var(--gold); color: var(--dark); }
+
+.red-line { text-align: center; border-top: 2px solid var(--v-red); border-bottom: 2px solid var(--v-red); padding: 20px; margin: 25px 0; font-style: italic; }
     </style>
 </head>
 <body>
@@ -206,7 +314,7 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
             <p style="text-align: center; font-weight: bold; color: var(--v-red); margin-bottom: 25px;">"Uluslararası Bir Başarının Hikâyesi"</p>
 
             <h3>AVRUPA KONSEYİ 2004 YILI AVRUPA MÜZE ÖDÜLÜ</h3>
-            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, kuruluşundan yalnızca 7 yıl sonra Avrupa’nın en prestijli müzecilik ödüllerinden biri olan <strong>Avrupa Konseyi 2004 Yılı Avrupa Müze Ödülü’nü</strong> kazanarak büyük bir başarıya imza atmıştır. Ödül kararı, Konsey Başkanı <strong>Peter Schieder</strong> tarafından Müze Müdürü <strong>Enver Şengül’e</strong> resmi yazı ile bildirilmiştir.</p>
+            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, kuruluşundan yalnızca 7 yıl sonra Avrupa'nın en prestijli müzecilik ödüllerinden biri olan <strong>Avrupa Konseyi 2004 Yılı Avrupa Müze Ödülü'nü</strong> kazanarak büyük bir başarıya imza atmıştır. Ödül kararı, Konsey Başkanı <strong>Peter Schieder</strong> tarafından Müze Müdürü <strong>Enver Şengül'e</strong> resmi yazı ile bildirilmiştir.</p>
 
             <div class="small-img-wrapper" style="text-align: center;">
                 <img src="../oduller/images/1.jpg" style="max-width: 100%; height: auto;">
@@ -222,21 +330,21 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
             </ul>
 
             <div class="red-line">
-                "Ödül; ünlü sanatçı <strong>Joan Miró</strong> tarafından yapılan bir heykel ve resmi diplomayı içermektedir. Ayrıca nakit para ödülünün müze hesabına yatırılacağı ve törenin <strong>27 Nisan 2004'te Strasbourg Palais des Rohan’da</strong> yapılacağı bildirilmiştir."
+                "Ödül; ünlü sanatçı <strong>Joan Miró</strong> tarafından yapılan bir heykel ve resmi diplomayı içermektedir. Ayrıca nakit para ödülünün müze hesabına yatırılacağı ve törenin <strong>27 Nisan 2004'te Strasbourg Palais des Rohan'da</strong> yapılacağı bildirilmiştir."
             </div>
 
             <div class="red-line" style="font-style: italic; background: #f9f9f9; padding: 20px; border-left: 5px solid var(--v-red);">
                 <p><strong>Avrupa Konseyi Parlamento Meclisi Resmi Yazısı</strong></p>
                 <p>Sayın Şengül,</p>
-                <p>Parlamento Meclisi’nin Kültür Bilim ve Eğitim Komitesinin 2004 Avrupa Konseyi Müze Ödülünü Sağlık Müzesi’ne verilmesine karar verdiğini onaylamak amacıyla size yazmaktan mutluluk duyuyorum. Bu ödülün verilmesindeki etkenler arasında, ruhsal bozukluğun psikolojik hassasiyeti konusuna müzenizin özellikle başarılı ve örnek yaklaşımı olmuştur. Ayrıca müzenizin doğu ve batı kültürleri arasında daha fazla köprü görevi yapabileceği coğrafi konumu da etkili olmuştur.</p>
-                <p>Ödül, Palais des Rohan, Strasbourg’da 27 Nisan 2004 akşamında düzenlenecek olan törende takdim edilecektir. Belgenizi ve kupanızı (Joan Miro tarafından yapılan bir heykel) almak için törene katılabileceğinizi umuyorum. Nakit para ödülünüzde müzenizin banka hesabına yatırılacaktır. Daha fazla bilgi için Mr. Christopher Grayson ile temas edebilirsiniz. Müzenizin başarısından dolayı sizi içtenlikle kutluyorum.</p>
+                <p>Parlamento Meclisi'nin Kültür Bilim ve Eğitim Komitesinin 2004 Avrupa Konseyi Müze Ödülünü Sağlık Müzesi'ne verilmesine karar verdiğini onaylamak amacıyla size yazmaktan mutluluk duyuyorum. Bu ödülün verilmesindeki etkenler arasında, ruhsal bozukluğun psikolojik hassasiyeti konusuna müzenizin özellikle başarılı ve örnek yaklaşımı olmuştur. Ayrıca müzenizin doğu ve batı kültürleri arasında daha fazla köprü görevi yapabileceği coğrafi konumu da etkili olmuştur.</p>
+                <p>Ödül, Palais des Rohan, Strasbourg'da 27 Nisan 2004 akşamında düzenlenecek olan törende takdim edilecektir. Belgenizi ve kupanızı (Joan Miro tarafından yapılan bir heykel) almak için törene katılabileceğinizi umuyorum. Nakit para ödülünüzde müzenizin banka hesabına yatırılacaktır. Daha fazla bilgi için Mr. Christopher Grayson ile temas edebilirsiniz. Müzenizin başarısından dolayı sizi içtenlikle kutluyorum.</p>
                 <p style="text-align: right;"><strong>Saygılarımla,<br>Peter Schieder - Meclis Başkanı</strong></p>
             </div>
 
             <h3>STRASBOURG ÖDÜL TÖRENİ</h3>
-            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, <strong>27 Nisan</strong> tarihinde Fransa’nın Strasbourg kentinde düzenlenen törenle ödülünü aldı. Ülkemizin ve Edirne’nin tanıtımı açısından oldukça önemli olan bu ödülü almak için Strasbourg’a giden Trakya Üniversitesi Rektörü <strong>Prof. Dr. Osman İnci</strong>, Müzenin Kurucusu <strong>Yrd. Doç. Dr. Ratıp Kazancıgil</strong>, Müze Müdürü <strong>Enver Şengül</strong> ve diğer üniversite temsilcileri, Strasbourg’un saray müzelerinin en önemlisi olan <strong>Palace Rohan’daki</strong> ödül törenine katıldılar.</p>
+            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, <strong>27 Nisan</strong> tarihinde Fransa'nın Strasbourg kentinde düzenlenen törenle ödülünü aldı. Ülkemizin ve Edirne'nin tanıtımı açısından oldukça önemli olan bu ödülü almak için Strasbourg'a giden Trakya Üniversitesi Rektörü <strong>Prof. Dr. Osman İnci</strong>, Müzenin Kurucusu <strong>Yrd. Doç. Dr. Ratıp Kazancıgil</strong>, Müze Müdürü <strong>Enver Şengül</strong> ve diğer üniversite temsilcileri, Strasbourg'un saray müzelerinin en önemlisi olan <strong>Palace Rohan'daki</strong> ödül törenine katıldılar.</p>
 
-            <p>Törende özellikle Avrupa kültürel mirasının korunması, Doğu ve Batı kültürlerinin kaynaşması ile Türkiye’nin kültürel zenginliği ve laik yapısı vurgulanmıştır. Belediye Başkanı <strong>Fabienne Keller</strong> memnuniyetini dile getirirken, <strong>Hans Woodtli</strong> ödül gerekçelerini detaylandırmıştır. Avrupa Konseyi Parlamenterler Birliği Başkanı <strong>Schieder</strong> ise Türkiye’nin kültüre verdiği öneme değinerek, bir İslam ülkesi olan Türkiye’nin, laik yapısıyla, bu tür zenginlikleri ön plana çıkarma başarısı gösterdiğini söyledi. Konuşmasının ardından Joan Miro heykeli ile diplomayı müzemiz temsilcilerine takdim etti.</p>
+            <p>Törende özellikle Avrupa kültürel mirasının korunması, Doğu ve Batı kültürlerinin kaynaşması ile Türkiye'nin kültürel zenginliği ve laik yapısı vurgulanmıştır. Belediye Başkanı <strong>Fabienne Keller</strong> memnuniyetini dile getirirken, <strong>Hans Woodtli</strong> ödül gerekçelerini detaylandırmıştır. Avrupa Konseyi Parlamenterler Birliği Başkanı <strong>Schieder</strong> ise Türkiye'nin kültüre verdiği öneme değinerek, bir İslam ülkesi olan Türkiye'nin, laik yapısıyla, bu tür zenginlikleri ön plana çıkarma başarısı gösterdiğini söyledi. Konuşmasının ardından Joan Miro heykeli ile diplomayı müzemiz temsilcilerine takdim etti.</p>
 
             <div class="table-wrap">
                 <table style="width: 100%; border-collapse: collapse;">
@@ -268,8 +376,8 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
             </div>
 
             <h3>DİPLOMATİK TEMASLAR VE ATİNA FORUMU</h3>
-            <p><strong>28 Nisan'da</strong> Avrupa Konseyi Kültür Komisyonu tarafından kabul edilen heyetimiz, müzenin tedavi yöntemleri üzerine kapsamlı bir oturum gerçekleştirmiştir. Buradaki oturumda <strong>Zülfü Livaneli</strong>, üniversite heyetini yalnız bırakmadı. Temaslar esnasında hem Avrupa Konseyi Binası hem de ödül töreninin yapıldığı Rohan Sarayı’nda açılan Edirne’yi, Üniversiteyi ve müzeyi tanıtıcı sergiler büyük ilgi görmüştür.</p>
-            <p><strong>5–8 Mayıs tarihlerinde Atina’da</strong> düzenlenen ve 48 ülkeden 58 müzenin katıldığı Avrupa Müze Forumu’nda müzemiz, <strong>ilk sunum yapan kurum</strong> olma onuruna erişmiştir. Foruma ilk görüşmeci olarak davet edilen Sağlık Müzesi’nin sunumu oldukça başarılı bulundu.</p>
+            <p><strong>28 Nisan'da</strong> Avrupa Konseyi Kültür Komisyonu tarafından kabul edilen heyetimiz, müzenin tedavi yöntemleri üzerine kapsamlı bir oturum gerçekleştirmiştir. Buradaki oturumda <strong>Zülfü Livaneli</strong>, üniversite heyetini yalnız bırakmadı. Temaslar esnasında hem Avrupa Konseyi Binası hem de ödül töreninin yapıldığı Rohan Sarayı'nda açılan Edirne'yi, Üniversiteyi ve müzeyi tanıtıcı sergiler büyük ilgi görmüştür.</p>
+            <p><strong>5–8 Mayıs tarihlerinde Atina'da</strong> düzenlenen ve 48 ülkeden 58 müzenin katıldığı Avrupa Müze Forumu'nda müzemiz, <strong>ilk sunum yapan kurum</strong> olma onuruna erişmiştir. Foruma ilk görüşmeci olarak davet edilen Sağlık Müzesi'nin sunumu oldukça başarılı bulundu.</p>
 
             <div class="small-img-wrapper" style="text-align: center;">
                 <img src="../oduller/images/2.jpg" alt="Atina Avrupa Müze Forumu" style="max-width: 100%; height: auto;">
@@ -278,9 +386,9 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
          
             <h3>AVRUPA KÜLTÜREL MİRAS BİRLİĞİ</h3>
             <h4>KÖLN: EN İYİ SUNUM ÖDÜLÜ</h4>
-            <p>Sağlık Müzesi’nin elde ettiği diğer önemli uluslararası ödül, <strong>Avrupa Kültürel Miras Birliği ve Kültürel Mirastaki En İyiler (The Best in Heritage) ve Mükemmellik Kulübü</strong> tarafından verilen <strong>“En İyi Sunum Ödülü”</strong>dür.</p>
+            <p>Sağlık Müzesi'nin elde ettiği diğer önemli uluslararası ödül, <strong>Avrupa Kültürel Miras Birliği ve Kültürel Mirastaki En İyiler (The Best in Heritage) ve Mükemmellik Kulübü</strong> tarafından verilen <strong>"En İyi Sunum Ödülü"</strong>dür.</p>
             
-            <p>Her yıl Avrupa genelinde değişik kategorilerde ödül alan <strong>14 ayrı ülkeden gelen 17 müze</strong> arasında “En İyi Sunum Ödülü”nü kazanma başarısı göstermiştir. Almanya’nın <strong>Köln</strong> kentinde yapılan ve Norveç (2), Portekiz, İngiltere (2), Avusturya, İsrail, Estonya (2), Rusya, Almanya, Hırvatistan, Yunanistan, Danimarka, İspanya ve Litvanya’dan gelen ödüllü müzeler, 4 gün süreyle kendilerini tanıtan stantlar açmış ve sunumlar yapmıştır.</p>
+            <p>Her yıl Avrupa genelinde değişik kategorilerde ödül alan <strong>14 ayrı ülkeden gelen 17 müze</strong> arasında "En İyi Sunum Ödülü"nü kazanma başarısı göstermiştir. Almanya'nın <strong>Köln</strong> kentinde yapılan ve Norveç (2), Portekiz, İngiltere (2), Avusturya, İsrail, Estonya (2), Rusya, Almanya, Hırvatistan, Yunanistan, Danimarka, İspanya ve Litvanya'dan gelen ödüllü müzeler, 4 gün süreyle kendilerini tanıtan stantlar açmış ve sunumlar yapmıştır.</p>
 
             <div class="small-img-wrapper" style="text-align: center;">
                  <img src="../oduller/images/3.jpg" alt="Köln En İyi Sunum Ödülü Töreni" style="max-width: 100%; height: auto;">
@@ -289,7 +397,7 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
 
             <p>Ödül töreninde ilk konuşmayı <strong>Köln Kent Konseyi Sanat ve Kültürel İlişkiler Komitesi Başkanı Dr. Lothar Theodor Lemper</strong> yapmıştır. Ardından sırasıyla Avrupa Kültürel Miras Birliği ve Mükemmellik Kulübü adına <strong>Tomislav Šola</strong>, Europa Nostra temsilcisi <strong>Prof. Emil Hadler</strong>, ICOM (Uluslararası Müzeler Konseyi) Avrupa Başkanı <strong>Udo Gößwald</strong>, Alman Müzeler Birliği Başkanı <strong>Dr. Michael Eissenhauer</strong> ve Avrupa Müze Forumu (EMF) temsilcisi <strong>Stephan Harrison</strong> birer konuşma yapmıştır.</p>
 
-            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, <strong>Rektör Yardımcısı Prof. Dr. Beyhan Karamanlıoğlu</strong> başkanlığındaki bir çalışma grubuyla temsil edilmiştir. <strong>Müze Müdürü Enver Şengül</strong> ve <strong>Müze Uluslararası İlişkiler Koordinatörü Nehir Ağırseven’in</strong> hazırladığı sunuma <strong>Kültür ve Turizm Bakanlığı</strong> da destek vermiştir. <strong>Edirne Devlet Türk Müziği Korosu Şefi Yıldıray Öztürk</strong> ve <strong>tambur sanatçısı Reyhan İllez</strong> de geçmişte tedavide kullanılan klasik Türk müziği eserleriyle sunuma eşlik etmiştir.</p>
+            <p>Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi, <strong>Rektör Yardımcısı Prof. Dr. Beyhan Karamanlıoğlu</strong> başkanlığındaki bir çalışma grubuyla temsil edilmiştir. <strong>Müze Müdürü Enver Şengül</strong> ve <strong>Müze Uluslararası İlişkiler Koordinatörü Nehir Ağırseven'in</strong> hazırladığı sunuma <strong>Kültür ve Turizm Bakanlığı</strong> da destek vermiştir. <strong>Edirne Devlet Türk Müziği Korosu Şefi Yıldıray Öztürk</strong> ve <strong>tambur sanatçısı Reyhan İllez</strong> de geçmişte tedavide kullanılan klasik Türk müziği eserleriyle sunuma eşlik etmiştir.</p>
 
             <div class="table-wrap" style="overflow-x:auto; margin-top: 20px;">
                 <table style="width:100%; min-width: 500px; border-collapse: collapse;">
@@ -324,7 +432,7 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
             </div>
 
             <h3>DİĞER ULUSLARARASI BAŞARILARIMIZ</h3>
-            <p>Sağlık Müzesi, Hırvatistan’ın Dubrovnik kentinde düzenlenen ödüllü müzeler buluşmasında en iyi ikinci sunumu gerçekleştiren müze olmuştur. Ayrıca Güneydoğu Avrupa Gazeteciler Derneği tarafından “Yılın Başarı Ödülü”ne layık görülmüştür.</p>
+            <p>Sağlık Müzesi, Hırvatistan'ın Dubrovnik kentinde düzenlenen ödüllü müzeler buluşmasında en iyi ikinci sunumu gerçekleştiren müze olmuştur. Ayrıca Güneydoğu Avrupa Gazeteciler Derneği tarafından "Yılın Başarı Ödülü"ne layık görülmüştür.</p>
 
             <div class="table-wrap">
                 <table style="width: 100%; border-collapse: collapse;">
@@ -356,15 +464,171 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
             </div>
 
             <div class="red-line" style="margin-top: 30px;">
-                Sağlık Müzesi kuruluşundan 7 yıl sonra Avrupa’nın en prestijli müzecilik ödüllerinden olan <strong>Avrupa Konseyi 2004 Yılı Avrupa Müze Ödülü’nü</strong> alma başarısı gösterdi. Hem göze hem kulağa hitap eden sunumlarla, tarihi tedavi yöntemlerini modern müzecilik anlayışıyla dünyaya anlatan müzemiz; Doğu ile Batı arasında kurduğu kültürel köprü ile uluslararası alanda ülkemizi gururla temsil etmeye devam etmektedir.
+                Sağlık Müzesi kuruluşundan 7 yıl sonra Avrupa'nın en prestijli müzecilik ödüllerinden olan <strong>Avrupa Konseyi 2004 Yılı Avrupa Müze Ödülü'nü</strong> alma başarısı gösterdi. Hem göze hem kulağa hitap eden sunumlarla, tarihi tedavi yöntemlerini modern müzecilik anlayışıyla dünyaya anlatan müzemiz; Doğu ile Batı arasında kurduğu kültürel köprü ile uluslararası alanda ülkemizi gururla temsil etmeye devam etmektedir.
             </div>
         </div>
+
+        <!-- ===================== GALERİ BAŞLIK BANDI ===================== -->
+        <div class="gallery-title-bar">
+            <h3>FOTOĞRAF GALERİSİ</h3>
+            <p>Ödül Törenlerinden ve Etkinliklerden Kareler &nbsp;·&nbsp; 22 Görsel</p>
+        </div>
+
+        <!-- ===================== 22 GÖRSELLİ SLİDER ===================== -->
+        <div class="gallery-inner">
+            <div class="slider-outer" id="sliderOuter">
+                <div class="slider-track" id="sliderTrack">
+
+                    <div class="slide-item" onclick="openFS(0)">
+                        <img src="../oduller/img/cat_8_ (1).jpg" alt="Ödül Galerisi 1">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 1</div>
+                        <div class="slide-counter">1 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(1)">
+                        <img src="../oduller/img/cat_8_ (2).jpg" alt="Ödül Galerisi 2">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 2</div>
+                        <div class="slide-counter">2 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(2)">
+                        <img src="../oduller/img/cat_8_ (3).jpg" alt="Ödül Galerisi 3">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 3</div>
+                        <div class="slide-counter">3 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(3)">
+                        <img src="../oduller/img/cat_8_ (4).jpg" alt="Ödül Galerisi 4">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 4</div>
+                        <div class="slide-counter">4 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(4)">
+                        <img src="../oduller/img/cat_8_ (5).jpg" alt="Ödül Galerisi 5">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 5</div>
+                        <div class="slide-counter">5 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(5)">
+                        <img src="../oduller/img/cat_8_ (6).jpg" alt="Ödül Galerisi 6">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 6</div>
+                        <div class="slide-counter">6 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(6)">
+                        <img src="../oduller/img/cat_8_ (7).jpg" alt="Ödül Galerisi 7">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 7</div>
+                        <div class="slide-counter">7 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(7)">
+                        <img src="../oduller/img/cat_8_ (8).jpg" alt="Ödül Galerisi 8">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 8</div>
+                        <div class="slide-counter">8 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(8)">
+                        <img src="../oduller/img/cat_8_ (9).jpg" alt="Ödül Galerisi 9">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 9</div>
+                        <div class="slide-counter">9 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(9)">
+                        <img src="../oduller/img/cat_8_ (10).jpg" alt="Ödül Galerisi 10">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 10</div>
+                        <div class="slide-counter">10 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(10)">
+                        <img src="../oduller/img/cat_8_ (11).jpg" alt="Ödül Galerisi 11">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 11</div>
+                        <div class="slide-counter">11 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(11)">
+                        <img src="../oduller/img/cat_8_ (12).jpg" alt="Ödül Galerisi 12">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 12</div>
+                        <div class="slide-counter">12 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(12)">
+                        <img src="../oduller/img/cat_8_ (13).jpg" alt="Ödül Galerisi 13">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 13</div>
+                        <div class="slide-counter">13 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(13)">
+                        <img src="../oduller/img/cat_8_ (14).jpg" alt="Ödül Galerisi 14">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 14</div>
+                        <div class="slide-counter">14 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(14)">
+                        <img src="../oduller/img/cat_8_ (15).jpg" alt="Ödül Galerisi 15">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 15</div>
+                        <div class="slide-counter">15 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(15)">
+                        <img src="../oduller/img/cat_8_ (16).jpg" alt="Ödül Galerisi 16">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 16</div>
+                        <div class="slide-counter">16 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(16)">
+                        <img src="../oduller/img/cat_8_ (17).jpg" alt="Ödül Galerisi 17">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 17</div>
+                        <div class="slide-counter">17 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(17)">
+                        <img src="../oduller/img/cat_8_ (18).jpg" alt="Ödül Galerisi 18">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 18</div>
+                        <div class="slide-counter">18 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(18)">
+                        <img src="../oduller/img/cat_8_ (19).jpg" alt="Ödül Galerisi 19">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 19</div>
+                        <div class="slide-counter">19 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(19)">
+                        <img src="../oduller/img/cat_8_ (20).jpg" alt="Ödül Galerisi 20">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 20</div>
+                        <div class="slide-counter">20 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(20)">
+                        <img src="../oduller/img/cat_8_ (21).jpg" alt="Ödül Galerisi 21">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 21</div>
+                        <div class="slide-counter">21 / 22</div>
+                    </div>
+                    <div class="slide-item" onclick="openFS(21)">
+                        <img src="../oduller/img/cat_8_ (22).jpg" alt="Ödül Galerisi 22">
+                        <div class="slide-caption">Ödül Töreni — Fotoğraf 22</div>
+                        <div class="slide-counter">22 / 22</div>
+                    </div>
+
+                </div><!-- /slider-track -->
+                <button class="slider-arrow prev" id="prevBtn" aria-label="Önceki">&#8592;</button>
+                <button class="slider-arrow next" id="nextBtn" aria-label="Sonraki">&#8594;</button>
+            </div><!-- /slider-outer -->
+
+            <!-- Dot nav — 22 nokta -->
+            <div class="thumb-nav" id="thumbNav">
+                <div class="thumb-dot active" onclick="goTo(0)"></div>
+                <div class="thumb-dot" onclick="goTo(1)"></div>
+                <div class="thumb-dot" onclick="goTo(2)"></div>
+                <div class="thumb-dot" onclick="goTo(3)"></div>
+                <div class="thumb-dot" onclick="goTo(4)"></div>
+                <div class="thumb-dot" onclick="goTo(5)"></div>
+                <div class="thumb-dot" onclick="goTo(6)"></div>
+                <div class="thumb-dot" onclick="goTo(7)"></div>
+                <div class="thumb-dot" onclick="goTo(8)"></div>
+                <div class="thumb-dot" onclick="goTo(9)"></div>
+                <div class="thumb-dot" onclick="goTo(10)"></div>
+                <div class="thumb-dot" onclick="goTo(11)"></div>
+                <div class="thumb-dot" onclick="goTo(12)"></div>
+                <div class="thumb-dot" onclick="goTo(13)"></div>
+                <div class="thumb-dot" onclick="goTo(14)"></div>
+                <div class="thumb-dot" onclick="goTo(15)"></div>
+                <div class="thumb-dot" onclick="goTo(16)"></div>
+                <div class="thumb-dot" onclick="goTo(17)"></div>
+                <div class="thumb-dot" onclick="goTo(18)"></div>
+                <div class="thumb-dot" onclick="goTo(19)"></div>
+                <div class="thumb-dot" onclick="goTo(20)"></div>
+                <div class="thumb-dot" onclick="goTo(21)"></div>
+            </div>
+            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın →</p>
+        </div><!-- /gallery-inner -->
 
         <div class="card-footer">
             <p style="font-weight: bold; letter-spacing: 2px;">DÜNYANIN TAKDİR ETTİĞİ BİR ŞİFA MİRASI: SAĞLIK MÜZESİ</p>
         </div>
     </div>
 </div>
+
     <div class="site-footer-wrapper">
         <footer class="site-footer">
             <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
@@ -373,20 +637,84 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
         </footer>
     </div>
 
+    <!-- FULLSCREEN OVERLAY -->
+    <div class="fs-overlay" id="fsOverlay">
+        <button class="fs-close" onclick="closeFS()">✕</button>
+        <img src="" alt="" id="fsImg">
+        <div class="fs-caption" id="fsCaption"></div>
+        <div class="fs-btns">
+            <button onclick="fsMove(-1)">&#8592; Önceki</button>
+            <button onclick="closeFS()">Kapat</button>
+            <button onclick="fsMove(1)">Sonraki &#8594;</button>
+        </div>
+    </div>
+
     <script>
+        // MENÜ
         const menuBtn = document.getElementById('menuBtn');
         const dropdown = document.getElementById('globalDropdown');
-
         menuBtn.onclick = function(e) {
             e.stopPropagation();
             dropdown.classList.toggle('active');
         };
-
         window.onclick = function(e) {
             if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.remove('active');
             }
         };
+
+        // SLİDER
+        const TOTAL = 22;
+        let cur = 0;
+        const track = document.getElementById('sliderTrack');
+        const dots = document.querySelectorAll('.thumb-dot');
+
+        function goTo(n) {
+            cur = ((n % TOTAL) + TOTAL) % TOTAL;
+            track.style.transform = `translateX(-${cur * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+        }
+
+        document.getElementById('prevBtn').onclick = () => goTo(cur - 1);
+        document.getElementById('nextBtn').onclick = () => goTo(cur + 1);
+
+        // Swipe (dokunmatik)
+        let tx = 0;
+        const so = document.getElementById('sliderOuter');
+        so.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
+        so.addEventListener('touchend', e => {
+            const d = tx - e.changedTouches[0].screenX;
+            if (Math.abs(d) > 50) goTo(d > 0 ? cur + 1 : cur - 1);
+        }, { passive: true });
+
+        // Klavye
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') goTo(cur - 1);
+            if (e.key === 'ArrowRight') goTo(cur + 1);
+            if (e.key === 'Escape') closeFS();
+        });
+
+        // FULLSCREEN
+        const srcs = Array.from({length: 22}, (_, i) => `../oduller/img/cat_8_ (${i + 1}).jpg`);
+        const caps = Array.from({length: 22}, (_, i) => `Ödül Töreni — Fotoğraf ${i + 1}`);
+        let fi = 0;
+
+        function openFS(idx) {
+            fi = idx;
+            document.getElementById('fsImg').src = srcs[idx];
+            document.getElementById('fsCaption').textContent = caps[idx];
+            document.getElementById('fsOverlay').classList.add('on');
+        }
+        function closeFS() { document.getElementById('fsOverlay').classList.remove('on'); }
+        function fsMove(dir) {
+            fi = ((fi + dir) + TOTAL) % TOTAL;
+            document.getElementById('fsImg').src = srcs[fi];
+            document.getElementById('fsCaption').textContent = caps[fi];
+            goTo(fi);
+        }
+        document.getElementById('fsOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeFS();
+        });
     </script>
 </body>
 </html>
