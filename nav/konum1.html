@@ -113,6 +113,14 @@ html,body{
 }
 @keyframes glowPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
 
+/* Water canvas */
+#water-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  z-index:0;pointer-events:none;
+  opacity:0.55;
+}
+
 .intro-title{
   position:relative;z-index:3;
   font-family:var(--font-head);font-size:clamp(20px,5vw,28px);
@@ -138,6 +146,21 @@ html,body{
   text-transform:uppercase;
 }
 .btn-start:active{transform:scale(0.97);}
+
+.btn-intro-lang{
+  position:relative;z-index:2;
+  font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;
+  background:transparent;
+  color:rgba(240,192,64,0.75);
+  border:1px solid rgba(184,134,11,0.4);
+  border-radius:50px;
+  padding:12px 32px;cursor:pointer;
+  margin-top:14px;
+  transition:all 0.3s ease;
+  text-transform:uppercase;
+}
+.btn-intro-lang:hover{border-color:var(--gold);color:var(--gold3);}
+.btn-intro-lang:active{transform:scale(0.97);}
 
 /* ══════════════════════════════════════════
    TOUR SCREEN
@@ -229,30 +252,31 @@ html,body{
 
 /* Slogan box */
 .stop-slogan{
-  background:linear-gradient(135deg,rgba(184,134,11,0.12),rgba(184,134,11,0.06));
-  border:1px solid var(--border);border-radius:8px;
+  background:linear-gradient(135deg,rgba(139,80,0,0.18),rgba(139,80,0,0.10));
+  border:1.5px solid #9a6010;border-radius:8px;
   padding:12px 16px;margin-bottom:14px;
   text-align:center;
-  font-family:var(--font-head);font-size:13px;
-  color:var(--gold);letter-spacing:0.08em;
+  font-family:var(--font-head);font-size:13px;font-weight:700;
+  color:#5a3000;letter-spacing:0.08em;
 }
 
 /* Content area */
 .stop-body{
-  background:#fff;
-  border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--parch2);
+  border:1.5px solid #b8860b;border-radius:var(--radius);
   padding:18px 16px;margin-bottom:14px;
-  box-shadow:var(--shadow);
+  box-shadow:0 4px 16px rgba(44,26,6,0.22);
 }
 .content-block{margin-bottom:18px;}
 .content-block:last-child{margin-bottom:0;}
 .content-title{
-  font-family:var(--font-head);font-size:12px;
-  color:var(--gold);letter-spacing:0.1em;
+  font-family:var(--font-head);font-size:13px;font-weight:700;
+  color:#7a4800;letter-spacing:0.1em;
   margin-bottom:6px;display:flex;align-items:center;gap:6px;
+  text-shadow:none;
 }
 .content-text{
-  font-size:15px;line-height:1.85;color:var(--ink2);
+  font-size:15px;line-height:1.85;color:#2c1a06;
   text-align:justify;
 }
 
@@ -279,17 +303,19 @@ html,body{
   flex:1;text-align:center;line-height:1.3;
 }
 .btn-back{
-  background:var(--parch3);color:var(--ink3);
-  border:1px solid var(--border);flex:0.7;
+  background:var(--parch3);color:#3a2000;
+  border:1.5px solid #9a6010;flex:0.7;font-weight:600;
 }
 .btn-back:active,.btn-forward:active,.btn-alt:active{transform:scale(0.97);}
 .btn-forward{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:var(--ink);box-shadow:0 4px 14px rgba(184,134,11,0.3);
+  background:linear-gradient(135deg,#9a6a00,#b8860b);
+  color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(100,60,0,0.45);
+  text-shadow:0 1px 3px rgba(0,0,0,0.3);
 }
 .btn-alt{
-  background:linear-gradient(135deg,var(--red),var(--red2));
-  color:#fff;box-shadow:0 4px 14px rgba(139,32,0,0.3);
+  background:linear-gradient(135deg,#6b1500,#a02010);
+  color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(100,20,0,0.45);
+  text-shadow:0 1px 3px rgba(0,0,0,0.3);
 }
 
 /* Tour image */
@@ -513,7 +539,7 @@ html,body{
    GÖNÜL KÖPRÜSÜ (LAST STOP FORM)
 ══════════════════════════════════════════ */
 .gonul-form{
-  background:#fff;border:1px solid var(--border);
+  background:var(--parch2);border:1.5px solid #b8860b;
   border-radius:var(--radius);padding:18px 16px;
   margin-bottom:14px;box-shadow:var(--shadow);
 }
@@ -546,13 +572,13 @@ html,body{
   display:flex;align-items:center;gap:8px;
 }
 .msg-card{
-  background:#fff;border:1px solid var(--border);border-radius:8px;
+  background:var(--parch2);border:1.5px solid #b8860b;border-radius:8px;
   padding:14px;margin-bottom:10px;
-  border-left:3px solid var(--gold);
+  border-left:4px solid #8a5800;
 }
-.msg-author{font-family:var(--font-head);font-size:12px;color:var(--ink);margin-bottom:2px;}
-.msg-city{font-size:11px;color:var(--stone);margin-bottom:8px;}
-.msg-body{font-size:14px;line-height:1.8;color:var(--ink2);}
+.msg-author{font-family:var(--font-head);font-size:12px;font-weight:700;color:#2c1a06;margin-bottom:2px;}
+.msg-city{font-size:11px;color:#6a4820;margin-bottom:8px;}
+.msg-body{font-size:14px;line-height:1.8;color:#2c1a06;}
 .msg-date{font-size:10px;color:var(--stone);text-align:right;margin-top:6px;}
 .msg-loading{text-align:center;padding:20px;color:var(--stone);font-style:italic;font-size:14px;}
 .msg-pagination{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px;}
@@ -624,6 +650,7 @@ html,body{
      INTRO SCREEN
 ══════════════════════════════════════════ -->
 <div id="screen-intro" class="screen active">
+  <canvas id="water-canvas"></canvas>
   <div class="intro-bg-rings">
     <div class="ring"></div>
     <div class="ring"></div>
@@ -637,6 +664,7 @@ html,body{
   <div class="intro-title">Eşiğe Davet</div>
   <div class="intro-sub">Zamanın ötesine, şifanın merkezine bir yolculuk…</div>
   <button class="btn-start" onclick="startTour()">YOLCULUĞA BAŞLA</button>
+  <button class="btn-intro-lang" onclick="openLang()">🌐 DİL SEÇ / LANGUAGE</button>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -666,10 +694,10 @@ html,body{
     <!-- ── DURAK 0: Müze Girişi ── -->
     <div class="stop-page active" id="stop-0">
       <div class="stop-header">
-        <div class="stop-main-title">🏛️ SULTAN II. BAYEZİD KÜLLİYESİ</div>
-        <div class="stop-sub-title">SAĞLIK MÜZESİ</div>
+        <div class="stop-main-title" data-i18n="s0_main">🏛️ SULTAN II. BAYEZİD KÜLLİYESİ</div>
+        <div class="stop-sub-title" data-i18n="s0_sub">SAĞLIK MÜZESİ</div>
       </div>
-      <div class="stop-slogan">✨ ŞİFA YOLCULUĞU — MÜZE GİRİŞİ</div>
+      <div class="stop-slogan" data-i18n="s0_slogan">✨ ŞİFA YOLCULUĞU — MÜZE GİRİŞİ</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -679,7 +707,7 @@ html,body{
         <div class="ornament-line"><span>✦</span></div>
         <div class="content-block">
           <div class="content-title">🏗️ YAPI</div>
-          <div class="content-text">Fatih Sultan Mehmet'in oğlu ve 8. Osmanlı Padişahı Sultan II. Bayezid tarafından, dönemin mimarbaşı Hayrettin'e yaptırılan bu yapılar topluluğu, Osmanlı külliyeleri içinde günümüze en sağlam olarak ulaşmış olan külliyedir. Merkezinde camii, sağ tarafında darüşşifa ve medrese, sol tarafında imaret ve kiler, caminin kenarlarına bitişik misafirhane ve arka tarafta Tunca Nehri üzerindeki köprüsüyle Osmanlı'nın sosyal devlet anlayışını en güçlü biçimde yansıtır.</div>
+          <div class="content-text">Fatih Sultan Mehmet'in oğlu ve 8. Osmanlı Padişahı Sultan II. Bayezid tarafından, dönemin mimarbaşı Hayrettin'e yaptırılan bu yapılar topluluğu, Osmanlı külliyeleri içinde günümüze en sağlam olarak ulaşmış olan külliyedir. Merkezinde camii, sağ tarafında darüşşifa ve medrese, sol tarafında imaret ve kiler, caminin kenarlarına bitişik olarak yapılmış misafirhane ve arka tarafta Tunca Nehri üzerindeki köprüsüyle Osmanlı'nın sosyal devlet anlayışını en güçlü biçimde yansıtan sağlık, sosyal, kültürel, eğitim ve dini yapıları içinde barındırır.</div>
         </div>
         <div class="ornament-line"><span>✦</span></div>
         <div class="content-block">
@@ -717,10 +745,10 @@ html,body{
     <!-- ── DURAK 1: Darüşşifa 1. Avlu ── -->
     <div class="stop-page" id="stop-1">
       <div class="stop-header">
-        <div class="stop-main-title">Darüşşifa Girişi</div>
-        <div class="stop-sub-title">🏛️ ADALET VE ŞİFA KAPISI</div>
+        <div class="stop-main-title" data-i18n="s1_main">Darüşşifa Girişi</div>
+        <div class="stop-sub-title" data-i18n="s1_sub">🏛️ ADALET VE ŞİFA KAPISI</div>
       </div>
-      <div class="stop-slogan">⚖️ ŞİFANIN İLK DURAĞI</div>
+      <div class="stop-slogan" data-i18n="s1_slogan">⚖️ ŞİFANIN İLK DURAĞI</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -746,11 +774,15 @@ html,body{
         </div>
         <div class="content-block">
           <div class="content-title">🌿 AĞAÇ VE SARMAŞIK</div>
-          <div class="content-text">Çimler içindeki panoda Ahmet Kutsi Tecer'in bu ağaç için kaleme aldığı hüzünlü sevda şiirini mutlaka okuyun. Ardından, o duyguyla ağaca ve sarmaşığa bir kez daha bakmanızı öneririm.</div>
+          <div class="content-text">Bu noktaya yaklaştığınızda, çimler içindeki panoda Ahmet Kutsi Tecer'in bu ağaç için kaleme aldığı hüzünlü sevda şiirini mutlaka okuyun. Ardından, o duyguyla ağaca ve sarmaşığa bir kez daha bakmanızı öneririm.</div>
         </div>
         <div class="content-block">
           <div class="content-title">🎬 SUNUM ODASI</div>
           <div class="content-text">Şiirin devamında, hemen sol tarafta sunum odamız yer almaktadır. Külliye'nin ve Darüşşifanın tarihçesini anlatan videoyu izleyerek kapsamlı bilgi edinebilirsiniz.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">🧭 YÖNLENDİRME</div>
+          <div class="content-text">Çeşitli canlandırmalar ve bilgilendirme panolarıyla düzenlenmiş bu odaları ayrıntılı gezmeyi dönüşünüze bırakarak, şimdi sizi sunum odamıza doğru yönlendirelim. İlk avlunun ilerisinde, sol tarafta yer alan odamız sunum odasıdır. Oraya doğru yürürken, solunuzda kalan kuyuya dikkatinizi çekmek isterim.</div>
         </div>
       </div>
 
@@ -773,10 +805,10 @@ html,body{
     <!-- ── DURAK 2: Darüşşifa 2. Avlu ── -->
     <div class="stop-page" id="stop-2">
       <div class="stop-header">
-        <div class="stop-main-title">Sunum Odasından Çıkış</div>
-        <div class="stop-sub-title">🏛️ BİLGİDEN DENEYİME</div>
+        <div class="stop-main-title" data-i18n="s2_main">Sunum Odasından Çıkış</div>
+        <div class="stop-sub-title" data-i18n="s2_sub">🏛️ BİLGİDEN DENEYİME</div>
       </div>
-      <div class="stop-slogan">🏛️ İDARE VE NİZAM</div>
+      <div class="stop-slogan" data-i18n="s2_slogan">🏛️ İDARE VE NİZAM</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -815,10 +847,10 @@ html,body{
     <!-- ── DURAK 3: Şifahane ── -->
     <div class="stop-page" id="stop-3">
       <div class="stop-header">
-        <div class="stop-main-title">Büyük Şifahane (SEKİZGEN BÖLÜM)</div>
-        <div class="stop-sub-title">🏛️ DARÜŞŞİFA EŞİĞİ</div>
+        <div class="stop-main-title" data-i18n="s3_main">Büyük Şifahane (SEKİZGEN BÖLÜM)</div>
+        <div class="stop-sub-title" data-i18n="s3_sub">🏛️ DARÜŞŞİFA EŞİĞİ</div>
       </div>
-      <div class="stop-slogan">🌊 RUHUN ŞİFAYA KAVUŞTUĞU ZİRVE</div>
+      <div class="stop-slogan" data-i18n="s3_slogan">🌊 RUHUN ŞİFAYA KAVUŞTUĞU ZİRVE</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -827,11 +859,11 @@ html,body{
         </div>
         <div class="content-block">
           <div class="content-title">🌊 HASTANENİN YAPISI</div>
-          <div class="content-text">Öyle bir hastane düşünün ki ortada suyu belli bir ritimle akan bir şadırvan ile hemen tam karşıda bulunan müzik sahnesi sizi karşılasın. Geniş kubbenin örttüğü bu merkezi planlı hastane, 6 kışlık, 4 yazlık hasta odası ile bir müzik sahnesinden meydana gelir.</div>
+          <div class="content-text">Öyle bir hastane düşünün ki ortada suyu belli bir ritimle akan bir şadırvan ile hemen tam karşıda bulunan müzik sahnesi sizi karşılasın. Geniş kubbenin örttüğü bu merkezi planlı hastane, 6 kışlık, 4 yazlık hasta odası ile bir müzik sahnesinden meydana gelir. Geniş kubbedeki aydınlatma feneri aynı zamanda hastanenin kötü kokularını dışarı atar. Zemindeki meyilli döşeme ve devamındaki kanallar ise hastanenin kolay yıkanıp temizlenmesi içindir.</div>
         </div>
         <div class="content-block">
           <div class="content-title">🎵 MÜZİKLE TEDAVİ</div>
-          <div class="content-text">Bu hastaneyi diğerlerinden ayıran en büyük özellik, tedavide müzik makamlarının kullanılmış olmasıdır. 10 kişilik musiki grubu, her hastalığa göre çeşitli makamlar çalıp söylerdi.</div>
+          <div class="content-text">Bu hastaneyi diğerlerinden ayıran en büyük özellik, tedavide müzik makamlarının kullanılmış olmasıdır. Tedavi esnasında 10 kişiden oluşan musiki grubunun, hekimlerin önerileri doğrultusunda her hastalığa göre çalıp söyledikleri müzik makamlarının çeşitli hastalıklara iyi geldiği düşünülürdü.</div>
         </div>
         <div class="content-block">
           <div class="content-title">💧 SUYLA TEDAVİ</div>
@@ -865,10 +897,10 @@ html,body{
     <!-- ── DURAK 4: Medrese ── -->
     <div class="stop-page" id="stop-4">
       <div class="stop-header">
-        <div class="stop-main-title">Tıp Medresesi</div>
-        <div class="stop-sub-title">🎓 İLMİN VE HEKİMLİĞİN BEŞİĞİ</div>
+        <div class="stop-main-title" data-i18n="s4_main">Tıp Medresesi</div>
+        <div class="stop-sub-title" data-i18n="s4_sub">🎓 İLMİN VE HEKİMLİĞİN BEŞİĞİ</div>
       </div>
-      <div class="stop-slogan">📚 HEKİMLERİN YETİŞTİĞİ OCAK</div>
+      <div class="stop-slogan" data-i18n="s4_slogan">📚 HEKİMLERİN YETİŞTİĞİ OCAK</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -891,6 +923,18 @@ html,body{
           <div class="content-title">📖 EL YAZMALARI</div>
           <div class="content-text">Burada okutulan ve birçoğu Osmanlı padişahlarının mühürlerini taşıyan 38 el yazması tıp eseri günümüze kadar ulaşmıştır. Bu kıymetli eserler Selimiye Yazma Eserler Kütüphanesi'nde koruma altındadır.</div>
         </div>
+        <div class="content-block">
+          <div class="content-title">📚 EĞİTİM SİSTEMİ</div>
+          <div class="content-text">Osmanlı eğitim sistemi içinde en üst düzey kabul edilen "60'lık ve altmış üstü medreseler" arasında yer alan bu yapıda öğrenciler, almış oldukları teorik eğitimlerini hemen yanındaki darüşşifada uygulama imkânı bularak bilgilerini pratikle pekiştirirlerdi.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">👨‍🏫 EĞİTİM KADROSU</div>
+          <div class="content-text">Medresenin eğitim kadrosunda, 18 öğrenciye ders veren ve günde 60 akçe ücret alan bir müderris, bir müderris yardımcısı, bir kütüphaneci ve iki hizmetli bulunurdu. Öğrencilerin tüm ihtiyaçları karşılandığı gibi, onlara ayrıca günde ikişer akçe burs verilirdi.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">🏥 SAĞLIK MÜZESİ</div>
+          <div class="content-text">Medrese, Trakya Üniversitesi tarafından 2007 yılında Sağlık Müzesi'nin ikinci seksiyonu olarak açılmış olup, odalarında dönemin hekimlik eğitimi anlatılmaktadır. En önemli bölümü, girişin tam karşısında bulunan dershanedir.</div>
+        </div>
       </div>
 
       <div class="stop-callout">
@@ -911,10 +955,10 @@ html,body{
     <!-- ── DURAK 5: Büyük Avlu ── -->
     <div class="stop-page" id="stop-5">
       <div class="stop-header">
-        <div class="stop-main-title">Sükûnet ve Işığın Buluşması</div>
-        <div class="stop-sub-title">🌿 AVLUYA VE FERAHLIĞA DÖNÜŞ</div>
+        <div class="stop-main-title" data-i18n="s5_main">Sükûnet ve Işığın Buluşması</div>
+        <div class="stop-sub-title" data-i18n="s5_sub">🌿 AVLUYA VE FERAHLIĞA DÖNÜŞ</div>
       </div>
-      <div class="stop-slogan">🌿 RUHANİ DİNGİNLİĞE ADIM</div>
+      <div class="stop-slogan" data-i18n="s5_slogan">🌿 RUHANİ DİNGİNLİĞE ADIM</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -953,10 +997,10 @@ html,body{
     <!-- ── DURAK 6: İmarethane ── -->
     <div class="stop-page" id="stop-6">
       <div class="stop-header">
-        <div class="stop-main-title">Sosyal Devletin ve Bereketin Merkezi</div>
-        <div class="stop-sub-title">🎓 İMARETHANE</div>
+        <div class="stop-main-title" data-i18n="s6_main">Sosyal Devletin ve Bereketin Merkezi</div>
+        <div class="stop-sub-title" data-i18n="s6_sub">🎓 İMARETHANE</div>
       </div>
-      <div class="stop-slogan">🔥 KAZANIN HİÇ SÖNMEYEN ATEŞİ</div>
+      <div class="stop-slogan" data-i18n="s6_slogan">🔥 KAZANIN HİÇ SÖNMEYEN ATEŞİ</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -980,13 +1024,21 @@ html,body{
           <div class="content-text">Padişah Tunca Nehri kenarına Yahya Baba'dan önce varıp saklanmış. Yahya Baba balıklara pay verip dönerken padişah gizlendiği yerden çıkarak, "Bre, sen hastaların nafakasını suya mı dökersin?" diye kükremiş. Balıklar başlarını sudan çıkararak, "Koca padişah bizim rızkımıza mı göz diker?" diyerek dile gelmiş.</div>
         </div>
         <div class="content-block">
+          <div class="content-title">🤲 YAHYA BABA'NIN VEFATI</div>
+          <div class="content-text">Hatasını hayretler içinde fark edip üzülen padişah, Yahya Baba'nın başını secdeden kaldırmasını beklemiş ama nafile. Bu iyiliksever adam çoktan ruhunu teslim etmiş…</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">🎭 MÜZENİN BU BÖLÜMÜ</div>
+          <div class="content-text">Sağlık Müzesi'nin bu bölümü de diğerleri gibi mekânın ruhuna uygun olarak mankenlerle canlandırılmış olup ziyaretçilerine Osmanlı imaret kültürünü anlatmaktadır. Bu bölümde ayrıca döneme ait orijinal bakır kaplar, havanlar ve saklama küpleri sergilenmektedir.</div>
+        </div>
+        <div class="content-block">
           <div class="content-title">🪦 TÜRBE ZİYARETİ</div>
           <div class="content-text">İmaretin hemen arka tarafında bulunan Yahya Baba'nın türbesini, gelip geçenler bir evliya gibi ziyaret ederek dua okurlar. Özellikle cuma günleri bu mezar ziyaretçilerle dolup taşar.</div>
         </div>
       </div>
 
       <div class="stop-callout">
-        ☕ <strong>Külliye Misafirhanesi'nde müze kafede çay ve Osmanlı şerbeti içebilir, hediyelik eşya alabilirsiniz.</strong>
+        🪦 <strong>TABHANELER:</strong> İmaretten çıkıp sol tarafta bulunan müzenin kafesinde oturup dinlenme zamanı. Külliyenin misafirhanesinde oluşturulan müze kafede çay ve özellikle Osmanlı şerbeti içebilir, hediyelik eşya ve kitaplardan satın alabilir, müze kütüphanesini gezdikten sonra da son durağımız olan Camii'nin avlusuna geçebilirsiniz.
       </div>
 
       <div class="stop-nav">
@@ -1003,10 +1055,10 @@ html,body{
     <!-- ── DURAK 7: Cami Avlusu ── -->
     <div class="stop-page" id="stop-7">
       <div class="stop-header">
-        <div class="stop-main-title">Ruhanî Atmosfere Hazırlık</div>
-        <div class="stop-sub-title">🕌 CAMİYE GİRİŞ</div>
+        <div class="stop-main-title" data-i18n="s7_main">Ruhanî Atmosfere Hazırlık</div>
+        <div class="stop-sub-title" data-i18n="s7_sub">🕌 CAMİYE GİRİŞ</div>
       </div>
-      <div class="stop-slogan">✨ TEK KUBBE, SONSUZ HUZUR</div>
+      <div class="stop-slogan" data-i18n="s7_slogan">✨ TEK KUBBE, SONSUZ HUZUR</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -1024,6 +1076,18 @@ html,body{
         <div class="content-block">
           <div class="content-title">🏛️ MERMER SÜTUNLAR</div>
           <div class="content-text">Etrafınızı saran mermer sütunlar, adeta sizi koruyan bir halka gibi yükselir. Farklı renklerde seçilmiş bu sütunlar, Osmanlı estetiğinin zarafetini ve uyum içindeki zenginliğini gözler önüne serer.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">✨ İÇ HUZUR VE SÜKÛNET</div>
+          <div class="content-text">Burada hissettiğiniz yalnızca bir mimari güzellik değildir; yüzyıllardır değişmeden süregelen bir sükûnet, bir iç huzur hâlidir.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">👁️ GÖZLEM ANLARI</div>
+          <div class="content-text">Şadırvanın başında kısa bir an durup bu yalın ama etkileyici avlu düzenini izleyin. Sütunların, kemerlerin ve ince süslemelerin birbiriyle kurduğu uyumu hissedin.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">🚪 CAMİYE GİRİŞ</div>
+          <div class="content-text">Ardından, tam karşınızda yükselen görkemli kapıya yönelin. Kapıyı örten meşin perdeyi usulca aralayarak içeri adım atın. Ülkemizin en zarif camilerinden birine girdiğinizi hemen fark edeceksiniz.</div>
         </div>
         <div class="content-block">
           <div class="content-title">🪵 KÜNDEKÂRİ DETAYI</div>
@@ -1049,15 +1113,19 @@ html,body{
     <!-- ── DURAK 8: Cami İçi ── -->
     <div class="stop-page" id="stop-8">
       <div class="stop-header">
-        <div class="stop-main-title">Cami İçinde Manevî Yolculuk</div>
-        <div class="stop-sub-title">🕌 CAMİ AVLUSU</div>
+        <div class="stop-main-title" data-i18n="s8_main">Cami İçinde Manevî Yolculuk</div>
+        <div class="stop-sub-title" data-i18n="s8_sub">🕌 CAMİ AVLUSU</div>
       </div>
-      <div class="stop-slogan">🌌 KUBBE ALTINDA FİNAL</div>
+      <div class="stop-slogan" data-i18n="s8_slogan">🌌 KUBBE ALTINDA FİNAL</div>
 
       <div class="stop-body">
         <div class="content-block">
           <div class="content-title">🚤 TARİHİ ULAŞIM</div>
           <div class="content-text">II. Bayezid ve ondan sonra gelen padişahlar, süslü saltanat kayıklarıyla nehir yolunu takip ederek bu camiye ulaşırdı. Nehir cephesindeki kapıdan içeri girer, caminin sol köşesinde sütunlar üzerinde yükselen hünkâr mahfilinde namazlarını eda ederlerdi.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">👑 HÜNKÂR MAHFİLİ HAYALİ</div>
+          <div class="content-text">Bir an için gözlerinizi kapatın… Padişahın, o yükseklikte, cemaatle birlikte aynı huzur içinde ibadet ettiğini hayal edin.</div>
         </div>
         <div class="content-block">
           <div class="content-title">🏛️ HÜNKÂR MAHFİLİ</div>
@@ -1068,12 +1136,24 @@ html,body{
           <div class="content-text">Mihrabın iki yanında bulunan silindirik denge taşlarına dokunup hafifçe çevirdiğinizde, bu büyük yapının zemininde en ufak bir kayma olmadığını fark edip şaşıracaksınız.</div>
         </div>
         <div class="content-block">
+          <div class="content-title">🪵 MİNBER VE İNCE İŞÇİLİK</div>
+          <div class="content-text">Sağ taraftaki minbere yaklaştığınızda ise mermer işçiliğinin inceliği ve zarafetine hayranlık duyacaksınız.</div>
+        </div>
+        <div class="content-block">
           <div class="content-title">📐 SEMBOLLER VE ANLAMLAR</div>
           <div class="content-text">Mihrabı arkanıza alıp giriş kapısının üzerine bakın. Kapının tam üzerindeki ve ortasında karpuz bulunan tepsi motifi, bu külliyede bir imaret bulunduğunu ve buraya gelenlerin yemeğe davet edildiğini simgeler.</div>
         </div>
         <div class="content-block">
+          <div class="content-title">💡 IŞIK VE AKUSTİK DÜZEN</div>
+          <div class="content-text">Kubbenin çevresindeki ve alt sıralardaki pencereler, ışığın mekân içinde dengeli bir şekilde yayılmasını sağlar. Bu aydınlık düzeni, caminin güçlü akustiğiyle birleşerek mekâna hem görsel hem işitsel bir derinlik kazandırır.</div>
+        </div>
+        <div class="content-block">
           <div class="content-title">🌌 KUBBE ALTINDA İHTİŞAM</div>
           <div class="content-text">Başınızı yukarı kaldırın… Barok süslemelerle bezeli bu muhteşem kubbeye dikkatle bakın. Yaklaşık 31 metre yüksekliğinde ve 22 metre çapındaki bu kubbe, hiçbir ara sütuna ihtiyaç duyulmadan dört duvar üzerine oturtulmuş, mimari açıdan son derece etkileyici bir örnektir.</div>
+        </div>
+        <div class="content-block">
+          <div class="content-title">🏗️ MİMARİ GEÇİŞ NOKTASI</div>
+          <div class="content-text">Aynı zamanda tek kubbeli yapılara geçişin önemli bir habercisi olarak kabul edilir.</div>
         </div>
         <div class="content-block">
           <div class="content-title">✨ FİNAL VE VEDA</div>
@@ -1099,10 +1179,10 @@ html,body{
     <!-- ── DURAK 9: Gönül Köprüsüne Davet ── -->
     <div class="stop-page" id="stop-9">
       <div class="stop-header">
-        <div class="stop-main-title">Veda Vakti</div>
-        <div class="stop-sub-title">🌊 GÖNÜL KÖPRÜSÜNE DAVET</div>
+        <div class="stop-main-title" data-i18n="s9_main">Veda Vakti</div>
+        <div class="stop-sub-title" data-i18n="s9_sub">🌊 GÖNÜL KÖPRÜSÜNE DAVET</div>
       </div>
-      <div class="stop-slogan">✨ BU HİKÂYEDE SİZİN DE İZİNİZ OLSUN</div>
+      <div class="stop-slogan" data-i18n="s9_slogan">✨ BU HİKÂYEDE SİZİN DE İZİNİZ OLSUN</div>
 
       <div class="stop-body">
         <div class="content-block">
@@ -1138,9 +1218,9 @@ html,body{
     <!-- ── DURAK 10: Gönül Köprüsü FORM ── -->
     <div class="stop-page" id="stop-10">
       <div class="stop-header">
-        <div class="stop-main-title">🖋️ Gönül Köprüsü</div>
+        <div class="stop-main-title" data-i18n="s10_main">🖋️ Gönül Köprüsü</div>
       </div>
-      <div class="stop-slogan">"Geçmişin şifası, bugünün kelimeleriyle buluşuyor."</div>
+      <div class="stop-slogan" data-i18n="s10_slogan">"Geçmişin şifası, bugünün kelimeleriyle buluşuyor."</div>
 
       <div class="stop-body" style="font-size:14px;line-height:1.8;color:var(--ink2);">
         Külliyemizde çıktığınız bu 500 yıllık yolculuğun sizde bıraktığı izleri duymayı çok isteriz. Kelimeleriniz bu köprünün birer taşı olacak.
@@ -1302,6 +1382,7 @@ html,body{
      AUDIO (hidden)
 ══════════════════════════════════════════ -->
 <audio id="stop-audio" preload="none"></audio>
+<audio id="intro-audio" src="assets/audio/intro-bg.mp3" loop preload="auto"></audio>
 
 <!-- ══════════════════════════════════════
      FIREBASE + MAIN JS
@@ -1378,6 +1459,11 @@ function showScreen(name){
 }
 
 function startTour(){
+  // intro sesini durdur
+  const introAudio = document.getElementById('intro-audio');
+  introAudio.pause();
+  introAudio.currentTime = 0;
+
   showScreen('tour');
   const locBtn = document.getElementById('btn-loc-fixed');
   if(locBtn) locBtn.style.display='flex';
@@ -1526,6 +1612,28 @@ const TRANSLATIONS = {
     confirm_close:'ŞİFANIZ BOL OLSUN 🌿',
     latest_title:'📜 Son Mesajlar', archive_title:'🗂️ Arşiv',
     no_msg:'Henüz mesaj yok. İlk taşı siz koyun! ✨',
+    // Stop 0
+    s0_main:'🏛️ SULTAN II. BAYEZİD KÜLLİYESİ', s0_sub:'SAĞLIK MÜZESİ', s0_slogan:'✨ ŞİFA YOLCULUĞU — MÜZE GİRİŞİ',
+    // Stop 1
+    s1_main:'Darüşşifa Girişi', s1_sub:'🏛️ ADALET VE ŞİFA KAPISI', s1_slogan:'⚖️ ŞİFANIN İLK DURAĞI',
+    // Stop 2
+    s2_main:'Sunum Odasından Çıkış', s2_sub:'🏛️ BİLGİDEN DENEYİME', s2_slogan:'🏛️ İDARE VE NİZAM',
+    // Stop 3
+    s3_main:'Büyük Şifahane (SEKİZGEN BÖLÜM)', s3_sub:'🏛️ DARÜŞŞİFA EŞİĞİ', s3_slogan:'🌊 RUHUN ŞİFAYA KAVUŞTUĞU ZİRVE',
+    // Stop 4
+    s4_main:'Tıp Medresesi', s4_sub:'🎓 İLMİN BEŞİĞİ', s4_slogan:'📚 BİLGİNİN IŞIĞI',
+    // Stop 5
+    s5_main:'Büyük Avlu', s5_sub:'🌿 ASIRLIK ÇINARLAR', s5_slogan:'🌳 ZAMAN VE HUZUR',
+    // Stop 6
+    s6_main:'İmarethane', s6_sub:'🍲 ŞEFKAT VE BEREKET', s6_slogan:'🍲 YAHYA BABA\'NIN MUTFAĞİ',
+    // Stop 7
+    s7_main:'Ruhanî Atmosfere Hazırlık', s7_sub:'🕌 CAMİYE GİRİŞ', s7_slogan:'✨ TEK KUBBE, SONSUZ HUZUR',
+    // Stop 8
+    s8_main:'Cami İçinde Manevî Yolculuk', s8_sub:'🕌 CAMİ AVLUSU', s8_slogan:'🌌 KUBBE ALTINDA FİNAL',
+    // Stop 9
+    s9_main:'Veda Vakti', s9_sub:'🌊 GÖNÜL KÖPRÜSÜNE DAVET', s9_slogan:'✨ BU HİKÂYEDE SİZİN DE İZİNİZ OLSUN',
+    // Stop 10
+    s10_main:'🖋️ Gönül Köprüsü', s10_slogan:'"Geçmişin şifası, bugünün kelimeleriyle buluşuyor."',
   },
   en:{
     start:'BEGIN THE JOURNEY',
@@ -1545,6 +1653,18 @@ const TRANSLATIONS = {
     confirm_close:'MAY YOU BE HEALED 🌿',
     latest_title:'📜 Recent Messages', archive_title:'🗂️ Archive',
     no_msg:'No messages yet. Be the first to add a stone! ✨',
+    // Stop titles
+    s0_main:'🏛️ SULTAN BAYEZID II KÜLLIYE', s0_sub:'HEALTH MUSEUM', s0_slogan:'✨ HEALING JOURNEY — MUSEUM ENTRANCE',
+    s1_main:'Darüşşifa Entrance', s1_sub:'🏛️ GATEWAY OF JUSTICE AND HEALING', s1_slogan:'⚖️ FIRST STOP OF HEALING',
+    s2_main:'Exiting the Presentation Room', s2_sub:'🏛️ FROM KNOWLEDGE TO EXPERIENCE', s2_slogan:'🏛️ ADMINISTRATION AND ORDER',
+    s3_main:'The Great Infirmary (OCTAGONAL HALL)', s3_sub:'🏛️ THRESHOLD OF THE DARÜŞŞIFA', s3_slogan:'🌊 THE PINNACLE OF HEALING',
+    s4_main:'Medical School (Madrasa)', s4_sub:'🎓 CRADLE OF KNOWLEDGE', s4_slogan:'📚 THE LIGHT OF LEARNING',
+    s5_main:'Great Courtyard', s5_sub:'🌿 CENTURIES-OLD PLANE TREES', s5_slogan:'🌳 TIME AND TRANQUILITY',
+    s6_main:'Imaret (Soup Kitchen)', s6_sub:'🍲 COMPASSION AND ABUNDANCE', s6_slogan:'🍲 YAHYA BABA\'S KITCHEN',
+    s7_main:'Preparing for a Spiritual Atmosphere', s7_sub:'🕌 ENTRANCE TO THE MOSQUE', s7_slogan:'✨ ONE DOME, ENDLESS PEACE',
+    s8_main:'Spiritual Journey Inside the Mosque', s8_sub:'🕌 MOSQUE COURTYARD', s8_slogan:'🌌 FINALE UNDER THE DOME',
+    s9_main:'Time to Bid Farewell', s9_sub:'🌊 INVITATION TO THE HEART BRIDGE', s9_slogan:'✨ LEAVE YOUR MARK IN THIS STORY',
+    s10_main:'🖋️ Heart Bridge', s10_slogan:'"The healing of the past meets the words of today."',
   },
   de:{
     start:'REISE BEGINNEN',
@@ -1564,6 +1684,17 @@ const TRANSLATIONS = {
     confirm_close:'GESUNDHEIT 🌿',
     latest_title:'📜 Neueste Nachrichten', archive_title:'🗂️ Archiv',
     no_msg:'Noch keine Nachrichten. Legen Sie den ersten Stein! ✨',
+    s0_main:'🏛️ SULTAN BAYEZID II. KÜLLIYE', s0_sub:'GESUNDHEITSMUSEUM', s0_slogan:'✨ HEILUNGSREISE — MUSEUMSEINGANG',
+    s1_main:'Darüşşifa Eingang', s1_sub:'🏛️ TOR DER GERECHTIGKEIT UND HEILUNG', s1_slogan:'⚖️ ERSTER STOP DER HEILUNG',
+    s2_main:'Ausgang aus dem Vortragsraum', s2_sub:'🏛️ VON WISSEN ZU ERFAHRUNG', s2_slogan:'🏛️ VERWALTUNG UND ORDNUNG',
+    s3_main:'Die Große Krankenstation (ACHTECKIGER SAAL)', s3_sub:'🏛️ SCHWELLE DES DARÜŞŞIFA', s3_slogan:'🌊 DER HÖHEPUNKT DER HEILUNG',
+    s4_main:'Medizinische Schule', s4_sub:'🎓 WIEGE DES WISSENS', s4_slogan:'📚 DAS LICHT DES LERNENS',
+    s5_main:'Großer Innenhof', s5_sub:'🌿 JAHRHUNDERTEALTE PLATANEN', s5_slogan:'🌳 ZEIT UND STILLE',
+    s6_main:'Imaret (Suppenküche)', s6_sub:'🍲 MITGEFÜHL UND ÜBERFLUSS', s6_slogan:'🍲 YAHYA BABAS KÜCHE',
+    s7_main:'Vorbereitung auf spirituelle Atmosphäre', s7_sub:'🕌 EINGANG ZUR MOSCHEE', s7_slogan:'✨ EINE KUPPEL, UNENDLICHER FRIEDEN',
+    s8_main:'Spirituelle Reise in der Moschee', s8_sub:'🕌 MOSCHEEHOF', s8_slogan:'🌌 FINALE UNTER DER KUPPEL',
+    s9_main:'Zeit des Abschieds', s9_sub:'🌊 EINLADUNG ZUR HERZBRÜCKE', s9_slogan:'✨ HINTERLASSE DEINE SPUR',
+    s10_main:'🖋️ Herzbrücke', s10_slogan:'"Die Heilung der Vergangenheit begegnet den Worten der Gegenwart."',
   },
   fr:{
     start:'COMMENCER LE VOYAGE',
@@ -1583,6 +1714,17 @@ const TRANSLATIONS = {
     confirm_close:'BONNE SANTÉ 🌿',
     latest_title:'📜 Derniers Messages', archive_title:'🗂️ Archive',
     no_msg:'Pas encore de messages. Soyez le premier! ✨',
+    s0_main:'🏛️ KÜLLIYE DU SULTAN BAYEZID II', s0_sub:'MUSÉE DE SANTÉ', s0_slogan:'✨ VOYAGE DE GUÉRISON — ENTRÉE DU MUSÉE',
+    s1_main:'Entrée du Darüşşifa', s1_sub:'🏛️ PORTE DE JUSTICE ET DE GUÉRISON', s1_slogan:'⚖️ PREMIER ARRÊT DE LA GUÉRISON',
+    s2_main:'Sortie de la Salle de Présentation', s2_sub:'🏛️ DU SAVOIR À L\'EXPÉRIENCE', s2_slogan:'🏛️ ADMINISTRATION ET ORDRE',
+    s3_main:'La Grande Infirmerie (SALLE OCTOGONALE)', s3_sub:'🏛️ SEUIL DU DARÜŞŞIFA', s3_slogan:'🌊 L\'APOGÉE DE LA GUÉRISON',
+    s4_main:'École de Médecine', s4_sub:'🎓 BERCEAU DU SAVOIR', s4_slogan:'📚 LA LUMIÈRE DE L\'APPRENTISSAGE',
+    s5_main:'Grande Cour', s5_sub:'🌿 PLATANES CENTENAIRES', s5_slogan:'🌳 TEMPS ET TRANQUILLITÉ',
+    s6_main:'Imaret (Cuisine Communautaire)', s6_sub:'🍲 COMPASSION ET ABONDANCE', s6_slogan:'🍲 LA CUISINE DE YAHYA BABA',
+    s7_main:'Préparation à l\'Atmosphère Spirituelle', s7_sub:'🕌 ENTRÉE À LA MOSQUÉE', s7_slogan:'✨ UN DÔME, UNE PAIX INFINIE',
+    s8_main:'Voyage Spirituel dans la Mosquée', s8_sub:'🕌 COUR DE LA MOSQUÉE', s8_slogan:'🌌 FINALE SOUS LE DÔME',
+    s9_main:'L\'Heure des Adieux', s9_sub:'🌊 INVITATION AU PONT DU CŒUR', s9_slogan:'✨ LAISSEZ VOTRE EMPREINTE',
+    s10_main:'🖋️ Pont du Cœur', s10_slogan:'"La guérison du passé rencontre les mots d\'aujourd\'hui."',
   },
   ar:{
     start:'ابدأ الرحلة',
@@ -1602,6 +1744,17 @@ const TRANSLATIONS = {
     confirm_close:'شفاءً وعافية 🌿',
     latest_title:'📜 آخر الرسائل', archive_title:'🗂️ الأرشيف',
     no_msg:'لا توجد رسائل بعد. كن الأول! ✨',
+    s0_main:'🏛️ كُلِّية السلطان بايزيد الثاني', s0_sub:'متحف الصحة', s0_slogan:'✨ رحلة الشفاء — مدخل المتحف',
+    s1_main:'مدخل دار الشفاء', s1_sub:'🏛️ بوابة العدل والشفاء', s1_slogan:'⚖️ المحطة الأولى للشفاء',
+    s2_main:'الخروج من غرفة العرض', s2_sub:'🏛️ من المعرفة إلى التجربة', s2_slogan:'🏛️ الإدارة والنظام',
+    s3_main:'العنبر الكبير (القاعة الثمانية)', s3_sub:'🏛️ عتبة دار الشفاء', s3_slogan:'🌊 ذروة الشفاء',
+    s4_main:'مدرسة الطب', s4_sub:'🎓 مهد العلم', s4_slogan:'📚 نور المعرفة',
+    s5_main:'الفناء الكبير', s5_sub:'🌿 أشجار معمّرة', s5_slogan:'🌳 الزمن والسكينة',
+    s6_main:'الإيمارة (مطبخ الخير)', s6_sub:'🍲 الرحمة والوفرة', s6_slogan:'🍲 مطبخ يحيى بابا',
+    s7_main:'التحضير للجو الروحاني', s7_sub:'🕌 مدخل المسجد', s7_slogan:'✨ قبة واحدة، سلام لا نهاية له',
+    s8_main:'رحلة روحانية داخل المسجد', s8_sub:'🕌 فناء المسجد', s8_slogan:'🌌 الختام تحت القبة',
+    s9_main:'وقت الوداع', s9_sub:'🌊 دعوة إلى جسر القلب', s9_slogan:'✨ اترك أثرك في هذه القصة',
+    s10_main:'🖋️ جسر القلب', s10_slogan:'"شفاء الماضي يلتقي بكلمات الحاضر."',
   },
   bg:{
     start:'ЗАПОЧНИ ПЪТУВАНЕТО',
@@ -1621,6 +1774,17 @@ const TRANSLATIONS = {
     confirm_close:'ЗДРАВЕ И БЛАГОПОЛУЧИЕ 🌿',
     latest_title:'📜 Последни Съобщения', archive_title:'🗂️ Архив',
     no_msg:'Все още няма съобщения. Бъдете първи! ✨',
+    s0_main:'🏛️ КЮЛЛИЕ НА СУЛТАН БАЯЗИД II', s0_sub:'ЗДРАВЕН МУЗЕЙ', s0_slogan:'✨ ПЪТУВАНЕ КЪМ ЗДРАВЕТО — ВХОД',
+    s1_main:'Вход на Дарюшшифа', s1_sub:'🏛️ ПОРТА НА СПРАВЕДЛИВОСТТА', s1_slogan:'⚖️ ПЪРВА СПИРКА',
+    s2_main:'Изход от залата за презентации', s2_sub:'🏛️ ОТ ЗНАНИЕ КЪМ ОПИТ', s2_slogan:'🏛️ АДМИНИСТРАЦИЯ И РЕД',
+    s3_main:'Голямото болнично крило (ОСМОЪГЪЛНА ЗАЛА)', s3_sub:'🏛️ ПРАГЪТ НА ДАРЮШШИФА', s3_slogan:'🌊 ВРЪХНАТА ТОЧКА',
+    s4_main:'Медицинско Медресе', s4_sub:'🎓 ЛЮЛКА НА ЗНАНИЕТО', s4_slogan:'📚 СВЕТЛИНАТА НА УЧЕНЕТО',
+    s5_main:'Голям Двор', s5_sub:'🌿 ВЕКОВНИ ЧИНАРИ', s5_slogan:'🌳 ВРЕМЕТО И ПОКОЯТ',
+    s6_main:'Имарет (Обществена Кухня)', s6_sub:'🍲 СЪЧУВСТВИЕ И ИЗОБИЛИЕ', s6_slogan:'🍲 КУХНЯТА НА ЯХЯ БАБА',
+    s7_main:'Подготовка за духовна атмосфера', s7_sub:'🕌 ВХОД КЪМ ДЖАМИЯТА', s7_slogan:'✨ ЕДИН КУПОЛ, БЕЗ КРАЕН МИР',
+    s8_main:'Духовно пътуване в джамията', s8_sub:'🕌 ДВОР НА ДЖАМИЯТА', s8_slogan:'🌌 ФИНАЛ ПОД КУПОЛА',
+    s9_main:'Час за Сбогом', s9_sub:'🌊 ПОКАНА КЪМ МОСТА НА СЪРЦЕТО', s9_slogan:'✨ ОСТАВИ СВОЯТА СЛЕДА',
+    s10_main:'🖋️ Мост на Сърцето', s10_slogan:'"Лечението на миналото среща думите на настоящето."',
   },
   el:{
     start:'ΞΕΚΙΝΉΣΤΕ ΤΟ ΤΑΞΊΔΙ',
@@ -1640,6 +1804,17 @@ const TRANSLATIONS = {
     confirm_close:'ΜΕ ΥΓΕΊΑ 🌿',
     latest_title:'📜 Πρόσφατα Μηνύματα', archive_title:'🗂️ Αρχείο',
     no_msg:'Δεν υπάρχουν μηνύματα ακόμα. Γίνετε πρώτος! ✨',
+    s0_main:'🏛️ ΚΥΛΙΓΕ ΤΟΥ ΣΟΥΛΤΑΝΟΥ ΒΑΓΙΑΖΙΤ ΙΙ', s0_sub:'ΜΟΥΣΕΙΟ ΥΓΕΙΑΣ', s0_slogan:'✨ ΤΑΞΙΔΙ ΘΕΡΑΠΕΙΑΣ — ΕΙΣΟΔΟΣ',
+    s1_main:'Είσοδος Νοσοκομείου', s1_sub:'🏛️ ΠΟΡΤΑ ΔΙΚΑΙΟΣΥΝΗΣ & ΘΕΡΑΠΕΙΑΣ', s1_slogan:'⚖️ ΠΡΩΤΗ ΣΤΑΣΗ',
+    s2_main:'Έξοδος από την Αίθουσα Παρουσίασης', s2_sub:'🏛️ ΑΠΟ ΤΗ ΓΝΩΣΗ ΣΤΗΝ ΕΜΠΕΙΡΙΑ', s2_slogan:'🏛️ ΔΙΟΙΚΗΣΗ & ΤΑΞΗ',
+    s3_main:'Το Μεγάλο Ιατρείο (ΟΚΤΑΓΩΝΙΚΗ ΑΙΘΟΥΣΑ)', s3_sub:'🏛️ ΚΑΤΩΦΛΙ ΤΟΥ ΝΟΣΟΚΟΜΕΙΟΥ', s3_slogan:'🌊 Η ΚΟΡΥΦΗ ΤΗΣ ΘΕΡΑΠΕΙΑΣ',
+    s4_main:'Ιατρική Σχολή', s4_sub:'🎓 ΚΟΙΤΙΔΑ ΓΝΩΣΗΣ', s4_slogan:'📚 ΤΟ ΦΩΣ ΤΗΣ ΜΑΘΗΣΗΣ',
+    s5_main:'Μεγάλη Αυλή', s5_sub:'🌿 ΑΙΩΝΟΒΙΑ ΠΛΑΤΑΝΙΑ', s5_slogan:'🌳 ΧΡΟΝΟΣ ΚΑΙ ΓΑΛΗΝΗ',
+    s6_main:'Ιμαρέτ (Κοινοτική Κουζίνα)', s6_sub:'🍲 ΦΙΛΑΝΘΡΩΠΙΑ & ΑΦΘΟΝΙΑ', s6_slogan:'🍲 Η ΚΟΥΖΙΝΑ ΤΟΥ ΓΙΑΧΥΑ ΜΠΑΜΠΑ',
+    s7_main:'Προετοιμασία για Πνευματική Ατμόσφαιρα', s7_sub:'🕌 ΕΙΣΟΔΟΣ ΣΤΟ ΤΖΑΜΙ', s7_slogan:'✨ ΕΝΑ ΘΟΛΟ, ΑΤΕΛΕΙΩΤΗ ΓΑΛΗΝΗ',
+    s8_main:'Πνευματικό Ταξίδι στο Τζαμί', s8_sub:'🕌 ΑΥΛΗ ΤΖΑΜΙΟΥ', s8_slogan:'🌌 ΦΙΝΑΛΕ ΥΠΟ ΤΟΝ ΤΡΟΟΥΛΟ',
+    s9_main:'Ώρα Αποχαιρετισμού', s9_sub:'🌊 ΠΡΟΣΚΛΗΣΗ ΣΤΗ ΓΕΦΥΡΑ ΚΑΡΔΙΑΣ', s9_slogan:'✨ ΑΦΗΣΤΕ ΤΟ ΣΗΜΑΔΙ ΣΑΣ',
+    s10_main:'🖋️ Γέφυρα Καρδιάς', s10_slogan:'"Η θεραπεία του παρελθόντος συναντά τις λέξεις του παρόντος."',
   },
   zh:{
     start:'开始旅程',
@@ -1659,6 +1834,17 @@ const TRANSLATIONS = {
     confirm_close:'祝您健康 🌿',
     latest_title:'📜 最新留言', archive_title:'🗂️ 归档',
     no_msg:'暂无留言，做第一个！ ✨',
+    s0_main:'🏛️ 苏丹巴耶济德二世库利耶', s0_sub:'健康博物馆', s0_slogan:'✨ 康复之旅 — 博物馆入口',
+    s1_main:'达鲁希法入口', s1_sub:'🏛️ 正义与康复之门', s1_slogan:'⚖️ 康复第一站',
+    s2_main:'离开展示厅', s2_sub:'🏛️ 从知识到体验', s2_slogan:'🏛️ 管理与秩序',
+    s3_main:'大疗养院（八角大厅）', s3_sub:'🏛️ 达鲁希法门槛', s3_slogan:'🌊 康复的顶峰',
+    s4_main:'医学院', s4_sub:'🎓 知识的摇篮', s4_slogan:'📚 学习之光',
+    s5_main:'大庭院', s5_sub:'🌿 百年法桐', s5_slogan:'🌳 时间与宁静',
+    s6_main:'伊马雷特（社区厨房）', s6_sub:'🍲 慈悲与富足', s6_slogan:'🍲 亚哈亚巴巴的厨房',
+    s7_main:'准备体验精神氛围', s7_sub:'🕌 进入清真寺', s7_slogan:'✨ 一穹顶，无尽宁静',
+    s8_main:'清真寺内的精神之旅', s8_sub:'🕌 清真寺庭院', s8_slogan:'🌌 穹顶下的终章',
+    s9_main:'告别时刻', s9_sub:'🌊 邀请加入心桥', s9_slogan:'✨ 在这个故事中留下您的印记',
+    s10_main:'🖋️ 心桥', s10_slogan:'"过去的治愈与今天的文字相遇。"',
   },
   fa:{
     start:'شروع سفر',
@@ -1678,6 +1864,17 @@ const TRANSLATIONS = {
     confirm_close:'سلامت باشید 🌿',
     latest_title:'📜 آخرین پیام‌ها', archive_title:'🗂️ آرشیو',
     no_msg:'هنوز پیامی نیست. اولین باشید! ✨',
+    s0_main:'🏛️ مجموعه سلطان بایزید دوم', s0_sub:'موزه بهداشت', s0_slogan:'✨ سفر شفا — ورودی موزه',
+    s1_main:'ورودی دارالشفا', s1_sub:'🏛️ دروازه عدالت و شفا', s1_slogan:'⚖️ اولین ایستگاه شفا',
+    s2_main:'خروج از سالن ارائه', s2_sub:'🏛️ از دانش به تجربه', s2_slogan:'🏛️ مدیریت و نظم',
+    s3_main:'بیمارستان بزرگ (سالن هشت‌ضلعی)', s3_sub:'🏛️ آستانه دارالشفا', s3_slogan:'🌊 اوج شفا',
+    s4_main:'مدرسه پزشکی', s4_sub:'🎓 گهواره دانش', s4_slogan:'📚 نور آموزش',
+    s5_main:'حیاط بزرگ', s5_sub:'🌿 چنارهای کهنسال', s5_slogan:'🌳 زمان و آرامش',
+    s6_main:'عمارت (آشپزخانه عمومی)', s6_sub:'🍲 همدردی و فراوانی', s6_slogan:'🍲 آشپزخانه یحیی بابا',
+    s7_main:'آمادگی برای فضای معنوی', s7_sub:'🕌 ورود به مسجد', s7_slogan:'✨ یک گنبد، آرامش بی‌پایان',
+    s8_main:'سفر معنوی در مسجد', s8_sub:'🕌 حیاط مسجد', s8_slogan:'🌌 پایان‌بندی زیر گنبد',
+    s9_main:'وقت خداحافظی', s9_sub:'🌊 دعوت به پل دل', s9_slogan:'✨ اثری از خود به جای بگذار',
+    s10_main:'🖋️ پل دل', s10_slogan:'"شفای گذشته با کلمات امروز ملاقات می‌کند."',
   }
 };
 
@@ -1703,6 +1900,11 @@ function applyTranslations(){
   const ml = document.getElementById('menu-lang-label');
   if(ml) ml.textContent = t('menu_lang');
 
+  // Back buttons in stop-nav
+  document.querySelectorAll('.btn-back').forEach(b=>{
+    if(b.getAttribute('data-role')==='back') b.textContent = t('back');
+  });
+
   // Form placeholders
   const gbName = document.getElementById('gb-name');
   const gbCity = document.getElementById('gb-city');
@@ -1722,6 +1924,20 @@ function applyTranslations(){
   // Message section titles
   const latestTitle = document.querySelector('#stop-10 .msg-section-title');
   if(latestTitle) latestTitle.innerHTML = t('latest_title')+' <span style="font-size:10px;color:var(--stone);">— Gönül Köprüsü\'nden sesler</span>';
+
+  // Tour stop content: data-i18n attributes
+  // All elements with data-i18n="key" will be updated from TRANSLATIONS
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if(val && val!==key) el.textContent = val;
+  });
+
+  // Tour stop content: data-tr / data-en etc. multi-lang per element
+  document.querySelectorAll('[data-tr]').forEach(el=>{
+    const val = el.getAttribute('data-'+L) || el.getAttribute('data-tr');
+    if(val) el.textContent = val;
+  });
 }
 
 /* ────────────────────────────────────────
@@ -1946,6 +2162,22 @@ function loadMessages(){
    INIT
 ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded',()=>{
+  // Intro ses — ilk kullanıcı etkileşiminde başlat (tarayıcı autoplay politikası)
+  const introAudio = document.getElementById('intro-audio');
+  introAudio.volume = 0.45;
+  let introStarted = false;
+  function tryPlayIntro(){
+    if(introStarted) return;
+    if(!document.getElementById('screen-intro').classList.contains('active')) return;
+    introStarted = true;
+    introAudio.play().catch(()=>{ introStarted = false; });
+  }
+  // Sayfa yüklenince dene (bazı tarayıcılar izin verir)
+  setTimeout(tryPlayIntro, 300);
+  // İlk dokunuş/tık ile kesin başlat
+  ['touchstart','mousedown','pointerdown'].forEach(ev=>{
+    document.addEventListener(ev, tryPlayIntro, {once:false, passive:true});
+  });
   // Restore speaker mute pref
   const muteStored = localStorage.getItem('rehber-speaker-muted');
   if(muteStored==='1'){
@@ -1971,6 +2203,128 @@ window.addEventListener('DOMContentLoaded',()=>{
     window.speechSynthesis.addEventListener('voiceschanged',()=>window.speechSynthesis.getVoices());
   }
 });
+/* ────────────────────────────────────────
+   WATER RIPPLE EFFECT
+──────────────────────────────────────── */
+(function(){
+  const canvas = document.getElementById('water-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H, cols, rows;
+  let current, previous;
+  const DAMP = 0.97;        // sönümleme
+  const DROP_INTERVAL = 900; // ms, otomatik damla
+
+  function resize(){
+    const pw = canvas.parentElement ? canvas.parentElement.offsetWidth  : window.innerWidth;
+    const ph = canvas.parentElement ? canvas.parentElement.offsetHeight : window.innerHeight;
+    W = canvas.width  = pw  || window.innerWidth;
+    H = canvas.height = ph  || window.innerHeight;
+    if(W < 1) W = canvas.width  = window.innerWidth;
+    if(H < 1) H = canvas.height = window.innerHeight;
+    cols = W; rows = H;
+    current  = new Float32Array(cols * rows);
+    previous = new Float32Array(cols * rows);
+  }
+
+  function drop(x, y, radius, strength){
+    x = Math.round(x); y = Math.round(y);
+    for(let dy = -radius; dy <= radius; dy++){
+      for(let dx = -radius; dx <= radius; dx++){
+        if(dx*dx + dy*dy <= radius*radius){
+          const nx = x+dx, ny = y+dy;
+          if(nx>=0 && nx<cols && ny>=0 && ny<rows)
+            previous[ny*cols+nx] += strength;
+        }
+      }
+    }
+  }
+
+  function update(){
+    for(let y=1; y<rows-1; y++){
+      for(let x=1; x<cols-1; x++){
+        const i = y*cols+x;
+        current[i] = (
+          previous[(y-1)*cols+x] +
+          previous[(y+1)*cols+x] +
+          previous[y*cols+(x-1)] +
+          previous[y*cols+(x+1)]
+        ) / 2 - current[i];
+        current[i] *= DAMP;
+      }
+    }
+    [current, previous] = [previous, current];
+  }
+
+  function render(){
+    const imgData = ctx.createImageData(W, H);
+    const data = imgData.data;
+
+    for(let y=1; y<rows-1; y++){
+      for(let x=1; x<cols-1; x++){
+        const i = y*cols+x;
+        const dx = previous[(y)*cols+(x+1)] - previous[(y)*cols+(x-1)];
+        const dy = previous[(y+1)*cols+x]   - previous[(y-1)*cols+x];
+
+        // altın-amber renk tonu
+        const base = 180 + Math.round(dx * 0.4);
+        const pi = (y*W+x)*4;
+        data[pi]   = Math.min(255, Math.max(0, base + 40));   // R
+        data[pi+1] = Math.min(255, Math.max(0, base - 30));   // G
+        data[pi+2] = Math.min(255, Math.max(0, 10));          // B
+        data[pi+3] = Math.min(200, Math.max(0, Math.abs(dx*6 + dy*6))); // A
+      }
+    }
+    ctx.putImageData(imgData, 0, 0);
+  }
+
+  function loop(){
+    update();
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  // Otomatik damla
+  function autoDrop(){
+    if(document.getElementById('screen-intro').classList.contains('active')){
+      drop(
+        Math.random()*W,
+        Math.random()*H,
+        Math.random()*18+8,
+        Math.random()*180+80
+      );
+    }
+    setTimeout(autoDrop, DROP_INTERVAL + Math.random()*600);
+  }
+
+  // Dokunma/tık ile damla
+  canvas.addEventListener('click', e=>{
+    const r = canvas.getBoundingClientRect();
+    drop(e.clientX - r.left, e.clientY - r.top, 22, 220);
+  });
+  canvas.addEventListener('touchstart', e=>{
+    const r = canvas.getBoundingClientRect();
+    Array.from(e.touches).forEach(t=>{
+      drop(t.clientX - r.left, t.clientY - r.top, 18, 180);
+    });
+  },{passive:true});
+
+  window.addEventListener('resize', resize);
+
+  function init(){
+    resize();
+    loop();
+    setTimeout(autoDrop, 400);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    // Bir frame bekle — layout kesinleşsin
+    requestAnimationFrame(()=> requestAnimationFrame(init));
+  }
+})();
 </script>
 </body>
 </html>
