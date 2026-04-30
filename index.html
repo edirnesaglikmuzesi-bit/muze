@@ -504,6 +504,9 @@
 
         /* =====================================================
            11. SPLASH SCREEN
+           sessionStorage kontrolü ile sadece ilk girişte gösterilir.
+           Sayfa yüklenirken <body> üzerinde splash--active sınıfı
+           varsa intro render edilir, yoksa #splash-screen gizlenir.
         ===================================================== */
         #splash-screen {
             position: fixed;
@@ -516,6 +519,11 @@
             align-items: center;
             transition: opacity 1.2s ease, visibility 1.2s ease;
             overflow: hidden;
+        }
+
+        /* Daha önce ziyaret edilmişse splash anında gizlenir */
+        body.splash--skip #splash-screen {
+            display: none !important;
         }
 
         .water-wrapper {
@@ -635,7 +643,7 @@
             width: 100%; height: 100%;
             background: var(--gold);
             box-shadow: 0 0 8px var(--gold);
-            animation: loadingProgress 3s forwards linear;
+            animation: loadingProgress 2s forwards linear;
         }
 
         @keyframes rotateLoader {
@@ -748,6 +756,26 @@
             .d-box { width: 28px; height: 38px; font-size: 19px; }
         }
     </style>
+
+    <!-- ============================================================
+         SPLASH KONTROLÜ — CSS yüklenmeden önce çalışır,
+         böylece intro hiç yanıp sönmez.
+    ============================================================ -->
+    <script>
+        (function () {
+            var SPLASH_KEY = 'kulliye_splash_shown_v1';
+            // sessionStorage: sekme/tarayıcı kapanınca sıfırlanır.
+            // Aynı oturumda ana sayfaya dönüldüğünde intro açılmaz.
+            if (sessionStorage.getItem(SPLASH_KEY)) {
+                // Daha önce gösterildi — body'e skip sınıfı ekle
+                document.documentElement.classList.add('splash--skip-root');
+            }
+        })();
+    </script>
+    <style>
+        /* Kök sınıf body yüklenmeden önce gizleme */
+        html.splash--skip-root #splash-screen { display: none !important; }
+    </style>
 </head>
 
 <body>
@@ -803,7 +831,7 @@
             <a href="music/music.html" class="dropdown-link">Müzikle Tedavi</a>
             <a href="geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
             <a href="galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
-             <a href="nav/rehber.html" class="dropdown-link">İnteraktif Rehber</a>
+            <a href="nav/rehber.html" class="dropdown-link">İnteraktif Rehber</a>
             <a href="nav/ziyaretci-defteri.html" class="dropdown-link">Ziyaretçi Defteri</a>
             <a href="siir/siir.html" class="dropdown-link">Ağaçla Sarmaşık</a>
             <a href="kazancigil/kazancigil.html" class="dropdown-link">Dr. Ratıp Kazancıgil</a>
@@ -1148,10 +1176,7 @@
             </div>
         </div>
 
-       
-        <!-- ====================================================
-             ZİYARETÇİ SAYACI — 
-        ==================================================== -->
+        <!-- ZİYARETÇİ SAYACI -->
         <div class="card">
             <div class="c-f t-l"></div><div class="c-f t-r"></div>
             <div class="c-f b-l"></div><div class="c-f b-r"></div>
@@ -1198,16 +1223,32 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     /* --------------------------------------------------
-       1. SPLASH — Su dalgası + kapanma
+       1. SPLASH — Sadece ilk ziyarette göster
+       sessionStorage kullanılır: sekme/tarayıcı kapanınca
+       sıfırlanır; aynı oturumda ana sayfaya dönüldüğünde
+       tekrar açılmaz.
     -------------------------------------------------- */
     (function initSplash() {
-        const canvas = document.getElementById('water-canvas');
-        const ctx    = canvas.getContext('2d');
-        let W = canvas.width  = window.innerWidth;
-        let H = canvas.height = window.innerHeight;
+        var SPLASH_KEY   = 'kulliye_splash_shown_v1';
+        var splashEl     = document.getElementById('splash-screen');
 
-        let buf1 = new Int32Array(W * H);
-        let buf2 = new Int32Array(W * H);
+        // Daha önce gösterilmişse splash elementini kaldır, çık.
+        if (sessionStorage.getItem(SPLASH_KEY)) {
+            if (splashEl) splashEl.remove();
+            return;
+        }
+
+        // İlk ziyaret: bayrağı kaydet
+        sessionStorage.setItem(SPLASH_KEY, '1');
+
+        /* Su dalgası animasyonu */
+        var canvas = document.getElementById('water-canvas');
+        var ctx    = canvas.getContext('2d');
+        var W = canvas.width  = window.innerWidth;
+        var H = canvas.height = window.innerHeight;
+
+        var buf1 = new Int32Array(W * H);
+        var buf2 = new Int32Array(W * H);
 
         function drop(x, y) {
             x = Math.floor(x); y = Math.floor(y);
@@ -1215,16 +1256,17 @@ document.addEventListener('DOMContentLoaded', function () {
             buf1[x + y * W] = 512;
         }
 
+        var rafId;
         function step() {
-            const img  = ctx.createImageData(W, H);
-            const data = img.data;
-            for (let y = 1; y < H-1; y++) {
-                for (let x = 1; x < W-1; x++) {
-                    const i = x + y * W;
+            var img  = ctx.createImageData(W, H);
+            var data = img.data;
+            for (var y = 1; y < H-1; y++) {
+                for (var x = 1; x < W-1; x++) {
+                    var i = x + y * W;
                     buf2[i] = ((buf1[i-1] + buf1[i+1] + buf1[i-W] + buf1[i+W]) >> 1) - buf2[i];
                     buf2[i] -= buf2[i] >> 5;
-                    const v = buf2[i];
-                    const p = i * 4;
+                    var v = buf2[i];
+                    var p = i * 4;
                     data[p]   = 10 + (v >> 3);
                     data[p+1] = 18 + (v >> 2);
                     data[p+2] = 28 + (v >> 1);
@@ -1232,28 +1274,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             ctx.putImageData(img, 0, 0);
-            [buf1, buf2] = [buf2, buf1];
+            var tmp = buf1; buf1 = buf2; buf2 = tmp;
+            rafId = requestAnimationFrame(step);
         }
 
-        (function loop() { step(); requestAnimationFrame(loop); })();
-        setInterval(() => drop(Math.random()*W, Math.random()*H), 450);
-        window.addEventListener('mousemove', e => drop(e.clientX, e.clientY));
+        step();
 
-        window.addEventListener('load', function () {
+        var dropInterval = setInterval(function () {
+            drop(Math.random() * W, Math.random() * H);
+        }, 450);
+
+        function onMouseMove(e) { drop(e.clientX, e.clientY); }
+        window.addEventListener('mousemove', onMouseMove);
+
+        /* 3 saniye sonra splash kapat, animasyonu durdur */
+        setTimeout(function () {
+            if (!splashEl) return;
+            splashEl.style.opacity    = '0';
+            splashEl.style.visibility = 'hidden';
             setTimeout(function () {
-                const s = document.getElementById('splash-screen');
-                if (!s) return;
-                s.style.opacity = '0';
-                setTimeout(() => s.remove(), 1200);
-            }, 3000);
-        });
+                splashEl.remove();
+                cancelAnimationFrame(rafId);
+                clearInterval(dropInterval);
+                window.removeEventListener('mousemove', onMouseMove);
+            }, 1200);
+        }, 3000);
     })();
 
     /* --------------------------------------------------
        2. MENÜ TOGGLE
     -------------------------------------------------- */
-    const menuBtn  = document.getElementById('menuBtn');
-    const dropdown = document.getElementById('globalDropdown');
+    var menuBtn  = document.getElementById('menuBtn');
+    var dropdown = document.getElementById('globalDropdown');
 
     menuBtn.addEventListener('click', function (e) {
         e.stopPropagation();
@@ -1269,7 +1321,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /* --------------------------------------------------
        3. GOOGLE SHEETS — Duyuru / Haber / Basın
     -------------------------------------------------- */
-    const sheetSettings = [
+    var sheetSettings = [
         {
             id:  'list-duyurular',
             url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=0&single=true&output=csv'
@@ -1290,16 +1342,16 @@ document.addEventListener('DOMContentLoaded', function () {
             header: true,
             skipEmptyLines: true,
             complete: function (results) {
-                const el = document.getElementById(sheet.id);
+                var el = document.getElementById(sheet.id);
                 if (!el) return;
                 el.innerHTML = '';
-                const rows = results.data.reverse().slice(0, 3);
+                var rows = results.data.reverse().slice(0, 3);
                 if (!rows.length) {
                     el.innerHTML = '<li><span class="ann-text-small">Kayıt bulunamadı.</span></li>';
                     return;
                 }
                 rows.forEach(function (row) {
-                    const li = document.createElement('li');
+                    var li = document.createElement('li');
                     li.innerHTML =
                         '<span class="ann-date-small">' + (row['TARİH'] || '') + '</span>' +
                         '<span class="ann-text-small">'  + (row['DUYURU METNİ'] || '') + '</span>';
@@ -1307,7 +1359,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             },
             error: function () {
-                const el = document.getElementById(sheet.id);
+                var el = document.getElementById(sheet.id);
                 if (el) el.innerHTML = '<li><span class="ann-text-small">Yüklenemedi.</span></li>';
             }
         });
@@ -1315,30 +1367,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* --------------------------------------------------
        4. ZİYARETÇİ SAYACI
-          - Toplam: counterapi.dev  (OFFSET + API count)
-          - Aktif : tarayıcı ping sistemi (localStorage tabanlı)
     -------------------------------------------------- */
     (function initCounter() {
-        var OFFSET      = 1132397;   // başlangıç sayısı
+        var OFFSET      = 1132397;
         var SESSION_KEY = 'kulliye_counted_v4';
         var ACTIVE_KEY  = 'kulliye_active_pings';
-        var ACTIVE_TTL  = 90000;     // 90 saniye ping süresi
+        var ACTIVE_TTL  = 90000;
         var MY_ID       = Date.now() + '_' + Math.random().toString(36).slice(2);
 
         var API_HIT = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci2/up';
         var API_GET = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci2';
 
-        /* --- Toplam sayacı render et --- */
         function render(apiCount) {
             var total = OFFSET + (apiCount || 0);
             var wrap = document.getElementById('counter-wrap');
             if (!wrap) return;
             wrap.innerHTML = '';
-            var str = String(total);
-            // Noktalı gösterim: 1.132.397
-            var formatted = str.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            var chars = formatted.split('');
-            chars.forEach(function (ch, i) {
+            var formatted = String(total).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            formatted.split('').forEach(function (ch, i) {
                 if (ch === '.') {
                     var sep = document.createElement('span');
                     sep.className = 'digit-sep';
@@ -1362,51 +1408,33 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        function showError() {
-            var wrap = document.getElementById('counter-wrap');
-            if (wrap) {
-                // API hatasında sadece OFFSET'i göster
-                render(0);
-            }
-        }
-
-        /* --- Aktif ziyaretçi sistemi (localStorage ping) --- */
         function pingActive() {
             try {
                 var raw = localStorage.getItem(ACTIVE_KEY);
                 var pings = raw ? JSON.parse(raw) : {};
                 var now = Date.now();
-                // Eskimiş girişleri temizle
                 Object.keys(pings).forEach(function (id) {
                     if (now - pings[id] > ACTIVE_TTL) delete pings[id];
                 });
-                // Kendi ping'ini güncelle
                 pings[MY_ID] = now;
                 localStorage.setItem(ACTIVE_KEY, JSON.stringify(pings));
-                // Aktif sayısını göster
-                var count = Object.keys(pings).length;
                 var el = document.getElementById('active-count');
-                if (el) el.textContent = count;
+                if (el) el.textContent = Object.keys(pings).length;
             } catch(e) {}
         }
 
-        /* --- API çağrısı --- */
         var isNew = !sessionStorage.getItem(SESSION_KEY);
-        var url = isNew ? API_HIT : API_GET;
-
-        fetch(url)
+        fetch(isNew ? API_HIT : API_GET)
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 if (isNew) sessionStorage.setItem(SESSION_KEY, '1');
                 render(data.count || 0);
             })
-            .catch(function() { render(0); });
+            .catch(function () { render(0); });
 
-        /* --- Aktif ping başlat --- */
         pingActive();
-        setInterval(pingActive, 30000);   // Her 30sn güncelle
+        setInterval(pingActive, 30000);
 
-        /* --- Sayfa kapanınca ping sil --- */
         window.addEventListener('beforeunload', function () {
             try {
                 var raw = localStorage.getItem(ACTIVE_KEY);
