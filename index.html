@@ -181,15 +181,6 @@
             object-position: center;
         }
 
-        .banner img.frame {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: fill;
-            pointer-events: none;
-            z-index: 5;
-        }
-
         /* =====================================================
            5. KARTLAR
         ===================================================== */
@@ -504,9 +495,6 @@
 
         /* =====================================================
            11. SPLASH SCREEN
-           sessionStorage kontrolü ile sadece ilk girişte gösterilir.
-           Sayfa yüklenirken <body> üzerinde splash--active sınıfı
-           varsa intro render edilir, yoksa #splash-screen gizlenir.
         ===================================================== */
         #splash-screen {
             position: fixed;
@@ -521,7 +509,6 @@
             overflow: hidden;
         }
 
-        /* Daha önce ziyaret edilmişse splash anında gizlenir */
         body.splash--skip #splash-screen {
             display: none !important;
         }
@@ -757,23 +744,15 @@
         }
     </style>
 
-    <!-- ============================================================
-         SPLASH KONTROLÜ — CSS yüklenmeden önce çalışır,
-         böylece intro hiç yanıp sönmez.
-    ============================================================ -->
     <script>
         (function () {
             var SPLASH_KEY = 'kulliye_splash_shown_v1';
-            // sessionStorage: sekme/tarayıcı kapanınca sıfırlanır.
-            // Aynı oturumda ana sayfaya dönüldüğünde intro açılmaz.
             if (sessionStorage.getItem(SPLASH_KEY)) {
-                // Daha önce gösterildi — body'e skip sınıfı ekle
                 document.documentElement.classList.add('splash--skip-root');
             }
         })();
     </script>
     <style>
-        /* Kök sınıf body yüklenmeden önce gizleme */
         html.splash--skip-root #splash-screen { display: none !important; }
     </style>
 </head>
@@ -859,7 +838,6 @@
     <!-- BANNER -->
     <div class="banner">
         <img src="assets/banner.webp" class="media" alt="Külliye Görünümü">
-        <img src="assets/cerceve1.png" class="frame" alt="">
     </div>
 
     <!-- ============================================================
@@ -1230,24 +1208,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* --------------------------------------------------
        1. SPLASH — Sadece ilk ziyarette göster
-       sessionStorage kullanılır: sekme/tarayıcı kapanınca
-       sıfırlanır; aynı oturumda ana sayfaya dönüldüğünde
-       tekrar açılmaz.
     -------------------------------------------------- */
     (function initSplash() {
         var SPLASH_KEY   = 'kulliye_splash_shown_v1';
         var splashEl     = document.getElementById('splash-screen');
 
-        // Daha önce gösterilmişse splash elementini kaldır, çık.
         if (sessionStorage.getItem(SPLASH_KEY)) {
             if (splashEl) splashEl.remove();
             return;
         }
 
-        // İlk ziyaret: bayrağı kaydet
         sessionStorage.setItem(SPLASH_KEY, '1');
 
-        /* Su dalgası animasyonu */
         var canvas = document.getElementById('water-canvas');
         var ctx    = canvas.getContext('2d');
         var W = canvas.width  = window.innerWidth;
@@ -1293,7 +1265,6 @@ document.addEventListener('DOMContentLoaded', function () {
         function onMouseMove(e) { drop(e.clientX, e.clientY); }
         window.addEventListener('mousemove', onMouseMove);
 
-        /* 3 saniye sonra splash kapat, animasyonu durdur */
         setTimeout(function () {
             if (!splashEl) return;
             splashEl.style.opacity    = '0';
