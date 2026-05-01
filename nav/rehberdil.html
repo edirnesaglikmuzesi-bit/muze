@@ -1467,6 +1467,7 @@ function goStop(n){
   if(tc){tc.scrollTop=0;}
   currentStop = n;
   updateProgressBar();
+  applyTranslations();
   playStopAudio(n);
   showEvliya(n);
 }
@@ -1568,10 +1569,15 @@ function setLang(code){
   closeMenu();
 
   // DOM'u senkron olarak güncelle — anında dil değişimi
-  const lang = TRANSLATIONS[currentLang] || TRANSLATIONS['tr'];
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key = el.getAttribute('data-i18n');
-    const val = lang[key] || TRANSLATIONS['tr'][key];
+    let val;
+    if(currentLang === 'tr'){
+      val = el.getAttribute('data-tr');
+    } else {
+      const lang = TRANSLATIONS[currentLang] || TRANSLATIONS['tr'];
+      val = lang[key] || TRANSLATIONS['tr'][key];
+    }
     if(!val) return;
     if(el.classList.contains('stop-callout') || el.classList.contains('stop-slogan')){
       el.innerHTML = val;
@@ -2533,6 +2539,11 @@ const TRANSLATIONS = {
 };
 
 function t(key){
+  if(currentLang === 'tr'){
+    const el = document.querySelector('[data-i18n="'+key+'"]');
+    if(el){ return el.getAttribute('data-tr') || TRANSLATIONS['tr'][key] || key; }
+    return TRANSLATIONS['tr'][key] || key;
+  }
   const lang = TRANSLATIONS[currentLang] || TRANSLATIONS['tr'];
   return lang[key] || TRANSLATIONS['tr'][key] || key;
 }
@@ -2568,8 +2579,14 @@ function applyTranslations(){
 
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key = el.getAttribute('data-i18n');
-    const val = t(key);
-    if(val && val!==key){
+    let val;
+    if(currentLang === 'tr'){
+      // Türkçe için HTML'deki orijinal metni kullan (data-tr'de saklı)
+      val = el.getAttribute('data-tr');
+    } else {
+      val = t(key);
+    }
+    if(val){
       if(el.classList.contains('stop-callout')||el.classList.contains('stop-slogan')){
         el.innerHTML = val;
       } else {
@@ -2861,6 +2878,12 @@ window.addEventListener('DOMContentLoaded',()=>{
   });
   const muteStored=localStorage.getItem('rehber-speaker-muted');
   if(muteStored==='1'){speakerMuted=true;document.getElementById('btn-speaker').textContent='🔇';}
+  // Orijinal Türkçe metinleri data-tr attribute'una kaydet (sayfa ilk açıldığında HTML zaten Türkçe)
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    if(!el.hasAttribute('data-tr')){
+      el.setAttribute('data-tr', el.classList.contains('stop-callout')||el.classList.contains('stop-slogan') ? el.innerHTML : el.textContent);
+    }
+  });
   currentLang='tr';
   document.documentElement.lang='tr';
   localStorage.setItem('rehber-lang','tr');
