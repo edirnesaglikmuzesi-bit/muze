@@ -921,7 +921,7 @@
     pointer-events: none;
     z-index: 99999;
     /* Yıldızın sağ üst ucu (≈%72, %22) tıklama noktası olsun */
-    transform: translate(-58.9%, -17.9%);
+    transform: translate(-50%, -16.1%);
     transition: transform 0.06s ease;
 }
 
@@ -1742,27 +1742,15 @@ document.addEventListener('DOMContentLoaded', function () {
 <!-- CURSOR -->
 <svg id="custom-cursor" width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" style="left:-999px;top:-999px;">
   <defs>
-    <filter id="glow-cur" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="1.8" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="glow-strong" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
+    <filter id="glow-cur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-
-  <!-- Hilal — merkez (24,30), dış R=17, iç R=13 sağa kaydırılmış -->
-  <circle cx="24" cy="30" r="17" fill="#d4af37" filter="url(#glow-cur)" opacity="0.95"/>
-  <circle cx="30" cy="27" r="13.5" fill="#0f1a24" />
-
-  <!-- 5 köşeli yıldız — sağ üstte, bir ucu (40,12) tıklama noktası -->
-  <!-- Yıldız merkezi: (33, 21), R_dış=11, R_iç=4.5, döndürülmüş -->
-  <!-- Uç açıları: top=270° den başlar, her 72° bir uç -->
-  <!-- Uç 0 (üst): angle=-90° => (33, 10) — tıklama noktası en üst uç -->
+  <!-- 5 köşeli yıldız: merkez(28,31), dış R=22, iç R=9 — üst uç (28,9) tıklama noktası -->
   <polygon
-    points="33,10  35.6,18.5  44.5,18.5  37.5,23.8  40.1,32.3  33,27  25.9,32.3  28.5,23.8  21.5,18.5  30.4,18.5"
-    fill="#d4af37" filter="url(#glow-cur)" opacity="0.95"/>
+    points="28,9  32.2,22.5  46.5,22.5  35.2,30.5  39.4,44  28,36  16.6,44  20.8,30.5  9.5,22.5  23.8,22.5"
+    fill="#d4af37" filter="url(#glow-cur)" opacity="0.97"/>
 </svg>
 
 <!-- SU DAMLASI CANVAS -->
