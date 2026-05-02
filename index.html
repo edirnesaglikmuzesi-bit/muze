@@ -448,6 +448,83 @@
         }
 
         /* =====================================================
+           8b. FİZİKİ ZİYARETÇİ SAYACI (yeni)
+        ===================================================== */
+        .stats-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .stats-split-divider {
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--gold-dark), transparent);
+            align-self: stretch;
+        }
+
+        .stat-half {
+            padding: 8px 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .stat-half-icon {
+            font-size: 16px;
+            color: var(--gold-dark);
+            margin-bottom: 1px;
+        }
+
+        .stat-half-label {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 0.8px;
+            color: #2b2b2b;
+            opacity: 0.75;
+            text-transform: uppercase;
+        }
+
+        .stat-half-number {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2b2b2b;
+            line-height: 1;
+        }
+
+        .stat-half-sub {
+            font-size: 9px;
+            font-style: italic;
+            color: #2b2b2b;
+            opacity: 0.45;
+            margin-top: 1px;
+        }
+
+        .stats-footer-link {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            padding: 7px 10px;
+            background: linear-gradient(135deg, #0e1922, #1b2b3a);
+            border: 1px solid rgba(212,175,55,0.5);
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 0.6px;
+            color: var(--gold) !important;
+            text-decoration: none !important;
+            transition: background 0.25s, color 0.25s, border-color 0.25s;
+        }
+        .stats-footer-link:hover {
+            background: var(--gold) !important;
+            color: var(--dark) !important;
+            border-color: var(--gold);
+        }
+        .stats-footer-link i { margin-right: 5px; }
+
+        /* =====================================================
            9. DETAILS / SUMMARY (Ziyaret Bilgileri, İletişim)
         ===================================================== */
         summary { list-style: none; outline: none; cursor: pointer; }
@@ -1160,23 +1237,55 @@
             </div>
         </div>
 
-        <!-- ZİYARETÇİ SAYACI -->
+        <!-- ZİYARETÇİ İSTATİSTİĞİ (2 bölüm) -->
         <div class="card">
             <div class="c-f t-l"></div><div class="c-f t-r"></div>
             <div class="c-f b-l"></div><div class="c-f b-r"></div>
             <h3>ZİYARETÇİ İSTATİSTİĞİ</h3>
-            <div class="card-content" style="text-align:center; padding: 18px 12px;">
-                <div class="counter-label">Toplam Web Ziyaretçisi</div>
-                <div class="counter-wrap" id="counter-wrap">
-                    <!-- Rakamlar JS ile oluşturulur -->
+            <div class="card-content" style="padding: 10px 12px 12px;">
+
+                <!-- ÜST BÖLÜM: Web Ziyaretçisi -->
+                <div style="text-align:center; padding-bottom:10px; border-bottom: 1px solid rgba(212,175,55,0.2);">
+                    <div class="counter-label" style="font-size:9px; letter-spacing:1px; margin-bottom:4px;">
+                        <i class="fas fa-globe" style="margin-right:4px; color:var(--gold-dark);"></i>WEB ZİYARETÇİSİ
+                    </div>
+                    <div class="counter-wrap" id="counter-wrap" style="margin: 6px 0;"></div>
+                    <div class="counter-since" style="margin-top:2px;">Mayıs 2026 itibarıyla · toplam</div>
+                    <div class="active-wrap" style="margin-top:8px; padding:6px 10px;">
+                        <span class="active-dot"></span>
+                        <span class="active-label">Şu An Sitede:</span>
+                        <span class="active-count" id="active-count">—</span>
+                        <span class="active-label">kişi</span>
+                    </div>
                 </div>
-                <div class="counter-since">Nisan 2026 itibarıyla</div>
-                <div class="active-wrap">
-                    <span class="active-dot"></span>
-                    <span class="active-label">Şu An Sitede:</span>
-                    <span class="active-count" id="active-count">—</span>
-                    <span class="active-label">kişi</span>
+
+                <!-- ALT BÖLÜM: Fiziki Müze Ziyaretçisi -->
+                <div style="padding-top:10px;">
+                    <div style="text-align:center; font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px; color:var(--gold-dark); opacity:0.85; margin-bottom:6px;">
+                        <i class="fas fa-landmark" style="margin-right:4px;"></i>FİZİKİ MÜZE ZİYARETÇİSİ
+                    </div>
+                    <div class="stats-split">
+                        <!-- Toplam -->
+                        <div class="stat-half" style="border-right: 1px solid rgba(212,175,55,0.2);">
+                            <div class="stat-half-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-half-label">Toplam</div>
+                            <div class="stat-half-number" id="phys-total">—</div>
+                            <div class="stat-half-sub">1998'den beri</div>
+                        </div>
+                        <!-- Bu Ay -->
+                        <div class="stat-half">
+                            <div class="stat-half-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="stat-half-label">Bu Ay</div>
+                            <div class="stat-half-number" id="phys-month">—</div>
+                            <div class="stat-half-sub" id="phys-month-label">—</div>
+                        </div>
+                    </div>
+                    <!-- Detay linki -->
+                    <a href="ziyaret/ziyaretci.html" class="stats-footer-link">
+                        <i class="fas fa-chart-bar"></i>Detaylı İstatistikler &amp; Grafikler →
+                    </a>
                 </div>
+
             </div>
         </div>
 
@@ -1346,42 +1455,35 @@ document.addEventListener('DOMContentLoaded', function () {
        4. ZİYARETÇİ SAYACI
     -------------------------------------------------- */
     (function initCounter() {
-        var OFFSET      = 1132397;
-        var SESSION_KEY = 'kulliye_counted_v4';
+        var OFFSET      = 0;
+        var SESSION_KEY = 'kulliye_counted_v5';
         var ACTIVE_KEY  = 'kulliye_active_pings';
         var ACTIVE_TTL  = 90000;
         var MY_ID       = Date.now() + '_' + Math.random().toString(36).slice(2);
 
-        var API_HIT = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci2/up';
-        var API_GET = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci2';
+        var API_HIT = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci3/up';
+        var API_GET = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci3';
 
         function render(apiCount) {
             var total = OFFSET + (apiCount || 0);
             var wrap = document.getElementById('counter-wrap');
             if (!wrap) return;
             wrap.innerHTML = '';
-            var formatted = String(total).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            formatted.split('').forEach(function (ch, i) {
-                if (ch === '.') {
-                    var sep = document.createElement('span');
-                    sep.className = 'digit-sep';
-                    sep.textContent = '.';
-                    wrap.appendChild(sep);
-                } else {
-                    var box = document.createElement('div');
-                    box.className = 'd-box';
-                    box.textContent = ch;
-                    box.style.opacity = '0';
-                    box.style.transform = 'translateY(-12px)';
-                    box.style.transition =
-                        'opacity 0.45s ease ' + (i * 0.06) + 's, ' +
-                        'transform 0.45s ease ' + (i * 0.06) + 's';
-                    wrap.appendChild(box);
-                    setTimeout(function () {
-                        box.style.opacity = '1';
-                        box.style.transform = 'translateY(0)';
-                    }, 30);
-                }
+            var digits = String(total).padStart(6, '0').split('');
+            digits.forEach(function (ch, i) {
+                var box = document.createElement('div');
+                box.className = 'd-box';
+                box.textContent = ch;
+                box.style.opacity = '0';
+                box.style.transform = 'translateY(-12px)';
+                box.style.transition =
+                    'opacity 0.45s ease ' + (i * 0.06) + 's, ' +
+                    'transform 0.45s ease ' + (i * 0.06) + 's';
+                wrap.appendChild(box);
+                setTimeout(function () {
+                    box.style.opacity = '1';
+                    box.style.transform = 'translateY(0)';
+                }, 30);
             });
         }
 
@@ -1420,6 +1522,119 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem(ACTIVE_KEY, JSON.stringify(pings));
             } catch(e) {}
         });
+    })();
+
+    /* --------------------------------------------------
+       5. FİZİKİ ZİYARETÇİ SAYACI (Google Sheets)
+    -------------------------------------------------- */
+    (function initPhysicalCounter() {
+        var SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSindpUqfzIMsteO46KZsSHxYgxnT_xAui-1bC1hcjlWbS6gzMAFsISf5sqLehELkPjJghO9clTIHyS/pub?gid=0&single=true&output=csv';
+
+        var MONTHS_TR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+        function fmt(n) {
+            return n.toLocaleString('tr-TR');
+        }
+
+        function parseDate(s) {
+            if (!s) return null;
+            s = s.trim();
+            var m;
+            if ((m = s.match(/^(\d{1,2})\.(\d{2})\.(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+            if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/))) return new Date(+m[1], +m[2]-1, +m[3]);
+            if ((m = s.match(/^(\d{1,2})\/(\d{2})\/(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+            var TR_M = {'ocak':0,'şubat':1,'mart':2,'nisan':3,'mayıs':4,'haziran':5,'temmuz':6,'ağustos':7,'eylül':8,'ekim':9,'kasım':10,'aralık':11};
+            if ((m = s.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})/))) {
+                var mo = TR_M[m[2].toLowerCase()];
+                if (mo !== undefined) return new Date(+m[3], mo, +m[1]);
+            }
+            return null;
+        }
+
+        function splitCSVLine(line) {
+            var result = [], current = '', inQuotes = false;
+            for (var i = 0; i < line.length; i++) {
+                var ch = line[i];
+                if (ch === '"') { inQuotes = !inQuotes; continue; }
+                if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; continue; }
+                current += ch;
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        function parseCSV(text) {
+            var lines = text.trim().split('\n');
+            var result = [];
+            var firstCols = splitCSVLine(lines[0]);
+            var startLine = !parseDate(firstCols[0]) ? 1 : 0;
+            for (var i = startLine; i < lines.length; i++) {
+                var parts = splitCSVLine(lines[i]);
+                if (parts.length < 2) continue;
+                var rawCount = parts[1].replace(/\./g, '').replace(',', '.');
+                var d = parseDate(parts[0]);
+                var c = Math.round(parseFloat(rawCount));
+                if (d && !isNaN(c) && c >= 0) result.push({ date: d, count: c });
+            }
+            return result.sort(function(a, b) { return a.date - b.date; });
+        }
+
+        function isoDate(d) {
+            return d.getFullYear() + '-' +
+                String(d.getMonth()+1).padStart(2,'0') + '-' +
+                String(d.getDate()).padStart(2,'0');
+        }
+
+        function animateNumber(el, target) {
+            var duration = 1200;
+            var start = Date.now();
+            function step() {
+                var elapsed = Date.now() - start;
+                var progress = Math.min(elapsed / duration, 1);
+                var ease = 1 - Math.pow(1 - progress, 3);
+                el.textContent = fmt(Math.round(target * ease));
+                if (progress < 1) requestAnimationFrame(step);
+                else el.textContent = fmt(target);
+            }
+            step();
+        }
+
+        function render(data) {
+            var totalEl   = document.getElementById('phys-total');
+            var monthEl   = document.getElementById('phys-month');
+            var monthLabelEl = document.getElementById('phys-month-label');
+
+            if (!totalEl) return;
+
+            var total = data.reduce(function(s, r) { return s + r.count; }, 0);
+            animateNumber(totalEl, total);
+
+            // Bu ay
+            var today = new Date();
+            var monthVal = data
+                .filter(function(r) {
+                    return r.date.getFullYear() === today.getFullYear() &&
+                           r.date.getMonth() === today.getMonth();
+                })
+                .reduce(function(s, r) { return s + r.count; }, 0);
+
+            if (monthEl) animateNumber(monthEl, monthVal);
+            if (monthLabelEl) {
+                monthLabelEl.textContent = MONTHS_TR[today.getMonth()] + ' ' + today.getFullYear();
+            }
+        }
+
+        fetch(SHEET_CSV)
+            .then(function(r) { return r.text(); })
+            .then(function(text) {
+                var data = parseCSV(text);
+                if (data.length > 0) render(data);
+                else throw new Error('Veri yok');
+            })
+            .catch(function() {
+                var el = document.getElementById('phys-total');
+                if (el) el.textContent = '—';
+            });
     })();
 
 });
