@@ -1494,13 +1494,26 @@ const STOP_NAMES = [
   'Cami Avlusu','Cami İçi','Gönül Köprüsü Davet','Gönül Köprüsü'
 ];
 
-const AUDIO_FILES = [
-  'assets/audio/tr/1.mp3','assets/audio/tr/2.mp3','assets/audio/tr/3.mp3',
-  'assets/audio/tr/4.mp3','assets/audio/tr/5.mp3','assets/tr/6.mp3',
-  'assets/audio/tr/7.mp3','assets/audio/tr/8.mp3','assets/audio/tr/9.mp3',
-  'assets/audio/tr/10.mp3','assets/audio/tr/11.mp3'
-];
+const LANG_AUDIO_FOLDERS = {
+  tr:  'assets/audio/tr',
+  en:  'assets/audio/en',
+  de:  'assets/audio/de',
+  fr:  'assets/audio/fr',
+  ar:  'assets/audio/ar',
+  bg:  'assets/audio/bg',
+  el:  'assets/audio/gr',
+  zh:  'assets/audio/cn',
+  fa:  'assets/audio/fa',
+  ja:  'assets/audio/jpn',
+  ru:  'assets/audio/ru',
+  ro:  'assets/audio/rum',
+  it:  'assets/audio/it'
+};
 
+function getAudioFile(stopIndex, lang) {
+  const folder = LANG_AUDIO_FOLDERS[lang] || LANG_AUDIO_FOLDERS['tr'];
+  return folder + '/' + (stopIndex + 1) + '.mp3';
+}
 const EVLIYA_MSGS = [
   '🎭 Hoş geldiniz! Bu şifa yurdunda asırlar arasında bir yolculuğa çıkıyoruz… Ben Evliya Çelebi, size bu diyarın hikâyesini anlatacağım.',
   '👁️ Bu darüşşifada nice dertliler deva bulur, gönlü dar olan dahi ferahlık bulur.',
@@ -1586,12 +1599,10 @@ function updateProgressBar(){
 function playStopAudio(n){
   if(speakerMuted) return;
   const audio = document.getElementById('stop-audio');
-  const src = AUDIO_FILES[n];
-  if(!src) return;
+  const src = getAudioFile(n, currentLang);
   audio.src = src;
   audio.play().catch(()=>{});
 }
-
 function toggleSpeaker(){
   speakerMuted = !speakerMuted;
   const btn = document.getElementById('btn-speaker');
@@ -1658,7 +1669,7 @@ function setLang(code){
   // Modalları hemen kapat
   closeLang();
   closeMenu();
-
+  playStopAudio(currentStop);
   // DOM'u senkron olarak güncelle — anında dil değişimi
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key = el.getAttribute('data-i18n');
