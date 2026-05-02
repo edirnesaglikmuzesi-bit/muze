@@ -22,6 +22,8 @@
     --chart-2: #8b4513;
     --chart-3: #2e6b5e;
     --chart-4: #5b2d8e;
+    --closed-bg: #3d0000;
+    --closed-text: #ff6b6b;
 }
 
 body {
@@ -130,6 +132,35 @@ body {
 .main-title h2 { font-size: clamp(15px, 3vw, 24px); letter-spacing: 5px; }
 .main-title p { font-size: 13px; margin-top: 8px; font-family: 'Playfair Display'; font-style: italic; color: rgba(212,175,55,0.65); }
 
+/* --- KAPALI UYARISI --- */
+.closed-notice {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--closed-bg);
+    color: var(--closed-text);
+    font-family: 'Cinzel';
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,107,107,0.4);
+    vertical-align: middle;
+}
+.closed-notice::before {
+    content: '✕';
+    font-size: 9px;
+}
+
+/* Tablo satırı — kapalı gün */
+.row-closed td {
+    background: rgba(61,0,0,0.08) !important;
+    color: rgba(43,43,43,0.4);
+}
+.row-closed .num-cell {
+    color: rgba(43,43,43,0.35) !important;
+}
+
 /* --- ÖZET KUTULARI --- */
 .stats-overview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 40px 40px 10px; position: relative; z-index: 2; }
 @media (max-width: 900px) { .stats-overview { grid-template-columns: repeat(2, 1fr); } }
@@ -206,6 +237,26 @@ body {
 .date-result-info { font-family: 'Playfair Display'; font-style: italic; font-size: 13px; color: rgba(43,43,43,0.5); margin-left: auto; }
 @media (max-width: 600px) { .date-result-info { width: 100%; margin-left: 0; } }
 
+/* Kapali gün bilgi kutusu */
+.closed-info-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(61,0,0,0.07);
+    border: 1px solid rgba(255,107,107,0.25);
+    border-radius: 6px;
+    margin-bottom: 18px;
+    font-family: 'Cinzel';
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #8b3a3a;
+}
+.closed-info-bar .dot-closed {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #ff6b6b; flex-shrink: 0;
+}
+
 /* --- GRAFİK ALANI --- */
 .chart-area {
     background: #fff;
@@ -246,6 +297,15 @@ body {
 .detail-table .bar-cell { padding-right: 20px; }
 .mini-bar { height: 6px; background: rgba(212,175,55,0.2); border-radius: 3px; overflow: hidden; }
 .mini-bar-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.8s ease; }
+
+/* Kapalı satır — çift arka plan override */
+.detail-table tr.row-closed td,
+.detail-table tr.row-closed:nth-child(even) td {
+    background: rgba(61,0,0,0.06) !important;
+}
+.detail-table tr.row-closed .mini-bar-fill {
+    background: rgba(200,80,80,0.3);
+}
 
 /* HATA MESAJI */
 .error-msg { text-align: center; padding: 40px; font-family: 'Cinzel'; font-size: 13px; color: #8b4513; letter-spacing: 2px; opacity: 0.7; }
@@ -352,7 +412,7 @@ body {
             <div class="stat-icon">📅</div>
             <div class="stat-period">BUGÜN</div>
             <div class="stat-number" id="statToday">—</div>
-            <div class="stat-sub">ziyaretçi</div>
+            <div class="stat-sub" id="statTodaySub">ziyaretçi</div>
         </div>
         <div class="stat-box">
             <div class="stat-icon">📆</div>
@@ -394,6 +454,11 @@ body {
                 <input type="date" id="dailyEnd">
                 <button class="btn-filter" onclick="renderDaily()">FİLTRELE</button>
                 <span class="date-result-info" id="dailyInfo"></span>
+            </div>
+            <!-- Kapalı gün bilgi çubuğu -->
+            <div class="closed-info-bar">
+                <span class="dot-closed"></span>
+                PAZARTESİ GÜNLERİ MÜZEMİZ KAPALIDIR
             </div>
             <div class="chart-area">
                 <h4>GÜNLÜK ZİYARETÇİ DAĞILIMI</h4>
@@ -506,11 +571,17 @@ body {
 
 <script>
 /* =====================================================
+   KAPALI GÜN KONTROLÜ — Pazartesi = 1
+   ===================================================== */
+function isMonday(d) {
+    return d.getDay() === 1;
+}
+
+/* =====================================================
    VERİ KATMANI — Google Sheets CSV'den çek
    ===================================================== */
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSindpUqfzIMsteO46KZsSHxYgxnT_xAui-1bC1hcjlWbS6gzMAFsISf5sqLehELkPjJghO9clTIHyS/pub?gid=0&single=true&output=csv';
 
-// rawData: [{date: Date, count: Number}]
 let rawData = [];
 let chartInstances = {};
 
@@ -524,7 +595,6 @@ async function loadData() {
         initAll();
     } catch(e) {
         console.error('Sheets yükleme hatası:', e);
-        // Demo verisi yükle
         rawData = generateDemoData();
         initAll();
         showDemoNotice();
@@ -534,14 +604,12 @@ async function loadData() {
 function parseCSV(text) {
     const lines = text.trim().split('\n');
     const result = [];
-    // İlk satır başlık olabilir — kontrol et
     const firstCols = splitCSVLine(lines[0]);
     const startLine = !parseDate(firstCols[0]) ? 1 : 0;
     for (let i = startLine; i < lines.length; i++) {
         const parts = splitCSVLine(lines[i]);
         if (parts.length < 2) continue;
         const rawDate = parts[0];
-        // Sayı: Türkçe 100.000,00 → noktaları kaldır, virgülü nokta yap → parseInt
         const rawCount = parts[1].replace(/\./g, '').replace(',', '.');
         const d = parseDate(rawDate);
         const c = Math.round(parseFloat(rawCount));
@@ -550,7 +618,6 @@ function parseCSV(text) {
     return result.sort((a, b) => a.date - b.date);
 }
 
-// CSV satırını tırnak içindeki virgüllere dikkat ederek böler
 function splitCSVLine(line) {
     const result = [];
     let current = '';
@@ -566,14 +633,12 @@ function splitCSVLine(line) {
 }
 
 function parseDate(s) {
-    // Desteklenen formatlar: DD.MM.YYYY / YYYY-MM-DD / DD/MM/YYYY / "D Ay YYYY Gün"
     if (!s) return null;
     s = s.trim();
     let m;
     if ((m = s.match(/^(\d{1,2})\.(\d{2})\.(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
     if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/))) return new Date(+m[1], +m[2]-1, +m[3]);
     if ((m = s.match(/^(\d{1,2})\/(\d{2})\/(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
-    // Türkçe uzun format: "1 Nisan 2026 Çarşamba" veya "1 Nisan 2026"
     const TR_MONTHS = {
         'ocak':0,'şubat':1,'mart':2,'nisan':3,'mayıs':4,'haziran':5,
         'temmuz':6,'ağustos':7,'eylül':8,'ekim':9,'kasım':10,'aralık':11
@@ -587,13 +652,15 @@ function parseDate(s) {
 
 function generateDemoData() {
     const data = [];
-    const start = new Date(2026, 3, 1); // 1 Nisan 2026
+    const start = new Date(2026, 3, 1);
     const today = new Date();
     let d = new Date(start);
     while (d <= today) {
         const dow = d.getDay();
-        const base = (dow === 0 || dow === 6) ? 120 : 60;
-        const count = Math.max(0, Math.round(base + (Math.random() - 0.4) * 50));
+        // Pazartesi günleri (1) 0 ziyaretçi
+        const count = dow === 1 ? 0 : Math.max(0, Math.round(
+            (dow === 0 || dow === 6 ? 120 : 60) + (Math.random() - 0.4) * 50
+        ));
         data.push({ date: new Date(d), count });
         d.setDate(d.getDate() + 1);
     }
@@ -613,6 +680,7 @@ function fmtDate(d) {
     return d.toLocaleDateString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric' });
 }
 const MONTHS_TR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const DAYS_TR = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
 
 function isoDate(d) {
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -634,18 +702,17 @@ function animateCounter(target) {
     const el = document.getElementById('counterDisplay');
     const duration = 2000;
     const start = Date.now();
-    const startVal = 0;
     function update() {
         const elapsed = Date.now() - start;
         const progress = Math.min(elapsed / duration, 1);
         const ease = 1 - Math.pow(1 - progress, 4);
-        const current = Math.round(startVal + (target - startVal) * ease);
+        const current = Math.round(target * ease);
         el.innerHTML = fmt(current).split('').map((c, i) =>
             `<span class="digit" style="animation-delay:${i * 0.04}s">${c}</span>`
         ).join('');
         if (progress < 1) requestAnimationFrame(update);
         else {
-            el.innerHTML = fmt(target).split('').map((c, i) =>
+            el.innerHTML = fmt(target).split('').map(c =>
                 `<span class="digit">${c}</span>`
             ).join('');
         }
@@ -663,10 +730,21 @@ function fillSummary() {
     const todayStr = isoDate(today);
     const todayVal = rawData.filter(r => isoDate(r.date) === todayStr).reduce((s,r)=>s+r.count,0);
 
-    // Bu hafta: Pazartesi'den bugüne
-    const dayOfWeek = (today.getDay() + 6) % 7; // Mon=0
+    // Bugün pazartesi mi?
+    const todayClosed = isMonday(today);
+    const todaySub = document.getElementById('statTodaySub');
+    if (todayClosed) {
+        document.getElementById('statToday').innerHTML = '<span style="font-size:0.55em;color:#ff6b6b;letter-spacing:1px">KAPALI</span>';
+        todaySub.innerHTML = '<span style="color:#ff6b6b;font-size:10px">Pazartesi — Kapalı Gün</span>';
+    } else {
+        document.getElementById('statToday').textContent = fmt(todayVal);
+        todaySub.textContent = 'ziyaretçi';
+    }
+
+    // Bu hafta (Pazartesiler hariç)
+    const dayOfWeek = (today.getDay() + 6) % 7;
     const weekStart = new Date(today); weekStart.setDate(today.getDate() - dayOfWeek);
-    const weekVal = rawData.filter(r => r.date >= weekStart && r.date <= today).reduce((s,r)=>s+r.count,0);
+    const weekVal = rawData.filter(r => r.date >= weekStart && r.date <= today && !isMonday(r.date)).reduce((s,r)=>s+r.count,0);
 
     // Bu ay
     const monthVal = rawData.filter(r => r.date.getFullYear() === today.getFullYear() && r.date.getMonth() === today.getMonth()).reduce((s,r)=>s+r.count,0);
@@ -674,14 +752,12 @@ function fillSummary() {
     // Toplam
     const totalVal = rawData.reduce((s,r)=>s+r.count,0);
 
-    document.getElementById('statToday').textContent = fmt(todayVal);
     document.getElementById('statWeek').textContent = fmt(weekVal);
     document.getElementById('statMonth').textContent = fmt(monthVal);
     document.getElementById('statTotal').textContent = fmt(totalVal);
 
     animateCounter(totalVal);
 
-    // Son güncelleme
     if (rawData.length > 0) {
         const last = rawData[rawData.length - 1];
         document.getElementById('lastUpdate').textContent = 'VERİ SON GÜNCELLEME: ' + fmtDate(last.date);
@@ -689,22 +765,30 @@ function fillSummary() {
 }
 
 /* =====================================================
-   GRAFİK OLUŞTURMA YARDIMCISI
+   GRAFİK OLUŞTURMA
    ===================================================== */
 const CHART_COLORS = {
     gold: '#d4af37',
     goldAlpha: 'rgba(212,175,55,0.15)',
     dark: '#0f1a24',
-    red: '#8b0000',
-    teal: '#2e6b5e',
+    closed: 'rgba(180,60,60,0.55)',
+    closedBorder: 'rgba(220,80,80,0.8)',
 };
 
-function makeChart(id, type, labels, data, labelStr) {
+function makeChart(id, type, labels, data, labelStr, closedFlags) {
     if (chartInstances[id]) chartInstances[id].destroy();
     const ctx = document.getElementById(id).getContext('2d');
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, 'rgba(212,175,55,0.35)');
     gradient.addColorStop(1, 'rgba(212,175,55,0.02)');
+
+    // Renk dizisi: kapalı günler kırmızımsı
+    const bgColors = data.map((_, i) =>
+        closedFlags && closedFlags[i] ? CHART_COLORS.closed : (type === 'line' ? gradient : 'rgba(212,175,55,0.75)')
+    );
+    const borderColors = data.map((_, i) =>
+        closedFlags && closedFlags[i] ? CHART_COLORS.closedBorder : CHART_COLORS.gold
+    );
 
     chartInstances[id] = new Chart(ctx, {
         type: type,
@@ -713,12 +797,14 @@ function makeChart(id, type, labels, data, labelStr) {
             datasets: [{
                 label: labelStr,
                 data,
-                backgroundColor: type === 'line' ? gradient : 'rgba(212,175,55,0.75)',
-                borderColor: CHART_COLORS.gold,
+                backgroundColor: type === 'line' ? gradient : bgColors,
+                borderColor: type === 'line' ? CHART_COLORS.gold : borderColors,
                 borderWidth: type === 'line' ? 2.5 : 1.5,
                 fill: type === 'line',
                 tension: 0.4,
-                pointBackgroundColor: CHART_COLORS.gold,
+                pointBackgroundColor: data.map((_, i) =>
+                    closedFlags && closedFlags[i] ? CHART_COLORS.closedBorder : CHART_COLORS.gold
+                ),
                 pointRadius: data.length > 60 ? 0 : 3,
                 pointHoverRadius: 6,
                 borderRadius: type === 'bar' ? 4 : 0,
@@ -739,7 +825,12 @@ function makeChart(id, type, labels, data, labelStr) {
                     titleColor: CHART_COLORS.gold,
                     bodyColor: '#fff',
                     callbacks: {
-                        label: ctx => ` ${fmt(ctx.raw)} ziyaretçi`
+                        label: ctx => {
+                            if (closedFlags && closedFlags[ctx.dataIndex]) {
+                                return ' KAPALI GÜN (Pazartesi)';
+                            }
+                            return ` ${fmt(ctx.raw)} ziyaretçi`;
+                        }
                     }
                 }
             },
@@ -764,10 +855,24 @@ function makeChart(id, type, labels, data, labelStr) {
    TABLO DOLDUR
    ===================================================== */
 function fillTable(tbodyId, rows) {
-    // rows: [{label, count}]
-    const max = Math.max(...rows.map(r=>r.count), 1);
+    // rows: [{label, count, closed?}]
+    const openRows = rows.filter(r => !r.closed);
+    const max = Math.max(...openRows.map(r => r.count), 1);
     const tbody = document.getElementById(tbodyId);
-    tbody.innerHTML = rows.map(r => `
+    tbody.innerHTML = rows.map(r => {
+        if (r.closed) {
+            return `
+            <tr class="row-closed">
+                <td>${r.label} &nbsp;<span class="closed-notice">KAPALI</span></td>
+                <td class="num-cell" style="color:rgba(43,43,43,0.3)">—</td>
+                <td class="bar-cell">
+                    <div class="mini-bar">
+                        <div class="mini-bar-fill" style="width:0%"></div>
+                    </div>
+                </td>
+            </tr>`;
+        }
+        return `
         <tr>
             <td>${r.label}</td>
             <td class="num-cell">${fmt(r.count)}</td>
@@ -776,8 +881,8 @@ function fillTable(tbodyId, rows) {
                     <div class="mini-bar-fill" style="width:${Math.round(r.count/max*100)}%"></div>
                 </div>
             </td>
-        </tr>
-    `).join('');
+        </tr>`;
+    }).join('');
 }
 
 /* =====================================================
@@ -786,19 +891,50 @@ function fillTable(tbodyId, rows) {
 function renderDaily() {
     const startInput = document.getElementById('dailyStart').value;
     const endInput = document.getElementById('dailyEnd').value;
-    let filtered = [...rawData];
-    if (startInput) filtered = filtered.filter(r => r.date >= new Date(startInput));
-    if (endInput) {
-        const endD = new Date(endInput); endD.setHours(23,59,59);
-        filtered = filtered.filter(r => r.date <= endD);
+
+    // Tarih aralığındaki tüm günleri oluştur (veri olsa da olmasa da)
+    let startD = startInput ? new Date(startInput) : (rawData.length > 0 ? new Date(rawData[0].date) : new Date());
+    let endD = endInput ? new Date(endInput) : new Date();
+    endD.setHours(23,59,59);
+
+    // rawData'dan map oluştur
+    const dataMap = {};
+    rawData.forEach(r => { dataMap[isoDate(r.date)] = r.count; });
+
+    // Tarih aralığındaki tüm günleri üret
+    const allDays = [];
+    let cursor = new Date(startD);
+    cursor.setHours(0,0,0,0);
+    while (cursor <= endD) {
+        allDays.push(new Date(cursor));
+        cursor.setDate(cursor.getDate() + 1);
     }
-    // En fazla 90 gün göster
-    if (filtered.length > 90) filtered = filtered.slice(-90);
-    const labels = filtered.map(r => fmtDate(r.date));
-    const data = filtered.map(r => r.count);
-    makeChart('chartDaily', filtered.length > 30 ? 'bar' : 'line', labels, data, 'Günlük Ziyaretçi');
-    fillTable('dailyTableBody', filtered.map(r=>({label: fmtDate(r.date), count: r.count})).reverse());
-    document.getElementById('dailyInfo').textContent = `${filtered.length} gün · Toplam: ${fmt(data.reduce((a,b)=>a+b,0))}`;
+
+    // En fazla 90 gün
+    const days = allDays.length > 90 ? allDays.slice(-90) : allDays;
+
+    const labels = days.map(d => {
+        const dayName = DAYS_TR[d.getDay()];
+        return fmtDate(d) + (isMonday(d) ? ' (Pzt)' : '');
+    });
+    const data = days.map(d => isMonday(d) ? 0 : (dataMap[isoDate(d)] || 0));
+    const closedFlags = days.map(d => isMonday(d));
+
+    makeChart('chartDaily', days.length > 30 ? 'bar' : 'line', labels, data, 'Günlük Ziyaretçi', closedFlags);
+
+    const tableRows = days.map((d, i) => ({
+        label: `${fmtDate(d)} ${DAYS_TR[d.getDay()]}`,
+        count: data[i],
+        closed: closedFlags[i]
+    })).reverse();
+
+    fillTable('dailyTableBody', tableRows);
+
+    const openDays = days.filter(d => !isMonday(d));
+    const total = data.filter((_, i) => !closedFlags[i]).reduce((a,b)=>a+b,0);
+    const closedCount = days.filter(d => isMonday(d)).length;
+    document.getElementById('dailyInfo').textContent =
+        `${days.length} gün (${closedCount} kapalı) · Toplam: ${fmt(total)}`;
 }
 
 /* =====================================================
@@ -807,10 +943,9 @@ function renderDaily() {
 function renderWeekly() {
     const yr = parseInt(document.getElementById('weeklyYear').value);
     const mo = document.getElementById('weeklyMonth').value;
-    let filtered = rawData.filter(r => r.date.getFullYear() === yr);
+    let filtered = rawData.filter(r => r.date.getFullYear() === yr && !isMonday(r.date));
     if (mo !== 'all') filtered = filtered.filter(r => r.date.getMonth() + 1 === parseInt(mo));
 
-    // Haftalara grupla
     const weekMap = {};
     filtered.forEach(r => {
         const wk = getWeekNumber(r.date);
@@ -831,7 +966,7 @@ function renderWeekly() {
 function renderMonthly() {
     const yr = parseInt(document.getElementById('monthlyYear').value);
     const monthMap = {};
-    rawData.filter(r => r.date.getFullYear() === yr).forEach(r => {
+    rawData.filter(r => r.date.getFullYear() === yr && !isMonday(r.date)).forEach(r => {
         const mo = r.date.getMonth();
         monthMap[mo] = (monthMap[mo] || 0) + r.count;
     });
@@ -848,7 +983,7 @@ function renderMonthly() {
    ===================================================== */
 function renderYearly() {
     const yearMap = {};
-    rawData.forEach(r => {
+    rawData.filter(r => !isMonday(r.date)).forEach(r => {
         const yr = r.date.getFullYear();
         yearMap[yr] = (yearMap[yr] || 0) + r.count;
     });
@@ -868,7 +1003,6 @@ function switchTab(name) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     event.currentTarget.classList.add('active');
     document.getElementById('tab-' + name).classList.add('active');
-    // Grafik yeniden çiz
     if (name === 'daily') renderDaily();
     if (name === 'weekly') renderWeekly();
     if (name === 'monthly') renderMonthly();
@@ -882,13 +1016,11 @@ function initAll() {
     const years = uniqueYears();
     const today = new Date();
 
-    // Yıl seçicilerini doldur
     ['weeklyYear','monthlyYear'].forEach(id => {
         const sel = document.getElementById(id);
         sel.innerHTML = years.map(y => `<option value="${y}" ${y===today.getFullYear()?'selected':''}>${y}</option>`).join('');
     });
 
-    // Günlük varsayılan: son 30 gün
     const d30 = new Date(today); d30.setDate(today.getDate() - 29);
     document.getElementById('dailyStart').value = isoDate(d30);
     document.getElementById('dailyEnd').value = isoDate(today);
