@@ -448,6 +448,85 @@
         }
 
         /* =====================================================
+           HERO KARTLAR (Rehber & Ziyaretçi Defteri)
+        ===================================================== */
+        .hero-cards-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hero-card {
+            background: linear-gradient(160deg, #1b2b3a 0%, #0e1922 100%);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 14px 22px;
+            text-align: center;
+            min-height: 155px;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--gold);
+        }
+
+        .hero-card-icon {
+            font-size: 30px;
+            color: var(--gold);
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 8px rgba(212,175,55,0.45));
+            transition: transform 0.3s;
+        }
+
+        .hero-card:hover .hero-card-icon { transform: scale(1.15); }
+
+        .hero-card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--gold) !important;
+            letter-spacing: 0.8px;
+            line-height: 1.55;
+            margin-bottom: 12px;
+        }
+
+        .hero-card-btn {
+            display: inline-block;
+            padding: 5px 14px;
+            background: transparent;
+            border: 1px solid rgba(212,175,55,0.5);
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            color: rgba(212,175,55,0.8) !important;
+            letter-spacing: 1px;
+            transition: background 0.25s, color 0.25s, border-color 0.25s;
+        }
+
+        .hero-card:hover .hero-card-btn {
+            background: var(--gold);
+            color: var(--dark) !important;
+            border-color: var(--gold);
+        }
+
+        /* =====================================================
            8b. FİZİKİ ZİYARETÇİ SAYACI (yeni)
         ===================================================== */
         .stats-split {
@@ -1014,26 +1093,23 @@
             </div>
         </div>
 
-        <!-- İnteraktif Rehber -->
-        <div class="card">
-            <div class="c-f t-l"></div><div class="c-f t-r"></div>
-            <div class="c-f b-l"></div><div class="c-f b-r"></div>
-            <h2>İNTERAKTİF MÜZE REHBERİ</h2>
-            <div class="card-content">
-                <ul>
-                    <li style="text-align:center;">
-                        <a href="nav/rehber.html" style="font-weight:bold;">
-                            Sultan II. Bayezid Külliyesi İnteraktif Gezi Rehberi
-                        </a>
-                    </li>
-                    <li style="text-align:center;">
-                        <a href="nav/ziyaretci-defteri.html" style="font-weight:bold;">Ziyaretçi Defteri</a>
-                    </li>
-                    <li style="text-align:center;">
-                        <a href="ziyaret/ziyaretci.html" style="font-weight:bold;">Müze Ziyaretçi İstatistikleri</a>
-                    </li>
-                </ul>
-            </div>
+        <!-- Rehber & Ziyaretçi Defteri — 2 Yanyana Hero Kart -->
+        <div class="hero-cards-row">
+
+            <!-- Müze Rehberi -->
+            <a href="nav/rehber.html" class="hero-card">
+                <div class="hero-card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <div class="hero-card-title">Sultan II. Bayezid Külliyesi<br>İnteraktif Gezi Rehberi</div>
+                <span class="hero-card-btn">GEZİYE BAŞLA →</span>
+            </a>
+
+            <!-- Ziyaretçi Defteri -->
+            <a href="nav/ziyaretci-defteri.html" class="hero-card">
+                <div class="hero-card-icon"><i class="fas fa-book-open"></i></div>
+                <div class="hero-card-title">Ziyaretçi<br>Defteri</div>
+                <span class="hero-card-btn">DEFTERE YAZ →</span>
+            </a>
+
         </div>
 
         <!-- Dinamik Kartlar: Duyurular / Haberler / Basında Biz -->
