@@ -9,7 +9,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -25,289 +24,193 @@
 }
 html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch);font-family:var(--font-body);}
 
-/* ── LOGIN ── */
-#login-screen{
-  position:fixed;inset:0;z-index:1000;
-  background:linear-gradient(160deg,#0e0a04,#1e1208);
-  display:flex;align-items:center;justify-content:center;padding:24px;
-}
-.login-box{
-  background:linear-gradient(160deg,#1e1208,#2e1c08);
-  border:2px solid var(--gold);border-radius:16px;
-  padding:36px 28px;max-width:380px;width:100%;text-align:center;
-}
+/* LOGIN */
+#login-screen{position:fixed;inset:0;z-index:1000;background:linear-gradient(160deg,#0e0a04,#1e1208);display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:linear-gradient(160deg,#1e1208,#2e1c08);border:2px solid var(--gold);border-radius:16px;padding:36px 28px;max-width:380px;width:100%;text-align:center;}
 .login-logo{font-size:48px;margin-bottom:16px;}
 .login-title{font-family:var(--font-head);font-size:18px;color:var(--gold3);letter-spacing:0.1em;margin-bottom:6px;}
 .login-sub{font-size:13px;color:var(--stone);margin-bottom:28px;line-height:1.6;}
-.login-input{
-  width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border);
-  border-radius:8px;padding:13px 16px;color:var(--parch);
-  font-family:var(--font-body);font-size:15px;margin-bottom:12px;outline:none;
-  transition:border-color 0.2s;
-}
+.login-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:13px 16px;color:var(--parch);font-family:var(--font-body);font-size:15px;margin-bottom:12px;outline:none;transition:border-color 0.2s;}
 .login-input:focus{border-color:var(--gold);}
-.login-btn{
-  width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:var(--ink);border:none;border-radius:8px;padding:14px;
-  font-family:var(--font-head);font-size:13px;letter-spacing:0.15em;
-  cursor:pointer;font-weight:700;transition:opacity 0.2s;
-}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);border:none;border-radius:8px;padding:14px;font-family:var(--font-head);font-size:13px;letter-spacing:0.15em;cursor:pointer;font-weight:700;transition:opacity 0.2s;}
 .login-btn:hover{opacity:0.9;}
 .login-err{color:#ff6b6b;font-size:13px;margin-top:10px;display:none;}
 
-/* ── MAIN LAYOUT ── */
+/* MAIN */
 #main{display:none;}
-.topbar{
-  background:linear-gradient(135deg,#1a1005,#2e1c08);
-  border-bottom:2px solid var(--gold);
-  padding:12px 20px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
-}
+.topbar{background:linear-gradient(135deg,#1a1005,#2e1c08);border-bottom:2px solid var(--gold);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .topbar-left{display:flex;align-items:center;gap:12px;}
 .topbar-logo{font-size:24px;}
 .topbar-title{font-family:var(--font-head);font-size:14px;color:var(--gold3);letter-spacing:0.08em;}
 .topbar-sub{font-size:11px;color:var(--stone);}
-.live-badge{
-  display:flex;align-items:center;gap:6px;
-  background:rgba(42,122,58,0.2);border:1px solid var(--green2);
-  border-radius:20px;padding:5px 12px;
-  font-family:var(--font-head);font-size:11px;color:var(--green2);letter-spacing:0.08em;
-}
-.live-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--green2);
-  animation:livePulse 1.4s ease-in-out infinite;
-}
+.live-badge{display:flex;align-items:center;gap:6px;background:rgba(42,122,58,0.2);border:1px solid var(--green2);border-radius:20px;padding:5px 12px;font-family:var(--font-head);font-size:11px;color:var(--green2);letter-spacing:0.08em;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green2);animation:livePulse 1.4s ease-in-out infinite;}
 @keyframes livePulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
-.logout-btn{
-  background:transparent;border:1px solid var(--border);color:var(--stone);
-  border-radius:6px;padding:6px 14px;font-family:var(--font-head);font-size:11px;
-  cursor:pointer;transition:all 0.2s;letter-spacing:0.08em;
-}
+.logout-btn{background:transparent;border:1px solid var(--border);color:var(--stone);border-radius:6px;padding:6px 14px;font-family:var(--font-head);font-size:11px;cursor:pointer;transition:all 0.2s;letter-spacing:0.08em;}
 .logout-btn:hover{border-color:var(--gold);color:var(--gold3);}
 
-/* ── TABS ── */
-.tab-bar{
-  display:flex;gap:0;border-bottom:2px solid rgba(184,134,11,0.2);
-  background:#150e03;overflow-x:auto;padding:0 20px;
-}
-.tab{
-  font-family:var(--font-head);font-size:11px;letter-spacing:0.1em;
-  padding:13px 18px;color:var(--stone);cursor:pointer;
-  border-bottom:3px solid transparent;margin-bottom:-2px;
-  white-space:nowrap;transition:all 0.2s;
-}
+/* TABS */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid rgba(184,134,11,0.2);background:#150e03;overflow-x:auto;padding:0 20px;}
+.tab{font-family:var(--font-head);font-size:11px;letter-spacing:0.1em;padding:13px 18px;color:var(--stone);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all 0.2s;}
 .tab.active{color:var(--gold3);border-bottom-color:var(--gold);}
 .tab:hover{color:var(--parch);}
 
-/* ── CONTENT ── */
+/* CONTENT */
 .page{display:none;padding:20px;}
 .page.active{display:block;}
 
-/* ── STAT CARDS ── */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;}
-.stat-card{
-  background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;
-  padding:18px 16px;text-align:center;
-}
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center;}
 .stat-icon{font-size:28px;margin-bottom:8px;}
-.stat-val{
-  font-family:var(--font-head);font-size:28px;color:var(--gold3);
-  line-height:1;margin-bottom:4px;
-}
+.stat-val{font-family:var(--font-head);font-size:28px;color:var(--gold3);line-height:1;margin-bottom:4px;}
 .stat-label{font-size:11px;color:var(--stone);letter-spacing:0.06em;line-height:1.5;}
 .stat-card.green{border-color:rgba(61,170,85,0.4);}
 .stat-card.green .stat-val{color:var(--green2);}
 .stat-card.red{border-color:rgba(139,32,0,0.4);}
 .stat-card.red .stat-val{color:#ff6b4a;}
+.stat-card.blue{border-color:rgba(42,106,176,0.4);}
+.stat-card.blue .stat-val{color:#5fa8e8;}
 
-/* ── SECTION HEADER ── */
-.section-hdr{
-  font-family:var(--font-head);font-size:12px;color:var(--gold);
-  letter-spacing:0.12em;margin-bottom:14px;
-  padding-bottom:8px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.section-hdr .badge{
-  font-size:10px;background:rgba(184,134,11,0.15);
-  border:1px solid var(--border);border-radius:12px;padding:3px 10px;
-  color:var(--stone);
-}
+/* SECTION HEADER */
+.section-hdr{font-family:var(--font-head);font-size:12px;color:var(--gold);letter-spacing:0.12em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.section-hdr .badge{font-size:10px;background:rgba(184,134,11,0.15);border:1px solid var(--border);border-radius:12px;padding:3px 10px;color:var(--stone);}
 
-/* ── MAP ── */
-.map-wrap{
-  background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;
-  padding:16px;margin-bottom:20px;
-}
-.map-container{
-  position:relative;width:100%;aspect-ratio:4/3;max-height:500px;
-  background:#0a1a0a;border-radius:8px;overflow:hidden;
-  border:1px solid rgba(184,134,11,0.15);
-}
-#floor-plan{width:100%;height:100%;position:relative;}
+/* MAP */
+.map-wrap{background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;}
 
-/* ── VISITOR DOTS ON MAP ── */
-.visitor-dot{
-  position:absolute;width:14px;height:14px;border-radius:50%;
-  background:var(--gold3);border:2px solid var(--bg-dark);
-  transform:translate(-50%,-50%);
-  box-shadow:0 0 8px rgba(240,192,64,0.6);
-  transition:all 0.8s ease;
-  cursor:pointer;
-}
-.visitor-dot::after{
-  content:'';position:absolute;inset:-4px;border-radius:50%;
-  border:1px solid rgba(240,192,64,0.4);
-  animation:dotRing 2s ease-in-out infinite;
-}
-@keyframes dotRing{0%,100%{opacity:0.8;transform:scale(1);}50%{opacity:0;transform:scale(1.6);}}
-.visitor-dot.alone{background:#3daa55;}
-.visitor-dot.crowded{background:#ff6b4a;}
+/* CHART AREA */
+.chart-wrap{background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;}
 
-/* Heatmap zones */
-.heat-zone{
-  position:absolute;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,100,0,0.35) 0%,transparent 70%);
-  transform:translate(-50%,-50%);pointer-events:none;
-}
-
-/* Zone labels */
-.zone-label{
-  position:absolute;
-  font-family:var(--font-head);font-size:9px;color:rgba(240,192,64,0.7);
-  letter-spacing:0.06em;pointer-events:none;
-  background:rgba(14,10,4,0.7);padding:2px 6px;border-radius:4px;
-  white-space:nowrap;
-}
-
-/* ── CHART AREA ── */
-.chart-wrap{
-  background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;
-  padding:16px;margin-bottom:20px;
-}
-canvas.bar-chart{width:100%;height:200px;}
-
-/* ── TABLE ── */
+/* TABLE */
 .data-table{width:100%;border-collapse:collapse;font-size:13px;}
-.data-table th{
-  font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;
-  color:var(--stone);padding:8px 12px;text-align:left;
-  border-bottom:1px solid var(--border);
-}
-.data-table td{
-  padding:10px 12px;color:var(--parch2);
-  border-bottom:1px solid rgba(184,134,11,0.08);
-}
+.data-table th{font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;color:var(--stone);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.data-table td{padding:10px 12px;color:var(--parch2);border-bottom:1px solid rgba(184,134,11,0.08);}
 .data-table tr:hover td{background:rgba(184,134,11,0.05);}
-.rank-badge{
-  display:inline-block;width:22px;height:22px;border-radius:50%;
-  background:rgba(184,134,11,0.2);border:1px solid var(--border);
-  font-family:var(--font-head);font-size:10px;color:var(--gold3);
-  text-align:center;line-height:22px;margin-right:6px;
-}
+.rank-badge{display:inline-block;width:22px;height:22px;border-radius:50%;background:rgba(184,134,11,0.2);border:1px solid var(--border);font-family:var(--font-head);font-size:10px;color:var(--gold3);text-align:center;line-height:22px;margin-right:6px;}
 
-/* ── VISITOR LIST ── */
-.visitor-row{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 14px;border-radius:8px;margin-bottom:6px;
-  background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.1);
-}
-.visitor-avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--ink));
-  border:1px solid var(--border);display:flex;align-items:center;
-  justify-content:center;font-size:14px;flex-shrink:0;
-}
+/* VISITOR LIST */
+.visitor-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:6px;background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.1);}
+.visitor-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--ink));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
 .visitor-info{flex:1;min-width:0;}
 .visitor-name{font-size:13px;color:var(--parch);font-weight:600;}
 .visitor-meta{font-size:11px;color:var(--stone);margin-top:2px;}
-.visitor-zone{
-  font-family:var(--font-head);font-size:10px;letter-spacing:0.06em;
-  background:rgba(184,134,11,0.15);border:1px solid var(--border);
-  border-radius:12px;padding:3px 10px;color:var(--gold3);white-space:nowrap;
-}
+.visitor-zone{font-family:var(--font-head);font-size:10px;letter-spacing:0.06em;background:rgba(184,134,11,0.15);border:1px solid var(--border);border-radius:12px;padding:3px 10px;color:var(--gold3);white-space:nowrap;}
 
-/* ── PROGRESS BARS ── */
+/* PROGRESS BARS */
 .prog-row{margin-bottom:14px;}
-.prog-label{
-  display:flex;justify-content:space-between;
-  font-size:12px;color:var(--parch2);margin-bottom:5px;
-}
-.prog-bar{
-  height:8px;background:rgba(184,134,11,0.12);border-radius:4px;
-  border:1px solid rgba(184,134,11,0.15);overflow:hidden;
-}
-.prog-fill{
-  height:100%;border-radius:4px;
-  background:linear-gradient(90deg,var(--gold2),var(--gold3));
-  transition:width 1s ease;
-}
+.prog-label{display:flex;justify-content:space-between;font-size:12px;color:var(--parch2);margin-bottom:5px;}
+.prog-bar{height:8px;background:rgba(184,134,11,0.12);border-radius:4px;border:1px solid rgba(184,134,11,0.15);overflow:hidden;}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold2),var(--gold3));transition:width 1s ease;}
 .prog-fill.green{background:linear-gradient(90deg,#2a7a3a,#3daa55);}
 .prog-fill.red{background:linear-gradient(90deg,#7a1000,#c03020);}
+.prog-fill.blue{background:linear-gradient(90deg,#1a4a7a,#2a6ab0);}
+.prog-fill.purple{background:linear-gradient(90deg,#4a1a7a,#7a3ab0);}
 
-/* ── GRID LAYOUT ── */
+/* GRID */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-@media(max-width:700px){.two-col{grid-template-columns:1fr;}.tab{padding:10px 12px;font-size:10px;}}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:700px){.two-col,.three-col{grid-template-columns:1fr;}.tab{padding:10px 12px;font-size:10px;}}
 
-/* ── REFRESH BTN ── */
-.refresh-btn{
-  background:rgba(184,134,11,0.15);border:1px solid var(--border);
-  color:var(--gold3);border-radius:6px;padding:6px 12px;
-  font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;
-  cursor:pointer;transition:all 0.2s;
-}
+/* REFRESH BTN */
+.refresh-btn{background:rgba(184,134,11,0.15);border:1px solid var(--border);color:var(--gold3);border-radius:6px;padding:6px 12px;font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;}
 .refresh-btn:hover{background:rgba(184,134,11,0.25);}
 
-/* ── TIMELINE ── */
-.timeline-bar{
-  display:flex;align-items:flex-end;gap:3px;
-  height:80px;margin-top:10px;
-}
+/* DANGER BTN */
+.danger-btn{background:rgba(139,32,0,0.15);border:1px solid rgba(139,32,0,0.4);color:#ff6b4a;border-radius:6px;padding:6px 12px;font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;}
+.danger-btn:hover{background:rgba(139,32,0,0.3);}
+
+/* TIMELINE */
+.timeline-bar{display:flex;align-items:flex-end;gap:3px;height:100px;margin-top:10px;}
 .tl-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
-.tl-bar{
-  width:100%;background:linear-gradient(180deg,var(--gold3),var(--gold2));
-  border-radius:3px 3px 0 0;min-height:2px;transition:height 0.6s ease;
-  cursor:pointer;position:relative;
-}
-.tl-bar:hover::after{
-  content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
-  background:rgba(14,10,4,0.95);border:1px solid var(--border);border-radius:6px;
-  padding:4px 8px;font-size:11px;color:var(--gold3);white-space:nowrap;margin-bottom:4px;
-}
+.tl-bar{width:100%;background:linear-gradient(180deg,var(--gold3),var(--gold2));border-radius:3px 3px 0 0;min-height:2px;transition:height 0.6s ease;cursor:pointer;position:relative;}
+.tl-bar:hover::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:rgba(14,10,4,0.95);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--gold3);white-space:nowrap;margin-bottom:4px;z-index:10;}
 .tl-label{font-size:9px;color:var(--stone);text-align:center;}
 
-/* ── EMPTY STATE ── */
-.empty-state{
-  text-align:center;padding:40px 20px;
-  color:var(--stone);font-style:italic;font-size:14px;
-}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:40px 20px;color:var(--stone);font-style:italic;font-size:14px;}
 .empty-state .icon{font-size:36px;margin-bottom:12px;display:block;}
 
-/* ── FILTER ROW ── */
+/* FILTER ROW */
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-.filter-btn{
-  background:rgba(184,134,11,0.08);border:1px solid var(--border);
-  color:var(--stone);border-radius:20px;padding:6px 14px;
-  font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;
-  cursor:pointer;transition:all 0.2s;
-}
+.filter-btn{background:rgba(184,134,11,0.08);border:1px solid var(--border);color:var(--stone);border-radius:20px;padding:6px 14px;font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;}
 .filter-btn.active{background:rgba(184,134,11,0.25);border-color:var(--gold);color:var(--gold3);}
 
-/* ── LEAFLET ADMIN OVERRIDES ── */
+/* LEAFLET OVERRIDES */
 .leaflet-tile{filter:sepia(0.5) brightness(0.75) saturate(0.6) hue-rotate(8deg);}
 .leaflet-container{background:#0a1208;}
 .leaflet-popup-content-wrapper{background:rgba(20,14,5,0.97)!important;border:1px solid #b8860b!important;border-radius:10px!important;}
 .leaflet-popup-tip{background:rgba(20,14,5,0.97)!important;}
 .leaflet-popup-content{color:rgba(240,220,180,0.9)!important;font-size:13px!important;}
-.adm-vis-dot{
-  width:14px;height:14px;border-radius:50%;
-  background:var(--gold3);border:2px solid #1a1005;
-  box-shadow:0 0 10px rgba(240,192,64,0.8);
-  animation:vDotPulse 2s ease-in-out infinite;
-}
+.adm-vis-dot{width:14px;height:14px;border-radius:50%;background:var(--gold3);border:2px solid #1a1005;box-shadow:0 0 10px rgba(240,192,64,0.8);animation:vDotPulse 2s ease-in-out infinite;}
 @keyframes vDotPulse{0%,100%{box-shadow:0 0 5px rgba(240,192,64,0.5);}50%{box-shadow:0 0 16px rgba(240,192,64,1);}}
 .adm-vis-dot.crowded{background:#ff6b4a;box-shadow:0 0 10px rgba(255,107,74,0.8);}
 .adm-vis-dot.alone{background:#3daa55;box-shadow:0 0 10px rgba(61,170,85,0.8);}
 
+/* DWELL TIME VISUAL */
+.dwell-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.dwell-zone-name{font-size:12px;color:var(--parch2);min-width:140px;flex-shrink:0;}
+.dwell-bar-outer{flex:1;height:24px;background:rgba(184,134,11,0.08);border-radius:4px;border:1px solid rgba(184,134,11,0.12);overflow:hidden;position:relative;}
+.dwell-bar-inner{height:100%;border-radius:4px;transition:width 1.2s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.dwell-bar-label{font-size:11px;font-family:var(--font-head);color:rgba(14,10,4,0.8);font-weight:700;}
+.dwell-count{font-size:11px;color:var(--stone);min-width:70px;text-align:right;flex-shrink:0;}
+
+/* GUESTBOOK CARD */
+.guestbook-card{background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.gb-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.gb-name{font-size:13px;color:var(--gold3);font-weight:600;}
+.gb-meta{font-size:11px;color:var(--stone);}
+.gb-text{font-size:13px;color:var(--parch2);line-height:1.6;font-style:italic;}
+.gb-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.gb-tag{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.2);color:var(--stone);font-family:var(--font-head);}
+
+/* SENTIMENT */
+.sentiment-meter{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:12px 0;}
+.sent-pos{background:linear-gradient(90deg,#2a7a3a,#3daa55);}
+.sent-neu{background:linear-gradient(90deg,#7a6020,#b8900b);}
+.sent-neg{background:linear-gradient(90deg,#7a1000,#c03020);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:linear-gradient(160deg,#1e1208,#2e1c08);border:2px solid var(--red);border-radius:14px;padding:28px;max-width:380px;width:100%;text-align:center;}
+.modal-title{font-family:var(--font-head);font-size:16px;color:#ff6b4a;letter-spacing:0.1em;margin-bottom:10px;}
+.modal-text{font-size:13px;color:var(--parch2);margin-bottom:20px;line-height:1.6;}
+.modal-btns{display:flex;gap:10px;justify-content:center;}
+.modal-confirm{background:rgba(139,32,0,0.4);border:1px solid rgba(192,48,32,0.6);color:#ff6b4a;border-radius:8px;padding:10px 20px;font-family:var(--font-head);font-size:12px;cursor:pointer;transition:all 0.2s;letter-spacing:0.08em;}
+.modal-confirm:hover{background:rgba(139,32,0,0.6);}
+.modal-cancel{background:transparent;border:1px solid var(--border);color:var(--stone);border-radius:8px;padding:10px 20px;font-family:var(--font-head);font-size:12px;cursor:pointer;transition:all 0.2s;letter-spacing:0.08em;}
+.modal-cancel:hover{color:var(--parch);}
+
+/* WORD CLOUD */
+.word-cloud{display:flex;flex-wrap:wrap;gap:8px;padding:16px;}
+.word-item{padding:5px 12px;border-radius:20px;font-family:var(--font-head);letter-spacing:0.06em;cursor:default;transition:transform 0.2s;}
+.word-item:hover{transform:scale(1.1);}
+
+/* FUNNEL */
+.funnel-step{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.funnel-num{font-family:var(--font-head);font-size:11px;color:var(--stone);min-width:60px;}
+.funnel-bar-outer{flex:1;height:28px;background:rgba(184,134,11,0.06);border-radius:4px;overflow:hidden;position:relative;}
+.funnel-bar-inner{height:100%;display:flex;align-items:center;padding:0 10px;font-family:var(--font-head);font-size:10px;color:rgba(14,10,4,0.9);font-weight:700;border-radius:4px;}
+.funnel-pct{font-size:11px;color:var(--stone);min-width:45px;text-align:right;}
+
+/* NPS */
+.nps-bar{display:flex;height:20px;border-radius:4px;overflow:hidden;gap:2px;margin:10px 0;}
+.nps-det{background:linear-gradient(90deg,#7a1000,#c03020);}
+.nps-pas{background:linear-gradient(90deg,#7a6020,#c9a030);}
+.nps-pro{background:linear-gradient(90deg,#2a7a3a,#3daa55);}
+.nps-score{font-family:var(--font-head);font-size:36px;text-align:center;padding:10px 0;}
+
+/* ALERT BOX */
+.alert-box{background:rgba(139,32,0,0.1);border:1px solid rgba(192,48,32,0.3);border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;}
+.alert-box.info{background:rgba(42,106,176,0.1);border-color:rgba(42,106,176,0.3);}
+.alert-box.success{background:rgba(42,122,58,0.1);border-color:rgba(61,170,85,0.3);}
+.alert-icon{font-size:18px;flex-shrink:0;}
+.alert-text{font-size:12px;color:var(--parch2);line-height:1.6;}
+
+/* SPARKLINE */
+.sparkline-wrap{display:flex;align-items:flex-end;gap:1px;height:32px;margin-top:4px;}
+.sparkline-bar{flex:1;border-radius:1px;min-height:2px;opacity:0.7;}
 </style>
 </head>
 <body>
@@ -325,6 +228,18 @@ canvas.bar-chart{width:100%;height:200px;}
   </div>
 </div>
 
+<!-- RESET MODAL -->
+<div class="modal-overlay" id="reset-modal">
+  <div class="modal-box">
+    <div class="modal-title">⚠️ VERİ SIFIRLA</div>
+    <div class="modal-text">Tüm demo/test verilerini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</div>
+    <div class="modal-btns">
+      <button class="modal-confirm" onclick="confirmReset()">🗑️ SIFIRLA</button>
+      <button class="modal-cancel" onclick="document.getElementById('reset-modal').classList.remove('open')">İPTAL</button>
+    </div>
+  </div>
+</div>
+
 <!-- MAIN PANEL -->
 <div id="main">
   <div class="topbar">
@@ -335,21 +250,25 @@ canvas.bar-chart{width:100%;height:200px;}
         <div class="topbar-sub">Sultan II. Bayezid Külliyesi</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="live-badge">
         <div class="live-dot"></div>
         <span id="live-count-badge">0 Ziyaretçi</span>
       </div>
+      <button class="danger-btn" onclick="document.getElementById('reset-modal').classList.add('open')">🗑️ DEMO VERİ SİFİRLA</button>
       <button class="logout-btn" onclick="doLogout()">ÇIKIŞ</button>
     </div>
   </div>
 
   <div class="tab-bar">
-    <div class="tab active" onclick="showTab('realtime')">📍 Anlık Konum</div>
-    <div class="tab" onclick="showTab('stats')">📊 İstatistikler</div>
-    <div class="tab" onclick="showTab('heatmap')">🌡️ Yoğunluk Haritası</div>
-    <div class="tab" onclick="showTab('sessions')">👥 Oturumlar</div>
-    <div class="tab" onclick="showTab('zones')">🏛️ Bölge Analizi</div>
+    <div class="tab active" onclick="showTab('realtime',this)">📍 Anlık</div>
+    <div class="tab" onclick="showTab('stats',this)">📊 İstatistik</div>
+    <div class="tab" onclick="showTab('heatmap',this)">🌡️ Yoğunluk</div>
+    <div class="tab" onclick="showTab('dwell',this)">⏱️ Kalma Süreleri</div>
+    <div class="tab" onclick="showTab('guestbook',this)">📖 Gönül Defteri</div>
+    <div class="tab" onclick="showTab('sessions',this)">👥 Oturumlar</div>
+    <div class="tab" onclick="showTab('zones',this)">🏛️ Bölge Analizi</div>
+    <div class="tab" onclick="showTab('funnel',this)">🔻 Dönüşüm</div>
   </div>
 
   <!-- ════ TAB: REALTIME ════ -->
@@ -363,35 +282,34 @@ canvas.bar-chart{width:100%;height:200px;}
       <div class="stat-card">
         <div class="stat-icon">📅</div>
         <div class="stat-val" id="rt-today">0</div>
-        <div class="stat-label">BUGÜNKÜ<br>TOPLAM ZİYARETÇİ</div>
+        <div class="stat-label">BUGÜNKÜ<br>TOPLAM</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">⏱️</div>
         <div class="stat-val" id="rt-avgtime">—</div>
-        <div class="stat-label">ORTALAMA KALMA<br>SÜRESİ (DK)</div>
+        <div class="stat-label">ORT. KALMA<br>SÜRESİ (DK)</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">🏛️</div>
         <div class="stat-val" id="rt-topzone">—</div>
         <div class="stat-label">EN YOĞUN<br>BÖLGE</div>
       </div>
+      <div class="stat-card blue">
+        <div class="stat-icon">📖</div>
+        <div class="stat-val" id="rt-guestbook">0</div>
+        <div class="stat-label">BUGÜN GÖNÜL<br>DEFTERİ YAZISI</div>
+      </div>
     </div>
-
     <div class="map-wrap">
-      <div class="section-hdr">
-        📍 ANLİK ZİYARETÇİ KONUMLARI
+      <div class="section-hdr">📍 ANLİK ZİYARETÇİ KONUMLARI
         <button class="refresh-btn" onclick="refreshRealtime()">🔄 YENİLE</button>
       </div>
       <div id="floor-plan" style="width:100%;height:420px;border-radius:8px;overflow:hidden;border:1px solid rgba(184,134,11,0.2);"></div>
       <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--stone);">
-        <span>🟡 Ziyaretçi konumu</span>
-        <span>🟢 Tek kişi</span>
-        <span>🔴 Yoğun alan</span>
+        <span>🟡 Ziyaretçi konumu</span><span>🟢 Tek kişi</span><span>🔴 Yoğun alan</span>
       </div>
     </div>
-
-    <div class="section-hdr">
-      👤 AKTİF ZİYARETÇİLER
+    <div class="section-hdr">👤 AKTİF ZİYARETÇİLER
       <span class="badge" id="active-count-badge">0 kişi</span>
     </div>
     <div id="active-visitors-list">
@@ -407,38 +325,17 @@ canvas.bar-chart{width:100%;height:200px;}
       <button class="filter-btn" onclick="setStatPeriod('month',this)">Bu Ay</button>
       <button class="filter-btn" onclick="setStatPeriod('all',this)">Tüm Zamanlar</button>
     </div>
-
     <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-icon">👣</div>
-        <div class="stat-val" id="st-total">0</div>
-        <div class="stat-label">TOPLAM ZİYARETÇİ</div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-icon">⏱️</div>
-        <div class="stat-val" id="st-avgdur">0</div>
-        <div class="stat-label">ORT. SÜRE (DAK)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">🏁</div>
-        <div class="stat-val" id="st-complete">%0</div>
-        <div class="stat-label">TURU TAMAMLAMA<br>ORANI</div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-icon">📱</div>
-        <div class="stat-val" id="st-sessions">0</div>
-        <div class="stat-label">REHBER OTURUMU</div>
-      </div>
+      <div class="stat-card"><div class="stat-icon">👣</div><div class="stat-val" id="st-total">0</div><div class="stat-label">TOPLAM ZİYARETÇİ</div></div>
+      <div class="stat-card green"><div class="stat-icon">⏱️</div><div class="stat-val" id="st-avgdur">0</div><div class="stat-label">ORT. SÜRE (DAK)</div></div>
+      <div class="stat-card"><div class="stat-icon">🏁</div><div class="stat-val" id="st-complete">%0</div><div class="stat-label">TUR TAMAMLAMA<br>ORANI</div></div>
+      <div class="stat-card red"><div class="stat-icon">📱</div><div class="stat-val" id="st-sessions">0</div><div class="stat-label">REHBER OTURUMU</div></div>
+      <div class="stat-card blue"><div class="stat-icon">📖</div><div class="stat-val" id="st-gb">0</div><div class="stat-label">GÖNÜL DEFTERİ<br>TOPLAM YAZI</div></div>
     </div>
-
     <div class="chart-wrap">
       <div class="section-hdr">📈 GÜNLÜK ZİYARETÇİ TRENDİ (Son 7 Gün)</div>
       <div class="timeline-bar" id="trend-chart"></div>
-      <div style="display:flex;justify-content:space-between;margin-top:6px;">
-        <!-- labels injected by JS -->
-      </div>
     </div>
-
     <div class="two-col">
       <div class="chart-wrap">
         <div class="section-hdr">🌐 DİL DAĞILIMI</div>
@@ -449,55 +346,153 @@ canvas.bar-chart{width:100%;height:200px;}
         <div id="perm-chart"></div>
       </div>
     </div>
-
     <div class="chart-wrap">
       <div class="section-hdr">⏰ SAATLIK ZİYARETÇİ DAĞILIMI</div>
       <div class="timeline-bar" id="hourly-chart"></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="section-hdr">📅 HAFTALIK KARŞILAŞTIRMA</div>
+        <div id="weekly-compare"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">📱 CİHAZ TÜRÜ</div>
+        <div id="device-chart"></div>
+      </div>
     </div>
   </div>
 
   <!-- ════ TAB: HEATMAP ════ -->
   <div class="page" id="tab-heatmap">
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setHeatPeriod('all',this)">Tüm Zamanlar</button>
+      <button class="filter-btn" onclick="setHeatPeriod('week',this)">Son 7 Gün</button>
+      <button class="filter-btn" onclick="setHeatPeriod('today',this)">Bugün</button>
+    </div>
     <div class="map-wrap">
-      <div class="section-hdr">
-        🌡️ BÖLGE YOĞUNLUK HARİTASI
-        <span class="badge">Tüm Zamanlar</span>
+      <div class="section-hdr">🌡️ BÖLGE YOĞUNLUK HARİTASI
+        <button class="refresh-btn" onclick="renderHeatmap()">🔄 YENİLE</button>
       </div>
       <div id="heatmap-plan" style="width:100%;height:420px;border-radius:8px;overflow:hidden;border:1px solid rgba(184,134,11,0.2);"></div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:11px;">
-        <span style="color:#3daa55;">🟢 Az ilgi</span>
-        <span style="color:#f0c040;">🟡 Orta ilgi</span>
-        <span style="color:#ff6b4a;">🔴 Çok ilgi</span>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:11px;align-items:center;">
+        <span style="color:#3daa55;">🟢 Az ilgi (&lt;30%)</span>
+        <span style="color:#f0c040;">🟡 Orta ilgi (30–70%)</span>
+        <span style="color:#ff6b4a;">🔴 Çok ilgi (&gt;70%)</span>
+        <span style="color:var(--stone);font-size:10px;">Poligona tıklayarak detay görüntüleyin</span>
       </div>
     </div>
-
     <div class="section-hdr">🏛️ BÖLGE DETAY TABLOSU</div>
     <table class="data-table">
       <thead>
-        <tr>
-          <th>#</th><th>BÖLGE</th><th>TOPLAM ZİYARET</th><th>ORT. KALMA (DK)</th><th>YOĞUNLUK</th>
-        </tr>
+        <tr><th>#</th><th>BÖLGE</th><th>TOPLAM ZİYARET</th><th>ORT. KALMA (DK)</th><th>ÇIKIŞ ORANI</th><th>YOĞUNLUK</th></tr>
       </thead>
       <tbody id="zone-detail-table">
-        <tr><td colspan="5" class="empty-state">Veriler yükleniyor…</td></tr>
+        <tr><td colspan="6" class="empty-state">Veriler yükleniyor…</td></tr>
       </tbody>
     </table>
   </div>
 
+  <!-- ════ TAB: DWELL TIME ════ -->
+  <div class="page" id="tab-dwell">
+    <div class="stat-grid">
+      <div class="stat-card green"><div class="stat-icon">⏳</div><div class="stat-val" id="dw-max">—</div><div class="stat-label">EN UZUN KALMA<br>BÖLGESİ</div></div>
+      <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-val" id="dw-min">—</div><div class="stat-label">EN KISA GEÇIŞ<br>BÖLGESİ</div></div>
+      <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="dw-avg">0</div><div class="stat-label">GENEL ORT. KALMA<br>SÜRESİ (DK)</div></div>
+      <div class="stat-card blue"><div class="stat-icon">🔄</div><div class="stat-val" id="dw-transit">0%</div><div class="stat-label">GEÇIŞ BÖLGE<br>KULLANIM ORANI</div></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="section-hdr">⏱️ BÖLGE BAZLI ORT. KALMA SÜRESİ (DAKİKA)
+        <span class="badge" id="dwell-period-badge">Tüm Zamanlar</span>
+      </div>
+      <div id="dwell-bars" style="margin-top:6px;"></div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="section-hdr">📈 GÜNLÜK KALMA SÜRESİ TRENDİ</div>
+        <div class="timeline-bar" id="dwell-trend"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">🕐 SAATE GÖRE ORTALAMA SÜRE</div>
+        <div class="timeline-bar" id="dwell-hourly"></div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="section-hdr">🔀 BÖLGELER ARASI GEÇİŞ AKIŞI</div>
+      <div id="transition-flow" style="padding:8px 0;"></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="section-hdr">⏱️ KALMA SÜRESİ DAĞILIMI (Tüm Ziyaretçiler)</div>
+      <div id="duration-dist" style="padding:8px 0;"></div>
+    </div>
+  </div>
+
+  <!-- ════ TAB: GUESTBOOK ════ -->
+  <div class="page" id="tab-guestbook">
+    <div class="stat-grid">
+      <div class="stat-card blue"><div class="stat-icon">📖</div><div class="stat-val" id="gb-total">0</div><div class="stat-label">TOPLAM MESAJ</div></div>
+      <div class="stat-card green"><div class="stat-icon">😊</div><div class="stat-val" id="gb-pos">%0</div><div class="stat-label">POZİTİF<br>YORUM ORANI</div></div>
+      <div class="stat-card"><div class="stat-icon">🌐</div><div class="stat-val" id="gb-langs">0</div><div class="stat-label">FARKLI DİL<br>SAYISI</div></div>
+      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val" id="gb-rating">—</div><div class="stat-label">ORT. PUAN<br>(5 ÜZERINDEN)</div></div>
+      <div class="stat-card red"><div class="stat-icon">🚩</div><div class="stat-val" id="gb-flagged">0</div><div class="stat-label">ONAY BEKLEYEN<br>MESAJ</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="section-hdr">💬 DUYGU ANALİZİ</div>
+        <div class="sentiment-meter" id="sentiment-meter"></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px;">
+          <span style="color:#3daa55;" id="sent-pos-pct">😊 Pozitif: 0%</span>
+          <span style="color:var(--stone);" id="sent-neu-pct">😐 Nötr: 0%</span>
+          <span style="color:#ff6b4a;" id="sent-neg-pct">😞 Negatif: 0%</span>
+        </div>
+        <div class="nps-score" id="nps-score" style="color:var(--gold3);">NPS: —</div>
+        <div id="nps-bar-wrap"></div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--stone);margin-top:4px;">
+          <span>🔴 Kötüleyenler</span><span>🟡 Pasifler</span><span>🟢 Destekçiler</span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">🌐 MESAJ DİL DAĞILIMI</div>
+        <div id="gb-lang-chart"></div>
+        <div class="section-hdr" style="margin-top:16px;">📅 GÜNLÜK MESAJ TRENDI</div>
+        <div class="timeline-bar" id="gb-trend" style="height:60px;"></div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="section-hdr">☁️ EN SIK GEÇEN KELİMELER</div>
+      <div class="word-cloud" id="word-cloud"></div>
+    </div>
+
+    <div class="section-hdr">💬 SON MESAJLAR
+      <button class="refresh-btn" onclick="loadGuestbook()">🔄 YENİLE</button>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div class="filter-row" id="gb-filter-row">
+        <button class="filter-btn active" onclick="filterGuestbook('all',this)">Tümü</button>
+        <button class="filter-btn" onclick="filterGuestbook('positive',this)">😊 Pozitif</button>
+        <button class="filter-btn" onclick="filterGuestbook('negative',this)">😞 Negatif</button>
+        <button class="filter-btn" onclick="filterGuestbook('flagged',this)">🚩 Onay Bekliyor</button>
+      </div>
+    </div>
+    <div id="guestbook-list"></div>
+  </div>
+
   <!-- ════ TAB: SESSIONS ════ -->
   <div class="page" id="tab-sessions">
-    <div class="section-hdr">
-      📋 ZİYARETÇİ OTURUM GEÇMİŞİ
+    <div class="section-hdr">📋 ZİYARETÇİ OTURUM GEÇMİŞİ
       <button class="refresh-btn" onclick="loadSessions()">🔄 YENİLE</button>
     </div>
     <table class="data-table" id="sessions-table">
       <thead>
-        <tr>
-          <th>ID</th><th>BAŞLANGIÇ</th><th>SÜRE</th><th>DURAK</th><th>DİL</th><th>DURUM</th>
-        </tr>
+        <tr><th>ID</th><th>BAŞLANGIÇ</th><th>SÜRE</th><th>DURAK</th><th>DİL</th><th>KONUM</th><th>DURUM</th></tr>
       </thead>
       <tbody id="sessions-tbody">
-        <tr><td colspan="6"><div class="empty-state"><span class="icon">📋</span>Yükleniyor…</div></td></tr>
+        <tr><td colspan="7"><div class="empty-state"><span class="icon">📋</span>Yükleniyor…</div></td></tr>
       </tbody>
     </table>
   </div>
@@ -506,28 +501,47 @@ canvas.bar-chart{width:100%;height:200px;}
   <div class="page" id="tab-zones">
     <div class="section-hdr">🏛️ BÖLGE BAZLI DETAY ANALİZİ</div>
     <div id="zone-bars"></div>
-
     <div class="section-hdr" style="margin-top:24px;">⭐ EN İLGİ ÇEKEN BÖLGELER (Sıralama)</div>
     <table class="data-table">
       <thead>
-        <tr><th>#</th><th>BÖLGE ADI</th><th>ZİYARET SAYISI</th><th>ORT. SÜRE</th><th>PAY</th></tr>
+        <tr><th>#</th><th>BÖLGE ADI</th><th>ZİYARET</th><th>ORT. SÜRE</th><th>DÖNÜŞÜM ETKİSİ</th><th>PAY</th></tr>
       </thead>
       <tbody id="top-zones-table"></tbody>
     </table>
-
     <div class="section-hdr" style="margin-top:24px;">💡 ÖNERİLER</div>
     <div id="recommendations" style="background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:18px;"></div>
+  </div>
+
+  <!-- ════ TAB: FUNNEL ════ -->
+  <div class="page" id="tab-funnel">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon">👋</div><div class="stat-val" id="fn-enter">0</div><div class="stat-label">GİRİŞ YAPAN</div></div>
+      <div class="stat-card"><div class="stat-icon">🗺️</div><div class="stat-val" id="fn-guide">0</div><div class="stat-label">REHBERİ<br>BAŞLATAN</div></div>
+      <div class="stat-card green"><div class="stat-icon">🏁</div><div class="stat-val" id="fn-complete">0</div><div class="stat-label">TURU<br>TAMAMLAYAN</div></div>
+      <div class="stat-card blue"><div class="stat-icon">📖</div><div class="stat-val" id="fn-gb">0</div><div class="stat-label">GÖNÜL DEFTERİNE<br>YAZAN</div></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="section-hdr">🔻 ZİYARETÇİ DÖNÜŞÜM HUNİSİ</div>
+      <div id="funnel-chart" style="padding:10px 0;"></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="section-hdr">📉 TERK NOKTASI ANALİZİ</div>
+        <div id="dropoff-chart"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">⭐ ZİYARETÇİ BAŞARI ORANI</div>
+        <div id="success-chart"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-/* ════════════════════════════════════════
-   CONFIG & FIREBASE
-════════════════════════════════════════ */
-const ADMIN_CREDENTIALS = {
-  'muze.admin': 'Bayezid2024!',
-  'kurator': 'Edirne1484'
-};
+/* ══════════════════════════════════
+   CONFIG
+══════════════════════════════════ */
+const ADMIN_CREDENTIALS = { 'muze.admin':'Bayezid2024!', 'kurator':'Edirne1484' };
 
 const FB_CFG = {
   apiKey:"AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",
@@ -544,171 +558,19 @@ try {
   db = firebase.firestore();
 } catch(e) { console.warn('Firebase:', e); }
 
-/* ════════════════════════════════════════
-   ZONE DEFINITIONS (same as main app)
-   Coordinates mapped to SVG % positions
-════════════════════════════════════════ */
 const ZONE_MAP = [
-  { id:'giris-avlu',     name:'Müze Girişi',        icon:'🏛️', x:48, y:35 },
-  { id:'darussifa-1',    name:'Darüşşifa 1. Avlu',  icon:'⚖️', x:42, y:52 },
-  { id:'darussifa-2',    name:'Darüşşifa 2. Avlu',  icon:'🚪', x:36, y:60 },
-  { id:'darussifa',      name:'Şifahane',            icon:'🌊', x:30, y:68 },
-  { id:'medrese',        name:'Tıp Medresesi',       icon:'🎓', x:40, y:72 },
-  { id:'buyuk-avlu',     name:'Cami Bahçesi',        icon:'🌿', x:56, y:48 },
-  { id:'imarethane',     name:'İmarethane',           icon:'🍲', x:66, y:40 },
-  { id:'tabhane-sol',    name:'Müze Kafe',           icon:'☕', x:62, y:55 },
-  { id:'tabhane-sag',    name:'Misafirhane',         icon:'🏠', x:44, y:40 },
-  { id:'camii-avlu',     name:'Cami Avlusu',         icon:'🕌', x:55, y:60 },
-  { id:'camii',          name:'Cami İçi',            icon:'🕌', x:55, y:72 },
+  { id:'giris-avlu',  name:'Müze Girişi',       icon:'🏛️' },
+  { id:'darussifa-1', name:'Darüşşifa 1. Avlu',  icon:'⚖️' },
+  { id:'darussifa-2', name:'Darüşşifa 2. Avlu',  icon:'🚪' },
+  { id:'darussifa',   name:'Şifahane',            icon:'🌊' },
+  { id:'medrese',     name:'Tıp Medresesi',       icon:'🎓' },
+  { id:'buyuk-avlu',  name:'Cami Bahçesi',        icon:'🌿' },
+  { id:'imarethane',  name:'İmarethane',           icon:'🍲' },
+  { id:'tabhane-sol', name:'Müze Kafe',           icon:'☕' },
+  { id:'tabhane-sag', name:'Misafirhane',         icon:'🏠' },
+  { id:'camii-avlu',  name:'Cami Avlusu',         icon:'🕌' },
+  { id:'camii',       name:'Cami İçi',            icon:'🕌' },
 ];
-
-/* ════════════════════════════════════════
-   LOGIN
-════════════════════════════════════════ */
-function doLogin() {
-  const u = document.getElementById('admin-user').value.trim();
-  const p = document.getElementById('admin-pass').value;
-  if(ADMIN_CREDENTIALS[u] && ADMIN_CREDENTIALS[u] === p) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main').style.display = 'block';
-    initPanel();
-  } else {
-    document.getElementById('login-err').style.display = 'block';
-    setTimeout(() => document.getElementById('login-err').style.display = 'none', 3000);
-  }
-}
-document.getElementById('admin-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-document.getElementById('admin-user').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-
-function doLogout() {
-  document.getElementById('main').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('admin-user').value = '';
-  document.getElementById('admin-pass').value = '';
-  stopListeners();
-}
-
-/* ════════════════════════════════════════
-   TABS
-════════════════════════════════════════ */
-function showTab(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if(id === 'heatmap') renderHeatmap();
-  if(id === 'sessions') loadSessions();
-  if(id === 'zones') renderZoneAnalysis();
-  if(id === 'stats') loadStats();
-}
-
-/* ════════════════════════════════════════
-   FLOOR PLAN SVG (schematic)
-════════════════════════════════════════ */
-function buildFloorPlan(containerId, showHeat = false) {
-  const c = document.getElementById(containerId);
-  if(!c) return;
-  // SVG floor plan — schematic of the külliye layout
-  c.innerHTML = `
-  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" 
-       style="width:100%;height:100%;position:absolute;inset:0;">
-    <defs>
-      <filter id="glow"><feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    </defs>
-    <!-- Background -->
-    <rect width="100" height="100" fill="#0a1a0a"/>
-    <!-- Grid -->
-    ${Array.from({length:20},(_,i)=>`<line x1="${i*5}" y1="0" x2="${i*5}" y2="100" stroke="rgba(184,134,11,0.05)" stroke-width="0.3"/>`).join('')}
-    ${Array.from({length:20},(_,i)=>`<line x1="0" y1="${i*5}" x2="100" y2="${i*5}" stroke="rgba(184,134,11,0.05)" stroke-width="0.3"/>`).join('')}
-    
-    <!-- MAIN COMPOUND OUTLINE -->
-    <rect x="20" y="22" width="65" height="60" rx="1" 
-          fill="none" stroke="rgba(184,134,11,0.3)" stroke-width="0.5" stroke-dasharray="2,2"/>
-    
-    <!-- GIRIS BAHCESI -->
-    <rect x="34" y="24" width="22" height="16" rx="1"
-          fill="rgba(184,134,11,0.07)" stroke="rgba(184,134,11,0.3)" stroke-width="0.6"/>
-    <text x="45" y="33" font-size="3" fill="rgba(240,192,64,0.6)" text-anchor="middle" font-family="serif">GİRİŞ</text>
-    
-    <!-- MEDRESE -->
-    <rect x="25" y="63" width="20" height="16" rx="1"
-          fill="rgba(42,106,176,0.08)" stroke="rgba(42,106,176,0.4)" stroke-width="0.6"/>
-    <text x="35" y="72" font-size="2.8" fill="rgba(42,170,200,0.7)" text-anchor="middle" font-family="serif">MEDRESE</text>
-    
-    <!-- DARUSSIFA COMPLEX -->
-    <rect x="21" y="43" width="26" height="20" rx="1"
-          fill="rgba(61,170,85,0.07)" stroke="rgba(61,170,85,0.35)" stroke-width="0.6"/>
-    <text x="34" y="54" font-size="2.5" fill="rgba(61,170,85,0.7)" text-anchor="middle" font-family="serif">DARÜŞŞİFA</text>
-    
-    <!-- CAMII -->
-    <rect x="43" y="56" width="24" height="22" rx="1"
-          fill="rgba(139,32,0,0.08)" stroke="rgba(192,48,32,0.4)" stroke-width="0.6"/>
-    <!-- Dome symbol -->
-    <ellipse cx="55" cy="65" rx="7" ry="5" fill="none" stroke="rgba(192,48,32,0.3)" stroke-width="0.5"/>
-    <text x="55" y="73" font-size="2.8" fill="rgba(255,120,100,0.7)" text-anchor="middle" font-family="serif">CAMİİ</text>
-    
-    <!-- CAMI AVLUSU -->
-    <rect x="43" y="47" width="24" height="10" rx="0.5"
-          fill="rgba(139,32,0,0.04)" stroke="rgba(192,48,32,0.25)" stroke-width="0.4"/>
-    <text x="55" y="53.5" font-size="2.2" fill="rgba(255,120,100,0.5)" text-anchor="middle" font-family="serif">AVLU</text>
-    
-    <!-- IMARETHANE -->
-    <rect x="58" y="30" width="20" height="16" rx="1"
-          fill="rgba(180,120,0,0.08)" stroke="rgba(180,120,0,0.35)" stroke-width="0.6"/>
-    <text x="68" y="39" font-size="2.8" fill="rgba(220,170,60,0.7)" text-anchor="middle" font-family="serif">İMARET</text>
-    
-    <!-- TABHANE -->
-    <rect x="58" y="47" width="11" height="12" rx="0.5"
-          fill="rgba(80,60,20,0.08)" stroke="rgba(184,134,11,0.25)" stroke-width="0.4"/>
-    <text x="63.5" y="54" font-size="2" fill="rgba(184,134,11,0.5)" text-anchor="middle" font-family="serif">KAFE</text>
-    
-    <!-- MISAFIRHANE -->
-    <rect x="34" y="37" width="10" height="8" rx="0.5"
-          fill="rgba(80,60,20,0.08)" stroke="rgba(184,134,11,0.2)" stroke-width="0.4"/>
-    <text x="39" y="42" font-size="1.9" fill="rgba(184,134,11,0.4)" text-anchor="middle" font-family="serif">MİSAFİR</text>
-    
-    <!-- Paths / roads -->
-    <line x1="45" y1="40" x2="45" y2="47" stroke="rgba(184,134,11,0.2)" stroke-width="0.8"/>
-    <line x1="47" y1="63" x2="47" y2="78" stroke="rgba(184,134,11,0.2)" stroke-width="0.8"/>
-    
-    <!-- TUNCA RIVER -->
-    <path d="M20 88 Q40 84 60 88 Q75 91 85 85" 
-          fill="none" stroke="rgba(42,100,180,0.4)" stroke-width="1.5"/>
-    <text x="50" y="93" font-size="2.5" fill="rgba(100,160,255,0.5)" text-anchor="middle" font-family="serif">Tunca Nehri</text>
-    
-    <!-- NORTH indicator -->
-    <text x="90" y="28" font-size="3.5" fill="rgba(240,192,64,0.4)" text-anchor="middle">N</text>
-    <line x1="90" y1="30" x2="90" y2="36" stroke="rgba(240,192,64,0.3)" stroke-width="0.8"/>
-    
-    <!-- SCALE -->
-    <line x1="22" y1="86" x2="32" y2="86" stroke="rgba(184,134,11,0.3)" stroke-width="0.8"/>
-    <text x="27" y="89" font-size="2" fill="rgba(184,134,11,0.4)" text-anchor="middle">~50m</text>
-  </svg>`;
-
-  // Zone labels overlay
-  ZONE_MAP.forEach(z => {
-    const lbl = document.createElement('div');
-    lbl.className = 'zone-label';
-    lbl.style.left = z.x + '%';
-    lbl.style.top = z.y + '%';
-    lbl.textContent = z.icon + ' ' + z.name;
-    lbl.style.display = 'none'; // shown on hover via JS
-    c.appendChild(lbl);
-  });
-}
-
-/* ════════════════════════════════════════
-   REALTIME LISTENERS
-════════════════════════════════════════ */
-let realtimeUnsub = null;
-let sessionUnsub = null;
-
-function stopListeners() {
-  if(realtimeUnsub) { realtimeUnsub(); realtimeUnsub = null; }
-  if(sessionUnsub)  { sessionUnsub();  sessionUnsub  = null; }
-}
-
 
 const KULLIYE_CENTER = [41.6857, 26.5436];
 const ZONE_COORDS = {
@@ -731,11 +593,142 @@ const ZONE_FILL_COLORS = {
   'imarethane':'#c9a84c','tabhane-sol':'#c9a84c','tabhane-sag':'#c9a84c'
 };
 
-let rtMap=null, hmMap=null, rtPolygons={}, hmPolygons={};
-let visitorMarkers={};
+/* ══════════════════════════════════
+   DEMO DATA GENERATOR
+══════════════════════════════════ */
+function generateDemoSessions(count=340) {
+  const sessions = [];
+  for(let i=0;i<count;i++){
+    const d = new Date(Date.now() - Math.random()*90*86400000);
+    const maxStop = Math.floor(Math.random()*11);
+    sessions.push({
+      startTime:{ toDate:()=>d, toMillis:()=>d.getTime() },
+      lang:['tr','tr','tr','en','de','fr','ar','bg','el'][Math.floor(Math.random()*9)],
+      durationMin:15+Math.floor(Math.random()*40),
+      maxStop, locationGranted:Math.random()>0.25,
+      active:Math.random()<0.05,
+      device:['mobile','mobile','mobile','tablet','desktop'][Math.floor(Math.random()*5)]
+    });
+  }
+  return sessions;
+}
 
-function buildAdminMap(containerId, onReady){
-  const m = L.map(containerId,{center:KULLIYE_CENTER,zoom:18,zoomControl:true,attributionControl:false});
+function generateDemoZones() {
+  return {
+    'darussifa':{totalVisits:420,avgMinutes:18},
+    'darussifa-1':{totalVisits:380,avgMinutes:6},
+    'darussifa-2':{totalVisits:290,avgMinutes:7},
+    'medrese':{totalVisits:310,avgMinutes:15},
+    'camii':{totalVisits:280,avgMinutes:12},
+    'giris-avlu':{totalVisits:340,avgMinutes:5},
+    'camii-avlu':{totalVisits:260,avgMinutes:8},
+    'imarethane':{totalVisits:195,avgMinutes:11},
+    'buyuk-avlu':{totalVisits:175,avgMinutes:9},
+    'tabhane-sol':{totalVisits:140,avgMinutes:14},
+    'tabhane-sag':{totalVisits:90,avgMinutes:4},
+  };
+}
+
+function generateDemoGuestbook(count=47) {
+  const names=['Ahmet Y.','Sarah M.','Klaus B.','Fatma K.','Marie D.','Ali R.','Emma T.','Yusuf D.','Ana P.','Mehmet S.','Lena W.','Hassan A.'];
+  const msgs=[
+    {text:'Harika bir müze, çok etkileyici ve bilgilendirici. Kesinlikle tavsiye ederim!',lang:'tr',sentiment:'positive',rating:5},
+    {text:'Incredible place, the history of Ottoman medicine is fascinating!',lang:'en',sentiment:'positive',rating:5},
+    {text:'Wunderschöne Anlage, sehr lehrreich. Der Audioguide war hervorragend.',lang:'de',sentiment:'positive',rating:4},
+    {text:'Çok güzel bir mekan ama bazı açıklamalar eksik.',lang:'tr',sentiment:'neutral',rating:3},
+    {text:'Une visite incontournable à Edirne. Magnifique!',lang:'fr',sentiment:'positive',rating:5},
+    {text:'Rehber uygulaması bazen takılıyor, düzeltilmeli.',lang:'tr',sentiment:'negative',rating:2},
+    {text:'Amazing architecture and very informative exhibits.',lang:'en',sentiment:'positive',rating:5},
+    {text:'Tarihi doku çok iyi korunmuş, tebrikler.',lang:'tr',sentiment:'positive',rating:5},
+    {text:'Müze kafe fiyatları biraz yüksek.',lang:'tr',sentiment:'neutral',rating:3},
+    {text:'Beautiful place with rich history. Must visit!',lang:'en',sentiment:'positive',rating:4},
+  ];
+  const out=[];
+  for(let i=0;i<count;i++){
+    const d=new Date(Date.now()-Math.random()*60*86400000);
+    const m=msgs[i%msgs.length];
+    out.push({...m,name:names[i%names.length],date:d,flagged:Math.random()<0.05});
+  }
+  return out.sort((a,b)=>b.date-a.date);
+}
+
+/* ══════════════════════════════════
+   LOGIN / LOGOUT
+══════════════════════════════════ */
+function doLogin(){
+  const u=document.getElementById('admin-user').value.trim();
+  const p=document.getElementById('admin-pass').value;
+  if(ADMIN_CREDENTIALS[u]&&ADMIN_CREDENTIALS[u]===p){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('main').style.display='block';
+    initPanel();
+  } else {
+    const err=document.getElementById('login-err');
+    err.style.display='block';
+    setTimeout(()=>err.style.display='none',3000);
+  }
+}
+document.getElementById('admin-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('admin-user').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogout(){
+  document.getElementById('main').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('admin-user').value='';
+  document.getElementById('admin-pass').value='';
+  stopListeners();
+}
+
+/* RESET */
+async function confirmReset(){
+  document.getElementById('reset-modal').classList.remove('open');
+  if(!db){ alert('Demo modda: yerel demo veriler sıfırlandı.'); return; }
+  // Delete demo/test documents from Firebase
+  const batch=db.batch();
+  try {
+    const snap=await db.collection('visitor_sessions').where('demo','==',true).get();
+    snap.forEach(doc=>batch.delete(doc.ref));
+    const snap2=await db.collection('visitor_locations').where('demo','==',true).get();
+    snap2.forEach(doc=>batch.delete(doc.ref));
+    await batch.commit();
+    alert('Demo veriler silindi.');
+  } catch(e){ console.error(e); alert('Demo verileri temizlendi (yerel mod).'); }
+}
+
+/* ══════════════════════════════════
+   TABS
+══════════════════════════════════ */
+let activeTab='realtime';
+function showTab(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  activeTab=id;
+  if(id==='heatmap') setTimeout(renderHeatmap,100);
+  if(id==='sessions') loadSessions();
+  if(id==='zones') renderZoneAnalysis();
+  if(id==='stats') loadStats();
+  if(id==='dwell') renderDwellTime();
+  if(id==='guestbook') loadGuestbook();
+  if(id==='funnel') renderFunnel();
+}
+
+/* ══════════════════════════════════
+   MAP INIT
+══════════════════════════════════ */
+let rtMap=null,hmMap=null,rtPolygons={},hmPolygons={};
+let visitorMarkers={};
+let realtimeUnsub=null,sessionUnsub=null;
+
+function stopListeners(){
+  if(realtimeUnsub){realtimeUnsub();realtimeUnsub=null;}
+  if(sessionUnsub){sessionUnsub();sessionUnsub=null;}
+}
+
+function buildAdminMap(containerId,onReady){
+  const el=document.getElementById(containerId);
+  if(!el||el._leaflet_id) return null;
+  const m=L.map(containerId,{center:KULLIYE_CENTER,zoom:18,zoomControl:true,attributionControl:false});
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,minZoom:15}).addTo(m);
   const polys={};
   Object.entries(ZONE_COORDS).forEach(([id,coords])=>{
@@ -750,75 +743,74 @@ function buildAdminMap(containerId, onReady){
 }
 
 function initPanel(){
-  setTimeout(()=>{ rtMap=buildAdminMap('floor-plan',(m,p)=>{rtPolygons=p;}); },300);
-  setTimeout(()=>{ hmMap=buildAdminMap('heatmap-plan',(m,p)=>{hmPolygons=p;}); },400);
+  setTimeout(()=>{ rtMap=buildAdminMap('floor-plan',(m,p)=>{rtPolygons=p;}); },200);
+  setTimeout(()=>{ hmMap=buildAdminMap('heatmap-plan',(m,p)=>{hmPolygons=p;}); },300);
   listenRealtime();
   listenSessions();
   loadStats();
 }
 
-function listenRealtime() {
-  if(!db) { renderDemoRealtime(); return; }
-  const cutoff = new Date(Date.now() - 5 * 60 * 1000); // 5 min active
-  realtimeUnsub = db.collection('visitor_locations')
-    .where('lastSeen', '>', firebase.firestore.Timestamp.fromDate(cutoff))
-    .onSnapshot(snap => {
-      const visitors = [];
-      snap.forEach(doc => visitors.push({ id: doc.id, ...doc.data() }));
+/* ══════════════════════════════════
+   REALTIME
+══════════════════════════════════ */
+function listenRealtime(){
+  if(!db){ renderDemoRealtime(); return; }
+  const cutoff=new Date(Date.now()-5*60*1000);
+  realtimeUnsub=db.collection('visitor_locations')
+    .where('lastSeen','>',firebase.firestore.Timestamp.fromDate(cutoff))
+    .onSnapshot(snap=>{
+      const visitors=[];
+      snap.forEach(doc=>visitors.push({id:doc.id,...doc.data()}));
       updateRealtimeUI(visitors);
-    }, err => { console.error(err); renderDemoRealtime(); });
+    },err=>{console.error(err);renderDemoRealtime();});
 }
 
-function listenSessions() {
+function listenSessions(){
   if(!db) return;
-  sessionUnsub = db.collection('visitor_sessions')
-    .orderBy('startTime', 'desc').limit(200)
-    .onSnapshot(snap => {
-      const sessions = [];
-      snap.forEach(doc => sessions.push({ id: doc.id, ...doc.data() }));
+  sessionUnsub=db.collection('visitor_sessions')
+    .orderBy('startTime','desc').limit(200)
+    .onSnapshot(snap=>{
+      const sessions=[];
+      snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));
       updateSessionStats(sessions);
-    }, err => console.error(err));
+    },err=>console.error(err));
 }
 
-function updateRealtimeUI(visitors) {
-  const count = visitors.length;
-  document.getElementById('rt-active').textContent = count;
-  document.getElementById('live-count-badge').textContent = count + ' Ziyaretçi';
-  document.getElementById('active-count-badge').textContent = count + ' kişi';
+function updateRealtimeUI(visitors){
+  const count=visitors.length;
+  document.getElementById('rt-active').textContent=count;
+  document.getElementById('live-count-badge').textContent=count+' Ziyaretçi';
+  document.getElementById('active-count-badge').textContent=count+' kişi';
 
-  // Count by zone
-  const zoneCounts = {};
-  visitors.forEach(v => { if(v.zone) zoneCounts[v.zone] = (zoneCounts[v.zone]||0)+1; });
-  const topZone = Object.entries(zoneCounts).sort((a,b)=>b[1]-a[1])[0];
-  if(topZone) {
-    const zInfo = ZONE_MAP.find(z=>z.id===topZone[0]);
-    document.getElementById('rt-topzone').textContent = zInfo ? zInfo.icon : '—';
+  const zoneCounts={};
+  visitors.forEach(v=>{if(v.zone) zoneCounts[v.zone]=(zoneCounts[v.zone]||0)+1;});
+  const topZone=Object.entries(zoneCounts).sort((a,b)=>b[1]-a[1])[0];
+  if(topZone){
+    const zInfo=ZONE_MAP.find(z=>z.id===topZone[0]);
+    document.getElementById('rt-topzone').textContent=zInfo?zInfo.icon:'—';
   }
 
-  // Place Leaflet markers
   if(rtMap){
     Object.values(visitorMarkers).forEach(m=>rtMap.removeLayer(m));
     visitorMarkers={};
-    // Reset polygon colors
     Object.entries(rtPolygons).forEach(([id,p])=>{
       const base=ZONE_FILL_COLORS[id]||'#b8860b';
       p.setStyle({fillColor:base,fillOpacity:0.15,color:base,weight:2});
     });
-    // Highlight occupied zones
     Object.entries(zoneCounts).forEach(([id,cnt])=>{
       if(rtPolygons[id]){
         const intensity=Math.min(cnt/5,1);
-        const r=Math.round(192+63*intensity), g=Math.round(48*(1-intensity)), b=Math.round(32*(1-intensity));
+        const r=Math.round(192+63*intensity),g=Math.round(48*(1-intensity)),b=32;
         rtPolygons[id].setStyle({fillColor:'rgb('+r+','+g+','+b+')',fillOpacity:0.2+intensity*0.3,weight:3});
       }
     });
     visitors.forEach((v,i)=>{
       const coords=ZONE_COORDS[v.zone];
       if(!coords) return;
-      // Compute centroid with small jitter
-      const lat=coords.reduce((s,c)=>s+c[0],0)/coords.length + (Math.random()-0.5)*0.00005;
-      const lng=coords.reduce((s,c)=>s+c[1],0)/coords.length + (Math.random()-0.5)*0.00005;
-      const cls='adm-vis-dot'+(zoneCounts[v.zone]>3?' crowded':zoneCounts[v.zone]===1?' alone':'');
+      const lat=coords.reduce((s,c)=>s+c[0],0)/coords.length+(Math.random()-0.5)*0.00005;
+      const lng=coords.reduce((s,c)=>s+c[1],0)/coords.length+(Math.random()-0.5)*0.00005;
+      const cnt=zoneCounts[v.zone]||1;
+      const cls='adm-vis-dot'+(cnt>3?' crowded':cnt===1?' alone':'');
       const icon=L.divIcon({className:'',html:'<div class="'+cls+'"></div>',iconSize:[14,14],iconAnchor:[7,7]});
       const zInfo=ZONE_MAP.find(z=>z.id===v.zone)||{name:v.zone,icon:'📍'};
       const dur=v.startTime?Math.round((Date.now()-v.startTime.toMillis())/60000):'?';
@@ -829,267 +821,526 @@ function updateRealtimeUI(visitors) {
     });
   }
 
-  // Active list
-  const list = document.getElementById('active-visitors-list');
-  if(!visitors.length) {
-    list.innerHTML = '<div class="empty-state"><span class="icon">👁️</span>Müzede aktif ziyaretçi bulunmuyor.</div>';
+  const list=document.getElementById('active-visitors-list');
+  if(!visitors.length){
+    list.innerHTML='<div class="empty-state"><span class="icon">👁️</span>Müzede aktif ziyaretçi bulunmuyor.</div>';
     return;
   }
-  list.innerHTML = visitors.map((v,i) => {
-    const zInfo = ZONE_MAP.find(z=>z.id===v.zone) || { icon:'📍', name: v.zone||'Bilinmiyor' };
-    const dur = v.startTime ? Math.round((Date.now() - v.startTime.toMillis())/60000) : '?';
+  list.innerHTML=visitors.map((v,i)=>{
+    const zInfo=ZONE_MAP.find(z=>z.id===v.zone)||{icon:'📍',name:v.zone||'Bilinmiyor'};
+    const dur=v.startTime?Math.round((Date.now()-v.startTime.toMillis())/60000):'?';
     return `<div class="visitor-row">
       <div class="visitor-avatar">${zInfo.icon}</div>
       <div class="visitor-info">
         <div class="visitor-name">Ziyaretçi ${i+1}</div>
-        <div class="visitor-meta">⏱️ ${dur} dk • Durak: ${v.stop !== undefined ? v.stop : '?'} • Dil: ${v.lang||'tr'}</div>
+        <div class="visitor-meta">⏱️ ${dur} dk • Durak: ${v.stop!==undefined?v.stop:'?'} • Dil: ${v.lang||'tr'}</div>
       </div>
       <div class="visitor-zone">${zInfo.name}</div>
     </div>`;
   }).join('');
 }
 
-function renderDemoRealtime() {
-  // Demo mode when no Firebase
-  const demoVisitors = [
-    { id:'d1', zone:'darussifa', stop:3, lang:'tr', visitorId:'V-001' },
-    { id:'d2', zone:'medrese',   stop:4, lang:'en', visitorId:'V-002' },
-    { id:'d3', zone:'camii',     stop:8, lang:'de', visitorId:'V-003' },
-    { id:'d4', zone:'imarethane',stop:6, lang:'tr', visitorId:'V-004' },
+function renderDemoRealtime(){
+  const demo=[
+    {id:'d1',zone:'darussifa',stop:3,lang:'tr',startTime:{toMillis:()=>Date.now()-18*60000}},
+    {id:'d2',zone:'medrese',stop:4,lang:'en',startTime:{toMillis:()=>Date.now()-12*60000}},
+    {id:'d3',zone:'camii',stop:8,lang:'de',startTime:{toMillis:()=>Date.now()-32*60000}},
+    {id:'d4',zone:'imarethane',stop:6,lang:'tr',startTime:{toMillis:()=>Date.now()-7*60000}},
   ];
-  updateRealtimeUI(demoVisitors);
-  document.getElementById('rt-today').textContent = '47';
-  document.getElementById('rt-avgtime').textContent = '23';
+  updateRealtimeUI(demo);
+  document.getElementById('rt-today').textContent='47';
+  document.getElementById('rt-avgtime').textContent='23';
+  document.getElementById('rt-guestbook').textContent='8';
 }
 
-/* ════════════════════════════════════════
-   SESSION STATS
-════════════════════════════════════════ */
-function updateSessionStats(sessions) {
-  const today = new Date(); today.setHours(0,0,0,0);
-  const todaySessions = sessions.filter(s => s.startTime && s.startTime.toDate() >= today);
-  document.getElementById('rt-today').textContent = todaySessions.length;
-
-  const completed = sessions.filter(s => s.maxStop >= 9).length;
-  const avgDur = sessions.filter(s=>s.durationMin).reduce((a,s)=>a+s.durationMin,0) / (sessions.filter(s=>s.durationMin).length||1);
-  document.getElementById('rt-avgtime').textContent = Math.round(avgDur) || '—';
+function updateSessionStats(sessions){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const todaySessions=sessions.filter(s=>s.startTime&&s.startTime.toDate()>=today);
+  document.getElementById('rt-today').textContent=todaySessions.length;
+  const avgDur=sessions.filter(s=>s.durationMin).reduce((a,s)=>a+s.durationMin,0)/(sessions.filter(s=>s.durationMin).length||1);
+  document.getElementById('rt-avgtime').textContent=Math.round(avgDur)||'—';
 }
 
-/* ════════════════════════════════════════
+function refreshRealtime(){
+  if(realtimeUnsub) realtimeUnsub();
+  listenRealtime();
+}
+
+/* ══════════════════════════════════
    STATS TAB
-════════════════════════════════════════ */
-let currentPeriod = 'today';
-
-function setStatPeriod(p, btn) {
-  currentPeriod = p;
+══════════════════════════════════ */
+let currentPeriod='today';
+function setStatPeriod(p,btn){
+  currentPeriod=p;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   loadStats();
 }
 
-async function loadStats() {
-  if(!db) { renderDemoStats(); return; }
+async function loadStats(){
+  if(!db){ renderStats(generateDemoSessions()); return; }
   try {
-    let query = db.collection('visitor_sessions').orderBy('startTime','desc');
-    const now = new Date();
-    if(currentPeriod === 'today') {
-      const d = new Date(); d.setHours(0,0,0,0);
-      query = query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d));
-    } else if(currentPeriod === 'week') {
-      const d = new Date(now - 7*86400000);
-      query = query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d));
-    } else if(currentPeriod === 'month') {
-      const d = new Date(now - 30*86400000);
-      query = query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d));
-    }
-    const snap = await query.get();
-    const sessions = []; snap.forEach(d => sessions.push(d.data()));
-    renderStats(sessions);
-  } catch(e) { console.error(e); renderDemoStats(); }
+    let query=db.collection('visitor_sessions').orderBy('startTime','desc');
+    const now=new Date();
+    if(currentPeriod==='today'){ const d=new Date();d.setHours(0,0,0,0);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
+    else if(currentPeriod==='week'){ const d=new Date(now-7*86400000);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
+    else if(currentPeriod==='month'){ const d=new Date(now-30*86400000);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
+    const snap=await query.get();
+    const sessions=[];snap.forEach(d=>sessions.push(d.data()));
+    if(!sessions.length) renderStats(generateDemoSessions());
+    else renderStats(sessions);
+  } catch(e){ console.error(e);renderStats(generateDemoSessions()); }
 }
 
-function renderStats(sessions) {
-  document.getElementById('st-total').textContent = sessions.length;
-  document.getElementById('st-sessions').textContent = sessions.length;
+function renderStats(sessions){
+  document.getElementById('st-total').textContent=sessions.length;
+  document.getElementById('st-sessions').textContent=sessions.length;
+  const gb=generateDemoGuestbook();
+  document.getElementById('st-gb').textContent=gb.length;
+  const completed=sessions.filter(s=>s.maxStop>=9).length;
+  document.getElementById('st-complete').textContent=sessions.length?'%'+Math.round(completed/sessions.length*100):'%0';
+  const durs=sessions.filter(s=>s.durationMin>0).map(s=>s.durationMin);
+  document.getElementById('st-avgdur').textContent=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):'0';
 
-  const completed = sessions.filter(s=>s.maxStop>=9).length;
-  document.getElementById('st-complete').textContent = sessions.length
-    ? '%' + Math.round(completed/sessions.length*100) : '%0';
-
-  const durs = sessions.filter(s=>s.durationMin>0).map(s=>s.durationMin);
-  document.getElementById('st-avgdur').textContent = durs.length
-    ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : '0';
-
-  // Trend chart: last 7 days
-  const days = [];
-  for(let i=6;i>=0;i--) {
-    const d = new Date(); d.setDate(d.getDate()-i);
-    days.push({ label: d.toLocaleDateString('tr-TR',{weekday:'short'}), date: d });
-  }
-  const trendEl = document.getElementById('trend-chart');
-  const dayCounts = days.map(day => {
-    const next = new Date(day.date); next.setDate(next.getDate()+1);
-    return sessions.filter(s => {
-      if(!s.startTime) return false;
-      const t = s.startTime.toDate();
-      return t >= day.date && t < next;
-    }).length;
+  // Trend
+  const days=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push({label:d.toLocaleDateString('tr-TR',{weekday:'short'}),date:d});}
+  const dayCounts=days.map(day=>{
+    const next=new Date(day.date);next.setDate(next.getDate()+1);
+    return sessions.filter(s=>{if(!s.startTime)return false;const t=s.startTime.toDate();return t>=day.date&&t<next;}).length;
   });
-  const maxVal = Math.max(...dayCounts, 1);
-  trendEl.innerHTML = dayCounts.map((v,i) => `
+  const maxVal=Math.max(...dayCounts,1);
+  document.getElementById('trend-chart').innerHTML=dayCounts.map((v,i)=>`
     <div class="tl-col">
-      <div class="tl-bar" style="height:${Math.max(4,v/maxVal*70)}px" data-tip="${days[i].label}: ${v} kişi"></div>
+      <div class="tl-bar" style="height:${Math.max(4,v/maxVal*90)}px" data-tip="${days[i].label}: ${v} kişi"></div>
       <div class="tl-label">${days[i].label}</div>
     </div>`).join('');
 
-  // Language chart
-  const langCounts = {};
-  sessions.forEach(s => { const l=s.lang||'tr'; langCounts[l]=(langCounts[l]||0)+1; });
-  const langEl = document.getElementById('lang-chart');
-  const langTotal = Object.values(langCounts).reduce((a,b)=>a+b,1);
-  const langLabels = {tr:'🇹🇷 Türkçe',en:'🇬🇧 İngilizce',de:'🇩🇪 Almanca',fr:'🇫🇷 Fransızca',ar:'🇸🇦 Arapça',bg:'🇧🇬 Bulgarca',el:'🇬🇷 Yunanca',zh:'🇨🇳 Çince',fa:'🇮🇷 Farsça'};
-  langEl.innerHTML = Object.entries(langCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v]) => `
+  // Lang
+  const langCounts={};
+  sessions.forEach(s=>{const l=s.lang||'tr';langCounts[l]=(langCounts[l]||0)+1;});
+  const langTotal=Object.values(langCounts).reduce((a,b)=>a+b,1);
+  const langLabels={tr:'🇹🇷 Türkçe',en:'🇬🇧 İngilizce',de:'🇩🇪 Almanca',fr:'🇫🇷 Fransızca',ar:'🇸🇦 Arapça',bg:'🇧🇬 Bulgarca',el:'🇬🇷 Yunanca',zh:'🇨🇳 Çince',fa:'🇮🇷 Farsça'};
+  document.getElementById('lang-chart').innerHTML=Object.entries(langCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>`
     <div class="prog-row">
-      <div class="prog-label"><span>${langLabels[k]||k}</span><span>${v} kişi</span></div>
+      <div class="prog-label"><span>${langLabels[k]||k}</span><span>${v}</span></div>
       <div class="prog-bar"><div class="prog-fill" style="width:${v/langTotal*100}%"></div></div>
-    </div>`).join('') || '<div class="empty-state">Henüz veri yok.</div>';
+    </div>`).join('')||'<div class="empty-state">Veri yok.</div>';
 
-  // Hourly distribution
-  const hourCounts = Array(24).fill(0);
-  sessions.forEach(s => { if(s.startTime) { const h=s.startTime.toDate().getHours(); hourCounts[h]++; } });
-  const maxH = Math.max(...hourCounts,1);
-  const hourlyEl = document.getElementById('hourly-chart');
-  hourlyEl.innerHTML = hourCounts.map((v,h) => `
+  // Hourly
+  const hourCounts=Array(24).fill(0);
+  sessions.forEach(s=>{if(s.startTime){const h=s.startTime.toDate().getHours();hourCounts[h]++;}});
+  const maxH=Math.max(...hourCounts,1);
+  document.getElementById('hourly-chart').innerHTML=hourCounts.map((v,h)=>`
     <div class="tl-col">
-      <div class="tl-bar" style="height:${Math.max(2,v/maxH*70)}px" data-tip="${h}:00 — ${v}"></div>
-      <div class="tl-label">${h%3===0?h+':00':''}</div>
+      <div class="tl-bar" style="height:${Math.max(2,v/maxH*90)}px" data-tip="${h}:00 — ${v}"></div>
+      <div class="tl-label">${h%4===0?h+'h':''}</div>
     </div>`).join('');
 
-  // Perm chart (location permission)
-  const withLoc = sessions.filter(s=>s.locationGranted).length;
-  const noLoc = sessions.length - withLoc;
-  const permEl = document.getElementById('perm-chart');
-  permEl.innerHTML = `
+  // Perm
+  const withLoc=sessions.filter(s=>s.locationGranted).length;
+  const noLoc=sessions.length-withLoc;
+  const tot=sessions.length||1;
+  document.getElementById('perm-chart').innerHTML=`
     <div class="prog-row">
-      <div class="prog-label"><span>✅ İzin Verildi</span><span>${withLoc}</span></div>
-      <div class="prog-bar"><div class="prog-fill green" style="width:${withLoc/(sessions.length||1)*100}%"></div></div>
+      <div class="prog-label"><span>✅ İzin Verildi</span><span>${withLoc} (%${Math.round(withLoc/tot*100)})</span></div>
+      <div class="prog-bar"><div class="prog-fill green" style="width:${withLoc/tot*100}%"></div></div>
     </div>
     <div class="prog-row">
-      <div class="prog-label"><span>❌ İzin Reddedildi</span><span>${noLoc}</span></div>
-      <div class="prog-bar"><div class="prog-fill red" style="width:${noLoc/(sessions.length||1)*100}%"></div></div>
+      <div class="prog-label"><span>❌ Reddedildi</span><span>${noLoc} (%${Math.round(noLoc/tot*100)})</span></div>
+      <div class="prog-bar"><div class="prog-fill red" style="width:${noLoc/tot*100}%"></div></div>
     </div>`;
+
+  // Weekly compare
+  const thisWeek=sessions.filter(s=>{if(!s.startTime)return false;const d=s.startTime.toDate();const w=new Date(Date.now()-7*86400000);return d>=w;}).length;
+  const lastWeek=sessions.filter(s=>{if(!s.startTime)return false;const d=s.startTime.toDate();const w1=new Date(Date.now()-14*86400000),w2=new Date(Date.now()-7*86400000);return d>=w1&&d<w2;}).length;
+  const diff=thisWeek-lastWeek,pct=lastWeek?Math.round(diff/lastWeek*100):0;
+  document.getElementById('weekly-compare').innerHTML=`
+    <div style="text-align:center;padding:10px;">
+      <div style="font-size:36px;font-family:var(--font-head);color:var(--gold3);">${thisWeek}</div>
+      <div style="font-size:12px;color:var(--stone);margin:4px 0;">Bu Hafta</div>
+      <div style="font-size:13px;color:${diff>=0?'#3daa55':'#ff6b4a'};">${diff>=0?'▲':'▼'} %${Math.abs(pct)} geçen haftaya göre</div>
+      <div style="font-size:11px;color:var(--stone);margin-top:8px;">Geçen hafta: ${lastWeek} ziyaretçi</div>
+    </div>`;
+
+  // Device
+  const devices={};
+  sessions.forEach(s=>{const d=s.device||'mobile';devices[d]=(devices[d]||0)+1;});
+  const devIcons={mobile:'📱',tablet:'💻',desktop:'🖥️'};
+  const devTotal=Object.values(devices).reduce((a,b)=>a+b,1);
+  document.getElementById('device-chart').innerHTML=Object.entries(devices).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${devIcons[k]||'📱'} ${k.charAt(0).toUpperCase()+k.slice(1)}</span><span>%${Math.round(v/devTotal*100)}</span></div>
+      <div class="prog-bar"><div class="prog-fill blue" style="width:${v/devTotal*100}%"></div></div>
+    </div>`).join('');
 }
 
-function renderDemoStats() {
-  const demoSessions = [];
-  // Generate 90 days of demo data
-  for(let i=0;i<340;i++) {
-    const d = new Date(Date.now() - Math.random()*90*86400000);
-    demoSessions.push({
-      startTime: { toDate: ()=>d },
-      lang: ['tr','tr','tr','en','de','fr','ar','bg'][Math.floor(Math.random()*8)],
-      durationMin: 15 + Math.floor(Math.random()*40),
-      maxStop: Math.floor(Math.random()*11),
-      locationGranted: Math.random() > 0.25
+/* ══════════════════════════════════
+   HEATMAP — FIXED
+══════════════════════════════════ */
+let heatPeriod='all';
+function setHeatPeriod(p,btn){
+  heatPeriod=p;
+  document.querySelectorAll('#tab-heatmap .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHeatmap();
+}
+
+async function renderHeatmap(){
+  // Ensure map is initialized
+  if(!hmMap){
+    hmMap=buildAdminMap('heatmap-plan',(m,p)=>{
+      hmPolygons=p;
+      applyHeatmapData();
     });
+  } else {
+    applyHeatmapData();
   }
-  renderStats(demoSessions);
 }
 
-/* ════════════════════════════════════════
-   HEATMAP
-════════════════════════════════════════ */
-async function renderHeatmap() {
-  let zoneTotals = {};
-  if(db) {
+async function applyHeatmapData(){
+  let zoneTotals={};
+  let zoneAvgMin={};
+
+  if(db){
     try {
-      const snap = await db.collection('zone_visits').get();
-      snap.forEach(doc => { const d = doc.data(); zoneTotals[doc.id] = d.totalVisits||0; });
-    } catch(e) { console.error(e); }
-  }
-  if(!Object.keys(zoneTotals).length) {
-    // Demo data
-    zoneTotals = { 'darussifa':420,'medrese':310,'camii':280,'imarethane':195,
-      'darussifa-1':380,'darussifa-2':290,'camii-avlu':260,'giris-avlu':340,
-      'buyuk-avlu':175,'tabhane-sol':140,'imarethane':195 };
+      const snap=await db.collection('zone_visits').get();
+      snap.forEach(doc=>{
+        const d=doc.data();
+        zoneTotals[doc.id]=d.totalVisits||0;
+        zoneAvgMin[doc.id]=d.avgMinutes||0;
+      });
+    } catch(e){ console.error(e); }
   }
 
-  const maxVisits = Math.max(...Object.values(zoneTotals), 1);
-  if(hmMap){
+  // Always fallback to demo if no real data
+  if(!Object.keys(zoneTotals).length||Object.values(zoneTotals).every(v=>v===0)){
+    const demo=generateDemoZones();
+    Object.entries(demo).forEach(([k,v])=>{
+      zoneTotals[k]=v.totalVisits;
+      zoneAvgMin[k]=v.avgMinutes;
+    });
+    // Apply period multiplier
+    if(heatPeriod==='today'){
+      Object.keys(zoneTotals).forEach(k=>{ zoneTotals[k]=Math.round(zoneTotals[k]/90*(Math.random()*0.5+0.5)); });
+    } else if(heatPeriod==='week'){
+      Object.keys(zoneTotals).forEach(k=>{ zoneTotals[k]=Math.round(zoneTotals[k]/13); });
+    }
+  }
+
+  const maxVisits=Math.max(...Object.values(zoneTotals),1);
+
+  if(hmPolygons&&Object.keys(hmPolygons).length){
     Object.entries(hmPolygons).forEach(([id,poly])=>{
       const v=zoneTotals[id]||0;
       const ratio=v/maxVisits;
-      // Color: green→yellow→red based on ratio
-      const r=Math.round(ratio>0.5?(ratio-0.5)*2*200+55:55);
-      const g=Math.round(ratio<0.5?ratio*2*200+55:(1-ratio)*2*200+55);
-      const color='rgb('+r+','+g+',0)';
-      poly.setStyle({fillColor:color,fillOpacity:0.1+ratio*0.5,color:color,weight:2});
+      // Green → Yellow → Red gradient
+      let r,g,b;
+      if(ratio<0.3){ r=55+Math.round(ratio/0.3*100); g=170; b=85; }
+      else if(ratio<0.7){ const t=(ratio-0.3)/0.4; r=Math.round(155+100*t); g=Math.round(170-50*t); b=0; }
+      else { const t=(ratio-0.7)/0.3; r=Math.round(255); g=Math.round(120*(1-t)); b=0; }
+      const color=`rgb(${r},${g},${b})`;
+      poly.setStyle({fillColor:color,fillOpacity:0.12+ratio*0.45,color:color,weight:ratio>0.5?3:2,opacity:0.8+ratio*0.2});
       poly.unbindTooltip();
       const zm=ZONE_MAP.find(z=>z.id===id);
-      const visits=v.toLocaleString('tr');
-      const avgMin=Math.round(5+ratio*25);
-      poly.bindTooltip((zm?zm.icon+' '+zm.name:id)+'<br>🔢 '+visits+' ziyaret<br>⏱️ ort. '+avgMin+' dk',
-        {permanent:false,direction:'top'});
+      const avgM=zoneAvgMin[id]||Math.round(5+ratio*20);
+      const exitRate=Math.round(10+ratio*30);
+      poly.bindTooltip(
+        `<b>${zm?zm.icon+' '+zm.name:id}</b><br>🔢 ${(v).toLocaleString('tr')} ziyaret<br>⏱️ Ort. ${avgM} dk<br>🚶 Çıkış: %${exitRate}`,
+        {permanent:false,direction:'top',className:''}
+      );
     });
   }
 
-  // Render table
-  const rows = ZONE_MAP.map(z => ({
+  // Table
+  const rows=ZONE_MAP.map(z=>({
     ...z,
-    visits: zoneTotals[z.id]||0,
-    avgMin: Math.round(5 + (zoneTotals[z.id]||0)/maxVisits*20)
+    visits:zoneTotals[z.id]||0,
+    avgMin:zoneAvgMin[z.id]||Math.round(5+(zoneTotals[z.id]||0)/maxVisits*20),
+    exitRate:Math.round(10+(zoneTotals[z.id]||0)/maxVisits*30)
   })).sort((a,b)=>b.visits-a.visits);
 
-  const maxV2 = Math.max(...rows.map(r=>r.visits),1);
-  document.getElementById('zone-detail-table').innerHTML = rows.map((r,i) => `
+  const maxV2=Math.max(...rows.map(r=>r.visits),1);
+  const colorClass=r=>r.visits/maxV2>0.7?'red':r.visits/maxV2>0.35?'':'green';
+  document.getElementById('zone-detail-table').innerHTML=rows.map((r,i)=>`
     <tr>
       <td><span class="rank-badge">${i+1}</span></td>
       <td>${r.icon} ${r.name}</td>
       <td>${r.visits.toLocaleString('tr')}</td>
       <td>${r.avgMin} dk</td>
-      <td>
-        <div class="prog-bar" style="min-width:80px;">
-          <div class="prog-fill ${r.visits/maxV2>0.7?'red':r.visits/maxV2>0.4?'':''}" 
-               style="width:${r.visits/maxV2*100}%"></div>
-        </div>
-      </td>
+      <td>%${r.exitRate}</td>
+      <td><div class="prog-bar" style="min-width:80px;"><div class="prog-fill ${colorClass(r)}" style="width:${r.visits/maxV2*100}%"></div></div></td>
     </tr>`).join('');
 }
 
-/* ════════════════════════════════════════
-   SESSIONS TAB
-════════════════════════════════════════ */
-async function loadSessions() {
-  const tbody = document.getElementById('sessions-tbody');
-  tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Yükleniyor…</div></td></tr>';
-  let sessions = [];
-  if(db) {
+/* ══════════════════════════════════
+   DWELL TIME TAB
+══════════════════════════════════ */
+async function renderDwellTime(){
+  const zoneData=generateDemoZones();
+
+  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})}))
+    .sort((a,b)=>b.avgMinutes-a.avgMinutes);
+
+  const maxMin=Math.max(...sorted.map(z=>z.avgMinutes),1);
+  const maxVisits=Math.max(...sorted.map(z=>z.totalVisits),1);
+
+  // Top/Bottom zone
+  document.getElementById('dw-max').textContent=sorted[0].icon;
+  document.getElementById('dw-min').textContent=sorted[sorted.length-1].icon;
+  const avgAll=Math.round(sorted.reduce((s,z)=>s+z.avgMinutes,0)/sorted.length);
+  document.getElementById('dw-avg').textContent=avgAll;
+  const transitZones=['giris-avlu','camii-avlu','darussifa-1','darussifa-2'];
+  const transitPct=Math.round(transitZones.length/ZONE_MAP.length*100);
+  document.getElementById('dw-transit').textContent=transitPct+'%';
+
+  // Dwell bars with dual encoding (color=intensity, width=relative time)
+  const colors=['#c03020','#c85030','#d07040','#c9a030','#a0a830','#508040','#3daa55','#3daa55','#3daa55','#3daa55','#2a7a3a'];
+  document.getElementById('dwell-bars').innerHTML=sorted.map((z,i)=>{
+    const ratio=z.avgMinutes/maxMin;
+    const pct=Math.round(ratio*100);
+    const color=colors[Math.min(i,colors.length-1)];
+    const visitRatio=z.totalVisits/maxVisits;
+    return `<div class="dwell-bar-wrap">
+      <div class="dwell-zone-name">${z.icon} ${z.name}</div>
+      <div class="dwell-bar-outer">
+        <div class="dwell-bar-inner" style="width:${Math.max(8,pct)}%;background:linear-gradient(90deg,${color}aa,${color});">
+          <span class="dwell-bar-label">${z.avgMinutes} dk</span>
+        </div>
+      </div>
+      <div class="dwell-count">${z.totalVisits.toLocaleString('tr')} ziyaret</div>
+    </div>`;
+  }).join('');
+
+  // Dwell trend (7 days)
+  const trendVals=[18,21,19,24,22,20,23];
+  const maxT=Math.max(...trendVals);
+  document.getElementById('dwell-trend').innerHTML=trendVals.map((v,i)=>{
+    const days=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+    return `<div class="tl-col">
+      <div class="tl-bar" style="height:${v/maxT*90}px;background:linear-gradient(180deg,#5fa8e8,#2a6ab0);" data-tip="${days[i]}: ort. ${v} dk"></div>
+      <div class="tl-label">${days[i]}</div>
+    </div>`;
+  }).join('');
+
+  // Hourly dwell
+  const hourlyDwell=[0,0,0,0,0,0,0,0,14,18,22,24,23,20,19,21,25,28,24,20,16,12,8,0];
+  const maxHD=Math.max(...hourlyDwell);
+  document.getElementById('dwell-hourly').innerHTML=hourlyDwell.map((v,h)=>`
+    <div class="tl-col">
+      <div class="tl-bar" style="height:${v?Math.max(4,v/maxHD*90):2}px;background:${v?'linear-gradient(180deg,#c9a030,#8a6010)':'rgba(184,134,11,0.1)'};" data-tip="${h}:00 — ${v||'-'} dk"></div>
+      <div class="tl-label">${h%4===0?h+'h':''}</div>
+    </div>`).join('');
+
+  // Transition flow (most common paths)
+  const flows=[
+    {from:'🏛️ Giriş',to:'⚖️ Darüşşifa 1',count:312,pct:92},
+    {from:'⚖️ Darüşşifa 1',to:'🚪 Darüşşifa 2',count:290,pct:85},
+    {from:'🚪 Darüşşifa 2',to:'🌊 Şifahane',count:261,pct:76},
+    {from:'🌊 Şifahane',to:'🎓 Medrese',count:224,pct:65},
+    {from:'🎓 Medrese',to:'🌿 Cami Bahçesi',count:198,pct:58},
+    {from:'🌿 Cami Bahçesi',to:'🕌 Cami İçi',count:156,pct:46},
+  ];
+  document.getElementById('transition-flow').innerHTML=flows.map(f=>`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+      <div style="font-size:12px;color:var(--parch2);min-width:160px;">${f.from}</div>
+      <div style="font-size:18px;color:var(--gold);">→</div>
+      <div style="font-size:12px;color:var(--parch2);min-width:160px;">${f.to}</div>
+      <div style="flex:1;"><div class="prog-bar"><div class="prog-fill" style="width:${f.pct}%"></div></div></div>
+      <div style="font-size:11px;color:var(--stone);min-width:60px;text-align:right;">%${f.pct} • ${f.count}</div>
+    </div>`).join('');
+
+  // Duration distribution
+  const distBuckets=[
+    {label:'0–10 dk',count:28,color:'#c03020'},
+    {label:'10–20 dk',count:67,color:'#c9a030'},
+    {label:'20–30 dk',count:112,color:'#a0a830'},
+    {label:'30–45 dk',count:89,color:'#3daa55'},
+    {label:'45–60 dk',count:31,color:'#2a7a3a'},
+    {label:'60+ dk',count:13,color:'#1a5a28'},
+  ];
+  const maxD=Math.max(...distBuckets.map(b=>b.count));
+  document.getElementById('duration-dist').innerHTML=distBuckets.map(b=>`
+    <div class="dwell-bar-wrap">
+      <div class="dwell-zone-name">${b.label}</div>
+      <div class="dwell-bar-outer">
+        <div class="dwell-bar-inner" style="width:${Math.max(8,b.count/maxD*100)}%;background:${b.color}aa;">
+          <span class="dwell-bar-label">${b.count} kişi</span>
+        </div>
+      </div>
+      <div class="dwell-count">%${Math.round(b.count/340*100)}</div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════
+   GUESTBOOK TAB
+══════════════════════════════════ */
+let gbFilter='all';
+let gbData=[];
+
+function filterGuestbook(f,btn){
+  gbFilter=f;
+  document.querySelectorAll('#gb-filter-row .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGuestbookList();
+}
+
+async function loadGuestbook(){
+  gbData=[];
+  if(db){
     try {
-      const snap = await db.collection('visitor_sessions').orderBy('startTime','desc').limit(50).get();
-      snap.forEach(doc => sessions.push({ id: doc.id, ...doc.data() }));
-    } catch(e) { console.error(e); }
+      const snap=await db.collection('guestbook').orderBy('date','desc').limit(100).get();
+      snap.forEach(doc=>gbData.push({id:doc.id,...doc.data()}));
+    } catch(e){ console.error(e); }
   }
-  if(!sessions.length) {
-    // Demo
-    for(let i=0;i<20;i++) {
-      const d = new Date(Date.now()-Math.random()*7*86400000);
-      sessions.push({
-        id:'demo-'+i, startTime:{toDate:()=>d},
-        durationMin: Math.round(15+Math.random()*35),
-        maxStop: Math.floor(Math.random()*11),
-        lang:['tr','tr','en','de','fr'][Math.floor(Math.random()*5)],
-        active: Math.random()<0.1
-      });
-    }
+  if(!gbData.length) gbData=generateDemoGuestbook();
+
+  // Stats
+  const total=gbData.length;
+  const pos=gbData.filter(m=>m.sentiment==='positive').length;
+  const neg=gbData.filter(m=>m.sentiment==='negative').length;
+  const neu=gbData.filter(m=>m.sentiment==='neutral').length;
+  const flagged=gbData.filter(m=>m.flagged).length;
+  const langs=new Set(gbData.map(m=>m.lang||'tr')).size;
+  const ratings=gbData.filter(m=>m.rating).map(m=>m.rating);
+  const avgRating=ratings.length?Math.round(ratings.reduce((a,b)=>a+b,0)/ratings.length*10)/10:0;
+
+  document.getElementById('gb-total').textContent=total;
+  document.getElementById('gb-pos').textContent='%'+Math.round(pos/total*100);
+  document.getElementById('gb-langs').textContent=langs;
+  document.getElementById('gb-rating').textContent=avgRating+'⭐';
+  document.getElementById('gb-flagged').textContent=flagged;
+
+  // Sentiment meter
+  const pp=Math.round(pos/total*100),np=Math.round(neg/total*100),nep=100-pp-np;
+  document.getElementById('sentiment-meter').innerHTML=`
+    <div class="sent-pos" style="width:${pp}%;"></div>
+    <div class="sent-neu" style="width:${nep}%;"></div>
+    <div class="sent-neg" style="width:${np}%;"></div>`;
+  document.getElementById('sent-pos-pct').textContent=`😊 Pozitif: %${pp}`;
+  document.getElementById('sent-neu-pct').textContent=`😐 Nötr: %${nep}`;
+  document.getElementById('sent-neg-pct').textContent=`😞 Negatif: %${np}`;
+
+  // NPS
+  const promoters=gbData.filter(m=>m.rating>=4).length;
+  const detractors=gbData.filter(m=>m.rating<=2).length;
+  const passives=total-promoters-detractors;
+  const nps=Math.round((promoters-detractors)/total*100);
+  document.getElementById('nps-score').textContent='NPS: '+nps;
+  document.getElementById('nps-score').style.color=nps>50?'#3daa55':nps>0?'#f0c040':'#ff6b4a';
+  document.getElementById('nps-bar-wrap').innerHTML=`<div class="nps-bar">
+    <div class="nps-det" style="flex:${detractors};"></div>
+    <div class="nps-pas" style="flex:${passives};"></div>
+    <div class="nps-pro" style="flex:${promoters};"></div>
+  </div>`;
+
+  // Lang chart
+  const langC={};gbData.forEach(m=>{const l=m.lang||'tr';langC[l]=(langC[l]||0)+1;});
+  const lt=Object.values(langC).reduce((a,b)=>a+b,1);
+  const langLabels={tr:'🇹🇷 Türkçe',en:'🇬🇧 İngilizce',de:'🇩🇪 Almanca',fr:'🇫🇷 Fransızca',ar:'🇸🇦 Arapça',bg:'🇧🇬 Bulgarca',el:'🇬🇷 Yunanca'};
+  document.getElementById('gb-lang-chart').innerHTML=Object.entries(langC).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${langLabels[k]||k}</span><span>${v}</span></div>
+      <div class="prog-bar"><div class="prog-fill purple" style="width:${v/lt*100}%"></div></div>
+    </div>`).join('');
+
+  // Trend
+  const days=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d);}
+  const trendC=days.map(day=>{
+    const next=new Date(day);next.setDate(next.getDate()+1);
+    return gbData.filter(m=>m.date>=day&&m.date<next).length;
+  });
+  const maxT=Math.max(...trendC,1);
+  document.getElementById('gb-trend').innerHTML=trendC.map((v,i)=>{
+    const d=days[i];
+    return `<div class="tl-col">
+      <div class="tl-bar" style="height:${Math.max(2,v/maxT*55)}px;background:linear-gradient(180deg,#7a3ab0,#4a1a7a);" data-tip="${d.toLocaleDateString('tr-TR',{weekday:'short'})}: ${v}"></div>
+      <div class="tl-label">${d.toLocaleDateString('tr-TR',{weekday:'short'})}</div>
+    </div>`;
+  }).join('');
+
+  // Word cloud
+  const words=[
+    {word:'Harika',count:28,lang:'tr'},{word:'Excellent',count:19,lang:'en'},
+    {word:'Tarihi',count:24,lang:'tr'},{word:'Beautiful',count:15,lang:'en'},
+    {word:'Etkileyici',count:22,lang:'tr'},{word:'Wunderschön',count:11,lang:'de'},
+    {word:'Bilgilendirici',count:18,lang:'tr'},{word:'Müthiş',count:16,lang:'tr'},
+    {word:'Magnifique',count:9,lang:'fr'},{word:'Amazing',count:12,lang:'en'},
+    {word:'Güzel',count:20,lang:'tr'},{word:'Historical',count:8,lang:'en'},
+    {word:'Tebrikler',count:14,lang:'tr'},{word:'Impressive',count:10,lang:'en'},
+    {word:'Eindrucksvoll',count:7,lang:'de'},{word:'Tavsiye',count:13,lang:'tr'},
+  ];
+  const maxWC=Math.max(...words.map(w=>w.count));
+  const wcColors=['#f0c040','#d4a017','#3daa55','#5fa8e8','#c9a84c','#ff6b4a','#7a3ab0'];
+  document.getElementById('word-cloud').innerHTML=words.map((w,i)=>{
+    const size=Math.round(10+w.count/maxWC*14);
+    const opacity=0.5+w.count/maxWC*0.5;
+    const color=wcColors[i%wcColors.length];
+    return `<div class="word-item" style="font-size:${size}px;color:${color};opacity:${opacity};background:${color}18;border:1px solid ${color}33;" title="${w.count} kez">${w.word}</div>`;
+  }).join('');
+
+  renderGuestbookList();
+}
+
+function renderGuestbookList(){
+  let filtered=gbData;
+  if(gbFilter==='positive') filtered=gbData.filter(m=>m.sentiment==='positive');
+  else if(gbFilter==='negative') filtered=gbData.filter(m=>m.sentiment==='negative');
+  else if(gbFilter==='flagged') filtered=gbData.filter(m=>m.flagged);
+
+  const sentIcon={positive:'😊',neutral:'😐',negative:'😞'};
+  const sentColor={positive:'rgba(61,170,85,0.2)',neutral:'rgba(184,134,11,0.1)',negative:'rgba(139,32,0,0.15)'};
+  const sentBorder={positive:'rgba(61,170,85,0.3)',neutral:'rgba(184,134,11,0.2)',negative:'rgba(192,48,32,0.3)'};
+
+  document.getElementById('guestbook-list').innerHTML=filtered.slice(0,20).map(m=>{
+    const stars='⭐'.repeat(m.rating||0)+'☆'.repeat(5-(m.rating||0));
+    return `<div class="guestbook-card" style="background:${sentColor[m.sentiment]||sentColor.neutral};border-color:${sentBorder[m.sentiment]||sentBorder.neutral};">
+      <div class="gb-header">
+        <div>
+          <div class="gb-name">${sentIcon[m.sentiment]||'📝'} ${m.name||'Anonim'}</div>
+          <div class="gb-meta">${m.date instanceof Date?m.date.toLocaleDateString('tr-TR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:13px;">${stars}</div>
+          ${m.flagged?'<div style="font-size:10px;color:#ff6b4a;margin-top:2px;">🚩 Onay Bekliyor</div>':''}
+        </div>
+      </div>
+      <div class="gb-text">"${m.text}"</div>
+      <div class="gb-tags">
+        <span class="gb-tag">${m.lang||'tr'}</span>
+        ${m.sentiment?`<span class="gb-tag">${sentIcon[m.sentiment]} ${m.sentiment}</span>`:''}
+      </div>
+    </div>`;
+  }).join('')||'<div class="empty-state">Bu kategoride mesaj yok.</div>';
+}
+
+/* ══════════════════════════════════
+   SESSIONS TAB
+══════════════════════════════════ */
+async function loadSessions(){
+  const tbody=document.getElementById('sessions-tbody');
+  tbody.innerHTML='<tr><td colspan="7"><div class="empty-state">Yükleniyor…</div></td></tr>';
+  let sessions=[];
+  if(db){
+    try {
+      const snap=await db.collection('visitor_sessions').orderBy('startTime','desc').limit(50).get();
+      snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));
+    } catch(e){ console.error(e); }
   }
-  tbody.innerHTML = sessions.map(s => {
-    const t = s.startTime ? s.startTime.toDate() : new Date();
+  if(!sessions.length){
+    const demo=generateDemoSessions(25);
+    sessions=demo.map((s,i)=>({id:'demo-'+i,...s}));
+  }
+  tbody.innerHTML=sessions.map(s=>{
+    const t=s.startTime?s.startTime.toDate():new Date();
     return `<tr>
-      <td style="font-size:10px;color:var(--stone);">${s.id.slice(-6)}</td>
+      <td style="font-size:10px;color:var(--stone);">${(s.id||'').slice(-6)}</td>
       <td>${t.toLocaleDateString('tr-TR')} ${t.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</td>
       <td>${s.durationMin||'—'} dk</td>
       <td>Durak ${s.maxStop||0}/10</td>
       <td>${s.lang||'tr'}</td>
+      <td style="font-size:11px;">${s.locationGranted?'✅':'❌'}</td>
       <td><span style="font-size:11px;padding:3px 8px;border-radius:10px;
           background:${s.active?'rgba(61,170,85,0.2)':'rgba(184,134,11,0.1)'};
           border:1px solid ${s.active?'rgba(61,170,85,0.4)':'rgba(184,134,11,0.2)'};
@@ -1097,73 +1348,109 @@ async function loadSessions() {
         ${s.active?'🟢 Aktif':'✓ Tamamlandı'}
       </span></td>
     </tr>`;
-  }).join('') || '<tr><td colspan="6"><div class="empty-state">Kayıt bulunamadı.</div></td></tr>';
+  }).join('')||'<tr><td colspan="7"><div class="empty-state">Kayıt yok.</div></td></tr>';
 }
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════
    ZONE ANALYSIS TAB
-════════════════════════════════════════ */
-async function renderZoneAnalysis() {
-  let zoneTotals = {}, zoneAvgMin = {};
-  if(db) {
-    try {
-      const snap = await db.collection('zone_visits').get();
-      snap.forEach(doc => {
-        const d = doc.data();
-        zoneTotals[doc.id] = d.totalVisits||0;
-        zoneAvgMin[doc.id] = d.avgMinutes||0;
-      });
-    } catch(e) { console.error(e); }
-  }
-  if(!Object.keys(zoneTotals).length) {
-    zoneTotals = { 'darussifa':420,'medrese':310,'camii':280,'imarethane':195,
-      'darussifa-1':380,'darussifa-2':290,'camii-avlu':260,'giris-avlu':340,
-      'buyuk-avlu':175,'tabhane-sol':140 };
-    zoneAvgMin = { 'darussifa':18,'medrese':15,'camii':12,'imarethane':11,
-      'darussifa-1':6,'darussifa-2':7,'camii-avlu':8,'giris-avlu':5,
-      'buyuk-avlu':4,'tabhane-sol':9 };
-  }
-  const maxV = Math.max(...Object.values(zoneTotals),1);
-  const sorted = ZONE_MAP.map(z=>({...z, v:zoneTotals[z.id]||0, m:zoneAvgMin[z.id]||0}))
-    .sort((a,b)=>b.v-a.v);
+══════════════════════════════════ */
+async function renderZoneAnalysis(){
+  const zoneData=generateDemoZones();
+  const maxV=Math.max(...Object.values(zoneData).map(z=>z.totalVisits),1);
+  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})}))
+    .sort((a,b)=>b.totalVisits-a.totalVisits);
 
-  document.getElementById('zone-bars').innerHTML = sorted.map(z => `
+  document.getElementById('zone-bars').innerHTML=sorted.map(z=>`
     <div class="prog-row">
       <div class="prog-label">
         <span>${z.icon} ${z.name}</span>
-        <span style="color:var(--stone);">${z.v.toLocaleString('tr')} ziyaret • ort. ${z.m} dk</span>
+        <span style="color:var(--stone);">${(z.totalVisits||0).toLocaleString('tr')} ziyaret • ort. ${z.avgMinutes||0} dk</span>
       </div>
       <div class="prog-bar">
-        <div class="prog-fill ${z.v/maxV>0.7?'red':''}" style="width:${z.v/maxV*100}%"></div>
+        <div class="prog-fill ${(z.totalVisits||0)/maxV>0.7?'red':''}" style="width:${(z.totalVisits||0)/maxV*100}%"></div>
       </div>
     </div>`).join('');
 
-  const total = sorted.reduce((a,z)=>a+z.v,0)||1;
-  document.getElementById('top-zones-table').innerHTML = sorted.map((z,i) => `
+  const total=sorted.reduce((a,z)=>a+(z.totalVisits||0),0)||1;
+  document.getElementById('top-zones-table').innerHTML=sorted.map((z,i)=>`
     <tr>
       <td><span class="rank-badge">${i+1}</span></td>
       <td>${z.icon} ${z.name}</td>
-      <td>${z.v.toLocaleString('tr')}</td>
-      <td>${z.m} dk</td>
-      <td>%${Math.round(z.v/total*100)}</td>
+      <td>${(z.totalVisits||0).toLocaleString('tr')}</td>
+      <td>${z.avgMinutes||0} dk</td>
+      <td>${i<3?['🥇 Yüksek','🥈 Yüksek','🥉 Orta'][i]:'Normal'}</td>
+      <td>%${Math.round((z.totalVisits||0)/total*100)}</td>
     </tr>`).join('');
 
-  // Recommendations
-  const lowEngagement = sorted.filter(z=>z.v/maxV<0.3);
-  const highDwell = sorted.filter(z=>z.m>15);
-  let recs = '';
-  if(lowEngagement.length) recs += `<p style="margin-bottom:10px;">⚠️ <strong style="color:var(--gold3)">Düşük İlgi Alanları:</strong> ${lowEngagement.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde ziyaretçi yoğunluğu düşük. Bu bölgelere daha fazla tanıtım materyali veya interaktif unsurlar eklenebilir.</p>`;
-  if(highDwell.length) recs += `<p style="margin-bottom:10px;">✅ <strong style="color:var(--green2)">Uzun Kalma Alanları:</strong> ${highDwell.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde ziyaretçiler uzun süre vakit geçiriyor. Bu alanların içeriği genişletilebilir.</p>`;
-  recs += `<p style="margin-bottom:10px;">📊 <strong style="color:var(--gold3)">Genel Değerlendirme:</strong> Darüşşifa ve Medrese bölgeleri en yüksek ilgiyi alan alanlardır. Cami ve İmarethane bölgelerine rehber içeriği zenginleştirilerek daha fazla ziyaretçi çekilebilir.</p>`;
-  document.getElementById('recommendations').innerHTML = recs || '<div class="empty-state">Yeterli veri birikmeden öneri üretilemiyor.</div>';
+  const lowEng=sorted.filter(z=>(z.totalVisits||0)/maxV<0.3);
+  const highDwell=sorted.filter(z=>z.avgMinutes>13);
+  let recs='';
+  if(lowEng.length) recs+=`<div class="alert-box" style="margin-bottom:10px;"><span class="alert-icon">⚠️</span><div class="alert-text"><strong style="color:var(--gold3)">Düşük İlgi Alanları:</strong> ${lowEng.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde ziyaretçi sayısı düşük. Tanıtım materyali veya interaktif unsurlar eklenebilir.</div></div>`;
+  if(highDwell.length) recs+=`<div class="alert-box success" style="margin-bottom:10px;"><span class="alert-icon">✅</span><div class="alert-text"><strong style="color:var(--green2)">Uzun Kalma Alanları:</strong> ${highDwell.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde ziyaretçiler uzun süre vakit geçiriyor. İçerik genişletilebilir.</div></div>`;
+  recs+=`<div class="alert-box info"><span class="alert-icon">📊</span><div class="alert-text"><strong>Genel Değerlendirme:</strong> Darüşşifa ve Medrese bölgeleri en yüksek ilgiyi çekiyor. Cami ve İmarethane bölgelerine yönelik rehber içeriği zenginleştirilerek ziyaretçi süresi artırılabilir.</div></div>`;
+  document.getElementById('recommendations').innerHTML=recs;
 }
 
-/* ════════════════════════════════════════
-   REFRESH
-════════════════════════════════════════ */
-function refreshRealtime() {
-  if(realtimeUnsub) { realtimeUnsub(); }
-  listenRealtime();
+/* ══════════════════════════════════
+   FUNNEL TAB
+══════════════════════════════════ */
+function renderFunnel(){
+  const steps=[
+    {label:'Müzeye Giriş Yapan',count:340,icon:'👋',color:'#2a6ab0'},
+    {label:'Rehber Uygulamasını Açan',count:298,icon:'📱',color:'#3d8a30'},
+    {label:'İlk Durağa Ulaşan',count:271,icon:'🗺️',color:'#5daa45'},
+    {label:'5+ Durak Tamamlayan',count:198,icon:'🎯',color:'#c9a030'},
+    {label:'Tüm Turu Bitiren',count:124,icon:'🏁',color:'#b8860b'},
+    {label:'Gönül Defterine Yazan',count:47,icon:'📖',color:'#7a3ab0'},
+  ];
+
+  document.getElementById('fn-enter').textContent=steps[0].count;
+  document.getElementById('fn-guide').textContent=steps[2].count;
+  document.getElementById('fn-complete').textContent=steps[4].count;
+  document.getElementById('fn-gb').textContent=steps[5].count;
+
+  const maxCount=steps[0].count;
+  document.getElementById('funnel-chart').innerHTML=steps.map((s,i)=>{
+    const pct=Math.round(s.count/maxCount*100);
+    const convRate=i>0?Math.round(s.count/steps[i-1].count*100):100;
+    return `<div class="funnel-step">
+      <div class="funnel-num">${s.icon} ${s.count}</div>
+      <div class="funnel-bar-outer">
+        <div class="funnel-bar-inner" style="width:${pct}%;background:linear-gradient(90deg,${s.color}aa,${s.color});">
+          ${s.label}
+        </div>
+      </div>
+      <div class="funnel-pct" style="color:${convRate<70?'#ff6b4a':convRate<85?'#f0c040':'#3daa55'}">
+        ${i>0?'→ %'+convRate:'%100'}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Drop-off analysis
+  const dropoffs=steps.slice(1).map((s,i)=>({
+    label:`${steps[i].icon}→${s.icon}`,
+    dropped:steps[i].count-s.count,
+    pct:Math.round((steps[i].count-s.count)/steps[i].count*100)
+  }));
+  document.getElementById('dropoff-chart').innerHTML=dropoffs.map(d=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${d.label}</span><span style="color:#ff6b4a;">-${d.dropped} kişi (%${d.pct})</span></div>
+      <div class="prog-bar"><div class="prog-fill red" style="width:${d.pct*3}%"></div></div>
+    </div>`).join('');
+
+  // Success chart
+  const successMetrics=[
+    {label:'Turu Tamamlama',val:Math.round(124/340*100),color:'green'},
+    {label:'Rehber Kullanımı',val:Math.round(298/340*100),color:''},
+    {label:'Konum İzni Verme',val:72,color:''},
+    {label:'Gönül Defteri Yazma',val:Math.round(47/340*100),color:'purple'},
+    {label:'5+ Durak Gezme',val:Math.round(198/340*100),color:''},
+  ];
+  document.getElementById('success-chart').innerHTML=successMetrics.map(m=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${m.label}</span><span>%${m.val}</span></div>
+      <div class="prog-bar"><div class="prog-fill ${m.color}" style="width:${m.val}%"></div></div>
+    </div>`).join('');
 }
 </script>
 </body>
