@@ -3,732 +3,709 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Müze Admin Paneli — Sultan II. Bayezid Külliyesi</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<title>Sultan II. Bayezid Külliyesi — Müze Admin Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-/* ═══════════════════════════════════════════
-   ROOT & RESET
-═══════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --gold:#c9a227;--gold2:#e8c050;--gold3:#f5d875;
-  --dark:#0d0a06;--dark2:#161009;--dark3:#1e1508;
-  --panel:#1a1208;--panel2:#221a0c;--panel3:#2a2010;
-  --border:rgba(201,162,39,0.22);--border2:rgba(201,162,39,0.4);
-  --text:#e8d8b0;--text2:#b8a070;--text3:#7a6040;
-  --green:#2a9a50;--green2:#3dbb68;
-  --red:#c03030;--red2:#e04848;
-  --blue:#2060b0;--blue2:#4080d0;
-  --amber:#c07020;--amber2:#e09040;
-  --purple:#6040b0;--purple2:#8060d0;
-  --font-head:'Cinzel',serif;
-  --font-mono:'IBM Plex Mono',monospace;
-  --font-body:'Lora',Georgia,serif;
+  --gold:#b8860b;--gold2:#d4a017;--gold3:#f0c040;
+  --parch:#f7edd8;--parch2:#efe0c0;--parch3:#e8d5a8;
+  --ink:#2c1a06;--ink2:#4a3010;--ink3:#7a5820;
+  --red:#8b2000;--stone:#9a8060;
+  --border:rgba(184,134,11,0.35);
+  --bg-dark:#0e0a04;--bg-mid:#1a1005;--bg-card:#1e1208;
+  --font-head:'Cinzel',serif;--font-body:'Lora',Georgia,serif;
+  --green:#2a7a3a;--green2:#3daa55;
+  --blue:#1a4a7a;--blue2:#2a6ab0;
 }
+html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch);font-family:var(--font-body);}
 
-html,body{
-  background:var(--dark);color:var(--text);
-  font-family:var(--font-body);min-height:100vh;
-  overflow-x:hidden;
-}
+/* LOGIN */
+#login-screen{position:fixed;inset:0;z-index:1000;background:linear-gradient(160deg,#0e0a04,#1e1208);display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:linear-gradient(160deg,#1e1208,#2e1c08);border:2px solid var(--gold);border-radius:16px;padding:36px 28px;max-width:380px;width:100%;text-align:center;}
+.login-logo{font-size:48px;margin-bottom:16px;}
+.login-title{font-family:var(--font-head);font-size:18px;color:var(--gold3);letter-spacing:0.1em;margin-bottom:6px;}
+.login-sub{font-size:13px;color:var(--stone);margin-bottom:28px;line-height:1.6;}
+.login-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:13px 16px;color:var(--parch);font-family:var(--font-body);font-size:15px;margin-bottom:12px;outline:none;transition:border-color 0.2s;}
+.login-input:focus{border-color:var(--gold);}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);border:none;border-radius:8px;padding:14px;font-family:var(--font-head);font-size:13px;letter-spacing:0.15em;cursor:pointer;font-weight:700;transition:opacity 0.2s;}
+.login-btn:hover{opacity:0.9;}
+.login-err{color:#ff6b6b;font-size:13px;margin-top:10px;display:none;}
 
-/* ═══════════════════════════════════════════
-   LOGIN SCREEN
-═══════════════════════════════════════════ */
-#login-screen{
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;
-  background:radial-gradient(ellipse at 30% 40%,rgba(201,162,39,0.08) 0%,transparent 60%),
-             radial-gradient(ellipse at 70% 70%,rgba(201,162,39,0.05) 0%,transparent 50%),
-             var(--dark);
-}
-.login-box{
-  background:var(--panel);border:1px solid var(--border2);border-radius:20px;
-  padding:48px 40px;width:100%;max-width:420px;
-  box-shadow:0 32px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(201,162,39,0.15);
-}
-.login-logo{text-align:center;margin-bottom:32px;}
-.login-logo .emblem{font-size:48px;margin-bottom:8px;display:block;filter:drop-shadow(0 0 16px rgba(201,162,39,0.4));}
-.login-logo h1{font-family:var(--font-head);font-size:16px;color:var(--gold);letter-spacing:0.15em;line-height:1.6;}
-.login-logo p{font-size:11px;color:var(--text3);letter-spacing:0.1em;margin-top:4px;}
-.login-field{margin-bottom:14px;}
-.login-field label{display:block;font-size:10px;letter-spacing:0.15em;color:var(--text3);font-family:var(--font-head);margin-bottom:6px;}
-.login-field input{
-  width:100%;background:rgba(201,162,39,0.06);border:1px solid var(--border);
-  border-radius:8px;padding:14px 16px;color:var(--text);font-family:var(--font-mono);font-size:14px;
-  outline:none;transition:border-color 0.2s;
-}
-.login-field input:focus{border-color:var(--gold);}
-.login-btn{
-  width:100%;margin-top:8px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:var(--dark);border:none;border-radius:10px;
-  padding:16px;font-family:var(--font-head);font-size:12px;
-  letter-spacing:0.2em;cursor:pointer;font-weight:700;
-  box-shadow:0 8px 24px rgba(201,162,39,0.3);transition:all 0.2s;
-}
-.login-btn:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(201,162,39,0.4);}
-.login-err{font-size:12px;color:var(--red2);text-align:center;margin-top:10px;display:none;}
+/* MAIN */
+#main{display:none;}
+.topbar{background:linear-gradient(135deg,#1a1005,#2e1c08);border-bottom:2px solid var(--gold);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-logo{font-size:24px;}
+.topbar-title{font-family:var(--font-head);font-size:14px;color:var(--gold3);letter-spacing:0.08em;}
+.topbar-sub{font-size:11px;color:var(--stone);}
+.live-badge{display:flex;align-items:center;gap:6px;background:rgba(42,122,58,0.2);border:1px solid var(--green2);border-radius:20px;padding:5px 12px;font-family:var(--font-head);font-size:11px;color:var(--green2);letter-spacing:0.08em;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green2);animation:livePulse 1.4s ease-in-out infinite;}
+@keyframes livePulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.logout-btn{background:transparent;border:1px solid var(--border);color:var(--stone);border-radius:6px;padding:6px 14px;font-family:var(--font-head);font-size:11px;cursor:pointer;transition:all 0.2s;letter-spacing:0.08em;}
+.logout-btn:hover{border-color:var(--gold);color:var(--gold3);}
 
-/* ═══════════════════════════════════════════
-   MAIN APP
-═══════════════════════════════════════════ */
-#app{display:none;}
-#app.visible{display:flex;min-height:100vh;}
+/* TABS */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid rgba(184,134,11,0.2);background:#150e03;overflow-x:auto;padding:0 20px;}
+.tab-bar::-webkit-scrollbar{height:3px;}.tab-bar::-webkit-scrollbar-track{background:transparent;}.tab-bar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.tab{font-family:var(--font-head);font-size:11px;letter-spacing:0.1em;padding:13px 16px;color:var(--stone);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all 0.2s;}
+.tab.active{color:var(--gold3);border-bottom-color:var(--gold);}
+.tab:hover{color:var(--parch);}
 
-/* SIDEBAR */
-#sidebar{
-  width:260px;min-width:260px;background:var(--panel);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
-}
-.sidebar-head{
-  padding:28px 24px 20px;
-  border-bottom:1px solid var(--border);
-}
-.sidebar-head .s-emblem{font-size:28px;margin-bottom:8px;display:block;}
-.sidebar-head h2{font-family:var(--font-head);font-size:12px;color:var(--gold);letter-spacing:0.12em;line-height:1.6;}
-.sidebar-head p{font-size:10px;color:var(--text3);margin-top:2px;font-family:var(--font-mono);}
-
-.nav-section{padding:16px 16px 4px;font-size:9px;color:var(--text3);letter-spacing:0.2em;font-family:var(--font-head);}
-.nav-item{
-  display:flex;align-items:center;gap:12px;
-  padding:11px 20px;cursor:pointer;color:var(--text2);
-  font-family:var(--font-body);font-size:13px;border-left:2px solid transparent;
-  transition:all 0.15s;
-}
-.nav-item:hover{background:rgba(201,162,39,0.07);color:var(--text);}
-.nav-item.active{background:rgba(201,162,39,0.12);color:var(--gold2);border-left-color:var(--gold);}
-.nav-item .nav-icon{font-size:15px;flex-shrink:0;}
-.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;
-  font-family:var(--font-mono);padding:2px 6px;border-radius:10px;font-weight:600;}
-
-.sidebar-footer{
-  margin-top:auto;padding:16px 20px;
-  border-top:1px solid var(--border);
-  font-size:11px;color:var(--text3);font-family:var(--font-mono);
-}
-.sidebar-footer span{display:block;line-height:1.8;}
-.btn-logout{
-  margin-top:10px;width:100%;background:rgba(192,48,48,0.15);border:1px solid rgba(192,48,48,0.3);
-  color:var(--red2);border-radius:6px;padding:8px;font-family:var(--font-head);
-  font-size:10px;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;
-}
-.btn-logout:hover{background:rgba(192,48,48,0.25);}
-
-/* MAIN CONTENT */
-#main{flex:1;overflow-y:auto;background:var(--dark2);}
-
-.page{display:none;padding:32px;}
+/* CONTENT */
+.page{display:none;padding:20px;}
 .page.active{display:block;}
 
-/* PAGE HEADER */
-.page-header{margin-bottom:28px;}
-.page-header h1{font-family:var(--font-head);font-size:22px;color:var(--gold2);letter-spacing:0.08em;}
-.page-header p{font-size:13px;color:var(--text3);margin-top:4px;font-family:var(--font-mono);}
-.last-update{font-size:10px;color:var(--text3);font-family:var(--font-mono);margin-top:6px;}
-
 /* STAT CARDS */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px;}
-.stat-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  padding:20px;position:relative;overflow:hidden;
-}
-.stat-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:var(--accent,var(--gold));
-}
-.stat-card .sc-label{font-size:10px;letter-spacing:0.15em;color:var(--text3);font-family:var(--font-head);}
-.stat-card .sc-val{font-family:var(--font-mono);font-size:32px;font-weight:600;
-  color:var(--accent,var(--gold2));margin:8px 0 4px;line-height:1;}
-.stat-card .sc-sub{font-size:11px;color:var(--text3);}
-.stat-card .sc-icon{position:absolute;top:16px;right:16px;font-size:24px;opacity:0.25;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center;}
+.stat-icon{font-size:26px;margin-bottom:8px;}
+.stat-val{font-family:var(--font-head);font-size:26px;color:var(--gold3);line-height:1;margin-bottom:4px;}
+.stat-label{font-size:10px;color:var(--stone);letter-spacing:0.06em;line-height:1.5;}
+.stat-card.green{border-color:rgba(61,170,85,0.4);}
+.stat-card.green .stat-val{color:var(--green2);}
+.stat-card.red{border-color:rgba(139,32,0,0.4);}
+.stat-card.red .stat-val{color:#ff6b4a;}
+.stat-card.blue{border-color:rgba(42,106,176,0.4);}
+.stat-card.blue .stat-val{color:#5fa8e8;}
 
-/* SECTION BOX */
-.section-box{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  margin-bottom:20px;overflow:hidden;
-}
-.section-box-head{
-  padding:16px 20px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.section-box-head h3{font-family:var(--font-head);font-size:12px;color:var(--gold);letter-spacing:0.1em;}
-.section-box-head .sbh-meta{font-size:10px;color:var(--text3);font-family:var(--font-mono);}
-.section-box-body{padding:20px;}
+/* SECTION HEADER */
+.section-hdr{font-family:var(--font-head);font-size:12px;color:var(--gold);letter-spacing:0.12em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.section-hdr .badge{font-size:10px;background:rgba(184,134,11,0.15);border:1px solid var(--border);border-radius:12px;padding:3px 10px;color:var(--stone);}
 
-/* LIVE ZONE MAP */
-.zone-map-container{position:relative;width:100%;max-width:700px;margin:0 auto;}
-.zone-map-svg{width:100%;height:auto;display:block;}
+/* SUB-TAB */
+.sub-tab-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.sub-tab{font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;padding:7px 14px;border-radius:20px;cursor:pointer;border:1px solid var(--border);color:var(--stone);background:rgba(184,134,11,0.06);transition:all 0.2s;}
+.sub-tab.active{background:rgba(184,134,11,0.22);border-color:var(--gold);color:var(--gold3);}
+.sub-tab:hover{color:var(--parch);}
 
-/* PROGRESS BARS */
-.prog-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.prog-label{font-size:12px;color:var(--text2);width:180px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.prog-track{flex:1;height:8px;background:rgba(201,162,39,0.1);border-radius:4px;overflow:hidden;}
-.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--fc1,var(--gold)),var(--fc2,var(--gold2)));transition:width 0.8s ease;}
-.prog-val{font-family:var(--font-mono);font-size:11px;color:var(--text2);width:60px;text-align:right;flex-shrink:0;}
+/* MAP */
+.map-wrap{background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;}
+
+/* CHART AREA */
+.chart-wrap{background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;}
 
 /* TABLE */
-.data-table{width:100%;border-collapse:collapse;}
-.data-table th{
-  font-family:var(--font-head);font-size:9px;letter-spacing:0.15em;color:var(--text3);
-  padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);
-  background:rgba(201,162,39,0.04);
-}
-.data-table td{
-  padding:12px 12px;font-size:13px;color:var(--text2);
-  border-bottom:1px solid rgba(201,162,39,0.06);font-family:var(--font-mono);
-}
-.data-table tr:last-child td{border-bottom:none;}
-.data-table tr:hover td{background:rgba(201,162,39,0.04);}
+.data-table{width:100%;border-collapse:collapse;font-size:13px;}
+.data-table th{font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;color:var(--stone);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.data-table td{padding:10px 12px;color:var(--parch2);border-bottom:1px solid rgba(184,134,11,0.08);}
+.data-table tr:hover td{background:rgba(184,134,11,0.05);}
+.rank-badge{display:inline-block;width:22px;height:22px;border-radius:50%;background:rgba(184,134,11,0.2);border:1px solid var(--border);font-family:var(--font-head);font-size:10px;color:var(--gold3);text-align:center;line-height:22px;margin-right:6px;}
 
-/* BADGE */
-.badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-family:var(--font-mono);font-weight:600;}
-.badge-green{background:rgba(42,154,80,0.2);color:var(--green2);}
-.badge-red{background:rgba(192,48,48,0.2);color:var(--red2);}
-.badge-gold{background:rgba(201,162,39,0.2);color:var(--gold2);}
-.badge-blue{background:rgba(32,96,176,0.2);color:var(--blue2);}
-.badge-purple{background:rgba(96,64,176,0.2);color:var(--purple2);}
+/* VISITOR LIST */
+.visitor-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:6px;background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.1);}
+.visitor-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--ink));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.visitor-info{flex:1;min-width:0;}
+.visitor-name{font-size:13px;color:var(--parch);font-weight:600;}
+.visitor-meta{font-size:11px;color:var(--stone);margin-top:2px;}
+.visitor-zone{font-family:var(--font-head);font-size:10px;letter-spacing:0.06em;background:rgba(184,134,11,0.15);border:1px solid var(--border);border-radius:12px;padding:3px 10px;color:var(--gold3);white-space:nowrap;}
 
-/* LIVE DOT */
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green2);display:inline-block;
-  animation:livePulse 1.5s ease-in-out infinite;margin-right:6px;}
-@keyframes livePulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+/* PROGRESS BARS */
+.prog-row{margin-bottom:14px;}
+.prog-label{display:flex;justify-content:space-between;font-size:12px;color:var(--parch2);margin-bottom:5px;}
+.prog-bar{height:8px;background:rgba(184,134,11,0.12);border-radius:4px;border:1px solid rgba(184,134,11,0.15);overflow:hidden;}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold2),var(--gold3));transition:width 1s ease;}
+.prog-fill.green{background:linear-gradient(90deg,#2a7a3a,#3daa55);}
+.prog-fill.red{background:linear-gradient(90deg,#7a1000,#c03020);}
+.prog-fill.blue{background:linear-gradient(90deg,#1a4a7a,#2a6ab0);}
+.prog-fill.purple{background:linear-gradient(90deg,#4a1a7a,#7a3ab0);}
 
-/* CHART BARS */
-.chart-bars{display:flex;align-items:flex-end;gap:8px;height:140px;padding:0 4px;}
-.chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.chart-bar{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--gold2),var(--gold));
-  min-height:2px;transition:height 0.6s ease;cursor:pointer;position:relative;}
-.chart-bar:hover::after{
-  content:attr(data-tip);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);
-  background:var(--panel3);border:1px solid var(--border);border-radius:4px;
-  padding:4px 8px;font-size:10px;color:var(--text);white-space:nowrap;font-family:var(--font-mono);
-}
-.chart-bar-label{font-size:9px;color:var(--text3);font-family:var(--font-mono);text-align:center;white-space:nowrap;overflow:hidden;width:100%;}
-
-/* DONUT CHART */
-.donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
-.donut-svg{flex-shrink:0;}
-.donut-legend{flex:1;min-width:140px;}
-.donut-legend-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.donut-legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-.donut-legend-label{font-size:12px;color:var(--text2);}
-.donut-legend-val{font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-left:auto;}
-
-/* MESSAGES */
-.msg-item{
-  padding:14px 0;border-bottom:1px solid rgba(201,162,39,0.06);
-}
-.msg-item:last-child{border-bottom:none;}
-.msg-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.msg-item-name{font-family:var(--font-head);font-size:12px;color:var(--gold2);}
-.msg-item-city{font-size:11px;color:var(--text3);font-family:var(--font-mono);}
-.msg-item-date{font-size:10px;color:var(--text3);font-family:var(--font-mono);}
-.msg-item-text{font-size:13px;color:var(--text2);line-height:1.7;}
-
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:40px;color:var(--text3);}
-.empty-state .es-icon{font-size:36px;margin-bottom:12px;opacity:0.4;}
-.empty-state p{font-size:13px;}
-
-/* LIVE USERS TABLE */
-.live-user-row{
-  display:flex;align-items:center;gap:12px;padding:10px 0;
-  border-bottom:1px solid rgba(201,162,39,0.06);
-}
-.live-user-row:last-child{border-bottom:none;}
-.live-dot-sm{width:6px;height:6px;border-radius:50%;background:var(--green2);
-  animation:livePulse 1.5s ease-in-out infinite;flex-shrink:0;}
-.live-user-zone{font-size:13px;color:var(--text2);}
-.live-user-stop{font-family:var(--font-mono);font-size:11px;color:var(--text3);}
-.live-user-dur{font-family:var(--font-mono);font-size:11px;color:var(--amber2);margin-left:auto;}
-.live-user-lang{font-size:12px;}
-
-/* SCROLL */
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(201,162,39,0.25);border-radius:2px;}
-
-/* GRID 2 col */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
-@media(max-width:900px){.grid-2{grid-template-columns:1fr;}.grid-3{grid-template-columns:1fr 1fr;}}
-@media(max-width:600px){#sidebar{display:none;}.grid-3{grid-template-columns:1fr;}}
-
-/* ALERT */
-.alert-banner{
-  background:rgba(192,48,48,0.12);border:1px solid rgba(192,48,48,0.3);border-radius:8px;
-  padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--red2);
-  display:none;align-items:center;gap:10px;
-}
-.alert-banner.show{display:flex;}
+/* GRID */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:700px){.two-col,.three-col{grid-template-columns:1fr;}.tab{padding:10px 10px;font-size:10px;}}
 
 /* REFRESH BTN */
-.btn-refresh{
-  background:rgba(201,162,39,0.12);border:1px solid var(--border);color:var(--gold2);
-  border-radius:6px;padding:7px 14px;font-family:var(--font-head);font-size:10px;
-  letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;
-}
-.btn-refresh:hover{background:rgba(201,162,39,0.2);}
+.refresh-btn{background:rgba(184,134,11,0.15);border:1px solid var(--border);color:var(--gold3);border-radius:6px;padding:6px 12px;font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;}
+.refresh-btn:hover{background:rgba(184,134,11,0.25);}
 
-/* ZONE GRID */
-.zone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
-.zone-card{
-  background:var(--panel3);border:1px solid var(--border);border-radius:10px;
-  padding:14px 16px;
-}
-.zone-card-name{font-family:var(--font-head);font-size:11px;color:var(--gold);letter-spacing:0.08em;margin-bottom:8px;}
-.zone-card-count{font-family:var(--font-mono);font-size:28px;color:var(--gold2);font-weight:600;}
-.zone-card-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+/* TIMELINE BAR */
+.timeline-bar{display:flex;align-items:flex-end;gap:3px;height:100px;margin-top:10px;}
+.tl-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.tl-bar{width:100%;background:linear-gradient(180deg,var(--gold3),var(--gold2));border-radius:3px 3px 0 0;min-height:2px;transition:height 0.6s ease;cursor:pointer;position:relative;}
+.tl-bar:hover::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:rgba(14,10,4,0.95);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--gold3);white-space:nowrap;margin-bottom:4px;z-index:10;}
+.tl-label{font-size:9px;color:var(--stone);text-align:center;}
 
-/* PATH FLOW */
-.flow-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
-.flow-node{
-  background:rgba(201,162,39,0.1);border:1px solid var(--border);border-radius:6px;
-  padding:5px 10px;font-family:var(--font-mono);font-size:11px;color:var(--gold2);
-}
-.flow-arrow{color:var(--text3);font-size:14px;}
-.flow-count{font-size:10px;color:var(--text3);font-family:var(--font-mono);margin-left:auto;}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:40px 20px;color:var(--stone);font-style:italic;font-size:14px;}
+.empty-state .icon{font-size:36px;margin-bottom:12px;display:block;}
 
-/* HEAT ROW */
-.heat-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.heat-label{font-size:12px;color:var(--text2);width:150px;flex-shrink:0;}
-.heat-cells{display:flex;gap:3px;}
-.heat-cell{width:24px;height:24px;border-radius:3px;background:rgba(201,162,39,0.05);border:1px solid rgba(201,162,39,0.1);}
+/* FILTER ROW */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-btn{background:rgba(184,134,11,0.08);border:1px solid var(--border);color:var(--stone);border-radius:20px;padding:6px 14px;font-family:var(--font-head);font-size:10px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;}
+.filter-btn.active{background:rgba(184,134,11,0.25);border-color:var(--gold);color:var(--gold3);}
 
-/* SEPARATOR */
-hr.sep{border:none;border-top:1px solid var(--border);margin:20px 0;}
+/* LEAFLET OVERRIDES */
+.leaflet-tile{filter:sepia(0.5) brightness(0.75) saturate(0.6) hue-rotate(8deg);}
+.leaflet-container{background:#0a1208;}
+.leaflet-popup-content-wrapper{background:rgba(20,14,5,0.97)!important;border:1px solid #b8860b!important;border-radius:10px!important;}
+.leaflet-popup-tip{background:rgba(20,14,5,0.97)!important;}
+.leaflet-popup-content{color:rgba(240,220,180,0.9)!important;font-size:13px!important;}
+.adm-vis-dot{width:14px;height:14px;border-radius:50%;background:var(--gold3);border:2px solid #1a1005;box-shadow:0 0 10px rgba(240,192,64,0.8);animation:vDotPulse 2s ease-in-out infinite;}
+@keyframes vDotPulse{0%,100%{box-shadow:0 0 5px rgba(240,192,64,0.5);}50%{box-shadow:0 0 16px rgba(240,192,64,1);}}
+.adm-vis-dot.crowded{background:#ff6b4a;box-shadow:0 0 10px rgba(255,107,74,0.8);}
+.adm-vis-dot.alone{background:#3daa55;box-shadow:0 0 10px rgba(61,170,85,0.8);}
 
-/* INPUT */
-.admin-input{
-  background:rgba(201,162,39,0.06);border:1px solid var(--border);border-radius:6px;
-  padding:8px 12px;color:var(--text);font-family:var(--font-mono);font-size:13px;outline:none;
-}
-.admin-input:focus{border-color:var(--gold);}
+/* DWELL BARS */
+.dwell-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.dwell-zone-name{font-size:12px;color:var(--parch2);min-width:140px;flex-shrink:0;}
+.dwell-bar-outer{flex:1;height:24px;background:rgba(184,134,11,0.08);border-radius:4px;border:1px solid rgba(184,134,11,0.12);overflow:hidden;position:relative;}
+.dwell-bar-inner{height:100%;border-radius:4px;transition:width 1.2s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.dwell-bar-label{font-size:11px;font-family:var(--font-head);color:rgba(14,10,4,0.85);font-weight:700;}
+.dwell-count{font-size:11px;color:var(--stone);min-width:70px;text-align:right;flex-shrink:0;}
 
-/* MINI BADGE inline */
-.m-badge{
-  display:inline-flex;align-items:center;gap:3px;
-  padding:2px 7px;border-radius:10px;font-size:10px;font-family:var(--font-mono);
-}
+/* GUESTBOOK */
+.guestbook-card{background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.gb-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.gb-name{font-size:13px;color:var(--gold3);font-weight:600;}
+.gb-meta{font-size:11px;color:var(--stone);}
+.gb-text{font-size:13px;color:var(--parch2);line-height:1.6;font-style:italic;}
+.gb-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.gb-tag{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.2);color:var(--stone);font-family:var(--font-head);}
+
+/* SENTIMENT */
+.sentiment-meter{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:12px 0;}
+.sent-pos{background:linear-gradient(90deg,#2a7a3a,#3daa55);}
+.sent-neu{background:linear-gradient(90deg,#7a6020,#b8900b);}
+.sent-neg{background:linear-gradient(90deg,#7a1000,#c03020);}
+
+/* FUNNEL */
+.funnel-step{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.funnel-num{font-family:var(--font-head);font-size:11px;color:var(--stone);min-width:60px;}
+.funnel-bar-outer{flex:1;height:28px;background:rgba(184,134,11,0.06);border-radius:4px;overflow:hidden;position:relative;}
+.funnel-bar-inner{height:100%;display:flex;align-items:center;padding:0 10px;font-family:var(--font-head);font-size:10px;color:rgba(14,10,4,0.9);font-weight:700;border-radius:4px;}
+.funnel-pct{font-size:11px;color:var(--stone);min-width:45px;text-align:right;}
+
+/* NPS */
+.nps-bar{display:flex;height:20px;border-radius:4px;overflow:hidden;gap:2px;margin:10px 0;}
+.nps-det{background:linear-gradient(90deg,#7a1000,#c03020);}
+.nps-pas{background:linear-gradient(90deg,#7a6020,#c9a030);}
+.nps-pro{background:linear-gradient(90deg,#2a7a3a,#3daa55);}
+.nps-score{font-family:var(--font-head);font-size:36px;text-align:center;padding:10px 0;}
+
+/* ALERT BOX */
+.alert-box{background:rgba(139,32,0,0.1);border:1px solid rgba(192,48,32,0.3);border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;}
+.alert-box.info{background:rgba(42,106,176,0.1);border-color:rgba(42,106,176,0.3);}
+.alert-box.success{background:rgba(42,122,58,0.1);border-color:rgba(61,170,85,0.3);}
+.alert-icon{font-size:18px;flex-shrink:0;}
+.alert-text{font-size:12px;color:var(--parch2);line-height:1.6;}
+
+/* WORD CLOUD */
+.word-cloud{display:flex;flex-wrap:wrap;gap:8px;padding:16px;}
+.word-item{padding:5px 12px;border-radius:20px;font-family:var(--font-head);letter-spacing:0.06em;cursor:default;transition:transform 0.2s;}
+.word-item:hover{transform:scale(1.1);}
+
+/* DEVICE ICON CARDS */
+.device-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:10px;}
+.device-card{background:rgba(184,134,11,0.06);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;}
+.device-icon{font-size:28px;margin-bottom:6px;}
+.device-name{font-family:var(--font-head);font-size:9px;letter-spacing:0.1em;color:var(--stone);margin-bottom:4px;}
+.device-val{font-family:var(--font-head);font-size:22px;color:var(--gold3);}
+.device-pct{font-size:11px;color:var(--stone);}
+
+/* ROUTE MAP */
+.route-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:0;}
+.route-line{display:flex;flex-direction:column;align-items:center;gap:0;}
+.route-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:var(--bg-dark);flex-shrink:0;margin-top:3px;}
+.route-dot.active{background:var(--gold3);}
+.route-connector{width:2px;flex:1;min-height:24px;background:linear-gradient(180deg,var(--gold),rgba(184,134,11,0.2));margin:2px 0;}
+.route-content{flex:1;padding-bottom:16px;}
+.route-zone{font-size:13px;color:var(--parch);font-weight:600;}
+.route-meta{font-size:11px;color:var(--stone);margin-top:2px;}
+.route-bar{height:4px;background:rgba(184,134,11,0.12);border-radius:2px;margin-top:6px;overflow:hidden;}
+.route-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold2),var(--gold3));}
+
+/* PAGE USAGE ROW */
+.page-usage-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;margin-bottom:6px;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.1);}
+.page-num{font-family:var(--font-head);font-size:11px;color:var(--stone);min-width:28px;}
+.page-icon{font-size:18px;flex-shrink:0;}
+.page-info{flex:1;}
+.page-name{font-size:13px;color:var(--parch);font-weight:600;}
+.page-stats{font-size:11px;color:var(--stone);}
+.page-bar-wrap{width:100px;flex-shrink:0;}
+
+/* HEATMAP LEGEND */
+.hm-legend{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--stone);}
+.hm-grad{width:120px;height:10px;border-radius:3px;background:linear-gradient(90deg,#3daa55,#f0c040,#ff6b4a);}
 </style>
 </head>
 <body>
 
-<!-- ═══════════ LOGIN ═══════════ -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">
-      <span class="emblem">🏛️</span>
-      <h1>SULTAN II. BAYEZİD KÜLLİYESİ</h1>
-      <p>YÖNETİM PANELİ — SAĞLIK MÜZESİ</p>
-    </div>
-    <div class="login-field">
-      <label>KULLANICI ADI</label>
-      <input type="text" id="login-user" placeholder="admin" autocomplete="username">
-    </div>
-    <div class="login-field">
-      <label>ŞİFRE</label>
-      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <button class="login-btn" onclick="doLogin()">🔐 &nbsp;GİRİŞ YAP</button>
-    <div class="login-err" id="login-err">Kullanıcı adı veya şifre hatalı.</div>
+    <div class="login-logo">🏛️</div>
+    <div class="login-title">MÜZE YÖNETİM PANELİ</div>
+    <div class="login-sub">Sultan II. Bayezid Külliyesi Sağlık Müzesi<br>Ziyaretçi Analitik Sistemi</div>
+    <input class="login-input" id="admin-user" type="text" placeholder="Kullanıcı Adı" autocomplete="off">
+    <input class="login-input" id="admin-pass" type="password" placeholder="Şifre">
+    <button class="login-btn" onclick="doLogin()">GİRİŞ YAP</button>
+    <div class="login-err" id="login-err">Hatalı kullanıcı adı veya şifre.</div>
   </div>
 </div>
 
-<!-- ═══════════ MAIN APP ═══════════ -->
-<div id="app">
-
-  <!-- SIDEBAR -->
-  <nav id="sidebar">
-    <div class="sidebar-head">
-      <span class="s-emblem">🏛️</span>
-      <h2>MÜZEYİ YÖNETİM PANELİ</h2>
-      <p>Sultan II. Bayezid Külliyesi</p>
-    </div>
-
-    <div class="nav-section">CANLI TAKİP</div>
-    <div class="nav-item active" onclick="showPage('page-live')">
-      <span class="nav-icon">🟢</span><span>Anlık Ziyaretçiler</span>
-    </div>
-    <div class="nav-item" onclick="showPage('page-zones')">
-      <span class="nav-icon">🗺️</span><span>Bölge Haritası</span>
-    </div>
-
-    <div class="nav-section">ANALİTİK</div>
-    <div class="nav-item" onclick="showPage('page-overview')">
-      <span class="nav-icon">📊</span><span>Genel Bakış</span>
-    </div>
-    <div class="nav-item" onclick="showPage('page-stops')">
-      <span class="nav-icon">📍</span><span>Durak Raporları</span>
-    </div>
-    <div class="nav-item" onclick="showPage('page-paths')">
-      <span class="nav-icon">🧭</span><span>Gezi Güzergahları</span>
-    </div>
-    <div class="nav-item" onclick="showPage('page-devices')">
-      <span class="nav-icon">📱</span><span>Cihaz & Dil</span>
-    </div>
-
-    <div class="nav-section">İÇERİK</div>
-    <div class="nav-item" onclick="showPage('page-messages')">
-      <span class="nav-icon">💬</span><span>Gönül Köprüsü</span>
-      <span class="nav-badge" id="msg-badge">0</span>
-    </div>
-    <div class="nav-item" onclick="showPage('page-video')">
-      <span class="nav-icon">▶️</span><span>Video İzlenme</span>
-    </div>
-
-    <div class="sidebar-footer">
-      <span id="sb-time">--:--:--</span>
-      <span id="sb-date" style="font-size:10px;"></span>
-      <button class="btn-logout" onclick="doLogout()">⇠ ÇIKIŞ YAP</button>
-    </div>
-  </nav>
-
-  <!-- MAIN CONTENT -->
-  <main id="main">
-
-    <!-- ═══ PAGE: CANLI ZİYARETÇİLER ═══ -->
-    <div class="page active" id="page-live">
-      <div class="page-header">
-        <h1>🟢 &nbsp;Anlık Ziyaretçi Takibi</h1>
-        <p>Konum izni veren ziyaretçiler — gerçek zamanlı Firebase verisi</p>
-        <div class="last-update">Son güncelleme: <span id="live-last-update">bekleniyor…</span></div>
+<!-- MAIN PANEL -->
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">🏛️</div>
+      <div>
+        <div class="topbar-title">MÜZE YÖNETİM PANELİ</div>
+        <div class="topbar-sub">Sultan II. Bayezid Külliyesi</div>
       </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span id="live-count-badge">0 Ziyaretçi</span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">ÇIKIŞ</button>
+    </div>
+  </div>
 
+  <div class="tab-bar">
+    <div class="tab active" onclick="showTab('realtime',this)">📍 Anlık</div>
+    <div class="tab" onclick="showTab('stats',this)">📊 İstatistik</div>
+    <div class="tab" onclick="showTab('heatmap',this)">🌡️ Yoğunluk</div>
+    <div class="tab" onclick="showTab('dwell',this)">⏱️ Kalma Süreleri</div>
+    <div class="tab" onclick="showTab('routes',this)">🗺️ Güzergah</div>
+    <div class="tab" onclick="showTab('guestbook',this)">📖 Gönül Defteri</div>
+    <div class="tab" onclick="showTab('sessions',this)">👥 Oturumlar</div>
+    <div class="tab" onclick="showTab('zones',this)">🏛️ Bölge Analizi</div>
+    <div class="tab" onclick="showTab('funnel',this)">🔻 Dönüşüm</div>
+    <div class="tab" onclick="showTab('alerts',this)">🔔 Uyarılar</div>
+  </div>
+
+  <!-- ════ TAB: REALTIME ════ -->
+  <div class="page active" id="tab-realtime">
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-icon">👥</div>
+        <div class="stat-val" id="rt-active">0</div>
+        <div class="stat-label">ŞU AN MÜZEDEKİ ZİYARETÇİ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-val" id="rt-today">0</div>
+        <div class="stat-label">BUGÜNKÜ TOPLAM</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-val" id="rt-avgtime">—</div>
+        <div class="stat-label">ORT. KALMA SÜRESİ (DK)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏛️</div>
+        <div class="stat-val" id="rt-topzone">—</div>
+        <div class="stat-label">EN YOĞUN BÖLGE</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon">📖</div>
+        <div class="stat-val" id="rt-guestbook">0</div>
+        <div class="stat-label">BUGÜN GÖNÜL DEFTERİ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📱</div>
+        <div class="stat-val" id="rt-app-opens">0</div>
+        <div class="stat-label">AKTİF UYGULAMA OTURUMU</div>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <div class="section-hdr">📍 ANLİK ZİYARETÇİ KONUMLARI
+        <button class="refresh-btn" onclick="refreshRealtime()">🔄 YENİLE</button>
+      </div>
+      <div id="floor-plan" style="width:100%;height:420px;border-radius:8px;overflow:hidden;border:1px solid rgba(184,134,11,0.2);"></div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--stone);">
+        <span>🟡 Ziyaretçi konumu</span><span>🟢 Tek kişi</span><span>🔴 Yoğun alan</span>
+      </div>
+    </div>
+    <div class="section-hdr">👤 AKTİF ZİYARETÇİLER
+      <span class="badge" id="active-count-badge">0 kişi</span>
+    </div>
+    <div id="active-visitors-list">
+      <div class="empty-state"><span class="icon">👁️</span>Müzede aktif ziyaretçi bulunmuyor.</div>
+    </div>
+  </div>
+
+  <!-- ════ TAB: STATS ════ -->
+  <div class="page" id="tab-stats">
+    <!-- Period Filter -->
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setStatPeriod('today',this)">Bugün</button>
+      <button class="filter-btn" onclick="setStatPeriod('week',this)">Bu Hafta</button>
+      <button class="filter-btn" onclick="setStatPeriod('month',this)">Bu Ay</button>
+      <button class="filter-btn" onclick="setStatPeriod('all',this)">Tüm Zamanlar</button>
+    </div>
+
+    <!-- Sub-tab: device vs zone -->
+    <div class="sub-tab-bar">
+      <div class="sub-tab active" onclick="showStatSub('device',this)">📱 Cihaz & Platform İstatistikleri</div>
+      <div class="sub-tab" onclick="showStatSub('zone',this)">🏛️ Bölge & Poligon İstatistikleri</div>
+      <div class="sub-tab" onclick="showStatSub('app',this)">📲 Uygulama Kullanım İstatistikleri</div>
+    </div>
+
+    <!-- DEVICE STATS -->
+    <div id="stat-sub-device">
       <div class="stat-grid">
-        <div class="stat-card" style="--accent:var(--green2)">
-          <div class="sc-label">CANLI ZİYARETÇİ</div>
-          <div class="sc-val" id="lv-active">—</div>
-          <div class="sc-sub">konum izni veren</div>
-          <div class="sc-icon">🟢</div>
+        <div class="stat-card"><div class="stat-icon">👣</div><div class="stat-val" id="st-total">0</div><div class="stat-label">TOPLAM ZİYARETÇİ</div></div>
+        <div class="stat-card green"><div class="stat-icon">⏱️</div><div class="stat-val" id="st-avgdur">0</div><div class="stat-label">ORT. SÜRE (DAK)</div></div>
+        <div class="stat-card"><div class="stat-icon">🏁</div><div class="stat-val" id="st-complete">%0</div><div class="stat-label">TUR TAMAMLAMA</div></div>
+        <div class="stat-card blue"><div class="stat-icon">📍</div><div class="stat-val" id="st-loc-pct">%0</div><div class="stat-label">KONUM İZNİ ORANI</div></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">📱 CİHAZ TÜRÜ DAĞILIMI</div>
+        <div class="device-grid" id="device-cards"></div>
+        <div style="margin-top:16px;" id="device-os-chart"></div>
+      </div>
+      <div class="two-col">
+        <div class="chart-wrap">
+          <div class="section-hdr">🌐 DİL DAĞILIMI</div>
+          <div id="lang-chart"></div>
         </div>
-        <div class="stat-card" style="--accent:var(--gold2)">
-          <div class="sc-label">BUGÜNKÜ OTURUM</div>
-          <div class="sc-val" id="lv-sessions">—</div>
-          <div class="sc-sub">toplam ziyaretçi</div>
-          <div class="sc-icon">👥</div>
-        </div>
-        <div class="stat-card" style="--accent:var(--amber2)">
-          <div class="sc-label">ORT. GEÇEN SÜRE</div>
-          <div class="sc-val" id="lv-avgmin">—</div>
-          <div class="sc-sub">dakika</div>
-          <div class="sc-icon">⏱️</div>
-        </div>
-        <div class="stat-card" style="--accent:var(--blue2)">
-          <div class="sc-label">KONUM İZNİ ORANI</div>
-          <div class="sc-val" id="lv-locpct">—</div>
-          <div class="sc-sub">% izin veren</div>
-          <div class="sc-icon">📍</div>
+        <div class="chart-wrap">
+          <div class="section-hdr">📍 KONUM İZNİ DURUMU</div>
+          <div id="perm-chart"></div>
         </div>
       </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3><span class="live-dot"></span>AKTİF ZİYARETÇİLER VE BÖLÜMLER</h3>
-          <button class="btn-refresh" onclick="loadLiveData()">↻ Yenile</button>
-        </div>
-        <div class="section-box-body">
-          <div id="live-users-list"><div class="empty-state"><div class="es-icon">🧭</div><p>Konum izni veren aktif ziyaretçi bekleniyor…</p></div></div>
-        </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">📈 GÜNLÜK ZİYARETÇİ TRENDİ (Son 7 Gün)</div>
+        <div class="timeline-bar" id="trend-chart"></div>
       </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>📡 BUGÜNKÜ OTURUMLAR</h3>
-          <span class="sbh-meta" id="session-count-label">—</span>
+      <div class="two-col">
+        <div class="chart-wrap">
+          <div class="section-hdr">⏰ SAATLIK ZİYARETÇİ DAĞILIMI</div>
+          <div class="timeline-bar" id="hourly-chart"></div>
         </div>
-        <div class="section-box-body">
-          <div id="sessions-table-wrap"><div class="empty-state"><div class="es-icon">📋</div><p>Oturum verisi bekleniyor…</p></div></div>
+        <div class="chart-wrap">
+          <div class="section-hdr">📅 HAFTALIK KARŞILAŞTIRMA</div>
+          <div id="weekly-compare"></div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ PAGE: BÖLGE HARİTASI ═══ -->
-    <div class="page" id="page-zones">
-      <div class="page-header">
-        <h1>🗺️ Bölge Yoğunluk Haritası</h1>
-        <p>Her bölge için toplam ziyaret sayısı ve ortalama kalma süresi</p>
-      </div>
-
-      <div class="zone-grid" id="zone-cards">
-        <div class="empty-state"><p>Bölge verisi yükleniyor…</p></div>
-      </div>
-
-      <div class="section-box" style="margin-top:20px;">
-        <div class="section-box-head">
-          <h3>⏱️ BÖLGE KALMA SÜRELERİ (ORT. DAKİKA)</h3>
-        </div>
-        <div class="section-box-body" id="zone-dwell-bars">
-          <div class="empty-state"><p>Bekleniyor…</p></div>
-        </div>
-      </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>📊 BÖLGE ZİYARET SAYILARI</h3>
-        </div>
-        <div class="section-box-body">
-          <div class="chart-bars" id="zone-visit-chart" style="height:160px;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ PAGE: GENEL BAKIŞ ═══ -->
-    <div class="page" id="page-overview">
-      <div class="page-header">
-        <h1>📊 Genel Bakış</h1>
-        <p>Toplam istatistikler — tüm zamanlar</p>
-      </div>
-
+    <!-- ZONE STATS -->
+    <div id="stat-sub-zone" style="display:none;">
       <div class="stat-grid">
-        <div class="stat-card" style="--accent:var(--gold2)">
-          <div class="sc-label">TOPLAM OTURUM</div>
-          <div class="sc-val" id="ov-total">—</div>
-          <div class="sc-sub">tüm zamanlar</div>
-          <div class="sc-icon">📈</div>
+        <div class="stat-card"><div class="stat-icon">🏛️</div><div class="stat-val" id="zs-total-visits">0</div><div class="stat-label">TOPLAM BÖLGE ZİYARETİ</div></div>
+        <div class="stat-card green"><div class="stat-icon">🌟</div><div class="stat-val" id="zs-best">—</div><div class="stat-label">EN POPÜLER BÖLGE</div></div>
+        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" id="zs-longest">—</div><div class="stat-label">EN UZUN KALMA</div></div>
+        <div class="stat-card blue"><div class="stat-icon">🔄</div><div class="stat-val" id="zs-coverage">%0</div><div class="stat-label">ORTALAMA BÖLGE KAPSAMA</div></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">🗺️ POLIGON BAZLI ZİYARETÇİ DAĞILIMI</div>
+        <div id="zone-poly-chart"></div>
+      </div>
+      <div class="two-col">
+        <div class="chart-wrap">
+          <div class="section-hdr">⏱️ BÖLGE BAZLI ORT. KALMA SÜRESİ</div>
+          <div id="zone-dwell-mini"></div>
         </div>
-        <div class="stat-card" style="--accent:var(--green2)">
-          <div class="sc-label">TOPLAM YORUM</div>
-          <div class="sc-val" id="ov-msgs">—</div>
-          <div class="sc-sub">gönül köprüsü</div>
-          <div class="sc-icon">💬</div>
-        </div>
-        <div class="stat-card" style="--accent:var(--purple2)">
-          <div class="sc-label">YABANCI DİL ORANI</div>
-          <div class="sc-val" id="ov-foreign">—</div>
-          <div class="sc-sub">% yabancı dil</div>
-          <div class="sc-icon">🌍</div>
-        </div>
-        <div class="stat-card" style="--accent:var(--amber2)">
-          <div class="sc-label">ORT. TAMAMLANAN DURAK</div>
-          <div class="sc-val" id="ov-avgstp">—</div>
-          <div class="sc-sub">/ 10 durak</div>
-          <div class="sc-icon">🏁</div>
-        </div>
-        <div class="stat-card" style="--accent:var(--blue2)">
-          <div class="sc-label">TOPLAM BÖLGE ZİYARETİ</div>
-          <div class="sc-val" id="ov-zone-visits">—</div>
-          <div class="sc-sub">konum takipli</div>
-          <div class="sc-icon">📍</div>
-        </div>
-        <div class="stat-card" style="--accent:var(--red2)">
-          <div class="sc-label">ORT. OTURUM SÜRESİ</div>
-          <div class="sc-val" id="ov-avgdur">—</div>
-          <div class="sc-sub">dakika</div>
-          <div class="sc-icon">⏳</div>
+        <div class="chart-wrap">
+          <div class="section-hdr">📊 BÖLGE ÇIKIŞ ORANLARI</div>
+          <div id="zone-exit-chart"></div>
         </div>
       </div>
-
-      <div class="grid-2">
-        <div class="section-box">
-          <div class="section-box-head"><h3>🌍 DİL DAĞILIMI</h3></div>
-          <div class="section-box-body">
-            <div class="donut-wrap" id="lang-donut-wrap">
-              <div class="empty-state"><p>Bekleniyor…</p></div>
-            </div>
-          </div>
-        </div>
-        <div class="section-box">
-          <div class="section-box-head"><h3>📱 CİHAZ DAĞILIMI</h3></div>
-          <div class="section-box-body">
-            <div id="device-bars"><div class="empty-state"><p>Bekleniyor…</p></div></div>
-          </div>
-        </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">🔥 EN POPÜLER BÖLGE KOMBİNASYONLARI</div>
+        <div id="zone-combo-chart"></div>
       </div>
     </div>
 
-    <!-- ═══ PAGE: DURAK RAPORLARI ═══ -->
-    <div class="page" id="page-stops">
-      <div class="page-header">
-        <h1>📍 Durak Raporları</h1>
-        <p>Oturum bazlı durak istatistikleri — konum izni bağımsız</p>
-      </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>🏁 EN SON DURDURULAN DURAK DAĞILIMI</h3>
-          <span class="sbh-meta">Ziyaretçiler hangi durağa kadar gitti?</span>
-        </div>
-        <div class="section-box-body" id="stop-dropoff-bars">
-          <div class="empty-state"><p>Bekleniyor…</p></div>
-        </div>
-      </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>📊 DURAK TAMAMLANMA ORANLARI</h3>
-        </div>
-        <div class="section-box-body" id="stop-completion-bars">
-          <div class="empty-state"><p>Bekleniyor…</p></div>
-        </div>
-      </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>⏱️ BÖLGE BAZLI KALMA SÜRESİ (ORT. DAKİKA)</h3>
-        </div>
-        <div class="section-box-body" id="stop-dwell-table">
-          <div class="empty-state"><p>Bekleniyor…</p></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ PAGE: GÜZERGAH ═══ -->
-    <div class="page" id="page-paths">
-      <div class="page-header">
-        <h1>🧭 Gezi Güzergahları</h1>
-        <p>En sık yapılan tur akışları (oturum zincir analizi)</p>
-      </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>🔗 EN YOĞUN GEZİ GÜZERGAHLARI</h3>
-          <span class="sbh-meta">Bölge sırasına göre</span>
-        </div>
-        <div class="section-box-body" id="path-flows">
-          <div class="empty-state"><div class="es-icon">🧭</div><p>Güzergah verisi için konum takipli ziyaretçi gerekmektedir.</p></div>
-        </div>
-      </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>📤 ÇIKIŞ NOKTASİ ANALİZİ</h3>
-          <span class="sbh-meta">Ziyaretçiler en çok nerede turu bitiriyor?</span>
-        </div>
-        <div class="section-box-body" id="exit-analysis">
-          <div class="empty-state"><p>Bekleniyor…</p></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ PAGE: CİHAZ & DİL ═══ -->
-    <div class="page" id="page-devices">
-      <div class="page-header">
-        <h1>📱 Cihaz & Dil Analizi</h1>
-        <p>Tarayıcı, cihaz tipi ve dil tercihleri</p>
-      </div>
-
-      <div class="grid-2">
-        <div class="section-box">
-          <div class="section-box-head"><h3>📱 CİHAZ TİPİ</h3></div>
-          <div class="section-box-body" id="device-type-detail">
-            <div class="empty-state"><p>Bekleniyor…</p></div>
-          </div>
-        </div>
-        <div class="section-box">
-          <div class="section-box-head"><h3>🌐 DİL TERCİHLERİ (DETAY)</h3></div>
-          <div class="section-box-body" id="lang-detail">
-            <div class="empty-state"><p>Bekleniyor…</p></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>🌍 YABANCI DİL KULLANANLAR</h3>
-        </div>
-        <div class="section-box-body" id="foreign-lang-detail">
-          <div class="empty-state"><p>Bekleniyor…</p></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ PAGE: GÖNÜL KÖPRÜSÜ ═══ -->
-    <div class="page" id="page-messages">
-      <div class="page-header">
-        <h1>💬 Gönül Köprüsü — Ziyaretçi Yorumları</h1>
-        <p>Firebase'den gerçek zamanlı yükleniyor</p>
-      </div>
-
+    <!-- APP STATS -->
+    <div id="stat-sub-app" style="display:none;">
       <div class="stat-grid">
-        <div class="stat-card" style="--accent:var(--gold2)">
-          <div class="sc-label">TOPLAM YORUM</div>
-          <div class="sc-val" id="msg-total">—</div>
-          <div class="sc-icon">📝</div>
+        <div class="stat-card"><div class="stat-icon">📲</div><div class="stat-val" id="as-sessions">0</div><div class="stat-label">TOPLAM UYGULAMA OTURUMU</div></div>
+        <div class="stat-card green"><div class="stat-icon">📄</div><div class="stat-val" id="as-pageviews">0</div><div class="stat-label">TOPLAM SAYFA GÖRÜNTÜLEME</div></div>
+        <div class="stat-card"><div class="stat-icon">🔤</div><div class="stat-val" id="as-tts">0%</div><div class="stat-label">SES OKU (TTS) KULLANIM</div></div>
+        <div class="stat-card blue"><div class="stat-icon">❓</div><div class="stat-val" id="as-ai">0</div><div class="stat-label">AI SORU SORULDU</div></div>
+        <div class="stat-card red"><div class="stat-icon">🔴</div><div class="stat-val" id="as-crash">0</div><div class="stat-label">HATA / ÇÖKME</div></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">📄 EN ÇOK GÖRÜNTÜLENen REHBER SAYFALARI</div>
+        <div id="app-pages-chart"></div>
+      </div>
+      <div class="two-col">
+        <div class="chart-wrap">
+          <div class="section-hdr">⏭️ SAYFA GEÇİŞ ORANLARI</div>
+          <div id="app-nav-chart"></div>
         </div>
-        <div class="stat-card" style="--accent:var(--green2)">
-          <div class="sc-label">BUGÜN</div>
-          <div class="sc-val" id="msg-today">—</div>
-          <div class="sc-icon">📅</div>
-        </div>
-        <div class="stat-card" style="--accent:var(--purple2)">
-          <div class="sc-label">YABANCI ZİYARETÇİ</div>
-          <div class="sc-val" id="msg-foreign-cnt">—</div>
-          <div class="sc-sub">farklı şehir</div>
-          <div class="sc-icon">🌍</div>
+        <div class="chart-wrap">
+          <div class="section-hdr">⚙️ ÖZELLİK KULLANIM ORANLARI</div>
+          <div id="app-feature-chart"></div>
         </div>
       </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>📜 TÜM YORUMLAR</h3>
-          <button class="btn-refresh" onclick="loadMessages()">↻ Yenile</button>
-        </div>
-        <div class="section-box-body" id="messages-list">
-          <div class="empty-state"><div class="es-icon">📝</div><p>Yorumlar yükleniyor…</p></div>
-        </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">⏱️ SAYFA BAŞINA ORT. OKUMA SÜRESİ (SANİYE)</div>
+        <div class="timeline-bar" id="app-readtime-chart" style="height:80px;"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">📈 GÜNLÜK UYGULAMA OTURUM TRENDİ</div>
+        <div class="timeline-bar" id="app-session-trend"></div>
       </div>
     </div>
+  </div>
 
-    <!-- ═══ PAGE: VİDEO İZLENME ═══ -->
-    <div class="page" id="page-video">
-      <div class="page-header">
-        <h1>▶️ Video İzlenme Raporu</h1>
-        <p>Durak 1'deki sunum videosunu izleyen ziyaretçi sayısı</p>
+  <!-- ════ TAB: HEATMAP ════ -->
+  <div class="page" id="tab-heatmap">
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setHeatPeriod('all',this)">Tüm Zamanlar</button>
+      <button class="filter-btn" onclick="setHeatPeriod('week',this)">Son 7 Gün</button>
+      <button class="filter-btn" onclick="setHeatPeriod('today',this)">Bugün</button>
+    </div>
+    <div class="map-wrap">
+      <div class="section-hdr">🌡️ BÖLGE YOĞUNLUK HARİTASI
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div class="hm-legend">
+            <span>Az</span>
+            <div class="hm-grad"></div>
+            <span>Çok</span>
+          </div>
+          <button class="refresh-btn" onclick="renderHeatmap()">🔄 YENİLE</button>
+        </div>
       </div>
+      <div id="heatmap-plan" style="width:100%;height:440px;border-radius:8px;overflow:hidden;border:1px solid rgba(184,134,11,0.2);"></div>
+    </div>
+    <div class="section-hdr">🏛️ BÖLGE DETAY TABLOSU</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>#</th><th>BÖLGE</th><th>TOPLAM ZİYARET</th><th>ORT. KALMA (DK)</th><th>ÇIKIŞ ORANI</th><th>YOĞUNLUK</th></tr>
+      </thead>
+      <tbody id="zone-detail-table">
+        <tr><td colspan="6" class="empty-state">Veriler yükleniyor…</td></tr>
+      </tbody>
+    </table>
+  </div>
 
+  <!-- ════ TAB: DWELL TIME ════ -->
+  <div class="page" id="tab-dwell">
+    <div class="stat-grid">
+      <div class="stat-card green"><div class="stat-icon">⏳</div><div class="stat-val" id="dw-max">—</div><div class="stat-label">EN UZUN KALMA BÖLGESİ</div></div>
+      <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-val" id="dw-min">—</div><div class="stat-label">EN KISA GEÇİŞ BÖLGESİ</div></div>
+      <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="dw-avg">0</div><div class="stat-label">GENEL ORT. KALMA (DK)</div></div>
+      <div class="stat-card blue"><div class="stat-icon">🔄</div><div class="stat-val" id="dw-transit">0%</div><div class="stat-label">GEÇİŞ BÖLGE ORANI</div></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="section-hdr">⏱️ BÖLGE BAZLI ORT. KALMA SÜRESİ (DAKİKA)</div>
+      <div id="dwell-bars" style="margin-top:6px;"></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="section-hdr">📈 GÜNLÜK KALMA SÜRESİ TRENDİ</div>
+        <div class="timeline-bar" id="dwell-trend"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">🕐 SAATE GÖRE ORT. SÜRE</div>
+        <div class="timeline-bar" id="dwell-hourly"></div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="section-hdr">🔀 BÖLGELER ARASI GEÇİŞ AKIŞI</div>
+      <div id="transition-flow" style="padding:8px 0;"></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="section-hdr">⏱️ KALMA SÜRESİ DAĞILIMI (Tüm Ziyaretçiler)</div>
+      <div id="duration-dist" style="padding:8px 0;"></div>
+    </div>
+  </div>
+
+  <!-- ════ TAB: ROUTES ════ -->
+  <div class="page" id="tab-routes">
+    <div class="sub-tab-bar">
+      <div class="sub-tab active" onclick="showRouteSub('location',this)">📍 Konum Bazlı Güzergah</div>
+      <div class="sub-tab" onclick="showRouteSub('apppage',this)">📄 Rehber Sayfa Bazlı Güzergah</div>
+    </div>
+
+    <!-- LOCATION ROUTES -->
+    <div id="route-sub-location">
       <div class="stat-grid">
-        <div class="stat-card" style="--accent:var(--red2)">
-          <div class="sc-label">TOPLAM VIDEO İZLEME</div>
-          <div class="sc-val" id="vid-total">—</div>
-          <div class="sc-icon">▶️</div>
+        <div class="stat-card"><div class="stat-icon">🗺️</div><div class="stat-val" id="lr-paths">0</div><div class="stat-label">FARKLI GÜZERGAH</div></div>
+        <div class="stat-card green"><div class="stat-icon">🏆</div><div class="stat-val" id="lr-top">—</div><div class="stat-label">EN POPÜLER GÜZERGah</div></div>
+        <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-val" id="lr-backtrack">%0</div><div class="stat-label">GERİ DÖNÜŞ ORANI</div></div>
+        <div class="stat-card blue"><div class="stat-icon">✅</div><div class="stat-val" id="lr-complete">%0</div><div class="stat-label">TAM GÜZERGah TAMAMLAMA</div></div>
+      </div>
+      <div class="map-wrap">
+        <div class="section-hdr">🗺️ EN POPÜLER GÜZERGah HARİTASI
+          <button class="refresh-btn" onclick="renderRouteMap()">🔄 YENİLE</button>
         </div>
-        <div class="stat-card" style="--accent:var(--blue2)">
-          <div class="sc-label">İZLEME ORANI</div>
-          <div class="sc-val" id="vid-rate">—</div>
-          <div class="sc-sub">% ziyaretçi izledi</div>
-          <div class="sc-icon">📊</div>
+        <div id="route-map" style="width:100%;height:400px;border-radius:8px;overflow:hidden;border:1px solid rgba(184,134,11,0.2);"></div>
+      </div>
+      <div class="two-col">
+        <div class="chart-wrap">
+          <div class="section-hdr">🏆 EN POPÜLER ROTALAR</div>
+          <div id="top-routes-chart"></div>
+        </div>
+        <div class="chart-wrap">
+          <div class="section-hdr">🚪 GİRİŞ → ÇIKIŞ ANALİZİ</div>
+          <div id="entry-exit-chart"></div>
         </div>
       </div>
-
-      <div class="section-box">
-        <div class="section-box-head">
-          <h3>📽️ VİDEO İZLEME NOTLARI</h3>
-        </div>
-        <div class="section-box-body">
-          <p style="font-size:13px;color:var(--text2);line-height:1.9;">
-            Video izlenme takibi için ana rehber uygulamasına (<code style="color:var(--gold2);">video_views</code>) koleksiyonuna Firebase yazma kodu eklenmesi gerekmektedir.<br><br>
-            <strong style="color:var(--gold2);">Yapılacak entegrasyon:</strong> Rehber uygulamasında <code style="color:var(--gold2);">openYT()</code> fonksiyonu çağrıldığında aşağıdaki kod eklenmelidir:
-          </p>
-          <pre style="background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:16px;margin-top:16px;font-family:var(--font-mono);font-size:12px;color:var(--text2);overflow-x:auto;">
-// openYT() fonksiyonuna eklenecek:
-if(window.db && TRACKING.sessionId){
-  window.db.collection('video_views').add({
-    sessionId: TRACKING.sessionId,
-    stop: currentStop,
-    lang: currentLang,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  });
-}</pre>
-          <div id="vid-list" style="margin-top:16px;"></div>
-        </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">📊 ORTALAMA ZİYARETÇİ GÜZERGAHI (Sıralı Bölge Geçişleri)</div>
+        <div id="avg-route-visual" style="padding:10px 0;"></div>
       </div>
     </div>
 
-  </main>
+    <!-- APP PAGE ROUTES -->
+    <div id="route-sub-apppage" style="display:none;">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-icon">📄</div><div class="stat-val" id="pr-pages">0</div><div class="stat-label">TOPLAM SAYFA SAYISI</div></div>
+        <div class="stat-card green"><div class="stat-icon">👁️</div><div class="stat-val" id="pr-most">—</div><div class="stat-label">EN ÇOK OKUNAN SAYFA</div></div>
+        <div class="stat-card"><div class="stat-icon">⏭️</div><div class="stat-val" id="pr-skip">%0</div><div class="stat-label">SAYFA ATLAMA ORANI</div></div>
+        <div class="stat-card blue"><div class="stat-icon">🔚</div><div class="stat-val" id="pr-lastpage">—</div><div class="stat-label">EN SIK ÇIKIŞ SAYFASI</div></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">📄 SAYFA BAZLI KULLANIM SIRALAMA</div>
+        <div id="page-usage-list"></div>
+      </div>
+      <div class="two-col">
+        <div class="chart-wrap">
+          <div class="section-hdr">🔀 EN POPÜLER SAYFA GEÇİŞ AKIŞLARI</div>
+          <div id="page-flow-chart"></div>
+        </div>
+        <div class="chart-wrap">
+          <div class="section-hdr">📊 SAYFA TAMAMLAMA ORANLARI</div>
+          <div id="page-completion-chart"></div>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">🔭 SAYFA BAZLI ORTALAMA GÜZERGAH (Hangi sayfadan nereye gidildi?)</div>
+        <div id="page-route-flow" style="padding:10px 0;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ TAB: GUESTBOOK ════ -->
+  <div class="page" id="tab-guestbook">
+    <div class="stat-grid">
+      <div class="stat-card blue"><div class="stat-icon">📖</div><div class="stat-val" id="gb-total">0</div><div class="stat-label">TOPLAM MESAJ</div></div>
+      <div class="stat-card green"><div class="stat-icon">😊</div><div class="stat-val" id="gb-pos">%0</div><div class="stat-label">POZİTİF YORUM ORANI</div></div>
+      <div class="stat-card"><div class="stat-icon">🌐</div><div class="stat-val" id="gb-langs">0</div><div class="stat-label">FARKLI DİL</div></div>
+      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val" id="gb-rating">—</div><div class="stat-label">ORT. PUAN</div></div>
+      <div class="stat-card red"><div class="stat-icon">🚩</div><div class="stat-val" id="gb-flagged">0</div><div class="stat-label">ONAY BEKLEYEN</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="section-hdr">💬 DUYGU ANALİZİ</div>
+        <div class="sentiment-meter" id="sentiment-meter"></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px;">
+          <span style="color:#3daa55;" id="sent-pos-pct">😊 Pozitif: 0%</span>
+          <span style="color:var(--stone);" id="sent-neu-pct">😐 Nötr: 0%</span>
+          <span style="color:#ff6b4a;" id="sent-neg-pct">😞 Negatif: 0%</span>
+        </div>
+        <div class="nps-score" id="nps-score" style="color:var(--gold3);">NPS: —</div>
+        <div id="nps-bar-wrap"></div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--stone);margin-top:4px;">
+          <span>🔴 Kötüleyenler</span><span>🟡 Pasifler</span><span>🟢 Destekçiler</span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">🌐 DİL DAĞILIMI</div>
+        <div id="gb-lang-chart"></div>
+        <div class="section-hdr" style="margin-top:16px;">📅 GÜNLÜK MESAJ TRENDİ</div>
+        <div class="timeline-bar" id="gb-trend" style="height:60px;"></div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="section-hdr">☁️ EN SIK GEÇEN KELİMELER</div>
+      <div class="word-cloud" id="word-cloud"></div>
+    </div>
+    <div class="section-hdr">💬 SON MESAJLAR
+      <button class="refresh-btn" onclick="loadGuestbook()">🔄 YENİLE</button>
+    </div>
+    <div class="filter-row" id="gb-filter-row">
+      <button class="filter-btn active" onclick="filterGuestbook('all',this)">Tümü</button>
+      <button class="filter-btn" onclick="filterGuestbook('positive',this)">😊 Pozitif</button>
+      <button class="filter-btn" onclick="filterGuestbook('negative',this)">😞 Negatif</button>
+      <button class="filter-btn" onclick="filterGuestbook('flagged',this)">🚩 Onay Bekliyor</button>
+    </div>
+    <div id="guestbook-list"></div>
+  </div>
+
+  <!-- ════ TAB: SESSIONS ════ -->
+  <div class="page" id="tab-sessions">
+    <div class="section-hdr">📋 ZİYARETÇİ OTURUM GEÇMİŞİ
+      <button class="refresh-btn" onclick="loadSessions()">🔄 YENİLE</button>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>BAŞLANGIÇ</th><th>SÜRE</th><th>DURAK</th><th>DİL</th><th>CİHAZ</th><th>KONUM</th><th>DURUM</th></tr>
+      </thead>
+      <tbody id="sessions-tbody">
+        <tr><td colspan="8"><div class="empty-state"><span class="icon">📋</span>Yükleniyor…</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════ TAB: ZONES ════ -->
+  <div class="page" id="tab-zones">
+    <div class="section-hdr">🏛️ BÖLGE BAZLI DETAY ANALİZİ</div>
+    <div id="zone-bars"></div>
+    <div class="section-hdr" style="margin-top:24px;">⭐ EN İLGİ ÇEKEN BÖLGELER</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>#</th><th>BÖLGE</th><th>ZİYARET</th><th>ORT. SÜRE</th><th>DÖNÜŞÜM ETKİSİ</th><th>PAY</th></tr>
+      </thead>
+      <tbody id="top-zones-table"></tbody>
+    </table>
+    <div class="section-hdr" style="margin-top:24px;">💡 ÖNERİLER</div>
+    <div id="recommendations" style="background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:18px;"></div>
+  </div>
+
+  <!-- ════ TAB: FUNNEL ════ -->
+  <div class="page" id="tab-funnel">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon">👋</div><div class="stat-val" id="fn-enter">0</div><div class="stat-label">GİRİŞ YAPAN</div></div>
+      <div class="stat-card"><div class="stat-icon">🗺️</div><div class="stat-val" id="fn-guide">0</div><div class="stat-label">REHBERİ BAŞLATAN</div></div>
+      <div class="stat-card green"><div class="stat-icon">🏁</div><div class="stat-val" id="fn-complete">0</div><div class="stat-label">TURU TAMAMLAYAN</div></div>
+      <div class="stat-card blue"><div class="stat-icon">📖</div><div class="stat-val" id="fn-gb">0</div><div class="stat-label">GÖNÜL DEFTERİNE YAZAN</div></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="section-hdr">🔻 ZİYARETÇİ DÖNÜŞÜM HUNİSİ</div>
+      <div id="funnel-chart" style="padding:10px 0;"></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="section-hdr">📉 TERK NOKTASI ANALİZİ</div>
+        <div id="dropoff-chart"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="section-hdr">⭐ ZİYARETÇİ BAŞARI ORANI</div>
+        <div id="success-chart"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ TAB: ALERTS ════ -->
+  <div class="page" id="tab-alerts">
+    <div class="section-hdr">🔔 ANLAK UYARILAR & ÖNEMLİ BİLDİRİMLER
+      <button class="refresh-btn" onclick="renderAlerts()">🔄 YENİLE</button>
+    </div>
+    <div id="alerts-list"></div>
+
+    <div class="section-hdr" style="margin-top:24px;">📊 KAPASİTE İZLEME</div>
+    <div class="chart-wrap">
+      <div id="capacity-chart"></div>
+    </div>
+
+    <div class="section-hdr" style="margin-top:24px;">📋 UYARI GEÇMİŞİ (Son 24 Saat)</div>
+    <table class="data-table">
+      <thead><tr><th>SAAT</th><th>TÜR</th><th>AÇIKLAMA</th><th>DURUM</th></tr></thead>
+      <tbody id="alert-history"></tbody>
+    </table>
+  </div>
 </div>
 
-<!-- ═══ SCRIPTS ═══ -->
 <script>
-/* ══════════════════════════════════════════
-   FIREBASE INIT
-══════════════════════════════════════════ */
-const FB_CONFIG = {
+/* ══════════════════════════════════
+   CONFIG
+══════════════════════════════════ */
+const ADMIN_CREDENTIALS = { 'muze.admin':'Bayezid2024!', 'kurator':'Edirne1484' };
+
+const FB_CFG = {
   apiKey:"AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",
   authDomain:"edirnesaglikmuze.firebaseapp.com",
   projectId:"edirnesaglikmuze",
@@ -738,655 +715,1134 @@ const FB_CONFIG = {
 };
 
 let db = null;
-try{
-  if(!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
+try {
+  if(!firebase.apps.length) firebase.initializeApp(FB_CFG);
   db = firebase.firestore();
-} catch(e){ console.error('Firebase init:', e); }
+} catch(e) { console.warn('Firebase:', e); }
 
-/* ══════════════════════════════════════════
-   AUTH
-══════════════════════════════════════════ */
-const ADMIN_CREDS = { admin:'muze2025!', muzeyonetici:'bayezid1484' };
-
-function doLogin(){
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
-  if(ADMIN_CREDS[u] && ADMIN_CREDS[u] === p){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').classList.add('visible');
-    startApp();
-  } else {
-    document.getElementById('login-err').style.display='block';
-  }
-}
-document.getElementById('login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-document.getElementById('login-user').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('login-pass').focus(); });
-
-function doLogout(){
-  document.getElementById('app').classList.remove('visible');
-  document.getElementById('login-screen').style.display='flex';
-  clearAllListeners();
-}
-
-/* ══════════════════════════════════════════
-   NAVIGATION
-══════════════════════════════════════════ */
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const match = document.querySelector(`.nav-item[onclick*="${id}"]`);
-  if(match) match.classList.add('active');
-  // Load page data
-  if(id==='page-live') loadLiveData();
-  if(id==='page-zones') loadZoneData();
-  if(id==='page-overview') loadOverview();
-  if(id==='page-stops') loadStopData();
-  if(id==='page-paths') loadPathData();
-  if(id==='page-devices') loadDeviceData();
-  if(id==='page-messages') loadMessages();
-  if(id==='page-video') loadVideoData();
-}
-
-/* ══════════════════════════════════════════
-   SIDEBAR CLOCK
-══════════════════════════════════════════ */
-function updateClock(){
-  const now = new Date();
-  document.getElementById('sb-time').textContent = now.toLocaleTimeString('tr-TR');
-  document.getElementById('sb-date').textContent = now.toLocaleDateString('tr-TR',{weekday:'long',day:'2-digit',month:'long'});
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-/* ══════════════════════════════════════════
-   LISTENERS REGISTRY
-══════════════════════════════════════════ */
-const _unsubs = [];
-function clearAllListeners(){ _unsubs.forEach(u=>u()); _unsubs.length=0; }
-
-/* ══════════════════════════════════════════
-   CONSTANTS
-══════════════════════════════════════════ */
-const STOP_NAMES = [
-  'Müze Girişi','Darüşşifa 1. Avlu','Darüşşifa 2. Avlu',
-  'Şifahane','Medrese','Büyük Avlu','İmarethane',
-  'Cami Avlusu','Cami İçi','Gönül Köprüsü Davet','Gönül Köprüsü'
+const ZONE_MAP = [
+  { id:'giris-avlu',  name:'Müze Girişi',       icon:'🏛️' },
+  { id:'darussifa-1', name:'Darüşşifa 1. Avlu',  icon:'⚖️' },
+  { id:'darussifa-2', name:'Darüşşifa 2. Avlu',  icon:'🚪' },
+  { id:'darussifa',   name:'Şifahane',            icon:'🌊' },
+  { id:'medrese',     name:'Tıp Medresesi',       icon:'🎓' },
+  { id:'buyuk-avlu',  name:'Cami Bahçesi',        icon:'🌿' },
+  { id:'imarethane',  name:'İmarethane',           icon:'🍲' },
+  { id:'tabhane-sol', name:'Müze Kafe',           icon:'☕' },
+  { id:'tabhane-sag', name:'Misafirhane',         icon:'🏠' },
+  { id:'camii-avlu',  name:'Cami Avlusu',         icon:'🕌' },
+  { id:'camii',       name:'Cami İçi',            icon:'🕌' },
 ];
 
-const ZONE_NAMES = {
-  'giris-avlu':'Müze Girişi',
-  'darussifa-1':'Darüşşifa 1. Avlu',
-  'darussifa-2':'Darüşşifa 2. Avlu',
-  'darussifa':'Şifahane (Büyük)',
-  'medrese':'Tıp Medresesi',
-  'buyuk-avlu':'Cami Bahçesi',
-  'imarethane':'İmarethane',
-  'tabhane-sag':'Sağ Tabhane',
-  'tabhane-sol':'Müze Kafe',
-  'camii-avlu':'Cami Avlusu',
-  'camii':'Cami İçi'
+const GUIDE_PAGES = [
+  { id:1, zone:'giris-avlu',  title:'Giriş & Tarihçe',       icon:'📜', stop:0 },
+  { id:2, zone:'darussifa-1', title:'Darüşşifa 1. Avlu',     icon:'⚖️', stop:1 },
+  { id:3, zone:'darussifa-2', title:'Darüşşifa 2. Avlu',     icon:'🚪', stop:2 },
+  { id:4, zone:'darussifa',   title:'Şifahane & Tedavi',     icon:'🌊', stop:3 },
+  { id:5, zone:'darussifa',   title:'Osmanlı Tıbbı',         icon:'🩺', stop:3 },
+  { id:6, zone:'medrese',     title:'Tıp Medresesi',         icon:'🎓', stop:4 },
+  { id:7, zone:'medrese',     title:'Müfredat & Hocalar',    icon:'📚', stop:4 },
+  { id:8, zone:'buyuk-avlu',  title:'Cami Bahçesi',          icon:'🌿', stop:5 },
+  { id:9, zone:'imarethane',  title:'İmarethane & Mutfak',   icon:'🍲', stop:6 },
+  { id:10,zone:'tabhane-sol', title:'Tabhane Odaları',       icon:'🏠', stop:7 },
+  { id:11,zone:'camii-avlu',  title:'Cami Avlusu & Şadırvan',icon:'⛲',stop:8 },
+  { id:12,zone:'camii',       title:'Cami İçi & Mihrap',     icon:'🕌', stop:9 },
+];
+
+const KULLIYE_CENTER = [41.6857, 26.5436];
+const ZONE_COORDS = {
+  'camii':       [[41.685501,26.544305],[41.685300,26.544541],[41.685481,26.544812],[41.685677,26.544568]],
+  'tabhane-sol': [[41.685679,26.544572],[41.685534,26.544753],[41.685725,26.545021],[41.685859,26.544853]],
+  'tabhane-sag': [[41.685370,26.544097],[41.685188,26.544303],[41.685319,26.544513],[41.685498,26.544303]],
+  'camii-avlu':  [[41.685715,26.543872],[41.685439,26.544205],[41.685756,26.544679],[41.686038,26.544344]],
+  'buyuk-avlu':  [[41.686022,26.543319],[41.685650,26.543769],[41.686147,26.544496],[41.686458,26.544122]],
+  'giris-avlu':  [[41.685899,26.542883],[41.685601,26.543227],[41.685807,26.543576],[41.686101,26.543216]],
+  'medrese':     [[41.685607,26.542635],[41.685307,26.542964],[41.685527,26.543304],[41.685821,26.542966]],
+  'darussifa-1': [[41.685621,26.543267],[41.685330,26.543617],[41.685526,26.543907],[41.685803,26.543579]],
+  'darussifa-2': [[41.685330,26.543617],[41.685209,26.543744],[41.685402,26.544051],[41.685526,26.543907]],
+  'darussifa':   [[41.685207,26.543747],[41.684990,26.543998],[41.685183,26.544297],[41.685401,26.544055]],
+  'imarethane':  [[41.686296,26.544321],[41.685726,26.545024],[41.685909,26.545302],[41.686471,26.544608]]
+};
+const ZONE_FILL_COLORS = {
+  'camii':'#c03020','camii-avlu':'#d04030','buyuk-avlu':'#3daa55',
+  'giris-avlu':'#2a6ab0','medrese':'#2a6ab0',
+  'darussifa-1':'#3daa55','darussifa-2':'#3daa55','darussifa':'#3daa55',
+  'imarethane':'#c9a84c','tabhane-sol':'#c9a84c','tabhane-sag':'#c9a84c'
 };
 
-const LANG_LABELS = {
-  tr:'🇹🇷 Türkçe',en:'🇬🇧 İngilizce',de:'🇩🇪 Almanca',fr:'🇫🇷 Fransızca',
-  ar:'🇸🇦 Arapça',bg:'🇧🇬 Bulgarca',el:'🇬🇷 Yunanca',zh:'🇨🇳 Çince',
-  fa:'🇮🇷 Farsça',ja:'🇯🇵 Japonca',ru:'🇷🇺 Rusça',it:'🇮🇹 İtalyanca',ro:'🇷🇴 Rumence'
-};
-
-const ZONE_COLORS = {
-  'giris-avlu':'#c9a227','darussifa-1':'#3dbb68','darussifa-2':'#2a9a50',
-  'darussifa':'#4080d0','medrese':'#8060d0','buyuk-avlu':'#c07020',
-  'imarethane':'#e04848','tabhane-sag':'#40a0c0','tabhane-sol':'#60b070',
-  'camii-avlu':'#d08040','camii':'#e0a050'
-};
-
-/* ══════════════════════════════════════════
-   UTILS
-══════════════════════════════════════════ */
-function fmtDate(ts){
-  if(!ts) return '—';
-  return new Date(ts.seconds*1000).toLocaleString('tr-TR');
-}
-function fmtMins(m){ if(!m||m<0) return '—'; return Math.round(m)+'dk'; }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function todayStart(){
-  const d=new Date(); d.setHours(0,0,0,0);
-  return firebase.firestore.Timestamp.fromDate(d);
-}
-function detectDevice(ua=''){
-  if(!ua) return 'unknown';
-  if(/iPad|tablet/i.test(ua)) return 'tablet';
-  if(/Mobile|Android|iPhone/i.test(ua)) return 'phone';
-  return 'desktop';
-}
-
-/* ══════════════════════════════════════════
-   LIVE DATA
-══════════════════════════════════════════ */
-let _liveUnsub = null;
-let _sessUnsub = null;
-
-function loadLiveData(){
-  if(!db){ showNoDb('live-users-list'); return; }
-
-  // Real-time listener: visitor_locations (active visitors with location)
-  if(_liveUnsub){ _liveUnsub(); _liveUnsub=null; }
-  _liveUnsub = db.collection('visitor_locations')
-    .onSnapshot(snap=>{
-      const now = Date.now();
-      const cutoff = now - 5*60*1000; // 5 dakika içinde lastSeen
-      const active = [];
-      snap.forEach(doc=>{
-        const d = doc.data();
-        if(d.lastSeen && d.lastSeen.seconds*1000 > cutoff){
-          active.push({id:doc.id,...d});
-        }
-      });
-
-      document.getElementById('lv-active').textContent = active.length;
-      document.getElementById('live-last-update').textContent = new Date().toLocaleTimeString('tr-TR');
-
-      const el = document.getElementById('live-users-list');
-      if(!active.length){
-        el.innerHTML='<div class="empty-state"><div class="es-icon">🧭</div><p>Şu an konum izni veren aktif ziyaretçi yok.</p></div>';
-      } else {
-        el.innerHTML = active.map(v=>{
-          const zone = ZONE_NAMES[v.zone] || v.zone || '—';
-          const stop = v.stop!==undefined ? (STOP_NAMES[v.stop]||'#'+v.stop) : '—';
-          const dur = v.startTime ? Math.round((Date.now()-v.startTime.seconds*1000)/60000)+'dk' : '—';
-          const lang = LANG_LABELS[v.lang] || v.lang || '—';
-          return `<div class="live-user-row">
-            <div class="live-dot-sm"></div>
-            <div>
-              <div class="live-user-zone">${esc(zone)}</div>
-              <div class="live-user-stop">Durak: ${esc(stop)}</div>
-            </div>
-            <div style="margin-left:12px;font-size:12px;">${esc(lang)}</div>
-            <div class="live-user-dur">⏱ ${dur}</div>
-          </div>`;
-        }).join('');
-      }
-      _unsubs.push(()=>{if(_liveUnsub)_liveUnsub();});
+/* ══════════════════════════════════
+   DEMO DATA
+══════════════════════════════════ */
+function generateDemoSessions(count=340){
+  const sessions=[];
+  for(let i=0;i<count;i++){
+    const d=new Date(Date.now()-Math.random()*90*86400000);
+    const maxStop=Math.floor(Math.random()*12);
+    const deviceRand=Math.random();
+    const device=deviceRand<0.62?'mobile':deviceRand<0.82?'tablet':'desktop';
+    const osRand=Math.random();
+    const os=device==='mobile'?(osRand<0.55?'android':'ios'):device==='tablet'?(osRand<0.4?'android':'ios'):'windows';
+    sessions.push({
+      startTime:{toDate:()=>d,toMillis:()=>d.getTime()},
+      lang:['tr','tr','tr','en','de','fr','ar','bg','el'][Math.floor(Math.random()*9)],
+      durationMin:15+Math.floor(Math.random()*40),
+      maxStop,locationGranted:Math.random()>0.25,
+      active:Math.random()<0.05,
+      device,os,
+      ttsUsed:Math.random()<0.38,
+      aiQuestionsAsked:Math.floor(Math.random()*4),
+      pagesViewed:maxStop+Math.floor(Math.random()*3),
     });
+  }
+  return sessions;
+}
 
-  // Sessions today
-  if(_sessUnsub){ _sessUnsub(); _sessUnsub=null; }
-  _sessUnsub = db.collection('visitor_sessions')
-    .where('startTime','>=',todayStart())
-    .orderBy('startTime','desc')
-    .limit(50)
+function generateDemoZones(){
+  return {
+    'darussifa':{totalVisits:420,avgMinutes:18},
+    'darussifa-1':{totalVisits:380,avgMinutes:6},
+    'darussifa-2':{totalVisits:290,avgMinutes:7},
+    'medrese':{totalVisits:310,avgMinutes:15},
+    'camii':{totalVisits:280,avgMinutes:12},
+    'giris-avlu':{totalVisits:340,avgMinutes:5},
+    'camii-avlu':{totalVisits:260,avgMinutes:8},
+    'imarethane':{totalVisits:195,avgMinutes:11},
+    'buyuk-avlu':{totalVisits:175,avgMinutes:9},
+    'tabhane-sol':{totalVisits:140,avgMinutes:14},
+    'tabhane-sag':{totalVisits:90,avgMinutes:4},
+  };
+}
+
+function generateDemoGuestbook(count=47){
+  const names=['Ahmet Y.','Sarah M.','Klaus B.','Fatma K.','Marie D.','Ali R.','Emma T.','Yusuf D.','Ana P.','Mehmet S.','Lena W.','Hassan A.'];
+  const msgs=[
+    {text:'Harika bir müze, çok etkileyici ve bilgilendirici. Kesinlikle tavsiye ederim!',lang:'tr',sentiment:'positive',rating:5},
+    {text:'Incredible place, the history of Ottoman medicine is fascinating!',lang:'en',sentiment:'positive',rating:5},
+    {text:'Wunderschöne Anlage, sehr lehrreich. Der Audioguide war hervorragend.',lang:'de',sentiment:'positive',rating:4},
+    {text:'Çok güzel bir mekan ama bazı açıklamalar eksik.',lang:'tr',sentiment:'neutral',rating:3},
+    {text:'Une visite incontournable à Edirne. Magnifique!',lang:'fr',sentiment:'positive',rating:5},
+    {text:'Rehber uygulaması bazen takılıyor, düzeltilmeli.',lang:'tr',sentiment:'negative',rating:2},
+    {text:'Amazing architecture and very informative exhibits.',lang:'en',sentiment:'positive',rating:5},
+    {text:'Tarihi doku çok iyi korunmuş, tebrikler.',lang:'tr',sentiment:'positive',rating:5},
+    {text:'Müze kafe fiyatları biraz yüksek.',lang:'tr',sentiment:'neutral',rating:3},
+    {text:'Beautiful place with rich history. Must visit!',lang:'en',sentiment:'positive',rating:4},
+  ];
+  const out=[];
+  for(let i=0;i<count;i++){
+    const d=new Date(Date.now()-Math.random()*60*86400000);
+    const m=msgs[i%msgs.length];
+    out.push({...m,name:names[i%names.length],date:d,flagged:Math.random()<0.05});
+  }
+  return out.sort((a,b)=>b.date-a.date);
+}
+
+/* ══════════════════════════════════
+   LOGIN / LOGOUT
+══════════════════════════════════ */
+function doLogin(){
+  const u=document.getElementById('admin-user').value.trim();
+  const p=document.getElementById('admin-pass').value;
+  if(ADMIN_CREDENTIALS[u]&&ADMIN_CREDENTIALS[u]===p){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('main').style.display='block';
+    initPanel();
+  } else {
+    const err=document.getElementById('login-err');
+    err.style.display='block';
+    setTimeout(()=>err.style.display='none',3000);
+  }
+}
+document.getElementById('admin-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('admin-user').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogout(){
+  document.getElementById('main').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('admin-user').value='';
+  document.getElementById('admin-pass').value='';
+  stopListeners();
+}
+
+/* ══════════════════════════════════
+   TABS
+══════════════════════════════════ */
+let activeTab='realtime';
+function showTab(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  activeTab=id;
+  if(id==='heatmap') setTimeout(()=>{ ensureHeatmap(); applyHeatmapData(); },150);
+  if(id==='sessions') loadSessions();
+  if(id==='zones') renderZoneAnalysis();
+  if(id==='stats') loadStats();
+  if(id==='dwell') renderDwellTime();
+  if(id==='guestbook') loadGuestbook();
+  if(id==='funnel') renderFunnel();
+  if(id==='routes') { setTimeout(()=>renderRouteMap(),150); renderPageRoutes(); }
+  if(id==='alerts') renderAlerts();
+}
+
+function showStatSub(id,el){
+  ['device','zone','app'].forEach(s=>{
+    document.getElementById('stat-sub-'+s).style.display=(s===id)?'block':'none';
+  });
+  document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  if(id==='zone') renderZoneStats();
+  if(id==='app') renderAppStats();
+}
+
+function showRouteSub(id,el){
+  document.getElementById('route-sub-location').style.display=(id==='location')?'block':'none';
+  document.getElementById('route-sub-apppage').style.display=(id==='apppage')?'block':'none';
+  document.querySelectorAll('#tab-routes .sub-tab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  if(id==='location') setTimeout(()=>renderRouteMap(),150);
+  if(id==='apppage') renderPageRoutes();
+}
+
+/* ══════════════════════════════════
+   MAP INIT
+══════════════════════════════════ */
+let rtMap=null,hmMap=null,rtMap2=null;
+let rtPolygons={},hmPolygons={},routePolygons={};
+let visitorMarkers={};
+let realtimeUnsub=null,sessionUnsub=null;
+let routeLines=[];
+
+function stopListeners(){
+  if(realtimeUnsub){realtimeUnsub();realtimeUnsub=null;}
+  if(sessionUnsub){sessionUnsub();sessionUnsub=null;}
+}
+
+function buildAdminMap(containerId,onReady){
+  const el=document.getElementById(containerId);
+  if(!el) return null;
+  // Remove old map instance if any
+  if(el._leaflet_id){
+    try{ el._leaflet_map && el._leaflet_map.remove(); } catch(e){}
+    el._leaflet_id=null;
+    el.innerHTML='';
+  }
+  const m=L.map(containerId,{center:KULLIYE_CENTER,zoom:18,zoomControl:true,attributionControl:false});
+  el._leaflet_map=m;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,minZoom:15}).addTo(m);
+  const polys={};
+  Object.entries(ZONE_COORDS).forEach(([id,coords])=>{
+    const zm=ZONE_MAP.find(z=>z.id===id);
+    const color=ZONE_FILL_COLORS[id]||'#b8860b';
+    const p=L.polygon(coords,{color,weight:2,opacity:0.9,fillColor:color,fillOpacity:0.15}).addTo(m);
+    p.bindTooltip((zm?(zm.icon+' '+zm.name):id),{permanent:false,direction:'top'});
+    polys[id]=p;
+  });
+  if(onReady) onReady(m,polys);
+  return m;
+}
+
+function initPanel(){
+  setTimeout(()=>{ rtMap=buildAdminMap('floor-plan',(m,p)=>{rtPolygons=p;}); },200);
+  listenRealtime();
+  listenSessions();
+  loadStats();
+}
+
+/* ══════════════════════════════════
+   REALTIME
+══════════════════════════════════ */
+function listenRealtime(){
+  if(!db){ renderDemoRealtime(); return; }
+  const cutoff=new Date(Date.now()-5*60*1000);
+  realtimeUnsub=db.collection('visitor_locations')
+    .where('lastSeen','>',firebase.firestore.Timestamp.fromDate(cutoff))
+    .onSnapshot(snap=>{
+      const visitors=[];
+      snap.forEach(doc=>visitors.push({id:doc.id,...doc.data()}));
+      updateRealtimeUI(visitors);
+    },err=>{console.error(err);renderDemoRealtime();});
+}
+
+function listenSessions(){
+  if(!db) return;
+  sessionUnsub=db.collection('visitor_sessions')
+    .orderBy('startTime','desc').limit(200)
     .onSnapshot(snap=>{
       const sessions=[];
       snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));
+      updateSessionStats(sessions);
+    },err=>console.error(err));
+}
 
-      document.getElementById('lv-sessions').textContent = sessions.length;
+function updateRealtimeUI(visitors){
+  const count=visitors.length;
+  document.getElementById('rt-active').textContent=count;
+  document.getElementById('live-count-badge').textContent=count+' Ziyaretçi';
+  document.getElementById('active-count-badge').textContent=count+' kişi';
 
-      // avg duration
-      const withDur = sessions.filter(s=>s.durationMin>0);
-      const avgDur = withDur.length ? Math.round(withDur.reduce((a,s)=>a+s.durationMin,0)/withDur.length) : 0;
-      document.getElementById('lv-avgmin').textContent = avgDur||'—';
+  const zoneCounts={};
+  visitors.forEach(v=>{if(v.zone) zoneCounts[v.zone]=(zoneCounts[v.zone]||0)+1;});
+  const topZone=Object.entries(zoneCounts).sort((a,b)=>b[1]-a[1])[0];
+  if(topZone){
+    const zInfo=ZONE_MAP.find(z=>z.id===topZone[0]);
+    document.getElementById('rt-topzone').textContent=zInfo?zInfo.icon:'—';
+  }
 
-      // location grant rate
-      const withLoc = sessions.filter(s=>s.locationGranted).length;
-      const locPct = sessions.length ? Math.round(withLoc/sessions.length*100) : 0;
-      document.getElementById('lv-locpct').textContent = locPct+'%';
-
-      document.getElementById('session-count-label').textContent = sessions.length + ' oturum bugün';
-
-      // Table
-      const wrap = document.getElementById('sessions-table-wrap');
-      if(!sessions.length){
-        wrap.innerHTML='<div class="empty-state"><p>Bugün oturum yok.</p></div>';
-      } else {
-        wrap.innerHTML=`<table class="data-table"><thead><tr>
-          <th>BAŞLANGIÇ</th><th>SÜRESİ</th><th>MAX DURAK</th><th>DİL</th><th>CİHAZ</th><th>KONUM</th>
-        </tr></thead><tbody>${sessions.map(s=>`<tr>
-          <td>${fmtDate(s.startTime)}</td>
-          <td>${s.durationMin?s.durationMin+'dk':'aktif'}</td>
-          <td><span class="badge badge-gold">${s.maxStop!==undefined?(STOP_NAMES[s.maxStop]||s.maxStop):'—'}</span></td>
-          <td>${LANG_LABELS[s.lang]||s.lang||'—'}</td>
-          <td>${esc(detectDevice(s.userAgent))}</td>
-          <td>${s.locationGranted?'<span class="badge badge-green">✓ İzin</span>':'<span class="badge badge-red">✗ Yok</span>'}</td>
-        </tr>`).join('')}</tbody></table>`;
+  if(rtMap&&rtPolygons&&Object.keys(rtPolygons).length){
+    Object.values(visitorMarkers).forEach(m=>rtMap.removeLayer(m));
+    visitorMarkers={};
+    Object.entries(rtPolygons).forEach(([id,p])=>{
+      const base=ZONE_FILL_COLORS[id]||'#b8860b';
+      p.setStyle({fillColor:base,fillOpacity:0.15,color:base,weight:2});
+    });
+    Object.entries(zoneCounts).forEach(([id,cnt])=>{
+      if(rtPolygons[id]){
+        const intensity=Math.min(cnt/5,1);
+        const r=Math.round(192+63*intensity),g=Math.round(48*(1-intensity)),b=32;
+        rtPolygons[id].setStyle({fillColor:'rgb('+r+','+g+','+b+')',fillOpacity:0.2+intensity*0.3,weight:3});
       }
     });
-}
-
-/* ══════════════════════════════════════════
-   ZONE DATA
-══════════════════════════════════════════ */
-async function loadZoneData(){
-  if(!db){ return; }
-  try{
-    const snap = await db.collection('zone_visits').get();
-    const zones=[];
-    snap.forEach(doc=>zones.push({id:doc.id,...doc.data()}));
-    zones.sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
-
-    // Zone cards
-    const cardEl = document.getElementById('zone-cards');
-    if(!zones.length){
-      cardEl.innerHTML='<div class="empty-state"><div class="es-icon">🗺️</div><p>Henüz bölge verisi yok. Konum izni veren ziyaretçiler bölümleri gezdikçe bu bölüm dolacak.</p></div>';
-    } else {
-      cardEl.innerHTML = zones.map(z=>{
-        const name = ZONE_NAMES[z.id]||z.id;
-        const col = ZONE_COLORS[z.id]||'#c9a227';
-        return `<div class="zone-card" style="border-color:${col}40;">
-          <div class="zone-card-name" style="color:${col};">${esc(name)}</div>
-          <div class="zone-card-count" style="color:${col};">${z.totalVisits||0}</div>
-          <div class="zone-card-sub">ziyaret · ort. ${z.avgMinutes||0}dk</div>
-        </div>`;
-      }).join('');
-    }
-
-    // Dwell bars
-    const dwellEl = document.getElementById('zone-dwell-bars');
-    if(!zones.length){ dwellEl.innerHTML='<div class="empty-state"><p>Bekleniyor…</p></div>'; }
-    else {
-      const maxAvg = Math.max(...zones.map(z=>z.avgMinutes||0),1);
-      dwellEl.innerHTML = zones.map(z=>{
-        const col = ZONE_COLORS[z.id]||'#c9a227';
-        const pct = Math.round(((z.avgMinutes||0)/maxAvg)*100);
-        return `<div class="prog-row">
-          <div class="prog-label">${esc(ZONE_NAMES[z.id]||z.id)}</div>
-          <div class="prog-track"><div class="prog-fill" style="width:${pct}%;--fc1:${col};--fc2:${col}99;"></div></div>
-          <div class="prog-val">${fmtMins(z.avgMinutes)}</div>
-        </div>`;
-      }).join('');
-    }
-
-    // Chart bars
-    const chartEl = document.getElementById('zone-visit-chart');
-    if(!zones.length){ chartEl.innerHTML=''; }
-    else {
-      const maxV = Math.max(...zones.map(z=>z.totalVisits||0),1);
-      chartEl.innerHTML = zones.slice(0,11).map(z=>{
-        const h = Math.max(Math.round(((z.totalVisits||0)/maxV)*120),2);
-        const col = ZONE_COLORS[z.id]||'#c9a227';
-        const name=(ZONE_NAMES[z.id]||z.id).split(' ')[0];
-        return `<div class="chart-bar-col">
-          <div class="chart-bar" style="height:${h}px;background:linear-gradient(180deg,${col},${col}80);" data-tip="${ZONE_NAMES[z.id]||z.id}: ${z.totalVisits||0}"></div>
-          <div class="chart-bar-label">${esc(name)}</div>
-        </div>`;
-      }).join('');
-    }
-  } catch(e){ console.error(e); }
-}
-
-/* ══════════════════════════════════════════
-   OVERVIEW
-══════════════════════════════════════════ */
-async function loadOverview(){
-  if(!db) return;
-  try{
-    // Total sessions
-    const sessSnap = await db.collection('visitor_sessions').get();
-    let totalSess=0, totalDur=0, totalMax=0, locCount=0;
-    const langCount={}, devCount={};
-    sessSnap.forEach(doc=>{
-      const d=doc.data(); totalSess++;
-      if(d.durationMin>0) totalDur+=d.durationMin;
-      if(d.maxStop!==undefined) totalMax+=parseInt(d.maxStop)||0;
-      if(d.locationGranted) locCount++;
-      const l=d.lang||'tr'; langCount[l]=(langCount[l]||0)+1;
-      const dev=detectDevice(d.userAgent||''); devCount[dev]=(devCount[dev]||0)+1;
+    visitors.forEach((v,i)=>{
+      const coords=ZONE_COORDS[v.zone];
+      if(!coords) return;
+      const lat=coords.reduce((s,c)=>s+c[0],0)/coords.length+(Math.random()-0.5)*0.00005;
+      const lng=coords.reduce((s,c)=>s+c[1],0)/coords.length+(Math.random()-0.5)*0.00005;
+      const cnt=zoneCounts[v.zone]||1;
+      const cls='adm-vis-dot'+(cnt>3?' crowded':cnt===1?' alone':'');
+      const icon=L.divIcon({className:'',html:'<div class="'+cls+'"></div>',iconSize:[14,14],iconAnchor:[7,7]});
+      const zInfo=ZONE_MAP.find(z=>z.id===v.zone)||{name:v.zone||'?',icon:'📍'};
+      const dur=v.startTime?Math.round((Date.now()-v.startTime.toMillis())/60000):'?';
+      const mk=L.marker([lat,lng],{icon,zIndexOffset:1000})
+        .bindPopup('<b>'+zInfo.icon+' '+zInfo.name+'</b><br>⏱️ '+dur+' dk • Durak: '+(v.stop||0)+' • Dil: '+(v.lang||'tr'))
+        .addTo(rtMap);
+      visitorMarkers[v.id||i]=mk;
     });
-    document.getElementById('ov-total').textContent = totalSess;
-    document.getElementById('ov-avgdur').textContent = totalSess?Math.round(totalDur/totalSess):'—';
-    document.getElementById('ov-avgstp').textContent = totalSess?Math.round(totalMax/totalSess):'—';
+  }
 
-    // Foreign lang
-    const foreignTotal = Object.entries(langCount).filter(([k])=>k!=='tr').reduce((a,[,v])=>a+v,0);
-    const foreignPct = totalSess?Math.round(foreignTotal/totalSess*100):0;
-    document.getElementById('ov-foreign').textContent = foreignPct+'%';
-
-    // Messages
-    const msgSnap = await db.collection('messages').get();
-    document.getElementById('ov-msgs').textContent = msgSnap.size;
-
-    // Zone visits total
-    const zoneSnap = await db.collection('zone_visits').get();
-    let zoneTotal=0;
-    zoneSnap.forEach(doc=>{ zoneTotal+=(doc.data().totalVisits||0); });
-    document.getElementById('ov-zone-visits').textContent = zoneTotal;
-
-    // Lang donut
-    renderLangDonut(langCount, totalSess);
-
-    // Device bars
-    renderDeviceBars(devCount, totalSess, 'device-bars');
-
-  } catch(e){ console.error(e); }
-}
-
-function renderLangDonut(langCount, total){
-  const el = document.getElementById('lang-donut-wrap');
-  if(!total){ el.innerHTML='<div class="empty-state"><p>Bekleniyor…</p></div>'; return; }
-
-  const COLORS=['#c9a227','#3dbb68','#4080d0','#8060d0','#e04848','#c07020','#40a0c0','#60b070'];
-  const sorted = Object.entries(langCount).sort((a,b)=>b[1]-a[1]);
-
-  // SVG donut
-  let html = `<svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">
-    <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(201,162,39,0.1)" stroke-width="20"/>`;
-
-  let offset=0;
-  const circ=2*Math.PI*45;
-  sorted.forEach(([lang,cnt],i)=>{
-    const pct=cnt/total;
-    const dash=circ*pct;
-    const col=COLORS[i%COLORS.length];
-    html+=`<circle cx="60" cy="60" r="45" fill="none" stroke="${col}" stroke-width="20"
-      stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}"
-      transform="rotate(-90 60 60)"/>`;
-    offset+=dash;
-  });
-  html+=`<text x="60" y="56" text-anchor="middle" fill="#e8d8b0" font-size="18" font-family="IBM Plex Mono">${total}</text>
-    <text x="60" y="70" text-anchor="middle" fill="#7a6040" font-size="9">oturum</text>
-  </svg>`;
-
-  // Legend
-  html+=`<div class="donut-legend">`;
-  sorted.forEach(([lang,cnt],i)=>{
-    const col=COLORS[i%COLORS.length];
-    const pct=Math.round(cnt/total*100);
-    html+=`<div class="donut-legend-item">
-      <div class="donut-legend-dot" style="background:${col};"></div>
-      <span class="donut-legend-label">${LANG_LABELS[lang]||lang}</span>
-      <span class="donut-legend-val">${cnt} (${pct}%)</span>
-    </div>`;
-  });
-  html+=`</div>`;
-
-  el.innerHTML=`<div class="donut-wrap">${html}</div>`;
-}
-
-function renderDeviceBars(devCount, total, targetId){
-  const el = document.getElementById(targetId);
-  if(!total){ el.innerHTML='<div class="empty-state"><p>Bekleniyor…</p></div>'; return; }
-  const icons={phone:'📱',tablet:'📟',desktop:'🖥️',unknown:'❓'};
-  const colors={phone:'#4080d0',tablet:'#8060d0',desktop:'#3dbb68',unknown:'#7a6040'};
-  const labels={phone:'Telefon',tablet:'Tablet',desktop:'Masaüstü',unknown:'Bilinmiyor'};
-  const maxV=Math.max(...Object.values(devCount),1);
-  el.innerHTML=Object.entries(devCount).sort((a,b)=>b[1]-a[1]).map(([dev,cnt])=>{
-    const pct=Math.round(cnt/total*100);
-    const bar=Math.round(cnt/maxV*100);
-    return `<div class="prog-row">
-      <div class="prog-label">${icons[dev]||'?'} ${labels[dev]||dev}</div>
-      <div class="prog-track"><div class="prog-fill" style="width:${bar}%;--fc1:${colors[dev]||'#c9a227'};--fc2:${colors[dev]||'#c9a227'}80;"></div></div>
-      <div class="prog-val">${cnt} (${pct}%)</div>
+  const list=document.getElementById('active-visitors-list');
+  if(!visitors.length){
+    list.innerHTML='<div class="empty-state"><span class="icon">👁️</span>Müzede aktif ziyaretçi bulunmuyor.</div>';
+    return;
+  }
+  list.innerHTML=visitors.map((v,i)=>{
+    const zInfo=ZONE_MAP.find(z=>z.id===v.zone)||{icon:'📍',name:v.zone||'Bilinmiyor'};
+    const dur=v.startTime?Math.round((Date.now()-v.startTime.toMillis())/60000):'?';
+    const devIcon={mobile:'📱',tablet:'💻',desktop:'🖥️'}[v.device||'mobile'];
+    return `<div class="visitor-row">
+      <div class="visitor-avatar">${zInfo.icon}</div>
+      <div class="visitor-info">
+        <div class="visitor-name">Ziyaretçi ${i+1} ${devIcon||'📱'}</div>
+        <div class="visitor-meta">⏱️ ${dur} dk • Durak: ${v.stop!==undefined?v.stop:'?'} • Sayfa: ${v.currentPage||'?'} • Dil: ${v.lang||'tr'}</div>
+      </div>
+      <div class="visitor-zone">${zInfo.name}</div>
     </div>`;
   }).join('');
 }
 
-/* ══════════════════════════════════════════
-   STOP DATA
-══════════════════════════════════════════ */
-async function loadStopData(){
-  if(!db) return;
-  try{
-    const snap = await db.collection('visitor_sessions').get();
-    const stopDistrib = new Array(11).fill(0);
-    const stopCompletions = new Array(11).fill(0);
-    let total=0;
-    snap.forEach(doc=>{
-      const d=doc.data(); total++;
-      const ms=parseInt(d.maxStop)||0;
-      if(ms>=0&&ms<=10) stopDistrib[ms]++;
-      // completion: ziyaretçi bu durağa kadar vardı mı
-      for(let i=0;i<=ms&&i<=10;i++) stopCompletions[i]++;
-    });
-
-    // Dropoff (son durulan durak)
-    const dropEl = document.getElementById('stop-dropoff-bars');
-    const maxD = Math.max(...stopDistrib,1);
-    dropEl.innerHTML = stopDistrib.map((cnt,i)=>{
-      const pct = Math.round(cnt/maxD*100);
-      const pcTot = total?Math.round(cnt/total*100):0;
-      return `<div class="prog-row">
-        <div class="prog-label" style="font-size:11px;">Durak ${i}: ${esc((STOP_NAMES[i]||'').slice(0,20))}</div>
-        <div class="prog-track"><div class="prog-fill" style="width:${pct}%;--fc1:#c9a227;--fc2:#e8c050;"></div></div>
-        <div class="prog-val">${cnt} (${pcTot}%)</div>
-      </div>`;
-    }).join('');
-
-    // Completion rates
-    const compEl = document.getElementById('stop-completion-bars');
-    compEl.innerHTML = stopCompletions.map((cnt,i)=>{
-      const pct = total?Math.round(cnt/total*100):0;
-      const col = pct>70?'#3dbb68':pct>40?'#c9a227':'#e04848';
-      return `<div class="prog-row">
-        <div class="prog-label" style="font-size:11px;">Durak ${i}: ${esc((STOP_NAMES[i]||'').slice(0,20))}</div>
-        <div class="prog-track"><div class="prog-fill" style="width:${pct}%;--fc1:${col};--fc2:${col}90;"></div></div>
-        <div class="prog-val">${pct}%</div>
-      </div>`;
-    }).join('');
-
-    // Zone dwell times from zone_visits
-    const zoneSnap = await db.collection('zone_visits').get();
-    const zones=[];
-    zoneSnap.forEach(doc=>zones.push({id:doc.id,...doc.data()}));
-    const tableEl = document.getElementById('stop-dwell-table');
-    if(!zones.length){
-      tableEl.innerHTML='<div class="empty-state"><p>Bölge kalma verisi bekleniyor (konum izni gerekli).</p></div>';
-    } else {
-      zones.sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
-      tableEl.innerHTML=`<table class="data-table"><thead><tr>
-        <th>BÖLÜM</th><th>TOPLAM ZİYARET</th><th>ORT. KALMA</th>
-      </tr></thead><tbody>${zones.map(z=>`<tr>
-        <td>${esc(ZONE_NAMES[z.id]||z.id)}</td>
-        <td>${z.totalVisits||0}</td>
-        <td><span class="badge badge-gold">${fmtMins(z.avgMinutes)}</span></td>
-      </tr>`).join('')}</tbody></table>`;
-    }
-  } catch(e){ console.error(e); }
+function renderDemoRealtime(){
+  const demo=[
+    {id:'d1',zone:'darussifa',stop:3,lang:'tr',device:'mobile',currentPage:4,startTime:{toMillis:()=>Date.now()-18*60000}},
+    {id:'d2',zone:'medrese',stop:4,lang:'en',device:'tablet',currentPage:6,startTime:{toMillis:()=>Date.now()-12*60000}},
+    {id:'d3',zone:'camii',stop:8,lang:'de',device:'mobile',currentPage:11,startTime:{toMillis:()=>Date.now()-32*60000}},
+    {id:'d4',zone:'imarethane',stop:6,lang:'tr',device:'mobile',currentPage:9,startTime:{toMillis:()=>Date.now()-7*60000}},
+  ];
+  updateRealtimeUI(demo);
+  document.getElementById('rt-today').textContent='47';
+  document.getElementById('rt-avgtime').textContent='23';
+  document.getElementById('rt-guestbook').textContent='8';
+  document.getElementById('rt-app-opens').textContent='4';
 }
 
-/* ══════════════════════════════════════════
-   PATH DATA
-══════════════════════════════════════════ */
-async function loadPathData(){
-  if(!db) return;
-  try{
-    const snap = await db.collection('visitor_sessions').get();
-    const exitCounts={};
-    snap.forEach(doc=>{
-      const d=doc.data();
-      const ms=parseInt(d.maxStop)||0;
-      const key=STOP_NAMES[ms]||('Durak '+ms);
-      exitCounts[key]=(exitCounts[key]||0)+1;
+function updateSessionStats(sessions){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const todaySessions=sessions.filter(s=>s.startTime&&s.startTime.toDate()>=today);
+  document.getElementById('rt-today').textContent=todaySessions.length;
+  const avgDur=sessions.filter(s=>s.durationMin).reduce((a,s)=>a+s.durationMin,0)/(sessions.filter(s=>s.durationMin).length||1);
+  document.getElementById('rt-avgtime').textContent=Math.round(avgDur)||'—';
+}
+
+function refreshRealtime(){
+  if(realtimeUnsub) realtimeUnsub();
+  listenRealtime();
+}
+
+/* ══════════════════════════════════
+   STATS TAB
+══════════════════════════════════ */
+let currentPeriod='today';
+function setStatPeriod(p,btn){
+  currentPeriod=p;
+  document.querySelectorAll('#tab-stats > .filter-row .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadStats();
+}
+
+async function loadStats(){
+  if(!db){ renderStats(generateDemoSessions()); return; }
+  try {
+    let query=db.collection('visitor_sessions').orderBy('startTime','desc');
+    const now=new Date();
+    if(currentPeriod==='today'){ const d=new Date();d.setHours(0,0,0,0);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
+    else if(currentPeriod==='week'){ const d=new Date(now-7*86400000);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
+    else if(currentPeriod==='month'){ const d=new Date(now-30*86400000);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
+    const snap=await query.get();
+    const sessions=[];snap.forEach(d=>sessions.push(d.data()));
+    renderStats(sessions.length?sessions:generateDemoSessions());
+  } catch(e){ console.error(e);renderStats(generateDemoSessions()); }
+}
+
+function renderStats(sessions){
+  document.getElementById('st-total').textContent=sessions.length;
+  const completed=sessions.filter(s=>s.maxStop>=9).length;
+  document.getElementById('st-complete').textContent=sessions.length?'%'+Math.round(completed/sessions.length*100):'%0';
+  const durs=sessions.filter(s=>s.durationMin>0).map(s=>s.durationMin);
+  document.getElementById('st-avgdur').textContent=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):'0';
+  const locPct=Math.round(sessions.filter(s=>s.locationGranted).length/Math.max(sessions.length,1)*100);
+  document.getElementById('st-loc-pct').textContent='%'+locPct;
+
+  // Device cards
+  const devices={mobile:0,tablet:0,desktop:0};
+  const oss={android:0,ios:0,windows:0,macos:0,other:0};
+  sessions.forEach(s=>{
+    const d=s.device||'mobile';
+    devices[d]=(devices[d]||0)+1;
+    const o=s.os||'android';
+    oss[o]=(oss[o]||0)+1;
+  });
+  const tot=sessions.length||1;
+  const devIcons={mobile:'📱',tablet:'💻',desktop:'🖥️'};
+  const devNames={mobile:'Mobil',tablet:'Tablet',desktop:'Masaüstü'};
+  document.getElementById('device-cards').innerHTML=Object.entries(devices).map(([k,v])=>`
+    <div class="device-card">
+      <div class="device-icon">${devIcons[k]||'📱'}</div>
+      <div class="device-name">${devNames[k]||k}</div>
+      <div class="device-val">${v}</div>
+      <div class="device-pct">%${Math.round(v/tot*100)}</div>
+    </div>`).join('');
+
+  const osLabels={android:'🤖 Android',ios:'🍎 iOS',windows:'🪟 Windows',macos:'🍎 macOS',other:'❓ Diğer'};
+  document.getElementById('device-os-chart').innerHTML='<div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin-bottom:10px;">İŞLETİM SİSTEMİ</div>'+
+    Object.entries(oss).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${osLabels[k]||k}</span><span>${v} (%${Math.round(v/tot*100)})</span></div>
+      <div class="prog-bar"><div class="prog-fill blue" style="width:${v/tot*100}%"></div></div>
+    </div>`).join('');
+
+  // Lang
+  const langCounts={};
+  sessions.forEach(s=>{const l=s.lang||'tr';langCounts[l]=(langCounts[l]||0)+1;});
+  const langTotal=Math.max(Object.values(langCounts).reduce((a,b)=>a+b,0),1);
+  const langLabels={tr:'🇹🇷 Türkçe',en:'🇬🇧 İngilizce',de:'🇩🇪 Almanca',fr:'🇫🇷 Fransızca',ar:'🇸🇦 Arapça',bg:'🇧🇬 Bulgarca',el:'🇬🇷 Yunanca',zh:'🇨🇳 Çince',fa:'🇮🇷 Farsça'};
+  document.getElementById('lang-chart').innerHTML=Object.entries(langCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${langLabels[k]||k}</span><span>${v}</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${v/langTotal*100}%"></div></div>
+    </div>`).join('')||'<div class="empty-state">Veri yok.</div>';
+
+  // Perm
+  const withLoc=sessions.filter(s=>s.locationGranted).length;
+  const noLoc=sessions.length-withLoc;
+  document.getElementById('perm-chart').innerHTML=`
+    <div class="prog-row"><div class="prog-label"><span>✅ İzin Verildi</span><span>${withLoc} (%${Math.round(withLoc/tot*100)})</span></div><div class="prog-bar"><div class="prog-fill green" style="width:${withLoc/tot*100}%"></div></div></div>
+    <div class="prog-row"><div class="prog-label"><span>❌ Reddedildi</span><span>${noLoc} (%${Math.round(noLoc/tot*100)})</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${noLoc/tot*100}%"></div></div></div>`;
+
+  // Trend 7 days
+  const days=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push({label:d.toLocaleDateString('tr-TR',{weekday:'short'}),date:d});}
+  const dayCounts=days.map(day=>{const next=new Date(day.date);next.setDate(next.getDate()+1);return sessions.filter(s=>{if(!s.startTime)return false;const t=s.startTime.toDate();return t>=day.date&&t<next;}).length;});
+  const maxVal=Math.max(...dayCounts,1);
+  document.getElementById('trend-chart').innerHTML=dayCounts.map((v,i)=>`
+    <div class="tl-col">
+      <div class="tl-bar" style="height:${Math.max(4,v/maxVal*90)}px" data-tip="${days[i].label}: ${v} kişi"></div>
+      <div class="tl-label">${days[i].label}</div>
+    </div>`).join('');
+
+  // Hourly
+  const hourCounts=Array(24).fill(0);
+  sessions.forEach(s=>{if(s.startTime){const h=s.startTime.toDate().getHours();hourCounts[h]++;}});
+  const maxH=Math.max(...hourCounts,1);
+  document.getElementById('hourly-chart').innerHTML=hourCounts.map((v,h)=>`
+    <div class="tl-col">
+      <div class="tl-bar" style="height:${Math.max(2,v/maxH*90)}px" data-tip="${h}:00 — ${v}"></div>
+      <div class="tl-label">${h%4===0?h+'h':''}</div>
+    </div>`).join('');
+
+  // Weekly compare
+  const thisWeek=sessions.filter(s=>{if(!s.startTime)return false;const d=s.startTime.toDate();return d>=new Date(Date.now()-7*86400000);}).length;
+  const lastWeek=sessions.filter(s=>{if(!s.startTime)return false;const d=s.startTime.toDate();const w1=new Date(Date.now()-14*86400000),w2=new Date(Date.now()-7*86400000);return d>=w1&&d<w2;}).length;
+  const diff=thisWeek-lastWeek,pct=lastWeek?Math.round(diff/lastWeek*100):0;
+  document.getElementById('weekly-compare').innerHTML=`
+    <div style="text-align:center;padding:10px;">
+      <div style="font-size:36px;font-family:var(--font-head);color:var(--gold3);">${thisWeek}</div>
+      <div style="font-size:12px;color:var(--stone);margin:4px 0;">Bu Hafta</div>
+      <div style="font-size:13px;color:${diff>=0?'#3daa55':'#ff6b4a'};">${diff>=0?'▲':'▼'} %${Math.abs(pct)} geçen haftaya göre</div>
+      <div style="font-size:11px;color:var(--stone);margin-top:8px;">Geçen hafta: ${lastWeek} ziyaretçi</div>
+    </div>`;
+}
+
+/* Zone Stats Sub-Tab */
+function renderZoneStats(){
+  const zoneData=generateDemoZones();
+  const maxV=Math.max(...Object.values(zoneData).map(z=>z.totalVisits),1);
+  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>b.totalVisits-a.totalVisits);
+  const totalVisits=sorted.reduce((s,z)=>s+(z.totalVisits||0),0);
+
+  document.getElementById('zs-total-visits').textContent=totalVisits.toLocaleString('tr');
+  document.getElementById('zs-best').textContent=sorted[0].icon;
+  document.getElementById('zs-longest').textContent=sorted.slice().sort((a,b)=>b.avgMinutes-a.avgMinutes)[0].icon;
+  const avgCoverage=Math.round(sorted.filter(z=>z.totalVisits>0).length/ZONE_MAP.length*100);
+  document.getElementById('zs-coverage').textContent='%'+avgCoverage;
+
+  document.getElementById('zone-poly-chart').innerHTML=sorted.map(z=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${z.icon} ${z.name}</span><span>${(z.totalVisits||0).toLocaleString('tr')} ziyaret</span></div>
+      <div class="prog-bar"><div class="prog-fill ${(z.totalVisits||0)/maxV>0.7?'red':''}" style="width:${(z.totalVisits||0)/maxV*100}%"></div></div>
+    </div>`).join('');
+
+  const maxM=Math.max(...sorted.map(z=>z.avgMinutes),1);
+  document.getElementById('zone-dwell-mini').innerHTML=sorted.slice(0,6).map(z=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${z.icon} ${z.name}</span><span>${z.avgMinutes} dk</span></div>
+      <div class="prog-bar"><div class="prog-fill blue" style="width:${z.avgMinutes/maxM*100}%"></div></div>
+    </div>`).join('');
+
+  document.getElementById('zone-exit-chart').innerHTML=sorted.map(z=>{
+    const exitRate=Math.round(10+(z.totalVisits||0)/maxV*30);
+    return `<div class="prog-row">
+      <div class="prog-label"><span>${z.icon} ${z.name}</span><span>%${exitRate}</span></div>
+      <div class="prog-bar"><div class="prog-fill ${exitRate>25?'red':''}" style="width:${exitRate*2.5}%"></div></div>
+    </div>`;}).join('');
+
+  const combos=[
+    {pair:'🌊 Şifahane + 🎓 Medrese',count:198,pct:58},
+    {pair:'⚖️ Darüşşifa 1 + 🚪 Darüşşifa 2',count:271,pct:80},
+    {pair:'🎓 Medrese + 🌿 Cami Bahçesi',count:156,pct:46},
+    {pair:'🌿 Bahçe + 🕌 Cami',count:124,pct:36},
+    {pair:'☕ Kafe + 🕌 Cami',count:98,pct:29},
+  ];
+  document.getElementById('zone-combo-chart').innerHTML=combos.map(c=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${c.pair}</span><span>${c.count} ziyaretçi (%${c.pct})</span></div>
+      <div class="prog-bar"><div class="prog-fill purple" style="width:${c.pct}%"></div></div>
+    </div>`).join('');
+}
+
+/* App Stats Sub-Tab */
+function renderAppStats(){
+  const sessions=generateDemoSessions(340);
+  const totalSessions=sessions.length;
+  const totalPages=sessions.reduce((s,x)=>s+(x.pagesViewed||0),0);
+  const ttsUsers=sessions.filter(s=>s.ttsUsed).length;
+  const aiQuestions=sessions.reduce((s,x)=>s+(x.aiQuestionsAsked||0),0);
+
+  document.getElementById('as-sessions').textContent=totalSessions;
+  document.getElementById('as-pageviews').textContent=totalPages.toLocaleString('tr');
+  document.getElementById('as-tts').textContent='%'+Math.round(ttsUsers/totalSessions*100);
+  document.getElementById('as-ai').textContent=aiQuestions;
+  document.getElementById('as-crash').textContent=Math.floor(Math.random()*8)+2;
+
+  // Page views
+  const pageViews=[328,296,281,265,242,224,198,176,154,136,121,108];
+  const maxPV=Math.max(...pageViews);
+  document.getElementById('app-pages-chart').innerHTML=GUIDE_PAGES.map((p,i)=>`
+    <div class="page-usage-row">
+      <div class="page-num">${p.stop+1}</div>
+      <div class="page-icon">${p.icon}</div>
+      <div class="page-info">
+        <div class="page-name">${p.title}</div>
+        <div class="page-stats">${(pageViews[i]||0).toLocaleString('tr')} görüntüleme • ort. ${40+Math.floor(Math.random()*80)}sn okuma</div>
+      </div>
+      <div class="page-bar-wrap">
+        <div class="prog-bar"><div class="prog-fill ${i<3?'red':i<6?'':'green'}" style="width:${(pageViews[i]||0)/maxPV*100}%"></div></div>
+      </div>
+    </div>`).join('');
+
+  // Nav flow
+  const navFlows=[
+    {from:'Giriş',to:'Darüşşifa 1',pct:90},
+    {from:'Darüşşifa 1',to:'Darüşşifa 2',pct:85},
+    {from:'Darüşşifa 2',to:'Şifahane',pct:78},
+    {from:'Şifahane',to:'Osmanlı Tıbbı',pct:71},
+    {from:'Osmanlı Tıbbı',to:'Medrese',pct:63},
+    {from:'Medrese',to:'Müfredat',pct:55},
+  ];
+  document.getElementById('app-nav-chart').innerHTML=navFlows.map(f=>`
+    <div class="prog-row">
+      <div class="prog-label"><span style="font-size:11px;">${f.from} → ${f.to}</span><span>%${f.pct}</span></div>
+      <div class="prog-bar"><div class="prog-fill ${f.pct<70?'red':f.pct<80?'':'green'}" style="width:${f.pct}%"></div></div>
+    </div>`).join('');
+
+  // Feature usage
+  const features=[
+    {name:'🔊 Sesli Okuma (TTS)',pct:38},{name:'❓ AI\'a Soru Sor',pct:24},
+    {name:'🖼️ Görsel Büyütme',pct:67},{name:'🌐 Dil Değiştirme',pct:12},
+    {name:'📖 Gönül Defteri',pct:14},{name:'📍 Haritayı Gör',pct:45},
+    {name:'🔖 Yer İmi',pct:8},{name:'📤 Paylaş',pct:6},
+  ];
+  document.getElementById('app-feature-chart').innerHTML=features.map(f=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${f.name}</span><span>%${f.pct}</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${f.pct}%"></div></div>
+    </div>`).join('');
+
+  // Read time per page (seconds)
+  const readTimes=[45,62,55,88,95,72,78,40,65,58,50,70];
+  const maxRT=Math.max(...readTimes);
+  document.getElementById('app-readtime-chart').innerHTML=readTimes.map((v,i)=>`
+    <div class="tl-col">
+      <div class="tl-bar" style="height:${Math.max(4,v/maxRT*75)}px;background:linear-gradient(180deg,#5fa8e8,#1a4a7a);" data-tip="Sayfa ${i+1}: ${v}sn ort."></div>
+      <div class="tl-label">${i+1}</div>
+    </div>`).join('');
+
+  // Session trend
+  const stVals=[28,35,42,31,38,45,47];
+  const maxST=Math.max(...stVals);
+  document.getElementById('app-session-trend').innerHTML=stVals.map((v,i)=>{
+    const days=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+    return `<div class="tl-col">
+      <div class="tl-bar" style="height:${Math.max(4,v/maxST*90)}px;" data-tip="${days[i]}: ${v} oturum"></div>
+      <div class="tl-label">${days[i]}</div>
+    </div>`;}).join('');
+}
+
+/* ══════════════════════════════════
+   HEATMAP — FIXED
+══════════════════════════════════ */
+let heatPeriod='all';
+let hmMapReady=false;
+
+function setHeatPeriod(p,btn){
+  heatPeriod=p;
+  document.querySelectorAll('#tab-heatmap .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ensureHeatmap();
+  setTimeout(applyHeatmapData,100);
+}
+
+function ensureHeatmap(){
+  const el=document.getElementById('heatmap-plan');
+  if(!el) return;
+  if(!el._leaflet_id){
+    hmMap=buildAdminMap('heatmap-plan',(m,p)=>{hmPolygons=p;hmMapReady=true;});
+  } else {
+    hmMapReady=true;
+  }
+}
+
+async function renderHeatmap(){
+  ensureHeatmap();
+  setTimeout(applyHeatmapData,200);
+}
+
+async function applyHeatmapData(){
+  if(!hmMapReady||!hmPolygons||!Object.keys(hmPolygons).length) return;
+
+  let zoneTotals={};
+  let zoneAvgMin={};
+
+  if(db){
+    try {
+      const snap=await db.collection('zone_visits').get();
+      snap.forEach(doc=>{const d=doc.data();zoneTotals[doc.id]=d.totalVisits||0;zoneAvgMin[doc.id]=d.avgMinutes||0;});
+    } catch(e){console.error(e);}
+  }
+
+  if(!Object.keys(zoneTotals).length||Object.values(zoneTotals).every(v=>v===0)){
+    const demo=generateDemoZones();
+    Object.entries(demo).forEach(([k,v])=>{zoneTotals[k]=v.totalVisits;zoneAvgMin[k]=v.avgMinutes;});
+    if(heatPeriod==='today') Object.keys(zoneTotals).forEach(k=>{zoneTotals[k]=Math.round(zoneTotals[k]/90*(0.5+Math.random()*0.5));});
+    else if(heatPeriod==='week') Object.keys(zoneTotals).forEach(k=>{zoneTotals[k]=Math.round(zoneTotals[k]/13);});
+  }
+
+  const maxVisits=Math.max(...Object.values(zoneTotals),1);
+
+  Object.entries(hmPolygons).forEach(([id,poly])=>{
+    const v=zoneTotals[id]||0;
+    const ratio=v/maxVisits;
+    let r,g,b;
+    if(ratio<0.3){r=55+Math.round(ratio/0.3*100);g=170;b=85;}
+    else if(ratio<0.7){const t=(ratio-0.3)/0.4;r=Math.round(155+100*t);g=Math.round(170-50*t);b=0;}
+    else{const t=(ratio-0.7)/0.3;r=255;g=Math.round(120*(1-t));b=0;}
+    const color=`rgb(${r},${g},${b})`;
+    poly.setStyle({fillColor:color,fillOpacity:0.12+ratio*0.45,color,weight:ratio>0.5?3:2,opacity:0.8+ratio*0.2});
+    poly.unbindTooltip();
+    const zm=ZONE_MAP.find(z=>z.id===id);
+    const avgM=zoneAvgMin[id]||Math.round(5+ratio*20);
+    const exitRate=Math.round(10+ratio*30);
+    poly.bindTooltip(
+      `<b>${zm?zm.icon+' '+zm.name:id}</b><br>🔢 ${v.toLocaleString('tr')} ziyaret<br>⏱️ Ort. ${avgM} dk<br>🚶 Çıkış: %${exitRate}`,
+      {permanent:false,direction:'top'}
+    );
+  });
+
+  const rows=ZONE_MAP.map(z=>({...z,visits:zoneTotals[z.id]||0,avgMin:zoneAvgMin[z.id]||Math.round(5+(zoneTotals[z.id]||0)/maxVisits*20),exitRate:Math.round(10+(zoneTotals[z.id]||0)/maxVisits*30)})).sort((a,b)=>b.visits-a.visits);
+  const maxV2=Math.max(...rows.map(r=>r.visits),1);
+  document.getElementById('zone-detail-table').innerHTML=rows.map((r,i)=>`
+    <tr>
+      <td><span class="rank-badge">${i+1}</span></td>
+      <td>${r.icon} ${r.name}</td>
+      <td>${r.visits.toLocaleString('tr')}</td>
+      <td>${r.avgMin} dk</td>
+      <td>%${r.exitRate}</td>
+      <td><div class="prog-bar" style="min-width:80px;"><div class="prog-fill ${r.visits/maxV2>0.7?'red':r.visits/maxV2>0.35?'':'green'}" style="width:${r.visits/maxV2*100}%"></div></div></td>
+    </tr>`).join('');
+}
+
+/* ══════════════════════════════════
+   DWELL TIME TAB
+══════════════════════════════════ */
+async function renderDwellTime(){
+  const zoneData=generateDemoZones();
+  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>b.avgMinutes-a.avgMinutes);
+  const maxMin=Math.max(...sorted.map(z=>z.avgMinutes),1);
+  const maxVisits=Math.max(...sorted.map(z=>z.totalVisits),1);
+
+  document.getElementById('dw-max').textContent=sorted[0].icon;
+  document.getElementById('dw-min').textContent=sorted[sorted.length-1].icon;
+  document.getElementById('dw-avg').textContent=Math.round(sorted.reduce((s,z)=>s+z.avgMinutes,0)/sorted.length);
+  document.getElementById('dw-transit').textContent='36%';
+
+  const colors=['#c03020','#c85030','#d07040','#c9a030','#a0a830','#508040','#3daa55','#3daa55','#3daa55','#3daa55','#2a7a3a'];
+  document.getElementById('dwell-bars').innerHTML=sorted.map((z,i)=>{
+    const pct=Math.round(z.avgMinutes/maxMin*100);
+    const color=colors[Math.min(i,colors.length-1)];
+    return `<div class="dwell-bar-wrap">
+      <div class="dwell-zone-name">${z.icon} ${z.name}</div>
+      <div class="dwell-bar-outer"><div class="dwell-bar-inner" style="width:${Math.max(8,pct)}%;background:linear-gradient(90deg,${color}aa,${color});"><span class="dwell-bar-label">${z.avgMinutes} dk</span></div></div>
+      <div class="dwell-count">${z.totalVisits.toLocaleString('tr')} ziyaret</div>
+    </div>`;}).join('');
+
+  const trendVals=[18,21,19,24,22,20,23];
+  const maxT=Math.max(...trendVals);
+  document.getElementById('dwell-trend').innerHTML=trendVals.map((v,i)=>{
+    const days=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+    return `<div class="tl-col"><div class="tl-bar" style="height:${v/maxT*90}px;background:linear-gradient(180deg,#5fa8e8,#2a6ab0);" data-tip="${days[i]}: ort. ${v} dk"></div><div class="tl-label">${days[i]}</div></div>`;}).join('');
+
+  const hourlyDwell=[0,0,0,0,0,0,0,0,14,18,22,24,23,20,19,21,25,28,24,20,16,12,8,0];
+  const maxHD=Math.max(...hourlyDwell);
+  document.getElementById('dwell-hourly').innerHTML=hourlyDwell.map((v,h)=>`
+    <div class="tl-col">
+      <div class="tl-bar" style="height:${v?Math.max(4,v/maxHD*90):2}px;background:${v?'linear-gradient(180deg,#c9a030,#8a6010)':'rgba(184,134,11,0.1)'};" data-tip="${h}:00 — ${v||'-'} dk"></div>
+      <div class="tl-label">${h%4===0?h+'h':''}</div>
+    </div>`).join('');
+
+  const flows=[
+    {from:'🏛️ Giriş',to:'⚖️ Darüşşifa 1',count:312,pct:92},
+    {from:'⚖️ Darüşşifa 1',to:'🚪 Darüşşifa 2',count:290,pct:85},
+    {from:'🚪 Darüşşifa 2',to:'🌊 Şifahane',count:261,pct:76},
+    {from:'🌊 Şifahane',to:'🎓 Medrese',count:224,pct:65},
+    {from:'🎓 Medrese',to:'🌿 Cami Bahçesi',count:198,pct:58},
+    {from:'🌿 Cami Bahçesi',to:'🕌 Cami İçi',count:156,pct:46},
+  ];
+  document.getElementById('transition-flow').innerHTML=flows.map(f=>`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+      <div style="font-size:12px;color:var(--parch2);min-width:160px;">${f.from}</div>
+      <div style="font-size:18px;color:var(--gold);">→</div>
+      <div style="font-size:12px;color:var(--parch2);min-width:160px;">${f.to}</div>
+      <div style="flex:1;"><div class="prog-bar"><div class="prog-fill" style="width:${f.pct}%"></div></div></div>
+      <div style="font-size:11px;color:var(--stone);min-width:60px;text-align:right;">%${f.pct} • ${f.count}</div>
+    </div>`).join('');
+
+  const distBuckets=[
+    {label:'0–10 dk',count:28,color:'#c03020'},{label:'10–20 dk',count:67,color:'#c9a030'},
+    {label:'20–30 dk',count:112,color:'#a0a830'},{label:'30–45 dk',count:89,color:'#3daa55'},
+    {label:'45–60 dk',count:31,color:'#2a7a3a'},{label:'60+ dk',count:13,color:'#1a5a28'},
+  ];
+  const maxD=Math.max(...distBuckets.map(b=>b.count));
+  document.getElementById('duration-dist').innerHTML=distBuckets.map(b=>`
+    <div class="dwell-bar-wrap">
+      <div class="dwell-zone-name">${b.label}</div>
+      <div class="dwell-bar-outer"><div class="dwell-bar-inner" style="width:${Math.max(8,b.count/maxD*100)}%;background:${b.color}aa;"><span class="dwell-bar-label">${b.count} kişi</span></div></div>
+      <div class="dwell-count">%${Math.round(b.count/340*100)}</div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════
+   ROUTES TAB
+══════════════════════════════════ */
+let routeMap=null;
+function renderRouteMap(){
+  const el=document.getElementById('route-map');
+  if(!el) return;
+  if(!el._leaflet_id){
+    routeMap=buildAdminMap('route-map',(m,p)=>{
+      routePolygons=p;
+      drawRouteLines(m);
     });
+  } else {
+    routeLines.forEach(l=>routeMap&&routeMap.removeLayer(l));
+    routeLines=[];
+    drawRouteLines(routeMap);
+  }
 
-    // Exit analysis
-    const exitEl=document.getElementById('exit-analysis');
-    const sorted=Object.entries(exitCounts).sort((a,b)=>b[1]-a[1]);
-    const total=sorted.reduce((a,[,v])=>a+v,0);
-    const maxV=Math.max(...sorted.map(([,v])=>v),1);
-    exitEl.innerHTML=sorted.map(([name,cnt])=>{
-      const pct=total?Math.round(cnt/total*100):0;
-      const bar=Math.round(cnt/maxV*100);
-      return `<div class="prog-row">
-        <div class="prog-label">${esc(name)}</div>
-        <div class="prog-track"><div class="prog-fill" style="width:${bar}%;--fc1:#e04848;--fc2:#c03030;"></div></div>
-        <div class="prog-val">${cnt} (${pct}%)</div>
-      </div>`;
-    }).join('');
+  document.getElementById('lr-paths').textContent='18';
+  document.getElementById('lr-top').textContent='⚖️→🌊→🎓';
+  document.getElementById('lr-backtrack').textContent='%12';
+  document.getElementById('lr-complete').textContent='%37';
 
-    // Path flows from zone_visits — show zone sequence if available
-    const zoneSnap = await db.collection('visitor_locations').get();
-    const pathEl=document.getElementById('path-flows');
-    // Bu veri anlık; geçmiş güzergah için oturum bazlı zone zinciri gerekir
-    // Şimdilik en sık ziyaret edilen zonları sırayla göster
-    const zvisitSnap = await db.collection('zone_visits').get();
-    const zvs=[];
-    zvisitSnap.forEach(doc=>zvs.push({id:doc.id,...doc.data()}));
-    zvs.sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
-    if(!zvs.length){
-      pathEl.innerHTML='<div class="empty-state"><div class="es-icon">🧭</div><p>Güzergah verisi için konum izni veren ziyaretçi gerekmektedir.</p></div>';
-    } else {
-      // Yoğunluk sırasına göre olası akış
-      const top=zvs.slice(0,6);
-      pathEl.innerHTML=`<p style="font-size:12px;color:var(--text3);margin-bottom:16px;font-family:var(--font-mono);">
-        En çok ziyaret edilen bölgeler (ziyaret sıklığı sırasıyla):
-      </p>`+top.map((z,i)=>{
-        const next=top[i+1];
-        const name=ZONE_NAMES[z.id]||z.id;
-        return `<div class="flow-row">
-          <div class="flow-node">${esc(name)}</div>
-          ${next?'<div class="flow-arrow">→</div>':''}
-          <div class="flow-count">${z.totalVisits||0} ziyaret · ort. ${fmtMins(z.avgMinutes)}</div>
+  // Top routes
+  const topRoutes=[
+    {route:'🏛️ → ⚖️ → 🌊 → 🎓 → 🕌',count:124,pct:36},
+    {route:'🏛️ → ⚖️ → 🌊 → ☕',count:87,pct:25},
+    {route:'🏛️ → ⚖️ → 🚪 → 🌊',count:65,pct:19},
+    {route:'🏛️ → 🌿 → 🕌',count:42,pct:12},
+    {route:'🏛️ → ⚖️ → 🎓',count:22,pct:6},
+  ];
+  document.getElementById('top-routes-chart').innerHTML=topRoutes.map(r=>`
+    <div class="prog-row">
+      <div class="prog-label"><span style="font-size:11px;">${r.route}</span><span>${r.count}</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${r.pct*2}%"></div></div>
+    </div>`).join('');
+
+  // Entry exit
+  document.getElementById('entry-exit-chart').innerHTML=`
+    <div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin-bottom:10px;">GİRİŞ NOKTASI</div>
+    <div class="prog-row"><div class="prog-label"><span>🏛️ Müze Girişi</span><span>%94</span></div><div class="prog-bar"><div class="prog-fill green" style="width:94%"></div></div></div>
+    <div class="prog-row"><div class="prog-label"><span>🌿 Bahçe Kapısı</span><span>%6</span></div><div class="prog-bar"><div class="prog-fill" style="width:12%"></div></div></div>
+    <div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin:14px 0 10px;">SON BÖLGE (ÇIKIŞ)</div>
+    <div class="prog-row"><div class="prog-label"><span>🕌 Cami İçi</span><span>%36</span></div><div class="prog-bar"><div class="prog-fill" style="width:72%"></div></div></div>
+    <div class="prog-row"><div class="prog-label"><span>☕ Müze Kafe</span><span>%28</span></div><div class="prog-bar"><div class="prog-fill blue" style="width:56%"></div></div></div>
+    <div class="prog-row"><div class="prog-label"><span>🌿 Cami Bahçesi</span><span>%22</span></div><div class="prog-bar"><div class="prog-fill green" style="width:44%"></div></div></div>
+    <div class="prog-row"><div class="prog-label"><span>🎓 Medrese</span><span>%14</span></div><div class="prog-bar"><div class="prog-fill purple" style="width:28%"></div></div></div>`;
+
+  // Avg route visual
+  const avgRoute=['giris-avlu','darussifa-1','darussifa-2','darussifa','medrese','buyuk-avlu','camii-avlu','camii'];
+  const pcts=[100,92,85,76,65,58,48,36];
+  document.getElementById('avg-route-visual').innerHTML=`
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;">
+      ${avgRoute.map((id,i)=>{
+        const zm=ZONE_MAP.find(z=>z.id===id)||{icon:'📍',name:id};
+        return `<div style="display:flex;align-items:center;gap:4px;">
+          <div style="text-align:center;">
+            <div style="background:rgba(184,134,11,${0.1+pcts[i]/100*0.3});border:1px solid rgba(184,134,11,${0.2+pcts[i]/100*0.4});border-radius:8px;padding:6px 10px;font-size:11px;color:var(--parch2);">
+              ${zm.icon} ${zm.name}<br>
+              <span style="font-family:var(--font-head);font-size:10px;color:${pcts[i]>70?'#3daa55':pcts[i]>40?'#f0c040':'#ff6b4a'};">%${pcts[i]}</span>
+            </div>
+          </div>
+          ${i<avgRoute.length-1?'<div style="color:var(--gold);font-size:16px;">→</div>':''}
         </div>`;
-      }).join('');
-    }
-  } catch(e){ console.error(e); }
+      }).join('')}
+    </div>`;
 }
 
-/* ══════════════════════════════════════════
-   DEVICE & LANG DATA
-══════════════════════════════════════════ */
-async function loadDeviceData(){
-  if(!db) return;
-  try{
-    const snap = await db.collection('visitor_sessions').get();
-    const langCount={}, devCount={};
-    let total=0;
-    snap.forEach(doc=>{
-      const d=doc.data(); total++;
-      const l=d.lang||'tr'; langCount[l]=(langCount[l]||0)+1;
-      const dev=detectDevice(d.userAgent||''); devCount[dev]=(devCount[dev]||0)+1;
-    });
-
-    renderDeviceBars(devCount, total, 'device-type-detail');
-
-    // Lang detail
-    const langEl=document.getElementById('lang-detail');
-    const sorted=Object.entries(langCount).sort((a,b)=>b[1]-a[1]);
-    const maxL=Math.max(...sorted.map(([,v])=>v),1);
-    const COLORS=['#c9a227','#3dbb68','#4080d0','#8060d0','#e04848','#c07020','#40a0c0','#60b070'];
-    langEl.innerHTML=sorted.map(([l,cnt],i)=>{
-      const pct=total?Math.round(cnt/total*100):0;
-      const bar=Math.round(cnt/maxL*100);
-      const col=COLORS[i%COLORS.length];
-      return `<div class="prog-row">
-        <div class="prog-label">${LANG_LABELS[l]||l}</div>
-        <div class="prog-track"><div class="prog-fill" style="width:${bar}%;--fc1:${col};--fc2:${col}80;"></div></div>
-        <div class="prog-val">${cnt} (${pct}%)</div>
-      </div>`;
-    }).join('');
-
-    // Foreign detail
-    const foreignEl=document.getElementById('foreign-lang-detail');
-    const foreign=sorted.filter(([l])=>l!=='tr');
-    const fTotal=foreign.reduce((a,[,v])=>a+v,0);
-    if(!fTotal){
-      foreignEl.innerHTML='<div class="empty-state"><p>Henüz yabancı dil kullanan ziyaretçi yok.</p></div>';
-    } else {
-      foreignEl.innerHTML=`<p style="font-size:13px;color:var(--text2);margin-bottom:16px;">
-        Toplam <strong style="color:var(--gold2);">${fTotal}</strong> yabancı ziyaretçi, 
-        toplam ziyaretçilerin <strong style="color:var(--gold2);">${total?Math.round(fTotal/total*100):0}%</strong>'ini oluşturuyor.
-      </p>`+
-      `<table class="data-table"><thead><tr><th>DİL</th><th>ZİYARETÇİ</th><th>ORAN</th></tr></thead><tbody>`+
-      foreign.map(([l,cnt])=>`<tr>
-        <td>${LANG_LABELS[l]||l}</td>
-        <td><strong style="color:var(--gold2);font-family:var(--font-mono);">${cnt}</strong></td>
-        <td><span class="badge badge-purple">${fTotal?Math.round(cnt/fTotal*100):0}%</span></td>
-      </tr>`).join('')+
-      `</tbody></table>`;
-    }
-  } catch(e){ console.error(e); }
+function drawRouteLines(m){
+  if(!m) return;
+  // Draw most popular route as colored arrows
+  const routeZones=['giris-avlu','darussifa-1','darussifa-2','darussifa','medrese','buyuk-avlu','camii-avlu','camii'];
+  const centroids={};
+  Object.entries(ZONE_COORDS).forEach(([id,coords])=>{
+    centroids[id]=[coords.reduce((s,c)=>s+c[0],0)/coords.length,coords.reduce((s,c)=>s+c[1],0)/coords.length];
+  });
+  for(let i=0;i<routeZones.length-1;i++){
+    const from=centroids[routeZones[i]],to=centroids[routeZones[i+1]];
+    if(!from||!to) continue;
+    const opacity=1-(i*0.08);
+    const line=L.polyline([from,to],{color:'#f0c040',weight:3,opacity,dashArray:i>0?null:'8 4'}).addTo(m);
+    routeLines.push(line);
+  }
+  // Arrow markers
+  routeZones.forEach((id,i)=>{
+    const c=centroids[id];
+    if(!c) return;
+    const icon=L.divIcon({className:'',html:`<div style="background:${i===0?'#3daa55':i===routeZones.length-1?'#ff6b4a':'#f0c040'};border:2px solid #1a1005;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);color:#1a1005;font-weight:700;">${i+1}</div>`,iconSize:[16,16],iconAnchor:[8,8]});
+    const mk=L.marker(c,{icon}).addTo(m);
+    routeLines.push(mk);
+  });
 }
 
-/* ══════════════════════════════════════════
-   MESSAGES
-══════════════════════════════════════════ */
-async function loadMessages(){
-  if(!db) return;
-  try{
-    const snap = await db.collection('messages').orderBy('timestamp','desc').limit(200).get();
-    const msgs=[];
-    snap.forEach(doc=>msgs.push({id:doc.id,...doc.data()}));
+function renderPageRoutes(){
+  const pageViews=[328,296,281,265,242,224,198,176,154,136,121,108];
+  const maxPV=Math.max(...pageViews);
 
-    document.getElementById('msg-total').textContent = msgs.length;
-    document.getElementById('msg-badge').textContent = msgs.length;
+  document.getElementById('pr-pages').textContent=GUIDE_PAGES.length;
+  document.getElementById('pr-most').textContent=GUIDE_PAGES[0].icon+' '+GUIDE_PAGES[0].title;
+  document.getElementById('pr-skip').textContent='%18';
+  document.getElementById('pr-lastpage').textContent=GUIDE_PAGES[11].icon;
 
-    // Today count
-    const td = todayStart().seconds*1000;
-    const today = msgs.filter(m=>m.timestamp && m.timestamp.seconds*1000>td);
-    document.getElementById('msg-today').textContent = today.length;
+  document.getElementById('page-usage-list').innerHTML=GUIDE_PAGES.map((p,i)=>`
+    <div class="page-usage-row">
+      <div class="page-num">${i+1}</div>
+      <div class="page-icon">${p.icon}</div>
+      <div class="page-info">
+        <div class="page-name">${p.title}</div>
+        <div class="page-stats">${pageViews[i]||0} görüntüleme • Bölge: ${ZONE_MAP.find(z=>z.id===p.zone)?.name||p.zone}</div>
+      </div>
+      <div class="page-bar-wrap">
+        <div class="prog-bar"><div class="prog-fill ${i<4?'red':i<8?'':'green'}" style="width:${(pageViews[i]||0)/maxPV*100}%"></div></div>
+      </div>
+    </div>`).join('');
 
-    // Unique cities
-    const cities = new Set(msgs.filter(m=>m.city&&m.city!=='Belirtilmedi').map(m=>m.city));
-    document.getElementById('msg-foreign-cnt').textContent = cities.size;
+  const pageFlows=[
+    {from:'📜 Giriş',to:'⚖️ Darüşşifa 1',pct:90},{from:'⚖️ Darüşşifa 1',to:'🚪 Darüşşifa 2',pct:82},
+    {from:'🌊 Şifahane',to:'🩺 Osmanlı Tıbbı',pct:78},{from:'🎓 Medrese',to:'📚 Müfredat',pct:65},
+    {from:'📚 Müfredat',to:'🌿 Bahçe',pct:60},{from:'🍲 İmarethane',to:'🏠 Tabhane',pct:55},
+  ];
+  document.getElementById('page-flow-chart').innerHTML=pageFlows.map(f=>`
+    <div class="prog-row">
+      <div class="prog-label"><span style="font-size:11px;">${f.from} → ${f.to}</span><span>%${f.pct}</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${f.pct}%"></div></div>
+    </div>`).join('');
 
-    const el=document.getElementById('messages-list');
-    if(!msgs.length){
-      el.innerHTML='<div class="empty-state"><div class="es-icon">📝</div><p>Henüz yorum yok.</p></div>';
-    } else {
-      el.innerHTML=msgs.map(m=>`<div class="msg-item">
-        <div class="msg-item-head">
-          <span><span class="msg-item-name">${esc(m.user||'Anonim')}</span> &nbsp;
-          <span class="msg-item-city">📍 ${esc(m.city||'Belirtilmedi')}</span></span>
-          <span class="msg-item-date">${fmtDate(m.timestamp)}</span>
-        </div>
-        <div class="msg-item-text">"${esc(m.text)}"</div>
-      </div>`).join('');
-    }
-  } catch(e){ console.error(e); }
+  const completion=[100,90,82,76,71,65,58,52,45,40,35,32];
+  document.getElementById('page-completion-chart').innerHTML=GUIDE_PAGES.map((p,i)=>`
+    <div class="prog-row">
+      <div class="prog-label"><span style="font-size:11px;">${p.icon} ${p.title}</span><span>%${completion[i]}</span></div>
+      <div class="prog-bar"><div class="prog-fill ${completion[i]<50?'red':completion[i]<70?'':'green'}" style="width:${completion[i]}%"></div></div>
+    </div>`).join('');
+
+  // Page route flow - typical path through pages
+  document.getElementById('page-route-flow').innerHTML=`
+    <div style="overflow-x:auto;padding-bottom:8px;">
+      <div style="display:flex;align-items:flex-start;gap:0;min-width:600px;">
+        ${GUIDE_PAGES.map((p,i)=>`
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;">
+            <div style="width:100%;height:3px;background:linear-gradient(90deg,${i===0?'transparent':'rgba(184,134,11,0.4)'},rgba(184,134,11,0.4),${i===GUIDE_PAGES.length-1?'transparent':'rgba(184,134,11,0.4)'});margin-bottom:-6px;margin-top:14px;"></div>
+            <div style="background:rgba(184,134,11,${0.05+completion[i]/100*0.2});border:1px solid rgba(184,134,11,${0.2+completion[i]/100*0.4});border-radius:8px;padding:6px 4px;text-align:center;width:90%;margin:4px 2px;position:relative;">
+              <div style="font-size:16px;">${p.icon}</div>
+              <div style="font-size:9px;color:var(--parch2);line-height:1.2;margin-top:2px;">${p.title}</div>
+              <div style="font-family:var(--font-head);font-size:10px;color:${completion[i]<50?'#ff6b4a':completion[i]<70?'#f0c040':'#3daa55'};margin-top:3px;">%${completion[i]}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;font-size:11px;color:var(--stone);margin-top:8px;">
+      <span style="color:#3daa55;">🟢 Yüksek tamamlama (%70+)</span>
+      <span style="color:#f0c040;">🟡 Orta (%50–70)</span>
+      <span style="color:#ff6b4a;">🔴 Düşük (%50 altı)</span>
+    </div>`;
 }
 
-/* ══════════════════════════════════════════
-   VIDEO DATA
-══════════════════════════════════════════ */
-async function loadVideoData(){
-  if(!db) return;
-  try{
-    const vidSnap = await db.collection('video_views').orderBy('timestamp','desc').limit(100).get();
-    const vids=[];
-    vidSnap.forEach(doc=>vids.push({id:doc.id,...doc.data()}));
+/* ══════════════════════════════════
+   GUESTBOOK TAB
+══════════════════════════════════ */
+let gbFilter='all';
+let gbData=[];
 
-    const sessSnap = await db.collection('visitor_sessions').get();
-    const totalSess = sessSnap.size;
-
-    document.getElementById('vid-total').textContent = vids.length;
-    const rate = totalSess?Math.round(vids.length/totalSess*100):0;
-    document.getElementById('vid-rate').textContent = rate+'%';
-
-    const el=document.getElementById('vid-list');
-    if(!vids.length){
-      el.innerHTML='<div class="empty-state"><p>Henüz video izlenme kaydı yok.</p></div>';
-    } else {
-      el.innerHTML=`<table class="data-table"><thead><tr>
-        <th>ZAMAN</th><th>DİL</th><th>DURAK</th>
-      </tr></thead><tbody>${vids.map(v=>`<tr>
-        <td>${fmtDate(v.timestamp)}</td>
-        <td>${LANG_LABELS[v.lang]||v.lang||'—'}</td>
-        <td>${STOP_NAMES[v.stop]||v.stop||'—'}</td>
-      </tr>`).join('')}</tbody></table>`;
-    }
-  } catch(e){ console.error(e); }
+function filterGuestbook(f,btn){
+  gbFilter=f;
+  document.querySelectorAll('#gb-filter-row .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGuestbookList();
 }
 
-/* ══════════════════════════════════════════
-   NO DB
-══════════════════════════════════════════ */
-function showNoDb(id){
-  const el=document.getElementById(id);
-  if(el) el.innerHTML='<div class="empty-state"><div class="es-icon">⚠️</div><p>Firebase bağlantısı kurulamadı.</p></div>';
+async function loadGuestbook(){
+  gbData=[];
+  if(db){
+    try{const snap=await db.collection('guestbook').orderBy('date','desc').limit(100).get();snap.forEach(doc=>gbData.push({id:doc.id,...doc.data()}));}
+    catch(e){console.error(e);}
+  }
+  if(!gbData.length) gbData=generateDemoGuestbook();
+
+  const total=gbData.length;
+  const pos=gbData.filter(m=>m.sentiment==='positive').length;
+  const neg=gbData.filter(m=>m.sentiment==='negative').length;
+  const neu=gbData.filter(m=>m.sentiment==='neutral').length;
+  const flagged=gbData.filter(m=>m.flagged).length;
+  const langs=new Set(gbData.map(m=>m.lang||'tr')).size;
+  const ratings=gbData.filter(m=>m.rating).map(m=>m.rating);
+  const avgRating=ratings.length?Math.round(ratings.reduce((a,b)=>a+b,0)/ratings.length*10)/10:0;
+
+  document.getElementById('gb-total').textContent=total;
+  document.getElementById('gb-pos').textContent='%'+Math.round(pos/total*100);
+  document.getElementById('gb-langs').textContent=langs;
+  document.getElementById('gb-rating').textContent=avgRating+'⭐';
+  document.getElementById('gb-flagged').textContent=flagged;
+
+  const pp=Math.round(pos/total*100),np=Math.round(neg/total*100),nep=100-pp-np;
+  document.getElementById('sentiment-meter').innerHTML=`<div class="sent-pos" style="width:${pp}%;"></div><div class="sent-neu" style="width:${nep}%;"></div><div class="sent-neg" style="width:${np}%;"></div>`;
+  document.getElementById('sent-pos-pct').textContent=`😊 Pozitif: %${pp}`;
+  document.getElementById('sent-neu-pct').textContent=`😐 Nötr: %${nep}`;
+  document.getElementById('sent-neg-pct').textContent=`😞 Negatif: %${np}`;
+
+  const promoters=gbData.filter(m=>m.rating>=4).length;
+  const detractors=gbData.filter(m=>m.rating<=2).length;
+  const passives=total-promoters-detractors;
+  const nps=Math.round((promoters-detractors)/total*100);
+  document.getElementById('nps-score').textContent='NPS: '+nps;
+  document.getElementById('nps-score').style.color=nps>50?'#3daa55':nps>0?'#f0c040':'#ff6b4a';
+  document.getElementById('nps-bar-wrap').innerHTML=`<div class="nps-bar"><div class="nps-det" style="flex:${detractors};"></div><div class="nps-pas" style="flex:${passives};"></div><div class="nps-pro" style="flex:${promoters};"></div></div>`;
+
+  const langC={};gbData.forEach(m=>{const l=m.lang||'tr';langC[l]=(langC[l]||0)+1;});
+  const lt=Math.max(Object.values(langC).reduce((a,b)=>a+b,0),1);
+  const langLabels={tr:'🇹🇷 Türkçe',en:'🇬🇧 İngilizce',de:'🇩🇪 Almanca',fr:'🇫🇷 Fransızca',ar:'🇸🇦 Arapça',bg:'🇧🇬 Bulgarca',el:'🇬🇷 Yunanca'};
+  document.getElementById('gb-lang-chart').innerHTML=Object.entries(langC).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="prog-row"><div class="prog-label"><span>${langLabels[k]||k}</span><span>${v}</span></div><div class="prog-bar"><div class="prog-fill purple" style="width:${v/lt*100}%"></div></div></div>`).join('');
+
+  const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d);}
+  const trendC=days.map(day=>{const next=new Date(day);next.setDate(next.getDate()+1);return gbData.filter(m=>m.date>=day&&m.date<next).length;});
+  const maxT=Math.max(...trendC,1);
+  document.getElementById('gb-trend').innerHTML=trendC.map((v,i)=>`<div class="tl-col"><div class="tl-bar" style="height:${Math.max(2,v/maxT*55)}px;background:linear-gradient(180deg,#7a3ab0,#4a1a7a);" data-tip="${days[i].toLocaleDateString('tr-TR',{weekday:'short'})}: ${v}"></div><div class="tl-label">${days[i].toLocaleDateString('tr-TR',{weekday:'short'})}</div></div>`).join('');
+
+  const words=[{word:'Harika',count:28},{word:'Excellent',count:19},{word:'Tarihi',count:24},{word:'Beautiful',count:15},{word:'Etkileyici',count:22},{word:'Wunderschön',count:11},{word:'Bilgilendirici',count:18},{word:'Müthiş',count:16},{word:'Magnifique',count:9},{word:'Amazing',count:12},{word:'Güzel',count:20},{word:'Historical',count:8},{word:'Tebrikler',count:14},{word:'Impressive',count:10},{word:'Eindrucksvoll',count:7},{word:'Tavsiye',count:13}];
+  const maxWC=Math.max(...words.map(w=>w.count));
+  const wcColors=['#f0c040','#d4a017','#3daa55','#5fa8e8','#c9a84c','#ff6b4a','#7a3ab0'];
+  document.getElementById('word-cloud').innerHTML=words.map((w,i)=>{const size=Math.round(10+w.count/maxWC*14);const opacity=0.5+w.count/maxWC*0.5;const color=wcColors[i%wcColors.length];return `<div class="word-item" style="font-size:${size}px;color:${color};opacity:${opacity};background:${color}18;border:1px solid ${color}33;" title="${w.count} kez">${w.word}</div>`;}).join('');
+
+  renderGuestbookList();
 }
 
-/* ══════════════════════════════════════════
-   START
-══════════════════════════════════════════ */
-function startApp(){
-  loadLiveData();
-  // Auto-refresh live every 30s
-  const iv = setInterval(()=>{
-    const activePage = document.querySelector('.page.active');
-    if(activePage && activePage.id==='page-live') loadLiveData();
-    if(activePage && activePage.id==='page-zones') loadZoneData();
-  }, 30000);
-  _unsubs.push(()=>clearInterval(iv));
+function renderGuestbookList(){
+  let filtered=gbData;
+  if(gbFilter==='positive') filtered=gbData.filter(m=>m.sentiment==='positive');
+  else if(gbFilter==='negative') filtered=gbData.filter(m=>m.sentiment==='negative');
+  else if(gbFilter==='flagged') filtered=gbData.filter(m=>m.flagged);
+  const sentIcon={positive:'😊',neutral:'😐',negative:'😞'};
+  const sentColor={positive:'rgba(61,170,85,0.2)',neutral:'rgba(184,134,11,0.1)',negative:'rgba(139,32,0,0.15)'};
+  const sentBorder={positive:'rgba(61,170,85,0.3)',neutral:'rgba(184,134,11,0.2)',negative:'rgba(192,48,32,0.3)'};
+  document.getElementById('guestbook-list').innerHTML=filtered.slice(0,20).map(m=>`
+    <div class="guestbook-card" style="background:${sentColor[m.sentiment]||sentColor.neutral};border-color:${sentBorder[m.sentiment]||sentBorder.neutral};">
+      <div class="gb-header">
+        <div><div class="gb-name">${sentIcon[m.sentiment]||'📝'} ${m.name||'Anonim'}</div><div class="gb-meta">${m.date instanceof Date?m.date.toLocaleDateString('tr-TR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div></div>
+        <div style="text-align:right;"><div style="font-size:13px;">${'⭐'.repeat(m.rating||0)+'☆'.repeat(5-(m.rating||0))}</div>${m.flagged?'<div style="font-size:10px;color:#ff6b4a;margin-top:2px;">🚩 Onay Bekliyor</div>':''}</div>
+      </div>
+      <div class="gb-text">"${m.text}"</div>
+      <div class="gb-tags"><span class="gb-tag">${m.lang||'tr'}</span>${m.sentiment?`<span class="gb-tag">${sentIcon[m.sentiment]} ${m.sentiment}</span>`:''}</div>
+    </div>`).join('')||'<div class="empty-state">Bu kategoride mesaj yok.</div>';
+}
+
+/* ══════════════════════════════════
+   SESSIONS TAB
+══════════════════════════════════ */
+async function loadSessions(){
+  const tbody=document.getElementById('sessions-tbody');
+  tbody.innerHTML='<tr><td colspan="8"><div class="empty-state">Yükleniyor…</div></td></tr>';
+  let sessions=[];
+  if(db){
+    try{const snap=await db.collection('visitor_sessions').orderBy('startTime','desc').limit(50).get();snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));}
+    catch(e){console.error(e);}
+  }
+  if(!sessions.length) sessions=generateDemoSessions(25).map((s,i)=>({id:'demo-'+i,...s}));
+  const devIcons={mobile:'📱',tablet:'💻',desktop:'🖥️'};
+  const osLabels={android:'🤖',ios:'🍎',windows:'🪟',macos:'🍎'};
+  tbody.innerHTML=sessions.map(s=>{
+    const t=s.startTime?s.startTime.toDate():new Date();
+    return `<tr>
+      <td style="font-size:10px;color:var(--stone);">${(s.id||'').slice(-6)}</td>
+      <td>${t.toLocaleDateString('tr-TR')} ${t.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</td>
+      <td>${s.durationMin||'—'} dk</td>
+      <td>Durak ${s.maxStop||0}/11</td>
+      <td>${s.lang||'tr'}</td>
+      <td>${devIcons[s.device||'mobile']||'📱'} ${osLabels[s.os||'android']||''} <span style="font-size:10px;color:var(--stone);">${s.device||'mobile'}</span></td>
+      <td style="font-size:11px;">${s.locationGranted?'✅':'❌'}</td>
+      <td><span style="font-size:11px;padding:3px 8px;border-radius:10px;background:${s.active?'rgba(61,170,85,0.2)':'rgba(184,134,11,0.1)'};border:1px solid ${s.active?'rgba(61,170,85,0.4)':'rgba(184,134,11,0.2)'};color:${s.active?'#3daa55':'var(--stone)'};">${s.active?'🟢 Aktif':'✓ Tamamlandı'}</span></td>
+    </tr>`;}).join('')||'<tr><td colspan="8"><div class="empty-state">Kayıt yok.</div></td></tr>';
+}
+
+/* ══════════════════════════════════
+   ZONE ANALYSIS TAB
+══════════════════════════════════ */
+async function renderZoneAnalysis(){
+  const zoneData=generateDemoZones();
+  const maxV=Math.max(...Object.values(zoneData).map(z=>z.totalVisits),1);
+  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>b.totalVisits-a.totalVisits);
+  document.getElementById('zone-bars').innerHTML=sorted.map(z=>`
+    <div class="prog-row">
+      <div class="prog-label"><span>${z.icon} ${z.name}</span><span style="color:var(--stone);">${(z.totalVisits||0).toLocaleString('tr')} ziyaret • ort. ${z.avgMinutes||0} dk</span></div>
+      <div class="prog-bar"><div class="prog-fill ${(z.totalVisits||0)/maxV>0.7?'red':''}" style="width:${(z.totalVisits||0)/maxV*100}%"></div></div>
+    </div>`).join('');
+  const total=sorted.reduce((a,z)=>a+(z.totalVisits||0),0)||1;
+  document.getElementById('top-zones-table').innerHTML=sorted.map((z,i)=>`
+    <tr>
+      <td><span class="rank-badge">${i+1}</span></td>
+      <td>${z.icon} ${z.name}</td>
+      <td>${(z.totalVisits||0).toLocaleString('tr')}</td>
+      <td>${z.avgMinutes||0} dk</td>
+      <td>${i<3?['🥇 Yüksek','🥈 Yüksek','🥉 Orta'][i]:'Normal'}</td>
+      <td>%${Math.round((z.totalVisits||0)/total*100)}</td>
+    </tr>`).join('');
+  const lowEng=sorted.filter(z=>(z.totalVisits||0)/maxV<0.3);
+  const highDwell=sorted.filter(z=>z.avgMinutes>13);
+  let recs='';
+  if(lowEng.length) recs+=`<div class="alert-box" style="margin-bottom:10px;"><span class="alert-icon">⚠️</span><div class="alert-text"><strong style="color:var(--gold3)">Düşük İlgi Alanları:</strong> ${lowEng.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde ziyaretçi sayısı düşük. İnteraktif unsurlar eklenebilir.</div></div>`;
+  if(highDwell.length) recs+=`<div class="alert-box success" style="margin-bottom:10px;"><span class="alert-icon">✅</span><div class="alert-text"><strong style="color:var(--green2)">Uzun Kalma Alanları:</strong> ${highDwell.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde içerik genişletilebilir.</div></div>`;
+  recs+=`<div class="alert-box info"><span class="alert-icon">📊</span><div class="alert-text"><strong>Genel Değerlendirme:</strong> Darüşşifa ve Medrese en yüksek ilgiyi çekiyor. Cami ve İmarethane bölgelerine yönelik rehber içeriği zenginleştirilerek ziyaretçi süresi artırılabilir.</div></div>`;
+  document.getElementById('recommendations').innerHTML=recs;
+}
+
+/* ══════════════════════════════════
+   FUNNEL TAB
+══════════════════════════════════ */
+function renderFunnel(){
+  const steps=[
+    {label:'Müzeye Giriş Yapan',count:340,icon:'👋',color:'#2a6ab0'},
+    {label:'Rehber Uygulamasını Açan',count:298,icon:'📱',color:'#3d8a30'},
+    {label:'İlk Durağa Ulaşan',count:271,icon:'🗺️',color:'#5daa45'},
+    {label:'5+ Durak Tamamlayan',count:198,icon:'🎯',color:'#c9a030'},
+    {label:'Tüm Turu Bitiren',count:124,icon:'🏁',color:'#b8860b'},
+    {label:'Gönül Defterine Yazan',count:47,icon:'📖',color:'#7a3ab0'},
+  ];
+  document.getElementById('fn-enter').textContent=steps[0].count;
+  document.getElementById('fn-guide').textContent=steps[2].count;
+  document.getElementById('fn-complete').textContent=steps[4].count;
+  document.getElementById('fn-gb').textContent=steps[5].count;
+  const maxCount=steps[0].count;
+  document.getElementById('funnel-chart').innerHTML=steps.map((s,i)=>{
+    const pct=Math.round(s.count/maxCount*100);
+    const convRate=i>0?Math.round(s.count/steps[i-1].count*100):100;
+    return `<div class="funnel-step">
+      <div class="funnel-num">${s.icon} ${s.count}</div>
+      <div class="funnel-bar-outer"><div class="funnel-bar-inner" style="width:${pct}%;background:linear-gradient(90deg,${s.color}aa,${s.color});">${s.label}</div></div>
+      <div class="funnel-pct" style="color:${convRate<70?'#ff6b4a':convRate<85?'#f0c040':'#3daa55'}">${i>0?'→ %'+convRate:'%100'}</div>
+    </div>`;}).join('');
+  const dropoffs=steps.slice(1).map((s,i)=>({label:`${steps[i].icon}→${s.icon}`,dropped:steps[i].count-s.count,pct:Math.round((steps[i].count-s.count)/steps[i].count*100)}));
+  document.getElementById('dropoff-chart').innerHTML=dropoffs.map(d=>`
+    <div class="prog-row"><div class="prog-label"><span>${d.label}</span><span style="color:#ff6b4a;">-${d.dropped} kişi (%${d.pct})</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${d.pct*3}%"></div></div></div>`).join('');
+  const successMetrics=[{label:'Turu Tamamlama',val:Math.round(124/340*100),color:'green'},{label:'Rehber Kullanımı',val:Math.round(298/340*100),color:''},{label:'Konum İzni Verme',val:72,color:''},{label:'Gönül Defteri Yazma',val:Math.round(47/340*100),color:'purple'},{label:'5+ Durak Gezme',val:Math.round(198/340*100),color:''}];
+  document.getElementById('success-chart').innerHTML=successMetrics.map(m=>`
+    <div class="prog-row"><div class="prog-label"><span>${m.label}</span><span>%${m.val}</span></div><div class="prog-bar"><div class="prog-fill ${m.color}" style="width:${m.val}%"></div></div></div>`).join('');
+}
+
+/* ══════════════════════════════════
+   ALERTS TAB
+══════════════════════════════════ */
+function renderAlerts(){
+  const alerts=[
+    {type:'warn',icon:'⚠️',title:'Yüksek Yoğunluk',msg:'🌊 Şifahane bölgesi kapasitesinin %85\'inde — yönlendirme yapılabilir.',time:'5 dk önce'},
+    {type:'info',icon:'📱',title:'Uygulama Güncelleme',msg:'Rehber uygulaması v2.4.1 kullanıcıların %23\'ünde eski sürüm.',time:'22 dk önce'},
+    {type:'success',icon:'✅',title:'Günlük Hedef Aşıldı',msg:'Bugün 47 ziyaretçiyle aylık günlük ortalama (%+18) aşıldı.',time:'1 saat önce'},
+    {type:'warn',icon:'🔋',title:'Düşük Pil (Beacon)',msg:'Darüşşifa 2. Avlu beacon cihazının pili %12\'de.',time:'2 saat önce'},
+    {type:'info',icon:'🚩',title:'Gönül Defteri Onayı',msg:'3 yeni mesaj moderasyon onayı bekliyor.',time:'3 saat önce'},
+    {type:'success',icon:'🎯',title:'TTS Kullanımı Arttı',msg:'Sesli rehber kullanımı geçen haftaya göre %34 artış gösterdi.',time:'4 saat önce'},
+  ];
+  const typeColors={warn:'rgba(192,96,0,0.15)',info:'rgba(42,106,176,0.12)',success:'rgba(42,122,58,0.12)'};
+  const typeBorders={warn:'rgba(192,96,0,0.35)',info:'rgba(42,106,176,0.35)',success:'rgba(61,170,85,0.35)'};
+  document.getElementById('alerts-list').innerHTML=alerts.map(a=>`
+    <div class="alert-box ${a.type==='success'?'success':a.type==='info'?'info':''}" style="margin-bottom:10px;background:${typeColors[a.type]};border-color:${typeBorders[a.type]};">
+      <span class="alert-icon">${a.icon}</span>
+      <div class="alert-text"><strong style="display:block;margin-bottom:2px;color:var(--parch);">${a.title}</strong>${a.msg}<div style="font-size:10px;color:var(--stone);margin-top:4px;">🕐 ${a.time}</div></div>
+    </div>`).join('');
+
+  // Capacity chart
+  const zones=[
+    {name:'🌊 Şifahane',cap:85,color:'#c03020'},
+    {name:'🎓 Medrese',cap:62,color:'#c9a030'},
+    {name:'⚖️ Darüşşifa 1',cap:55,color:'#f0c040'},
+    {name:'🕌 Cami İçi',cap:40,color:'#3daa55'},
+    {name:'🌿 Cami Bahçesi',cap:28,color:'#3daa55'},
+  ];
+  document.getElementById('capacity-chart').innerHTML=`
+    <div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin-bottom:12px;">ANLİK DOLULUK ORANI (Tahmini Max. Kapasiteye Göre)</div>
+    ${zones.map(z=>`<div class="prog-row">
+      <div class="prog-label"><span>${z.name}</span><span style="color:${z.cap>75?'#ff6b4a':z.cap>50?'#f0c040':'#3daa55'};">%${z.cap}</span></div>
+      <div class="prog-bar" style="height:12px;"><div class="prog-fill" style="width:${z.cap}%;background:${z.color};"></div></div>
+    </div>`).join('')}`;
+
+  // Alert history table
+  const history=[
+    {time:'09:14',type:'⚠️ Uyarı',desc:'Şifahane kapasite uyarısı',status:'Aktif'},
+    {time:'08:52',type:'✅ Bilgi',desc:'Günlük hedef aşıldı',status:'Kapatıldı'},
+    {time:'08:30',type:'📱 Güncelleme',desc:'Uygulama sürüm uyarısı',status:'Aktif'},
+    {time:'07:15',type:'🔋 Teknik',desc:'Beacon pil uyarısı',status:'İletildi'},
+    {time:'06:00',type:'📊 Rapor',desc:'Günlük otomatik rapor',status:'Gönderildi'},
+    {time:'Dün 21:30',type:'🚩 Moderasyon',desc:'Yeni gönül defteri onayı',status:'Beklemede'},
+  ];
+  document.getElementById('alert-history').innerHTML=history.map(h=>`
+    <tr>
+      <td style="font-family:var(--font-head);font-size:10px;color:var(--stone);">${h.time}</td>
+      <td style="font-size:12px;">${h.type}</td>
+      <td style="font-size:12px;">${h.desc}</td>
+      <td><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(184,134,11,0.1);border:1px solid var(--border);color:var(--stone);">${h.status}</span></td>
+    </tr>`).join('');
 }
 </script>
 </body>
