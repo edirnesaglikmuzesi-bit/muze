@@ -1379,8 +1379,10 @@ html,body{
     <div class="menu-section">SAYFALAR</div>
     <div class="menu-item" onclick="openMapScreen()"><span class="mi-icon">🗺️</span><span class="mi-name">Harita &amp; Konum</span></div>
     <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">🖋️</span><span class="mi-name">Gönül Köprüsü</span></div>
-    <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">✍️</span><span class="mi-name">Rehbere Sor </span></div>
-  </div>
+    <div class="menu-item" onclick="closeMenu();showScreen('defter');document.getElementById('defter-iframe').src='rehbere-sor.html'">
+  <span class="mi-icon">✍️</span>
+  <span class="mi-name">Rehbere Sor</span>
+</div>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -2871,9 +2873,9 @@ function openMapScreen(){
   document.getElementById('map-iframe').src='https://edirnesaglikmuzesi-bit.github.io/muze/nav/konum.html';
   showScreen('map');
 }
-function openDefterScreen(){
+function openRehberesor(){
   closeMenu();
-  document.getElementById('defter-iframe').src='nav/ziyaretci-defteri.html';
+  document.getElementById('defter-iframe').src='rehbere-sor.html';
   showScreen('defter');
 }
 
