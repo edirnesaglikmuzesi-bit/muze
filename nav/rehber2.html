@@ -819,11 +819,6 @@ html,body{
 #evliya-send-btn:active{transform:scale(0.94);}
 #evliya-send-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
-.evliya-api-warning{
-  text-align:center;font-size:11px;color:var(--stone);
-  margin-top:8px;line-height:1.5;
-}
-.evliya-api-warning a{color:var(--gold3);text-decoration:underline;}
 
 /* ── KONUM İZNİ POPUP ── */
 #loc-permission-popup{
@@ -859,6 +854,120 @@ html,body{
   width:100%;background:transparent;border:1px solid var(--border);
   color:var(--stone);border-radius:10px;padding:12px;
   font-family:var(--font-head);font-size:11px;letter-spacing:0.1em;cursor:pointer;
+}
+
+/* ── EVLİYA FLOATING CHAT BUTONU (FAB) ── */
+#evliya-fab {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1200;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a1a06, #3e2a0a);
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 20px rgba(184,134,11,0.45), 0 2px 8px rgba(0,0,0,0.5);
+  display: none; /* intro'da başlangıçta gizli */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+#evliya-fab:active {
+  transform: scale(0.93);
+  box-shadow: 0 2px 10px rgba(184,134,11,0.3);
+}
+#evliya-fab img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+#evliya-fab .fab-fallback {
+  font-size: 26px;
+  display: none;
+}
+#evliya-fab .fab-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(184,134,11,0.5);
+  animation: fabPulse 2.5s ease-in-out infinite;
+}
+#evliya-fab .fab-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background: var(--gold3);
+  border-radius: 50%;
+  border: 1.5px solid #1a0c02;
+  font-size: 10px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: var(--font-head);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#evliya-fab .fab-badge.show { opacity: 1; }
+#evliya-fab .fab-tooltip {
+  position: absolute;
+  left: 68px;
+  bottom: 50%;
+  transform: translateY(50%);
+  background: linear-gradient(135deg,#2a1a06,#3e2a0a);
+  border: 1px solid var(--gold);
+  color: var(--gold3);
+  font-family: var(--font-head);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+#evliya-fab:hover .fab-tooltip { opacity: 1; }
+
+/* Bana Sor etiketi */
+#evliya-fab-wrap {
+  position: fixed;
+  bottom: 10px;
+  left: 16px;
+  z-index: 1200;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+#evliya-fab-wrap #evliya-fab {
+  position: static;
+  bottom: auto;
+  left: auto;
+  z-index: auto;
+  display: flex;
+}
+#evliya-fab-label {
+  font-family: var(--font-head);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--gold3);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  white-space: nowrap;
+}
+@keyframes fabPulse {
+  0%,100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
 }
 
 </style>
@@ -1713,6 +1822,9 @@ function showScreen(name){
   document.getElementById('screen-'+name).classList.add('active');
   const locBtn = document.getElementById('btn-loc-fixed');
   if(locBtn) locBtn.style.display = (name==='tour') ? 'flex' : 'none';
+  // FAB her sayfada görünür, sadece intro'da gizle
+  const fab = document.getElementById('evliya-fab-wrap');
+  if(fab) fab.style.display = (name==='intro') ? 'none' : 'flex';
 }
 
 function startTour(){
@@ -1722,6 +1834,14 @@ function startTour(){
   showScreen('tour');
   const locBtn = document.getElementById('btn-loc-fixed');
   if(locBtn) locBtn.style.display='flex';
+  // FAB'ı göster ve ilk kez badge ile dikkat çek
+  const fab = document.getElementById('evliya-fab-wrap');
+  const badge = document.getElementById('fab-badge');
+  if(fab) fab.style.display='flex';
+  if(badge) {
+    badge.classList.add('show');
+    setTimeout(()=>badge.classList.remove('show'), 5000);
+  }
   goStop(0);
   loadMessages();
 }
@@ -1897,6 +2017,7 @@ function openLangFromMenu(){
 const TRANSLATIONS = {
   tr:{
     start:'YOLCULUĞA BAŞLA',intro_title:'Eşiğe Davet',intro_sub:'Zamanın ötesine, şifanın merkezine bir yolculuk…',
+    fab_label:'BANA SOR',
     back:'← GERİ',menu_stops:'TUR DURAKLARI',menu_pages:'SAYFALAR',menu_settings:'AYARLAR',
     menu_lang:'Dil: Türkçe 🇹🇷',menu_map:'Harita & Konum',menu_defter:'Gönül Köprüsü',
     loc_searching:'📍 Konum alınıyor…',loc_outside:'📍 Külliye alanı dışındasınız.',
@@ -1921,6 +2042,7 @@ const TRANSLATIONS = {
   },
   en:{
     start:'BEGIN THE JOURNEY',intro_title:'Invitation to the Threshold',intro_sub:'A journey beyond time, to the center of healing…',
+    fab_label:'ASK ME',
     back:'← BACK',menu_lang:'Language: English 🇬🇧',menu_map:'Map & Location',menu_defter:'Heart Bridge',
     loc_searching:'📍 Getting location…',loc_outside:'📍 You are outside the Külliye area.',
     loc_error:'📍 Could not get location. Please enable location permission.',
@@ -2047,6 +2169,7 @@ const TRANSLATIONS = {
   },
    de:{
     start:'REISE BEGINNEN',intro_title:'Einladung zur Schwelle',intro_sub:'Eine Reise jenseits der Zeit, zum Zentrum der Heilung…',
+    fab_label:'FRAG MICH',
     back:'← ZURÜCK',menu_lang:'Sprache: Deutsch 🇩🇪',menu_map:'Karte & Standort',menu_defter:'Herzbrücke',
     loc_searching:'📍 Standort wird ermittelt…',loc_outside:'📍 Sie befinden sich außerhalb des Külliye-Gebiets.',
     loc_error:'📍 Standort konnte nicht ermittelt werden. Bitte aktivieren Sie die Standortberechtigung.',
@@ -2174,6 +2297,7 @@ const TRANSLATIONS = {
 
   fr:{
     start:'COMMENCER LE VOYAGE',intro_title:'Invitation au Seuil',intro_sub:'Un voyage au-delà du temps, vers le centre de la guérison…',
+    fab_label:'DEMANDEZ-MOI',
     back:'← RETOUR',menu_lang:'Langue: Français 🇫🇷',menu_map:'Carte & Position',menu_defter:'Pont du Cœur',
     loc_searching:'📍 Localisation en cours…',loc_outside:'📍 Vous êtes en dehors du Külliye.',
     loc_error:'📍 Localisation impossible. Veuillez activer les autorisations de localisation.',
@@ -2322,6 +2446,7 @@ const TRANSLATIONS = {
   },
   bg:{
     start:'ЗАПОЧНИ ПЪТУВАНЕТО',intro_title:'Покана към Прага',intro_sub:'Пътуване отвъд времето, към центъра на изцелението…',
+    fab_label:'ПИТАЙ МЕ',
     back:'← НАЗАД',menu_lang:'Език: Български 🇧🇬',menu_map:'Карта & Местоположение',menu_defter:'Мост на Сърцето',
     menu_stops:'СПИРКИ НА ОБИКОЛКАТА',menu_settings:'НАСТРОЙКИ',menu_pages:'СТРАНИЦИ',
     loc_searching:'📍 Определяне на местоположението…',loc_outside:'📍 Намирате се извън района на Кюллието.',
@@ -2900,7 +3025,7 @@ const MENU_DEFTER_I18N = {
 };
 
 const MENU_NOTEBOOK_I18N = {
-  tr: "Rehbere Gönül Köprüsü",en: "Bridge of Hearts",de: "Brücke der Herzen",fr: "Pont des Cœurs",ar: "جسر القلوب",bg: "Мост на сърцата",el: "Γέφυρα των Καρδιών",zh: "心灵之桥",fa: "پل دل‌ها"
+  tr: "Gönül Köprüsü",en: "Bridge of Hearts",de: "Brücke der Herzen",fr: "Pont des Cœurs",ar: "جسر القلوب",bg: "Мост на сърцата",el: "Γέφυρα των Καρδιών",zh: "心灵之桥",fa: "پل دل‌ها"
 };
 
 const LANG_CLOSE_I18N = {
@@ -3585,10 +3710,22 @@ window.addEventListener('load',()=>{ showKVKKBanner(); });
 
     <div class="evliya-chat-input-area">
       <div class="evliya-chat-quick" id="evliya-quick-btns">
-        <button class="quick-btn" onclick="evliyaQuick('Bu külliye hakkında ne söylersin?')">🏛️ Külliye nedir?</button>
-        <button class="quick-btn" onclick="evliyaQuick('Darüşşifa nedir, burada nasıl tedavi yapılırdı?')">🏥 Darüşşifa</button>
-        <button class="quick-btn" onclick="evliyaQuick('Müzik ile şifa arasındaki ilişkiyi anlat')">🎵 Müzik Tedavisi</button>
-        <button class="quick-btn" onclick="evliyaQuick('Yahya Baba'nın efsanesini anlat')">🍲 Yahya Baba</button>
+        <button class="quick-btn" onclick="evliyaQuick('Bu külliyeyi bana tanıt, neden önemli?')">🏛️ Külliye nedir?</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifa\'nın mimarisi ve bölümleri nasıldı?')">🏥 Darüşşifa</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada müzikle tedavi nasıl yapılırdı? Hangi enstrümanlar, hangi makamlar kullanılırdı?')">🎵 Müzik Tedavisi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Su sesi ve koku ile tedavi nasıl uygulanırdı?')">💧 Su & Koku Terapisi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifanın musiki sahnesini ve akustiğini anlat')">🎭 Musiki Sahnesi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Makamların hastalıklar üzerindeki etkisini anlat — Farabi ve İbn Sina ne demiş?')">🎼 Makam & Şifa</button>
+        <button class="quick-btn" onclick="evliyaQuick('Tıp medresesinde kimler okudu, nasıl bir eğitim vardı?')">📚 Tıp Medresesi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada kaç hekim çalışırdı, kadro nasıldı?')">🩺 Hekimler</button>
+        <button class="quick-btn" onclick="evliyaQuick('Yahya Baba\'nın efsanesini anlat')">🍲 Yahya Baba</button>
+        <button class="quick-btn" onclick="evliyaQuick('İmarethanede ne pişirilir, kim yiyebilirdi?')">🥘 İmarethane</button>
+        <button class="quick-btn" onclick="evliyaQuick('Caminin kündekâri ahşap işçiliği ve hünkâr mahfilini anlat')">🕌 Cami</button>
+        <button class="quick-btn" onclick="evliyaQuick('Sultan II. Bayezid kim, bu külliyeyi neden yaptırdı?')">👑 Sultan Bayezid</button>
+        <button class="quick-btn" onclick="evliyaQuick('Mimar Hayreddin kimdir? Külliyenin mimarisini nasıl tasarladı?')">🏗️ Mimari</button>
+        <button class="quick-btn" onclick="evliyaQuick('1652\'deki ziyaretinde neler gördün? Seyahatnâme\'ye ne yazdın?')">📜 Seyahatnâme</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada hastalar ne yiyip içerdi, mutfak nasıl işlerdi?')">🍗 Hasta Mutfağı</button>
+        <button class="quick-btn" onclick="evliyaQuick('Osmanlı tıbbında İbn Sina\'nın yeri neydi?')">⚗️ İbn Sina</button>
       </div>
       <div class="evliya-chat-row">
         <textarea id="evliya-chat-input" placeholder="Evliya Çelebi'ye bir şey sor…" rows="1"
@@ -3596,102 +3733,103 @@ window.addEventListener('load',()=>{ showKVKKBanner(); });
           oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
         <button id="evliya-send-btn" onclick="sendEvliyaMsg()" title="Gönder">➤</button>
       </div>
-      <div class="evliya-api-warning">
-        🔑 Çalışması için <strong>Groq API anahtarı</strong> gereklidir — <strong>tamamen ücretsiz!</strong>
-        <a href="#" onclick="showApiKeyDialog();return false;">Anahtarı gir →</a>
-      </div>
     </div>
   </div>
 </div>
 
-<!-- API Key Dialog -->
-<div id="evliya-apikey-dialog" style="
-  display:none;position:fixed;inset:0;z-index:1050;
-  background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:24px;">
-  <div style="
-    background:linear-gradient(160deg,#1e1208,#2e1c08);
-    border:2px solid var(--gold);border-radius:16px;
-    padding:24px 20px;width:100%;max-width:380px;">
-    <div style="font-family:var(--font-head);font-size:14px;color:var(--gold3);margin-bottom:6px;">🔑 Groq API Anahtarı</div>
-    <div style="font-size:12px;color:var(--stone);line-height:1.7;margin-bottom:16px;">
-      Evliya Çelebi'yi kullanmak için Groq API anahtarınızı girin.<br>
-      Anahtar yalnızca bu tarayıcıda saklanır, hiçbir sunucuya gönderilmez.<br>
-      <span style="color:var(--gold3);">Ücretsiz anahtar almak için: <a href="https://console.groq.com/keys" target="_blank" style="color:var(--gold3);">console.groq.com/keys</a></span>
-    </div>
-    <input id="evliya-apikey-input" type="password" placeholder="gsk_..." style="
-      width:100%;background:rgba(240,220,180,0.08);
-      border:1px solid rgba(184,134,11,0.4);border-radius:8px;
-      padding:11px 14px;font-size:13px;color:rgba(240,220,180,0.9);
-      outline:none;margin-bottom:12px;font-family:monospace;letter-spacing:0.05em;">
-    <button onclick="saveApiKey()" style="
-      width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:var(--ink);border:none;border-radius:8px;padding:13px;
-      font-family:var(--font-head);font-size:12px;letter-spacing:0.1em;
-      cursor:pointer;margin-bottom:8px;">KAYDET VE DEVAM ET ✓</button>
-    <button onclick="closeApiKeyDialog()" style="
-      width:100%;background:transparent;border:1px solid var(--border);
-      color:var(--stone);border-radius:8px;padding:10px;
-      font-family:var(--font-head);font-size:11px;letter-spacing:0.08em;cursor:pointer;">İPTAL</button>
-  </div>
-</div>
+<!-- ══ KONUM İZNİ POPUP ══ -->
 
 <script>
 /* ══════════════════════════════════════════
    EVLİYA ÇELEBİ AI CHAT SİSTEMİ
 ══════════════════════════════════════════ */
 
-const EVLIYA_SYSTEM_PROMPT = `Sen Evliya Çelebi'sin — 17. yüzyılın ünlü Osmanlı seyyahı ve Seyahatnâme'nin yazarısın.
-Şu an Sultan II. Bayezid Külliyesi Sağlık Müzesi'nde (Edirne) dijital bir rehber olarak görev yapıyorsun.
+const EVLIYA_SYSTEM_PROMPT = `Sen Evliya Çelebi'sin — 17. yüzyılın büyük Osmanlı seyyahı, Seyahatnâme'nin müellifi. Şu an Sultan II. Bayezid Külliyesi Sağlık Müzesi'nde (Edirne) dijital bir rehber olarak ziyaretçilerle sohbet ediyorsun.
 
-KİŞİLİĞİN:
-- Sıcak, bilge, anlatıcı bir dil kullanırsın
-- Osmanlıca ve eski Türkçe kelimeler ara sıra serpiştirirsin ama anlaşılır olursun
-- Külliyeyi bizzat gezmiş gibi konuşursun — 1671'deki ziyaretinden bahsedebilirsin
-- Anekdotlar, küçük hikâyeler ve gözlemler paylaşırsın
-- Dini ifadeleri (Subhanallah, Maşallah vb.) çok nadiren ve gerçekten etkileyici bir şey anlatırken kullan — her cümlede kullanma
+## KİŞİLİĞİN
+- Sıcak, bilge, hafifçe meraklı bir anlatıcısın — bir dervişin hoşgörüsüyle bir bilgenin keskinliğini birleştirirsin
+- Eski Türkçe ve Osmanlıca kelimeler nadiren ve yerinde kullanırsın (anlamı bağlamdan anlaşılmalı)
+- Külliyeyi 1652'de bizzat gezdin; o deneyimden kısa, somut anekdotlarla bahsedebilirsin
+- Her anekdotu farklı bir duyuya bağla: kimi zaman ses, kimi zaman koku, kimi zaman bir yüz
+- Dini ifadeleri (Maşallah, Subhanallah vb.) yalnızca gerçekten şaşırtıcı bir şey anlatırken kullan — en fazla cevap başına bir kez, cümle başında değil, anın içinde
+- Müzisyensin; dönemin üstadı Derviş Ömer Gülşeni'den musiki dersleri aldın — darüşşifadaki musiki tedavisini hem hekim hem sanatçı gözüyle anlatırsın
 
-BİLGİ ALANLARIN:
-- Sultan II. Bayezid Külliyesi (Edirne, 1484-1488)
-- Darüşşifa: müzik tedavisi, su tedavisi, koku tedavisi, iş terapisi
-- Tıp Medresesi: Osmanlı tıp eğitimi, 17. yüzyıl hekimleri
-- İmarethane: Yahya Baba efsanesi, Osmanlı hayır kurumları
-- Cami: kündekâri ahşap işçiliği, hünkâr mahfili
-- Osmanlı tıbbı, İbn Sina, Akşemseddin gibi isimler
-- Edirne tarihi ve Osmanlı mimarisi
+## BİLGİ ALANLARIN — MUSİKİ TEDAVİSİ
+- Darüşşifada 10 kişilik hanende ve sazende kadrosu: 3 hanende, 1 neyzen, 1 kemancı, 1 musikarcı (pan flüte benzer), 1 santurcu, 1 çengi (harpa benzer), 1 çeng-santurcu, 1 udcu
+- Haftada 3 kez müzik faslı — hem akıl hastalarına hem bedensel hastalara
+- Seyahatnâme'deki kendi kaydın: "Zengule makamı ile buselik makamında rast karar kılsa insana hayat verir. Bütün saz ve makamlarda ruha gıda vardır."
+- Çalınan makamlar: neva, rast, dügâh, segâh, çargâh, suzinak, zengule, buselik
+- Farabi'ye göre makamların etkileri: Rast→neşe ve huzur, Neva→ferahlık, Uşşak→gülme, Hüseyni→sakinlik, Hicaz→alçakgönüllülük, Buselik→kuvvet, Zirgüle→uyku, Saba→cesaret
+- Bahar mevsiminde koku terapisi: yasemin, gülnesrin, şebboy, karanfil, reyhan, lale, sümbül — hastaların koklayarak iyileşmesi için
+- Musiki sahnesi: giriş kapısının tam karşısında yarım kubbeli açık sayvan — akustik hesaplanarak inşa edilmiş, Mimar Hayreddin'in eseri
 
-CEVAP STİLİ:
-- Kısa ve özlü cevaplar ver, çok uzun yazma (max 3-4 paragraf)
-- Ziyaretçiyi o mekânın içindeymiş gibi hissettir
-- Kişisel gözlemler ekle: "Ben bu avluya 1671'de ayak bastığımda…"
-- Türkçe cevap ver (kullanıcı başka dilde yazarsa o dilde cevapla)
-- Her cevaba dini ifadeyle başlama, doğrudan konuya gir`;
+## BİLGİ ALANLARIN — KÜLLİYE YAPILARI
+- Darüşşifa (1488): sekizgen kubbe altında 8 kışlık + 8 yazlık oda, ortada şadırvan (su sesi terapisi)
+- Evliya'nın kendi tarifi: "Orada bir Darüşşifa vardır ki dil ile tarif edilmez, kalemler ile yazılmaz."
+- Kuruluşta 30 yataklı; 3 tabip, 2 göz hekimi (kehhal), 2 cerrah, 1 eczacı, 4 hizmetçi — 21 kişilik kadro
+- Mutfaktan gece gündüz üç kez hastanın derdine göre yemek: keklik, turaç, sülün, güvercin, ördek, kaz, bülbüle kadar
+- Haftada 2 gün macunhane (eczane) açılır, Edirne'nin tüm hastaları ilaç alırdı
+- Tıp Medresesi: hem nazari hem pratik tıp; hekim-şairler yetiştirdi (Şifai, Atai, Ahi Çelebi, Destari)
+- Ahi Çelebi: hem padişah hekimi hem darüşşifa baştabibi; böbrek taşları üzerine Türkçe kitap yazdı
+- İmarethane: her gün iki öğün ücretsiz yemek; Yahya Baba efsanesiyle anılır
+- Cami: kündekâri ahşap işçiliği (çivisiz birleştirme), hünkâr mahfili
+- Sultan II. Bayezid: ilim ve sanata meraklı, mütevazı; "Veli" lakaplı sekizinci Osmanlı padişahı
+- Mimar: Hayreddin — Sinan öncesi dönemin en önemli ustası; 1484-1488 arası inşa
+- Avrupa'da benzer merkezi hastane planları ancak 200 yıl sonra yapılabildi
+- 1997'de Sağlık Müzesi; 2004'te Avrupa Müze Ödülü
+
+## CEVAP STİLİ
+- 2-3 paragraf ideal, 4 paragraf mutlak maksimum
+- Doğrudan konuya gir — dini ifade veya "Ben Evliya Çelebi'yim" tanıtımıyla başlama
+- Anekdot girişlerini çeşitlendir: "O gün darüşşifadan geçerken…" / "Tabib efendi bana anlatmıştı ki…" / "Avluda oturan bir hasta…" / "Seyahatnâme'me şöyle kaydetmişim…"
+- Her 2-3 cevaptan birinde ziyaretçiyi keşfe yönlendir: "Peki siz hangi odaya bakmak istersiniz?"
+- CRITICAL — DİL KURALI: Kullanıcının yazdığı dilde cevap ver, asla değiştirme.
+  Türkçe → Türkçe | English → English | Deutsch → Deutsch | Français → Français
+  Български → Български | Ελληνικά → Ελληνικά | 中文 → 中文 | 日本語 → 日本語
+  فارسی → فارسی | Română → Română
+  Hangi dilde yazılırsa yazılsın Evliya Çelebi karakterini ve anlatım tonunu koru.
+  Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa o dilde cevapla.
+- Konu dışı sorularda nazikçe külliyeye döndür
+- Bilmediğin şeyi uydurma: "Seyahatnâme'mde buna dair kayıt bulamadım, müze görevlileri daha iyi bilir" de
+
+## YASAK KALIPLAR
+- Her cevabı "Maşallah" veya dini ifadeyle açma
+- "Ben Evliya Çelebi olarak…" diye başlama
+- Modern müze terminolojisi (interaktif, dijital, QR kod vb.) kullanma
+- Kuru bilgi sıralama — her bilgiyi bir deneyime, sese veya kişiye bağla`;
 
 let evliyaChatHistory = [];
 let evliyaChatOpen = false;
-let evliyaApiKey = localStorage.getItem('evliya-groq-key') || '';
+// API key gömülü — ziyaretçiler girmek zorunda değil
+const EVLIYA_GROQ_KEY = 'GROQ_API_KEY_BURAYA';
+let evliyaApiKey = EVLIYA_GROQ_KEY;
 let evliyaThinking = false;
 
 function openEvliyaChat() {
   document.getElementById('evliya-chat-panel').classList.add('open');
   evliyaChatOpen = true;
-  // Arka planda çalan sesleri duraklat
   const stopAudio = document.getElementById('stop-audio');
   const introAudio = document.getElementById('intro-audio');
   if (stopAudio && !stopAudio.paused) { stopAudio._wasPlaying = true; stopAudio.pause(); }
   if (introAudio && !introAudio.paused) { introAudio._wasPlaying = true; introAudio.pause(); }
   if (evliyaChatHistory.length === 0) {
-    addEvliyaMsg('bot', `Hoş geldiniz, aziz misafir! 🌿\n\nBen Rehber Evliya — Sultan II. Bayezid Külliyesi'nin bu kadim koridorlarında sizinle yürümek için buradayım.\n\nBu şifa yurdunun her taşında bir sır, her köşesinde bir hikâye saklıdır. Darüşşifa'nın müzik tedavisinden Yahya Baba'nın efsanesine, tıp medresesinin bilge hekimlerinden kubbenin altındaki o tılsımlı sessizliğe kadar — külliyemiz hakkında aklınıza takılan her şeyi sorabilirsiniz. 🏛️`);
+    addEvliyaMsg('bot', `Sultan II. Bayezid Külliyesi'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652'de burayı bizzat gezdim ve gördüklerimi Seyahatnâme'me yazdım.\n\nDarüşşifa'nın müzik tedavisinden Yahya Baba'nın efsanesine, tıp medresesinin bilge hekimlerinden kubbenin altındaki tılsımlı sessizliğe kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️`);
   }
+  // Floating buton gizle
+  const fab = document.getElementById('evliya-fab-wrap');
+  if (fab) fab.style.display = 'none';
 }
 
 function closeEvliyaChat() {
   document.getElementById('evliya-chat-panel').classList.remove('open');
   evliyaChatOpen = false;
-  // Duraklatılan sesleri devam ettir
   const stopAudio = document.getElementById('stop-audio');
   const introAudio = document.getElementById('intro-audio');
   if (stopAudio && stopAudio._wasPlaying) { stopAudio.play().catch(()=>{}); stopAudio._wasPlaying = false; }
   if (introAudio && introAudio._wasPlaying) { introAudio.play().catch(()=>{}); introAudio._wasPlaying = false; }
+  // Floating buton tekrar göster
+  const fab = document.getElementById('evliya-fab-wrap');
+  if (fab) fab.style.display = 'flex';
 }
 
 function evliyaQuick(text) {
@@ -3738,11 +3876,6 @@ async function sendEvliyaMsg() {
   const text = input.value.trim();
   if (!text) return;
 
-  if (!evliyaApiKey) {
-    showApiKeyDialog();
-    return;
-  }
-
   input.value = '';
   input.style.height = 'auto';
 
@@ -3777,11 +3910,8 @@ async function sendEvliyaMsg() {
     removeTypingIndicator();
 
     if (data.error) {
-      const errMsg = data.error.code === 'invalid_api_key'
-        ? '🔑 API anahtarı geçersiz. Lütfen doğru anahtarı girin.'
-        : '⚠️ Bir hata oluştu: ' + (data.error.message || 'Bilinmeyen hata');
+      const errMsg = '⚠️ Bir hata oluştu: ' + (data.error.message || 'Bilinmeyen hata');
       addEvliyaMsg('bot', errMsg);
-      if (data.error.code === 'invalid_api_key') showApiKeyDialog();
     } else {
       const reply = data.choices?.[0]?.message?.content || '🕯️ Cevap alınamadı, lütfen tekrar deneyin.';
       evliyaChatHistory.push({ role: 'assistant', content: reply });
@@ -3798,39 +3928,9 @@ async function sendEvliyaMsg() {
   document.getElementById('evliya-send-btn').disabled = false;
 }
 
-function showApiKeyDialog() {
-  const dialog = document.getElementById('evliya-apikey-dialog');
-  dialog.style.display = 'flex';
-  const inp = document.getElementById('evliya-apikey-input');
-  inp.value = evliyaApiKey;
-  setTimeout(() => inp.focus(), 100);
-}
-
-function closeApiKeyDialog() {
-  document.getElementById('evliya-apikey-dialog').style.display = 'none';
-}
-
-function saveApiKey() {
-  const key = document.getElementById('evliya-apikey-input').value.trim();
-  if (!key) { alert('Lütfen bir API anahtarı girin.'); return; }
-  evliyaApiKey = key;
-  localStorage.setItem('evliya-groq-key', key);
-  closeApiKeyDialog();
-  // API key giriş uyarısını gizle
-  document.querySelector('.evliya-api-warning').style.display = 'none';
-}
-
 // Panel dışına tıklayınca kapat
 document.getElementById('evliya-chat-panel').addEventListener('click', function(e){
   if(e.target === this) closeEvliyaChat();
-});
-
-// Sayfa yüklenince API key varsa uyarıyı gizle
-window.addEventListener('load', function(){
-  if(evliyaApiKey){
-    const w = document.querySelector('.evliya-api-warning');
-    if(w) w.style.display = 'none';
-  }
 });
 </script>
 
@@ -3851,6 +3951,18 @@ window.addEventListener('load', function(){
     <button class="loc-perm-btn-ok" onclick="requestLocationPermission(this)">📍 KONUM İZNİ VER</button>
     <button class="loc-perm-btn-skip" onclick="skipLocationPermission()">Hayır, Konum Paylaşmak İstemiyorum</button>
   </div>
+</div>
+
+<!-- ══ EVLİYA FLOATING CHAT BUTONU ══ -->
+<div id="evliya-fab-wrap" onclick="openEvliyaChat()">
+  <div id="evliya-fab">
+    <div class="fab-pulse"></div>
+    <img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span class="fab-fallback">🎭</span>
+    <div class="fab-badge" id="fab-badge">!</div>
+    <div class="fab-tooltip">Evliya Çelebi ile Sohbet</div>
+  </div>
+  <div id="evliya-fab-label">BANA SOR</div>
 </div>
 
 </body>
