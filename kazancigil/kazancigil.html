@@ -11,7 +11,8 @@
 /* --- 1. TEMEL AYARLAR --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root { 
+:root {
+            --nav-height: 100px; 
     --gold: #d4af37; 
     --gold-bright: #f1d592;
     --dark: #0f1a24; 
@@ -23,26 +24,135 @@
 body {
     font-family: 'Playfair Display', serif;
     background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
-    padding-top: 130px;
+    padding-top: calc(var(--nav-height) + 20px);
     color: #2b2b2b;
 }
 
 /* --- 2. NAVİGASYON --- */
-.nav-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; position: fixed; top: 0; left: 0; z-index: 2000; }
-.nav {
-    width: 100%; max-width: 1240px; background-color: var(--dark);
-    border: 2px solid var(--gold); border-top: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: var(--gold);
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 30px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
-}
-.logo-subtitle { font-family: 'Cinzel'; font-size: 16px; font-weight: 700; }
-.menu-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; padding: 8px 18px; font-family: 'Cinzel'; border-radius: 4px; transition: 0.3s ease; }
-.menu-btn:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 15px var(--gold); }
-#globalDropdown { display: none; position: absolute; right: 30px; top: calc(100% + 10px); background: var(--dark); border: 2px solid var(--gold); min-width: 280px; max-height: 75vh; overflow-y: auto; border-radius: 8px; z-index: 3000; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
-#globalDropdown.active { display: block; }
-.dropdown-link { display: block; padding: 12px 25px; color: var(--gold) !important; text-decoration: none; font-family: 'Cinzel'; font-size: 13px; border-bottom: 1px solid rgba(212,175,55,0.1); }
-.dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; color: #fff !important; }
+        .nav-wrapper {
+            width: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 2000;
+            padding: 0 15px;
+        }
+
+        .nav {
+            max-width: 1240px;
+            margin: 0 auto;
+            background-color: var(--dark);
+            border: 2px solid var(--gold);
+            border-top: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 25px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-height: var(--nav-height);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .logo-img1, .logo-img2 {
+            height: 65px;
+            width: auto;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+        .logo-img1:hover, .logo-img2:hover { transform: scale(1.05); }
+
+        .logo-text-group {
+            color: var(--gold);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .logo-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(9px, 2vw, 11px);
+            letter-spacing: 2px;
+            opacity: 0.75;
+            white-space: nowrap;
+        }
+
+        .logo-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(10px, 2.5vw, 14px);
+            font-weight: 700;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-family: 'Cinzel', serif;
+            border-radius: 4px;
+            transition: background 0.3s, color 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .menu-btn:hover { background: var(--gold); color: #fff; }
+
+        #globalDropdown {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 100%;
+            background: var(--dark);
+            border: 2px solid var(--gold);
+            min-width: 280px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            z-index: 3000;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+        #globalDropdown.active { display: block; animation: dropIn 0.2s ease; }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 12px 25px;
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+            transition: background 0.2s, padding-left 0.2s, color 0.2s;
+        }
+        .dropdown-link:hover {
+            background: rgba(212,175,55,0.15);
+            padding-left: 30px;
+            color: #fff;
+        }
+
+        .dropdown-link-highlight {
+            background: var(--gold);
+            color: var(--dark) !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .dropdown-link-highlight:hover {
+            background: var(--gold-bright, #f1d592);
+            color: var(--dark) !important;
+            padding-left: 30px;
+        }
 
 /* --- 3. BANNER --- */
 .banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
@@ -78,7 +188,9 @@ body {
     box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px rgba(212, 175, 55, 0.3);
     border-color: var(--gold-bright);
 }
-@media (max-width: 768px) { .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; } }
+@media (max-width: 768px) {
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; } .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; } }
 
 /* --- 6. ALINTI --- */
 .red-line { text-align: center; border-top: 2px solid var(--v-red); border-bottom: 2px solid var(--v-red); padding: 20px; margin: 25px 0; font-style: italic; }
@@ -161,10 +273,10 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
 
 /* --- 13. SITE FOOTER --- */
 .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
-.site-footer { width: 100%; max-width: 1240px; background: var(--dark); border: 2px solid var(--gold); border-radius: 15px; padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px; font-family: 'Cinzel'; }
+.site-footer { width: 100%; max-width: 1240px; background: var(--dark); border: 2px solid var(--gold); border-radius: 15px; padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px; }
 
 /* --- 14. MOBİL --- */
-@media (max-width: 768px) { .nav { flex-direction: column; gap: 10px; padding: 10px 20px; } .banner-box { height: 250px; } .banner-overlay h1 { font-size: 24px; letter-spacing: 5px; } .content-area { padding: 30px 20px; font-size: 16px; } .corner-frame { width: 45px; height: 45px; } body { padding-top: 160px; } }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 10px; padding: 10px 20px; } .banner-box { height: 250px; } .banner-overlay h1 { font-size: 24px; letter-spacing: 5px; } .content-area { padding: 30px 20px; font-size: 16px; } .corner-frame { width: 45px; height: 45px; } body { padding-top: calc(var(--nav-height) + 20px); } }
 
 /* Fullscreen */
 .fs-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
@@ -178,6 +290,21 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
 .fs-btns button:hover { background: var(--gold); color: var(--dark); }
 
 .gold-divider { border: none; border-top: 1px solid rgba(212,175,55,0.35); margin: 28px 0; }
+            .footer-title {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            opacity: 0.75;
+        }
+
+        .footer-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -185,9 +312,13 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
 <!-- NAVİGASYON -->
 <div class="nav-wrapper">
     <nav class="nav">
-        <div class="logo">
-           <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
-            <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+        <div class="logo-box">
+            <img src="../assets/logo1.png" alt="Logo 1" class="logo-img1">
+            <img src="../assets/logo2.png" alt="Logo 2" class="logo-img2">
+            <div class="logo-text-group">
+                <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+                <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            </div>
         </div>
         <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
         <div id="globalDropdown">
@@ -202,7 +333,7 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
             <a href="../music/music.html" class="dropdown-link">Müzikle Tedavi</a>
             <a href="../geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
             <a href="../galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
-            <a href="../nav/rehber.html" class="dropdown-link">İnteraktif Rehber</a>
+            <a href="../nav/rehber.html" class="dropdown-link dropdown-link-highlight">İnteraktif Rehber</a>
             <a href="../nav/ziyaretci-defteri.html" class="dropdown-link">Ziyaretçi Defteri</a>
             <a href="../siir/siir.html" class="dropdown-link">Ağaçla Sarmaşık</a>
             <a href="../kazancigil/kazancigil.html" class="dropdown-link">Dr. Ratıp Kazancıgil</a>
@@ -420,8 +551,8 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
     </div><!-- /gallery-inner -->
 
     <div class="card-footer">
-        <p style="font-weight:bold; letter-spacing:2px;">EDİRNE'NİN RATIP HOCASI — MÜZEMİZİN KURUCUSU.</p>
-        <p style="font-size:14px; margin-top:10px;">"97 yıllık ömrünün 65 yılını Edirne'ye adayan, bu şehrin hafızası ve sesi..."</p>
+        <p style="font-weight: bold; letter-spacing: 2px;">EDİRNE'NİN RATIP HOCASI — MÜZEMİZİN KURUCUSU.</p>
+        <p style="font-size: 14px; margin-top: 10px;">"97 yıllık ömrünün 65 yılını Edirne'ye adayan, bu şehrin hafızası ve sesi..."</p>
     </div>
 </div>
 </div><!-- /container -->
@@ -430,9 +561,9 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
 <!-- SITE FOOTER -->
 <div class="site-footer-wrapper">
     <footer class="site-footer">
-        <div style="font-size:13px; font-weight:700;">T.C. TRAKYA ÜNİVERSİTESİ</div>
-        <div style="font-size:15px; margin-top:5px;">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
-        <p style="font-size:11px; margin-top:15px; opacity:0.7;">&copy; 2026 TÜM HAKLARI SAKLIDIR</p>
+                <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+        <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+        <p style="font-size:11px; margin-top:15px; opacity:0.65;">&copy; 2026 — Tüm Hakları Saklıdır</p>
     </footer>
 </div>
 
