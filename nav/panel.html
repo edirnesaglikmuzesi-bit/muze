@@ -333,15 +333,12 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
 
   <!-- ════ TAB: STATS ════ -->
   <div class="page" id="tab-stats">
-    <!-- Period Filter -->
     <div class="filter-row">
       <button class="filter-btn active" onclick="setStatPeriod('today',this)">Bugün</button>
       <button class="filter-btn" onclick="setStatPeriod('week',this)">Bu Hafta</button>
       <button class="filter-btn" onclick="setStatPeriod('month',this)">Bu Ay</button>
       <button class="filter-btn" onclick="setStatPeriod('all',this)">Tüm Zamanlar</button>
     </div>
-
-    <!-- Sub-tab: device vs zone -->
     <div class="sub-tab-bar">
       <div class="sub-tab active" onclick="showStatSub('device',this)">📱 Cihaz & Platform İstatistikleri</div>
       <div class="sub-tab" onclick="showStatSub('zone',this)">🏛️ Bölge & Poligon İstatistikleri</div>
@@ -459,11 +456,7 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
     <div class="map-wrap">
       <div class="section-hdr">🌡️ BÖLGE YOĞUNLUK HARİTASI
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <div class="hm-legend">
-            <span>Az</span>
-            <div class="hm-grad"></div>
-            <span>Çok</span>
-          </div>
+          <div class="hm-legend"><span>Az</span><div class="hm-grad"></div><span>Çok</span></div>
           <button class="refresh-btn" onclick="renderHeatmap()">🔄 YENİLE</button>
         </div>
       </div>
@@ -475,7 +468,7 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
         <tr><th>#</th><th>BÖLGE</th><th>TOPLAM ZİYARET</th><th>ORT. KALMA (DK)</th><th>ÇIKIŞ ORANI</th><th>YOĞUNLUK</th></tr>
       </thead>
       <tbody id="zone-detail-table">
-        <tr><td colspan="6" class="empty-state">Veriler yükleniyor…</td></tr>
+        <tr><td colspan="6"><div class="empty-state"><span class="icon">🌡️</span>Veri bekleniyor…</div></td></tr>
       </tbody>
     </table>
   </div>
@@ -518,8 +511,6 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
       <div class="sub-tab active" onclick="showRouteSub('location',this)">📍 Konum Bazlı Güzergah</div>
       <div class="sub-tab" onclick="showRouteSub('apppage',this)">📄 Rehber Sayfa Bazlı Güzergah</div>
     </div>
-
-    <!-- LOCATION ROUTES -->
     <div id="route-sub-location">
       <div class="stat-grid">
         <div class="stat-card"><div class="stat-icon">🗺️</div><div class="stat-val" id="lr-paths">0</div><div class="stat-label">FARKLI GÜZERGAH</div></div>
@@ -544,12 +535,10 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
         </div>
       </div>
       <div class="chart-wrap">
-        <div class="section-hdr">📊 ORTALAMA ZİYARETÇİ GÜZERGAHI (Sıralı Bölge Geçişleri)</div>
+        <div class="section-hdr">📊 ORTALAMA ZİYARETÇİ GÜZERGAHI</div>
         <div id="avg-route-visual" style="padding:10px 0;"></div>
       </div>
     </div>
-
-    <!-- APP PAGE ROUTES -->
     <div id="route-sub-apppage" style="display:none;">
       <div class="stat-grid">
         <div class="stat-card"><div class="stat-icon">📄</div><div class="stat-val" id="pr-pages">0</div><div class="stat-label">TOPLAM SAYFA SAYISI</div></div>
@@ -572,7 +561,7 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
         </div>
       </div>
       <div class="chart-wrap">
-        <div class="section-hdr">🔭 SAYFA BAZLI ORTALAMA GÜZERGAH (Hangi sayfadan nereye gidildi?)</div>
+        <div class="section-hdr">🔭 SAYFA BAZLI ORTALAMA GÜZERGAH</div>
         <div id="page-route-flow" style="padding:10px 0;"></div>
       </div>
     </div>
@@ -685,12 +674,8 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
       <button class="refresh-btn" onclick="renderAlerts()">🔄 YENİLE</button>
     </div>
     <div id="alerts-list"></div>
-
     <div class="section-hdr" style="margin-top:24px;">📊 KAPASİTE İZLEME</div>
-    <div class="chart-wrap">
-      <div id="capacity-chart"></div>
-    </div>
-
+    <div class="chart-wrap"><div id="capacity-chart"></div></div>
     <div class="section-hdr" style="margin-top:24px;">📋 UYARI GEÇMİŞİ (Son 24 Saat)</div>
     <table class="data-table">
       <thead><tr><th>SAAT</th><th>TÜR</th><th>AÇIKLAMA</th><th>DURUM</th></tr></thead>
@@ -720,6 +705,7 @@ try {
   db = firebase.firestore();
 } catch(e) { console.warn('Firebase:', e); }
 
+/* ══ GERÇEK VERİ YAPISI (Koordinatlar, harita, sayfa tanımları) ══ */
 const ZONE_MAP = [
   { id:'giris-avlu',  name:'Müze Girişi',       icon:'🏛️' },
   { id:'darussifa-1', name:'Darüşşifa 1. Avlu',  icon:'⚖️' },
@@ -771,69 +757,10 @@ const ZONE_FILL_COLORS = {
 };
 
 /* ══════════════════════════════════
-   DEMO DATA
+   YARDIMCI: BOŞ STATE
 ══════════════════════════════════ */
-function generateDemoSessions(count=340){
-  const sessions=[];
-  for(let i=0;i<count;i++){
-    const d=new Date(Date.now()-Math.random()*90*86400000);
-    const maxStop=Math.floor(Math.random()*12);
-    const deviceRand=Math.random();
-    const device=deviceRand<0.62?'mobile':deviceRand<0.82?'tablet':'desktop';
-    const osRand=Math.random();
-    const os=device==='mobile'?(osRand<0.55?'android':'ios'):device==='tablet'?(osRand<0.4?'android':'ios'):'windows';
-    sessions.push({
-      startTime:{toDate:()=>d,toMillis:()=>d.getTime()},
-      lang:['tr','tr','tr','en','de','fr','ar','bg','el'][Math.floor(Math.random()*9)],
-      durationMin:15+Math.floor(Math.random()*40),
-      maxStop,locationGranted:Math.random()>0.25,
-      active:Math.random()<0.05,
-      device,os,
-      ttsUsed:Math.random()<0.38,
-      aiQuestionsAsked:Math.floor(Math.random()*4),
-      pagesViewed:maxStop+Math.floor(Math.random()*3),
-    });
-  }
-  return sessions;
-}
-
-function generateDemoZones(){
-  return {
-    'darussifa':{totalVisits:420,avgMinutes:18},
-    'darussifa-1':{totalVisits:380,avgMinutes:6},
-    'darussifa-2':{totalVisits:290,avgMinutes:7},
-    'medrese':{totalVisits:310,avgMinutes:15},
-    'camii':{totalVisits:280,avgMinutes:12},
-    'giris-avlu':{totalVisits:340,avgMinutes:5},
-    'camii-avlu':{totalVisits:260,avgMinutes:8},
-    'imarethane':{totalVisits:195,avgMinutes:11},
-    'buyuk-avlu':{totalVisits:175,avgMinutes:9},
-    'tabhane-sol':{totalVisits:140,avgMinutes:14},
-    'tabhane-sag':{totalVisits:90,avgMinutes:4},
-  };
-}
-
-function generateDemoGuestbook(count=47){
-  const names=['Ahmet Y.','Sarah M.','Klaus B.','Fatma K.','Marie D.','Ali R.','Emma T.','Yusuf D.','Ana P.','Mehmet S.','Lena W.','Hassan A.'];
-  const msgs=[
-    {text:'Harika bir müze, çok etkileyici ve bilgilendirici. Kesinlikle tavsiye ederim!',lang:'tr',sentiment:'positive',rating:5},
-    {text:'Incredible place, the history of Ottoman medicine is fascinating!',lang:'en',sentiment:'positive',rating:5},
-    {text:'Wunderschöne Anlage, sehr lehrreich. Der Audioguide war hervorragend.',lang:'de',sentiment:'positive',rating:4},
-    {text:'Çok güzel bir mekan ama bazı açıklamalar eksik.',lang:'tr',sentiment:'neutral',rating:3},
-    {text:'Une visite incontournable à Edirne. Magnifique!',lang:'fr',sentiment:'positive',rating:5},
-    {text:'Rehber uygulaması bazen takılıyor, düzeltilmeli.',lang:'tr',sentiment:'negative',rating:2},
-    {text:'Amazing architecture and very informative exhibits.',lang:'en',sentiment:'positive',rating:5},
-    {text:'Tarihi doku çok iyi korunmuş, tebrikler.',lang:'tr',sentiment:'positive',rating:5},
-    {text:'Müze kafe fiyatları biraz yüksek.',lang:'tr',sentiment:'neutral',rating:3},
-    {text:'Beautiful place with rich history. Must visit!',lang:'en',sentiment:'positive',rating:4},
-  ];
-  const out=[];
-  for(let i=0;i<count;i++){
-    const d=new Date(Date.now()-Math.random()*60*86400000);
-    const m=msgs[i%msgs.length];
-    out.push({...m,name:names[i%names.length],date:d,flagged:Math.random()<0.05});
-  }
-  return out.sort((a,b)=>b.date-a.date);
+function emptyState(icon, msg) {
+  return `<div class="empty-state"><span class="icon">${icon}</span>${msg}</div>`;
 }
 
 /* ══════════════════════════════════
@@ -905,7 +832,7 @@ function showRouteSub(id,el){
 /* ══════════════════════════════════
    MAP INIT
 ══════════════════════════════════ */
-let rtMap=null,hmMap=null,rtMap2=null;
+let rtMap=null,hmMap=null;
 let rtPolygons={},hmPolygons={},routePolygons={};
 let visitorMarkers={};
 let realtimeUnsub=null,sessionUnsub=null;
@@ -919,7 +846,6 @@ function stopListeners(){
 function buildAdminMap(containerId,onReady){
   const el=document.getElementById(containerId);
   if(!el) return null;
-  // Remove old map instance if any
   if(el._leaflet_id){
     try{ el._leaflet_map && el._leaflet_map.remove(); } catch(e){}
     el._leaflet_id=null;
@@ -951,7 +877,10 @@ function initPanel(){
    REALTIME
 ══════════════════════════════════ */
 function listenRealtime(){
-  if(!db){ renderDemoRealtime(); return; }
+  if(!db){
+    document.getElementById('active-visitors-list').innerHTML=emptyState('⚠️','Firebase bağlantısı kurulamadı.');
+    return;
+  }
   const cutoff=new Date(Date.now()-5*60*1000);
   realtimeUnsub=db.collection('visitor_locations')
     .where('lastSeen','>',firebase.firestore.Timestamp.fromDate(cutoff))
@@ -959,7 +888,10 @@ function listenRealtime(){
       const visitors=[];
       snap.forEach(doc=>visitors.push({id:doc.id,...doc.data()}));
       updateRealtimeUI(visitors);
-    },err=>{console.error(err);renderDemoRealtime();});
+    },err=>{
+      console.error(err);
+      document.getElementById('active-visitors-list').innerHTML=emptyState('❌','Veri alınamadı: '+err.message);
+    });
 }
 
 function listenSessions(){
@@ -985,6 +917,8 @@ function updateRealtimeUI(visitors){
   if(topZone){
     const zInfo=ZONE_MAP.find(z=>z.id===topZone[0]);
     document.getElementById('rt-topzone').textContent=zInfo?zInfo.icon:'—';
+  } else {
+    document.getElementById('rt-topzone').textContent='—';
   }
 
   if(rtMap&&rtPolygons&&Object.keys(rtPolygons).length){
@@ -1020,7 +954,7 @@ function updateRealtimeUI(visitors){
 
   const list=document.getElementById('active-visitors-list');
   if(!visitors.length){
-    list.innerHTML='<div class="empty-state"><span class="icon">👁️</span>Müzede aktif ziyaretçi bulunmuyor.</div>';
+    list.innerHTML=emptyState('👁️','Müzede aktif ziyaretçi bulunmuyor.');
     return;
   }
   list.innerHTML=visitors.map((v,i)=>{
@@ -1038,26 +972,13 @@ function updateRealtimeUI(visitors){
   }).join('');
 }
 
-function renderDemoRealtime(){
-  const demo=[
-    {id:'d1',zone:'darussifa',stop:3,lang:'tr',device:'mobile',currentPage:4,startTime:{toMillis:()=>Date.now()-18*60000}},
-    {id:'d2',zone:'medrese',stop:4,lang:'en',device:'tablet',currentPage:6,startTime:{toMillis:()=>Date.now()-12*60000}},
-    {id:'d3',zone:'camii',stop:8,lang:'de',device:'mobile',currentPage:11,startTime:{toMillis:()=>Date.now()-32*60000}},
-    {id:'d4',zone:'imarethane',stop:6,lang:'tr',device:'mobile',currentPage:9,startTime:{toMillis:()=>Date.now()-7*60000}},
-  ];
-  updateRealtimeUI(demo);
-  document.getElementById('rt-today').textContent='47';
-  document.getElementById('rt-avgtime').textContent='23';
-  document.getElementById('rt-guestbook').textContent='8';
-  document.getElementById('rt-app-opens').textContent='4';
-}
-
 function updateSessionStats(sessions){
   const today=new Date(); today.setHours(0,0,0,0);
   const todaySessions=sessions.filter(s=>s.startTime&&s.startTime.toDate()>=today);
   document.getElementById('rt-today').textContent=todaySessions.length;
-  const avgDur=sessions.filter(s=>s.durationMin).reduce((a,s)=>a+s.durationMin,0)/(sessions.filter(s=>s.durationMin).length||1);
-  document.getElementById('rt-avgtime').textContent=Math.round(avgDur)||'—';
+  const durs=sessions.filter(s=>s.durationMin>0).map(s=>s.durationMin);
+  const avgDur=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):0;
+  document.getElementById('rt-avgtime').textContent=avgDur||'—';
 }
 
 function refreshRealtime(){
@@ -1077,7 +998,10 @@ function setStatPeriod(p,btn){
 }
 
 async function loadStats(){
-  if(!db){ renderStats(generateDemoSessions()); return; }
+  if(!db){
+    document.getElementById('stat-sub-device').innerHTML=emptyState('⚠️','Firebase bağlantısı kurulamadı.');
+    return;
+  }
   try {
     let query=db.collection('visitor_sessions').orderBy('startTime','desc');
     const now=new Date();
@@ -1085,30 +1009,45 @@ async function loadStats(){
     else if(currentPeriod==='week'){ const d=new Date(now-7*86400000);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
     else if(currentPeriod==='month'){ const d=new Date(now-30*86400000);query=query.where('startTime','>=',firebase.firestore.Timestamp.fromDate(d)); }
     const snap=await query.get();
-    const sessions=[];snap.forEach(d=>sessions.push(d.data()));
-    renderStats(sessions.length?sessions:generateDemoSessions());
-  } catch(e){ console.error(e);renderStats(generateDemoSessions()); }
+    const sessions=[];
+    snap.forEach(d=>sessions.push(d.data()));
+    renderStats(sessions);
+  } catch(e){
+    console.error(e);
+    document.getElementById('device-cards').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
 function renderStats(sessions){
+  if(!sessions.length){
+    document.getElementById('st-total').textContent='0';
+    document.getElementById('st-complete').textContent='%0';
+    document.getElementById('st-avgdur').textContent='0';
+    document.getElementById('st-loc-pct').textContent='%0';
+    document.getElementById('device-cards').innerHTML=emptyState('📊','Bu dönem için veri bulunmuyor.');
+    document.getElementById('lang-chart').innerHTML=emptyState('🌐','Veri yok.');
+    document.getElementById('perm-chart').innerHTML=emptyState('📍','Veri yok.');
+    document.getElementById('trend-chart').innerHTML='';
+    document.getElementById('hourly-chart').innerHTML='';
+    document.getElementById('weekly-compare').innerHTML=emptyState('📅','Veri yok.');
+    return;
+  }
+
   document.getElementById('st-total').textContent=sessions.length;
   const completed=sessions.filter(s=>s.maxStop>=9).length;
-  document.getElementById('st-complete').textContent=sessions.length?'%'+Math.round(completed/sessions.length*100):'%0';
+  document.getElementById('st-complete').textContent='%'+Math.round(completed/sessions.length*100);
   const durs=sessions.filter(s=>s.durationMin>0).map(s=>s.durationMin);
   document.getElementById('st-avgdur').textContent=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):'0';
-  const locPct=Math.round(sessions.filter(s=>s.locationGranted).length/Math.max(sessions.length,1)*100);
+  const locPct=Math.round(sessions.filter(s=>s.locationGranted).length/sessions.length*100);
   document.getElementById('st-loc-pct').textContent='%'+locPct;
 
-  // Device cards
+  const tot=sessions.length;
   const devices={mobile:0,tablet:0,desktop:0};
   const oss={android:0,ios:0,windows:0,macos:0,other:0};
   sessions.forEach(s=>{
-    const d=s.device||'mobile';
-    devices[d]=(devices[d]||0)+1;
-    const o=s.os||'android';
-    oss[o]=(oss[o]||0)+1;
+    const d=s.device||'mobile'; devices[d]=(devices[d]||0)+1;
+    const o=s.os||'other'; oss[o]=(oss[o]||0)+1;
   });
-  const tot=sessions.length||1;
   const devIcons={mobile:'📱',tablet:'💻',desktop:'🖥️'};
   const devNames={mobile:'Mobil',tablet:'Tablet',desktop:'Masaüstü'};
   document.getElementById('device-cards').innerHTML=Object.entries(devices).map(([k,v])=>`
@@ -1127,7 +1066,6 @@ function renderStats(sessions){
       <div class="prog-bar"><div class="prog-fill blue" style="width:${v/tot*100}%"></div></div>
     </div>`).join('');
 
-  // Lang
   const langCounts={};
   sessions.forEach(s=>{const l=s.lang||'tr';langCounts[l]=(langCounts[l]||0)+1;});
   const langTotal=Math.max(Object.values(langCounts).reduce((a,b)=>a+b,0),1);
@@ -1136,16 +1074,14 @@ function renderStats(sessions){
     <div class="prog-row">
       <div class="prog-label"><span>${langLabels[k]||k}</span><span>${v}</span></div>
       <div class="prog-bar"><div class="prog-fill" style="width:${v/langTotal*100}%"></div></div>
-    </div>`).join('')||'<div class="empty-state">Veri yok.</div>';
+    </div>`).join('')||emptyState('🌐','Dil verisi yok.');
 
-  // Perm
   const withLoc=sessions.filter(s=>s.locationGranted).length;
-  const noLoc=sessions.length-withLoc;
+  const noLoc=tot-withLoc;
   document.getElementById('perm-chart').innerHTML=`
     <div class="prog-row"><div class="prog-label"><span>✅ İzin Verildi</span><span>${withLoc} (%${Math.round(withLoc/tot*100)})</span></div><div class="prog-bar"><div class="prog-fill green" style="width:${withLoc/tot*100}%"></div></div></div>
     <div class="prog-row"><div class="prog-label"><span>❌ Reddedildi</span><span>${noLoc} (%${Math.round(noLoc/tot*100)})</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${noLoc/tot*100}%"></div></div></div>`;
 
-  // Trend 7 days
   const days=[];
   for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push({label:d.toLocaleDateString('tr-TR',{weekday:'short'}),date:d});}
   const dayCounts=days.map(day=>{const next=new Date(day.date);next.setDate(next.getDate()+1);return sessions.filter(s=>{if(!s.startTime)return false;const t=s.startTime.toDate();return t>=day.date&&t<next;}).length;});
@@ -1156,7 +1092,6 @@ function renderStats(sessions){
       <div class="tl-label">${days[i].label}</div>
     </div>`).join('');
 
-  // Hourly
   const hourCounts=Array(24).fill(0);
   sessions.forEach(s=>{if(s.startTime){const h=s.startTime.toDate().getHours();hourCounts[h]++;}});
   const maxH=Math.max(...hourCounts,1);
@@ -1166,7 +1101,6 @@ function renderStats(sessions){
       <div class="tl-label">${h%4===0?h+'h':''}</div>
     </div>`).join('');
 
-  // Weekly compare
   const thisWeek=sessions.filter(s=>{if(!s.startTime)return false;const d=s.startTime.toDate();return d>=new Date(Date.now()-7*86400000);}).length;
   const lastWeek=sessions.filter(s=>{if(!s.startTime)return false;const d=s.startTime.toDate();const w1=new Date(Date.now()-14*86400000),w2=new Date(Date.now()-7*86400000);return d>=w1&&d<w2;}).length;
   const diff=thisWeek-lastWeek,pct=lastWeek?Math.round(diff/lastWeek*100):0;
@@ -1179,133 +1113,137 @@ function renderStats(sessions){
     </div>`;
 }
 
-/* Zone Stats Sub-Tab */
-function renderZoneStats(){
-  const zoneData=generateDemoZones();
-  const maxV=Math.max(...Object.values(zoneData).map(z=>z.totalVisits),1);
-  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>b.totalVisits-a.totalVisits);
-  const totalVisits=sorted.reduce((s,z)=>s+(z.totalVisits||0),0);
+/* ══ Zone Stats ══ */
+async function renderZoneStats(){
+  if(!db){
+    document.getElementById('zone-poly-chart').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
+  }
+  try {
+    const snap=await db.collection('zone_visits').get();
+    const zoneData={};
+    snap.forEach(doc=>{zoneData[doc.id]=doc.data();});
 
-  document.getElementById('zs-total-visits').textContent=totalVisits.toLocaleString('tr');
-  document.getElementById('zs-best').textContent=sorted[0].icon;
-  document.getElementById('zs-longest').textContent=sorted.slice().sort((a,b)=>b.avgMinutes-a.avgMinutes)[0].icon;
-  const avgCoverage=Math.round(sorted.filter(z=>z.totalVisits>0).length/ZONE_MAP.length*100);
-  document.getElementById('zs-coverage').textContent='%'+avgCoverage;
+    if(!Object.keys(zoneData).length){
+      document.getElementById('zone-poly-chart').innerHTML=emptyState('🏛️','Bölge ziyaret verisi henüz yok.');
+      document.getElementById('zone-dwell-mini').innerHTML='';
+      document.getElementById('zone-exit-chart').innerHTML='';
+      document.getElementById('zone-combo-chart').innerHTML=emptyState('🔥','Henüz kombinasyon verisi yok.');
+      document.getElementById('zs-total-visits').textContent='0';
+      document.getElementById('zs-best').textContent='—';
+      document.getElementById('zs-longest').textContent='—';
+      document.getElementById('zs-coverage').textContent='%0';
+      return;
+    }
 
-  document.getElementById('zone-poly-chart').innerHTML=sorted.map(z=>`
-    <div class="prog-row">
-      <div class="prog-label"><span>${z.icon} ${z.name}</span><span>${(z.totalVisits||0).toLocaleString('tr')} ziyaret</span></div>
-      <div class="prog-bar"><div class="prog-fill ${(z.totalVisits||0)/maxV>0.7?'red':''}" style="width:${(z.totalVisits||0)/maxV*100}%"></div></div>
-    </div>`).join('');
+    const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
+    const totalVisits=sorted.reduce((s,z)=>s+(z.totalVisits||0),0);
+    const maxV=Math.max(...sorted.map(z=>z.totalVisits||0),1);
+    const maxM=Math.max(...sorted.map(z=>z.avgMinutes||0),1);
 
-  const maxM=Math.max(...sorted.map(z=>z.avgMinutes),1);
-  document.getElementById('zone-dwell-mini').innerHTML=sorted.slice(0,6).map(z=>`
-    <div class="prog-row">
-      <div class="prog-label"><span>${z.icon} ${z.name}</span><span>${z.avgMinutes} dk</span></div>
-      <div class="prog-bar"><div class="prog-fill blue" style="width:${z.avgMinutes/maxM*100}%"></div></div>
-    </div>`).join('');
+    document.getElementById('zs-total-visits').textContent=totalVisits.toLocaleString('tr');
+    document.getElementById('zs-best').textContent=sorted[0]?.icon||'—';
+    document.getElementById('zs-longest').textContent=sorted.slice().sort((a,b)=>(b.avgMinutes||0)-(a.avgMinutes||0))[0]?.icon||'—';
+    document.getElementById('zs-coverage').textContent='%'+Math.round(sorted.filter(z=>(z.totalVisits||0)>0).length/ZONE_MAP.length*100);
 
-  document.getElementById('zone-exit-chart').innerHTML=sorted.map(z=>{
-    const exitRate=Math.round(10+(z.totalVisits||0)/maxV*30);
-    return `<div class="prog-row">
-      <div class="prog-label"><span>${z.icon} ${z.name}</span><span>%${exitRate}</span></div>
-      <div class="prog-bar"><div class="prog-fill ${exitRate>25?'red':''}" style="width:${exitRate*2.5}%"></div></div>
-    </div>`;}).join('');
+    document.getElementById('zone-poly-chart').innerHTML=sorted.map(z=>`
+      <div class="prog-row">
+        <div class="prog-label"><span>${z.icon} ${z.name}</span><span>${(z.totalVisits||0).toLocaleString('tr')} ziyaret</span></div>
+        <div class="prog-bar"><div class="prog-fill ${(z.totalVisits||0)/maxV>0.7?'red':''}" style="width:${(z.totalVisits||0)/maxV*100}%"></div></div>
+      </div>`).join('');
 
-  const combos=[
-    {pair:'🌊 Şifahane + 🎓 Medrese',count:198,pct:58},
-    {pair:'⚖️ Darüşşifa 1 + 🚪 Darüşşifa 2',count:271,pct:80},
-    {pair:'🎓 Medrese + 🌿 Cami Bahçesi',count:156,pct:46},
-    {pair:'🌿 Bahçe + 🕌 Cami',count:124,pct:36},
-    {pair:'☕ Kafe + 🕌 Cami',count:98,pct:29},
-  ];
-  document.getElementById('zone-combo-chart').innerHTML=combos.map(c=>`
-    <div class="prog-row">
-      <div class="prog-label"><span>${c.pair}</span><span>${c.count} ziyaretçi (%${c.pct})</span></div>
-      <div class="prog-bar"><div class="prog-fill purple" style="width:${c.pct}%"></div></div>
-    </div>`).join('');
+    document.getElementById('zone-dwell-mini').innerHTML=sorted.slice(0,6).map(z=>`
+      <div class="prog-row">
+        <div class="prog-label"><span>${z.icon} ${z.name}</span><span>${z.avgMinutes||0} dk</span></div>
+        <div class="prog-bar"><div class="prog-fill blue" style="width:${(z.avgMinutes||0)/maxM*100}%"></div></div>
+      </div>`).join('');
+
+    document.getElementById('zone-exit-chart').innerHTML=sorted.map(z=>{
+      const exitRate=z.exitRate||0;
+      return `<div class="prog-row">
+        <div class="prog-label"><span>${z.icon} ${z.name}</span><span>%${exitRate}</span></div>
+        <div class="prog-bar"><div class="prog-fill ${exitRate>25?'red':''}" style="width:${exitRate}%"></div></div>
+      </div>`;}).join('');
+
+    // Zone combinations from Firebase if available
+    document.getElementById('zone-combo-chart').innerHTML=emptyState('🔥','Kombinasyon verisi henüz işlenmedi.');
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('zone-poly-chart').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
-/* App Stats Sub-Tab */
-function renderAppStats(){
-  const sessions=generateDemoSessions(340);
-  const totalSessions=sessions.length;
-  const totalPages=sessions.reduce((s,x)=>s+(x.pagesViewed||0),0);
-  const ttsUsers=sessions.filter(s=>s.ttsUsed).length;
-  const aiQuestions=sessions.reduce((s,x)=>s+(x.aiQuestionsAsked||0),0);
+/* ══ App Stats ══ */
+async function renderAppStats(){
+  if(!db){
+    document.getElementById('app-pages-chart').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
+  }
+  try {
+    const snap=await db.collection('app_stats').doc('summary').get();
+    if(!snap.exists){
+      ['as-sessions','as-pageviews','as-ai','as-crash'].forEach(id=>document.getElementById(id).textContent='0');
+      document.getElementById('as-tts').textContent='0%';
+      document.getElementById('app-pages-chart').innerHTML=emptyState('📄','Uygulama istatistiği henüz yok.');
+      document.getElementById('app-nav-chart').innerHTML='';
+      document.getElementById('app-feature-chart').innerHTML='';
+      document.getElementById('app-readtime-chart').innerHTML='';
+      document.getElementById('app-session-trend').innerHTML='';
+      return;
+    }
 
-  document.getElementById('as-sessions').textContent=totalSessions;
-  document.getElementById('as-pageviews').textContent=totalPages.toLocaleString('tr');
-  document.getElementById('as-tts').textContent='%'+Math.round(ttsUsers/totalSessions*100);
-  document.getElementById('as-ai').textContent=aiQuestions;
-  document.getElementById('as-crash').textContent=Math.floor(Math.random()*8)+2;
+    const d=snap.data();
+    document.getElementById('as-sessions').textContent=(d.totalSessions||0).toLocaleString('tr');
+    document.getElementById('as-pageviews').textContent=(d.totalPageviews||0).toLocaleString('tr');
+    document.getElementById('as-tts').textContent='%'+(d.ttsUsagePct||0);
+    document.getElementById('as-ai').textContent=(d.totalAiQuestions||0).toLocaleString('tr');
+    document.getElementById('as-crash').textContent=(d.totalCrashes||0);
 
-  // Page views
-  const pageViews=[328,296,281,265,242,224,198,176,154,136,121,108];
-  const maxPV=Math.max(...pageViews);
-  document.getElementById('app-pages-chart').innerHTML=GUIDE_PAGES.map((p,i)=>`
-    <div class="page-usage-row">
-      <div class="page-num">${p.stop+1}</div>
-      <div class="page-icon">${p.icon}</div>
-      <div class="page-info">
-        <div class="page-name">${p.title}</div>
-        <div class="page-stats">${(pageViews[i]||0).toLocaleString('tr')} görüntüleme • ort. ${40+Math.floor(Math.random()*80)}sn okuma</div>
-      </div>
-      <div class="page-bar-wrap">
-        <div class="prog-bar"><div class="prog-fill ${i<3?'red':i<6?'':'green'}" style="width:${(pageViews[i]||0)/maxPV*100}%"></div></div>
-      </div>
-    </div>`).join('');
+    // Page views per page
+    if(d.pageViews&&Object.keys(d.pageViews).length){
+      const maxPV=Math.max(...Object.values(d.pageViews),1);
+      document.getElementById('app-pages-chart').innerHTML=GUIDE_PAGES.map(p=>{
+        const v=d.pageViews[String(p.id)]||0;
+        return `<div class="page-usage-row">
+          <div class="page-num">${p.stop+1}</div>
+          <div class="page-icon">${p.icon}</div>
+          <div class="page-info">
+            <div class="page-name">${p.title}</div>
+            <div class="page-stats">${v.toLocaleString('tr')} görüntüleme</div>
+          </div>
+          <div class="page-bar-wrap">
+            <div class="prog-bar"><div class="prog-fill" style="width:${v/maxPV*100}%"></div></div>
+          </div>
+        </div>`;}).join('');
+    } else {
+      document.getElementById('app-pages-chart').innerHTML=emptyState('📄','Sayfa görüntüleme verisi henüz yok.');
+    }
 
-  // Nav flow
-  const navFlows=[
-    {from:'Giriş',to:'Darüşşifa 1',pct:90},
-    {from:'Darüşşifa 1',to:'Darüşşifa 2',pct:85},
-    {from:'Darüşşifa 2',to:'Şifahane',pct:78},
-    {from:'Şifahane',to:'Osmanlı Tıbbı',pct:71},
-    {from:'Osmanlı Tıbbı',to:'Medrese',pct:63},
-    {from:'Medrese',to:'Müfredat',pct:55},
-  ];
-  document.getElementById('app-nav-chart').innerHTML=navFlows.map(f=>`
-    <div class="prog-row">
-      <div class="prog-label"><span style="font-size:11px;">${f.from} → ${f.to}</span><span>%${f.pct}</span></div>
-      <div class="prog-bar"><div class="prog-fill ${f.pct<70?'red':f.pct<80?'':'green'}" style="width:${f.pct}%"></div></div>
-    </div>`).join('');
+    // Feature usage
+    if(d.featureUsage&&Object.keys(d.featureUsage).length){
+      const maxF=Math.max(...Object.values(d.featureUsage),1);
+      document.getElementById('app-feature-chart').innerHTML=Object.entries(d.featureUsage).map(([k,v])=>`
+        <div class="prog-row">
+          <div class="prog-label"><span>${k}</span><span>%${Math.round(v/maxF*100)}</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:${v/maxF*100}%"></div></div>
+        </div>`).join('');
+    } else {
+      document.getElementById('app-feature-chart').innerHTML=emptyState('⚙️','Özellik kullanım verisi yok.');
+    }
 
-  // Feature usage
-  const features=[
-    {name:'🔊 Sesli Okuma (TTS)',pct:38},{name:'❓ AI\'a Soru Sor',pct:24},
-    {name:'🖼️ Görsel Büyütme',pct:67},{name:'🌐 Dil Değiştirme',pct:12},
-    {name:'📖 Gönül Defteri',pct:14},{name:'📍 Haritayı Gör',pct:45},
-    {name:'🔖 Yer İmi',pct:8},{name:'📤 Paylaş',pct:6},
-  ];
-  document.getElementById('app-feature-chart').innerHTML=features.map(f=>`
-    <div class="prog-row">
-      <div class="prog-label"><span>${f.name}</span><span>%${f.pct}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${f.pct}%"></div></div>
-    </div>`).join('');
+    document.getElementById('app-nav-chart').innerHTML=emptyState('⏭️','Sayfa geçiş verisi henüz işlenmedi.');
+    document.getElementById('app-readtime-chart').innerHTML='';
+    document.getElementById('app-session-trend').innerHTML='';
 
-  // Read time per page (seconds)
-  const readTimes=[45,62,55,88,95,72,78,40,65,58,50,70];
-  const maxRT=Math.max(...readTimes);
-  document.getElementById('app-readtime-chart').innerHTML=readTimes.map((v,i)=>`
-    <div class="tl-col">
-      <div class="tl-bar" style="height:${Math.max(4,v/maxRT*75)}px;background:linear-gradient(180deg,#5fa8e8,#1a4a7a);" data-tip="Sayfa ${i+1}: ${v}sn ort."></div>
-      <div class="tl-label">${i+1}</div>
-    </div>`).join('');
-
-  // Session trend
-  const stVals=[28,35,42,31,38,45,47];
-  const maxST=Math.max(...stVals);
-  document.getElementById('app-session-trend').innerHTML=stVals.map((v,i)=>{
-    const days=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
-    return `<div class="tl-col">
-      <div class="tl-bar" style="height:${Math.max(4,v/maxST*90)}px;" data-tip="${days[i]}: ${v} oturum"></div>
-      <div class="tl-label">${days[i]}</div>
-    </div>`;}).join('');
+  } catch(e){
+    console.error(e);
+    document.getElementById('app-pages-chart').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
 /* ══════════════════════════════════
-   HEATMAP — FIXED
+   HEATMAP
 ══════════════════════════════════ */
 let heatPeriod='all';
 let hmMapReady=false;
@@ -1336,25 +1274,37 @@ async function renderHeatmap(){
 async function applyHeatmapData(){
   if(!hmMapReady||!hmPolygons||!Object.keys(hmPolygons).length) return;
 
+  if(!db){
+    document.getElementById('zone-detail-table').innerHTML=`<tr><td colspan="6">${emptyState('⚠️','Firebase bağlantısı yok.')}</td></tr>`;
+    return;
+  }
+
   let zoneTotals={};
   let zoneAvgMin={};
 
-  if(db){
-    try {
-      const snap=await db.collection('zone_visits').get();
-      snap.forEach(doc=>{const d=doc.data();zoneTotals[doc.id]=d.totalVisits||0;zoneAvgMin[doc.id]=d.avgMinutes||0;});
-    } catch(e){console.error(e);}
+  try {
+    const snap=await db.collection('zone_visits').get();
+    snap.forEach(doc=>{const d=doc.data();zoneTotals[doc.id]=d.totalVisits||0;zoneAvgMin[doc.id]=d.avgMinutes||0;});
+  } catch(e){
+    console.error(e);
+    document.getElementById('zone-detail-table').innerHTML=`<tr><td colspan="6">${emptyState('❌','Veri alınamadı: '+e.message)}</td></tr>`;
+    return;
   }
 
   if(!Object.keys(zoneTotals).length||Object.values(zoneTotals).every(v=>v===0)){
-    const demo=generateDemoZones();
-    Object.entries(demo).forEach(([k,v])=>{zoneTotals[k]=v.totalVisits;zoneAvgMin[k]=v.avgMinutes;});
-    if(heatPeriod==='today') Object.keys(zoneTotals).forEach(k=>{zoneTotals[k]=Math.round(zoneTotals[k]/90*(0.5+Math.random()*0.5));});
-    else if(heatPeriod==='week') Object.keys(zoneTotals).forEach(k=>{zoneTotals[k]=Math.round(zoneTotals[k]/13);});
+    // No data — reset polygons to default colors
+    Object.entries(hmPolygons).forEach(([id,poly])=>{
+      const color=ZONE_FILL_COLORS[id]||'#b8860b';
+      poly.setStyle({fillColor:color,fillOpacity:0.15,color,weight:2,opacity:0.9});
+      poly.unbindTooltip();
+      const zm=ZONE_MAP.find(z=>z.id===id);
+      poly.bindTooltip((zm?zm.icon+' '+zm.name:id)+' — veri yok',{permanent:false,direction:'top'});
+    });
+    document.getElementById('zone-detail-table').innerHTML=`<tr><td colspan="6">${emptyState('🏛️','Bölge ziyaret verisi henüz yok.')}</td></tr>`;
+    return;
   }
 
   const maxVisits=Math.max(...Object.values(zoneTotals),1);
-
   Object.entries(hmPolygons).forEach(([id,poly])=>{
     const v=zoneTotals[id]||0;
     const ratio=v/maxVisits;
@@ -1366,15 +1316,15 @@ async function applyHeatmapData(){
     poly.setStyle({fillColor:color,fillOpacity:0.12+ratio*0.45,color,weight:ratio>0.5?3:2,opacity:0.8+ratio*0.2});
     poly.unbindTooltip();
     const zm=ZONE_MAP.find(z=>z.id===id);
-    const avgM=zoneAvgMin[id]||Math.round(5+ratio*20);
-    const exitRate=Math.round(10+ratio*30);
+    const avgM=zoneAvgMin[id]||0;
+    const exitRate=Math.round(ratio*40);
     poly.bindTooltip(
       `<b>${zm?zm.icon+' '+zm.name:id}</b><br>🔢 ${v.toLocaleString('tr')} ziyaret<br>⏱️ Ort. ${avgM} dk<br>🚶 Çıkış: %${exitRate}`,
       {permanent:false,direction:'top'}
     );
   });
 
-  const rows=ZONE_MAP.map(z=>({...z,visits:zoneTotals[z.id]||0,avgMin:zoneAvgMin[z.id]||Math.round(5+(zoneTotals[z.id]||0)/maxVisits*20),exitRate:Math.round(10+(zoneTotals[z.id]||0)/maxVisits*30)})).sort((a,b)=>b.visits-a.visits);
+  const rows=ZONE_MAP.map(z=>({...z,visits:zoneTotals[z.id]||0,avgMin:zoneAvgMin[z.id]||0,exitRate:Math.round((zoneTotals[z.id]||0)/maxVisits*40)})).sort((a,b)=>b.visits-a.visits);
   const maxV2=Math.max(...rows.map(r=>r.visits),1);
   document.getElementById('zone-detail-table').innerHTML=rows.map((r,i)=>`
     <tr>
@@ -1391,225 +1341,194 @@ async function applyHeatmapData(){
    DWELL TIME TAB
 ══════════════════════════════════ */
 async function renderDwellTime(){
-  const zoneData=generateDemoZones();
-  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>b.avgMinutes-a.avgMinutes);
-  const maxMin=Math.max(...sorted.map(z=>z.avgMinutes),1);
-  const maxVisits=Math.max(...sorted.map(z=>z.totalVisits),1);
+  if(!db){
+    document.getElementById('dwell-bars').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
+  }
+  try {
+    const snap=await db.collection('zone_visits').get();
+    const zoneData={};
+    snap.forEach(doc=>{zoneData[doc.id]=doc.data();});
 
-  document.getElementById('dw-max').textContent=sorted[0].icon;
-  document.getElementById('dw-min').textContent=sorted[sorted.length-1].icon;
-  document.getElementById('dw-avg').textContent=Math.round(sorted.reduce((s,z)=>s+z.avgMinutes,0)/sorted.length);
-  document.getElementById('dw-transit').textContent='36%';
+    if(!Object.keys(zoneData).length){
+      document.getElementById('dw-max').textContent='—';
+      document.getElementById('dw-min').textContent='—';
+      document.getElementById('dw-avg').textContent='0';
+      document.getElementById('dw-transit').textContent='0%';
+      document.getElementById('dwell-bars').innerHTML=emptyState('⏱️','Kalma süresi verisi henüz yok.');
+      document.getElementById('dwell-trend').innerHTML='';
+      document.getElementById('dwell-hourly').innerHTML='';
+      document.getElementById('transition-flow').innerHTML=emptyState('🔀','Geçiş verisi yok.');
+      document.getElementById('duration-dist').innerHTML=emptyState('📊','Dağılım verisi yok.');
+      return;
+    }
 
-  const colors=['#c03020','#c85030','#d07040','#c9a030','#a0a830','#508040','#3daa55','#3daa55','#3daa55','#3daa55','#2a7a3a'];
-  document.getElementById('dwell-bars').innerHTML=sorted.map((z,i)=>{
-    const pct=Math.round(z.avgMinutes/maxMin*100);
-    const color=colors[Math.min(i,colors.length-1)];
-    return `<div class="dwell-bar-wrap">
-      <div class="dwell-zone-name">${z.icon} ${z.name}</div>
-      <div class="dwell-bar-outer"><div class="dwell-bar-inner" style="width:${Math.max(8,pct)}%;background:linear-gradient(90deg,${color}aa,${color});"><span class="dwell-bar-label">${z.avgMinutes} dk</span></div></div>
-      <div class="dwell-count">${z.totalVisits.toLocaleString('tr')} ziyaret</div>
-    </div>`;}).join('');
+    const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>(b.avgMinutes||0)-(a.avgMinutes||0));
+    const maxMin=Math.max(...sorted.map(z=>z.avgMinutes||0),1);
+    const avgAll=Math.round(sorted.reduce((s,z)=>s+(z.avgMinutes||0),0)/sorted.length);
 
-  const trendVals=[18,21,19,24,22,20,23];
-  const maxT=Math.max(...trendVals);
-  document.getElementById('dwell-trend').innerHTML=trendVals.map((v,i)=>{
-    const days=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
-    return `<div class="tl-col"><div class="tl-bar" style="height:${v/maxT*90}px;background:linear-gradient(180deg,#5fa8e8,#2a6ab0);" data-tip="${days[i]}: ort. ${v} dk"></div><div class="tl-label">${days[i]}</div></div>`;}).join('');
+    document.getElementById('dw-max').textContent=sorted[0]?.icon||'—';
+    document.getElementById('dw-min').textContent=sorted[sorted.length-1]?.icon||'—';
+    document.getElementById('dw-avg').textContent=avgAll;
+    document.getElementById('dw-transit').textContent=(zoneData.__transitRate||'0')+'%';
 
-  const hourlyDwell=[0,0,0,0,0,0,0,0,14,18,22,24,23,20,19,21,25,28,24,20,16,12,8,0];
-  const maxHD=Math.max(...hourlyDwell);
-  document.getElementById('dwell-hourly').innerHTML=hourlyDwell.map((v,h)=>`
-    <div class="tl-col">
-      <div class="tl-bar" style="height:${v?Math.max(4,v/maxHD*90):2}px;background:${v?'linear-gradient(180deg,#c9a030,#8a6010)':'rgba(184,134,11,0.1)'};" data-tip="${h}:00 — ${v||'-'} dk"></div>
-      <div class="tl-label">${h%4===0?h+'h':''}</div>
-    </div>`).join('');
+    const colors=['#c03020','#c85030','#d07040','#c9a030','#a0a830','#508040','#3daa55','#3daa55','#3daa55','#3daa55','#2a7a3a'];
+    document.getElementById('dwell-bars').innerHTML=sorted.map((z,i)=>{
+      const pct=Math.round((z.avgMinutes||0)/maxMin*100);
+      const color=colors[Math.min(i,colors.length-1)];
+      return `<div class="dwell-bar-wrap">
+        <div class="dwell-zone-name">${z.icon} ${z.name}</div>
+        <div class="dwell-bar-outer"><div class="dwell-bar-inner" style="width:${Math.max(8,pct)}%;background:linear-gradient(90deg,${color}aa,${color});"><span class="dwell-bar-label">${z.avgMinutes||0} dk</span></div></div>
+        <div class="dwell-count">${(z.totalVisits||0).toLocaleString('tr')} ziyaret</div>
+      </div>`;}).join('');
 
-  const flows=[
-    {from:'🏛️ Giriş',to:'⚖️ Darüşşifa 1',count:312,pct:92},
-    {from:'⚖️ Darüşşifa 1',to:'🚪 Darüşşifa 2',count:290,pct:85},
-    {from:'🚪 Darüşşifa 2',to:'🌊 Şifahane',count:261,pct:76},
-    {from:'🌊 Şifahane',to:'🎓 Medrese',count:224,pct:65},
-    {from:'🎓 Medrese',to:'🌿 Cami Bahçesi',count:198,pct:58},
-    {from:'🌿 Cami Bahçesi',to:'🕌 Cami İçi',count:156,pct:46},
-  ];
-  document.getElementById('transition-flow').innerHTML=flows.map(f=>`
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-      <div style="font-size:12px;color:var(--parch2);min-width:160px;">${f.from}</div>
-      <div style="font-size:18px;color:var(--gold);">→</div>
-      <div style="font-size:12px;color:var(--parch2);min-width:160px;">${f.to}</div>
-      <div style="flex:1;"><div class="prog-bar"><div class="prog-fill" style="width:${f.pct}%"></div></div></div>
-      <div style="font-size:11px;color:var(--stone);min-width:60px;text-align:right;">%${f.pct} • ${f.count}</div>
-    </div>`).join('');
+    // Daily dwell trend from Firebase if available
+    const dwellTrend=zoneData.__dailyDwellTrend||[];
+    if(dwellTrend.length){
+      const maxT=Math.max(...dwellTrend.map(d=>d.avg||0),1);
+      document.getElementById('dwell-trend').innerHTML=dwellTrend.map((d,i)=>`
+        <div class="tl-col">
+          <div class="tl-bar" style="height:${Math.max(4,(d.avg||0)/maxT*90)}px;background:linear-gradient(180deg,#5fa8e8,#2a6ab0);" data-tip="${d.label||i}: ort. ${d.avg||0} dk"></div>
+          <div class="tl-label">${d.label||''}</div>
+        </div>`).join('');
+    } else {
+      document.getElementById('dwell-trend').innerHTML=emptyState('📈','Trend verisi yok.');
+    }
 
-  const distBuckets=[
-    {label:'0–10 dk',count:28,color:'#c03020'},{label:'10–20 dk',count:67,color:'#c9a030'},
-    {label:'20–30 dk',count:112,color:'#a0a830'},{label:'30–45 dk',count:89,color:'#3daa55'},
-    {label:'45–60 dk',count:31,color:'#2a7a3a'},{label:'60+ dk',count:13,color:'#1a5a28'},
-  ];
-  const maxD=Math.max(...distBuckets.map(b=>b.count));
-  document.getElementById('duration-dist').innerHTML=distBuckets.map(b=>`
-    <div class="dwell-bar-wrap">
-      <div class="dwell-zone-name">${b.label}</div>
-      <div class="dwell-bar-outer"><div class="dwell-bar-inner" style="width:${Math.max(8,b.count/maxD*100)}%;background:${b.color}aa;"><span class="dwell-bar-label">${b.count} kişi</span></div></div>
-      <div class="dwell-count">%${Math.round(b.count/340*100)}</div>
-    </div>`).join('');
+    // Hourly dwell from Firebase if available
+    const hourlyDwell=zoneData.__hourlyDwell||[];
+    if(hourlyDwell.length){
+      const maxHD=Math.max(...hourlyDwell,1);
+      document.getElementById('dwell-hourly').innerHTML=hourlyDwell.map((v,h)=>`
+        <div class="tl-col">
+          <div class="tl-bar" style="height:${v?Math.max(4,v/maxHD*90):2}px;background:${v?'linear-gradient(180deg,#c9a030,#8a6010)':'rgba(184,134,11,0.1)'};" data-tip="${h}:00 — ${v||'-'} dk"></div>
+          <div class="tl-label">${h%4===0?h+'h':''}</div>
+        </div>`).join('');
+    } else {
+      document.getElementById('dwell-hourly').innerHTML=emptyState('🕐','Saatlik veri yok.');
+    }
+
+    document.getElementById('transition-flow').innerHTML=emptyState('🔀','Geçiş akışı verisi henüz işlenmedi.');
+    document.getElementById('duration-dist').innerHTML=emptyState('📊','Süre dağılımı verisi henüz işlenmedi.');
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('dwell-bars').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
 /* ══════════════════════════════════
    ROUTES TAB
 ══════════════════════════════════ */
 let routeMap=null;
-function renderRouteMap(){
+
+async function renderRouteMap(){
   const el=document.getElementById('route-map');
   if(!el) return;
   if(!el._leaflet_id){
     routeMap=buildAdminMap('route-map',(m,p)=>{
       routePolygons=p;
-      drawRouteLines(m);
     });
-  } else {
-    routeLines.forEach(l=>routeMap&&routeMap.removeLayer(l));
-    routeLines=[];
-    drawRouteLines(routeMap);
   }
 
-  document.getElementById('lr-paths').textContent='18';
-  document.getElementById('lr-top').textContent='⚖️→🌊→🎓';
-  document.getElementById('lr-backtrack').textContent='%12';
-  document.getElementById('lr-complete').textContent='%37';
+  // Reset stats
+  document.getElementById('lr-paths').textContent='0';
+  document.getElementById('lr-top').textContent='—';
+  document.getElementById('lr-backtrack').textContent='%0';
+  document.getElementById('lr-complete').textContent='%0';
 
-  // Top routes
-  const topRoutes=[
-    {route:'🏛️ → ⚖️ → 🌊 → 🎓 → 🕌',count:124,pct:36},
-    {route:'🏛️ → ⚖️ → 🌊 → ☕',count:87,pct:25},
-    {route:'🏛️ → ⚖️ → 🚪 → 🌊',count:65,pct:19},
-    {route:'🏛️ → 🌿 → 🕌',count:42,pct:12},
-    {route:'🏛️ → ⚖️ → 🎓',count:22,pct:6},
-  ];
-  document.getElementById('top-routes-chart').innerHTML=topRoutes.map(r=>`
-    <div class="prog-row">
-      <div class="prog-label"><span style="font-size:11px;">${r.route}</span><span>${r.count}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${r.pct*2}%"></div></div>
-    </div>`).join('');
-
-  // Entry exit
-  document.getElementById('entry-exit-chart').innerHTML=`
-    <div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin-bottom:10px;">GİRİŞ NOKTASI</div>
-    <div class="prog-row"><div class="prog-label"><span>🏛️ Müze Girişi</span><span>%94</span></div><div class="prog-bar"><div class="prog-fill green" style="width:94%"></div></div></div>
-    <div class="prog-row"><div class="prog-label"><span>🌿 Bahçe Kapısı</span><span>%6</span></div><div class="prog-bar"><div class="prog-fill" style="width:12%"></div></div></div>
-    <div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin:14px 0 10px;">SON BÖLGE (ÇIKIŞ)</div>
-    <div class="prog-row"><div class="prog-label"><span>🕌 Cami İçi</span><span>%36</span></div><div class="prog-bar"><div class="prog-fill" style="width:72%"></div></div></div>
-    <div class="prog-row"><div class="prog-label"><span>☕ Müze Kafe</span><span>%28</span></div><div class="prog-bar"><div class="prog-fill blue" style="width:56%"></div></div></div>
-    <div class="prog-row"><div class="prog-label"><span>🌿 Cami Bahçesi</span><span>%22</span></div><div class="prog-bar"><div class="prog-fill green" style="width:44%"></div></div></div>
-    <div class="prog-row"><div class="prog-label"><span>🎓 Medrese</span><span>%14</span></div><div class="prog-bar"><div class="prog-fill purple" style="width:28%"></div></div></div>`;
-
-  // Avg route visual
-  const avgRoute=['giris-avlu','darussifa-1','darussifa-2','darussifa','medrese','buyuk-avlu','camii-avlu','camii'];
-  const pcts=[100,92,85,76,65,58,48,36];
-  document.getElementById('avg-route-visual').innerHTML=`
-    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;">
-      ${avgRoute.map((id,i)=>{
-        const zm=ZONE_MAP.find(z=>z.id===id)||{icon:'📍',name:id};
-        return `<div style="display:flex;align-items:center;gap:4px;">
-          <div style="text-align:center;">
-            <div style="background:rgba(184,134,11,${0.1+pcts[i]/100*0.3});border:1px solid rgba(184,134,11,${0.2+pcts[i]/100*0.4});border-radius:8px;padding:6px 10px;font-size:11px;color:var(--parch2);">
-              ${zm.icon} ${zm.name}<br>
-              <span style="font-family:var(--font-head);font-size:10px;color:${pcts[i]>70?'#3daa55':pcts[i]>40?'#f0c040':'#ff6b4a'};">%${pcts[i]}</span>
-            </div>
-          </div>
-          ${i<avgRoute.length-1?'<div style="color:var(--gold);font-size:16px;">→</div>':''}
-        </div>`;
-      }).join('')}
-    </div>`;
-}
-
-function drawRouteLines(m){
-  if(!m) return;
-  // Draw most popular route as colored arrows
-  const routeZones=['giris-avlu','darussifa-1','darussifa-2','darussifa','medrese','buyuk-avlu','camii-avlu','camii'];
-  const centroids={};
-  Object.entries(ZONE_COORDS).forEach(([id,coords])=>{
-    centroids[id]=[coords.reduce((s,c)=>s+c[0],0)/coords.length,coords.reduce((s,c)=>s+c[1],0)/coords.length];
-  });
-  for(let i=0;i<routeZones.length-1;i++){
-    const from=centroids[routeZones[i]],to=centroids[routeZones[i+1]];
-    if(!from||!to) continue;
-    const opacity=1-(i*0.08);
-    const line=L.polyline([from,to],{color:'#f0c040',weight:3,opacity,dashArray:i>0?null:'8 4'}).addTo(m);
-    routeLines.push(line);
+  if(!db){
+    document.getElementById('top-routes-chart').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    document.getElementById('entry-exit-chart').innerHTML='';
+    document.getElementById('avg-route-visual').innerHTML='';
+    return;
   }
-  // Arrow markers
-  routeZones.forEach((id,i)=>{
-    const c=centroids[id];
-    if(!c) return;
-    const icon=L.divIcon({className:'',html:`<div style="background:${i===0?'#3daa55':i===routeZones.length-1?'#ff6b4a':'#f0c040'};border:2px solid #1a1005;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);color:#1a1005;font-weight:700;">${i+1}</div>`,iconSize:[16,16],iconAnchor:[8,8]});
-    const mk=L.marker(c,{icon}).addTo(m);
-    routeLines.push(mk);
-  });
+
+  try {
+    const snap=await db.collection('route_stats').doc('summary').get();
+    if(!snap.exists){
+      document.getElementById('top-routes-chart').innerHTML=emptyState('🗺️','Güzergah verisi henüz yok.');
+      document.getElementById('entry-exit-chart').innerHTML=emptyState('🚪','Giriş/çıkış verisi yok.');
+      document.getElementById('avg-route-visual').innerHTML=emptyState('📊','Ortalama güzergah verisi yok.');
+      return;
+    }
+    const d=snap.data();
+    document.getElementById('lr-paths').textContent=d.uniqueRoutes||0;
+    document.getElementById('lr-top').textContent=d.topRouteName||'—';
+    document.getElementById('lr-backtrack').textContent='%'+(d.backtrackRate||0);
+    document.getElementById('lr-complete').textContent='%'+(d.completionRate||0);
+
+    if(d.topRoutes&&d.topRoutes.length){
+      const maxR=Math.max(...d.topRoutes.map(r=>r.count||0),1);
+      document.getElementById('top-routes-chart').innerHTML=d.topRoutes.map(r=>`
+        <div class="prog-row">
+          <div class="prog-label"><span style="font-size:11px;">${r.route}</span><span>${r.count}</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:${(r.count/maxR)*100}%"></div></div>
+        </div>`).join('');
+    } else {
+      document.getElementById('top-routes-chart').innerHTML=emptyState('🏆','Rota verisi yok.');
+    }
+
+    document.getElementById('entry-exit-chart').innerHTML=emptyState('🚪','Giriş/çıkış verisi henüz işlenmedi.');
+    document.getElementById('avg-route-visual').innerHTML=emptyState('📊','Ortalama güzergah verisi henüz yok.');
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('top-routes-chart').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
-function renderPageRoutes(){
-  const pageViews=[328,296,281,265,242,224,198,176,154,136,121,108];
-  const maxPV=Math.max(...pageViews);
-
+async function renderPageRoutes(){
   document.getElementById('pr-pages').textContent=GUIDE_PAGES.length;
-  document.getElementById('pr-most').textContent=GUIDE_PAGES[0].icon+' '+GUIDE_PAGES[0].title;
-  document.getElementById('pr-skip').textContent='%18';
-  document.getElementById('pr-lastpage').textContent=GUIDE_PAGES[11].icon;
+  document.getElementById('pr-most').textContent='—';
+  document.getElementById('pr-skip').textContent='%0';
+  document.getElementById('pr-lastpage').textContent='—';
 
-  document.getElementById('page-usage-list').innerHTML=GUIDE_PAGES.map((p,i)=>`
-    <div class="page-usage-row">
-      <div class="page-num">${i+1}</div>
-      <div class="page-icon">${p.icon}</div>
-      <div class="page-info">
-        <div class="page-name">${p.title}</div>
-        <div class="page-stats">${pageViews[i]||0} görüntüleme • Bölge: ${ZONE_MAP.find(z=>z.id===p.zone)?.name||p.zone}</div>
-      </div>
-      <div class="page-bar-wrap">
-        <div class="prog-bar"><div class="prog-fill ${i<4?'red':i<8?'':'green'}" style="width:${(pageViews[i]||0)/maxPV*100}%"></div></div>
-      </div>
-    </div>`).join('');
+  if(!db){
+    document.getElementById('page-usage-list').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
+  }
 
-  const pageFlows=[
-    {from:'📜 Giriş',to:'⚖️ Darüşşifa 1',pct:90},{from:'⚖️ Darüşşifa 1',to:'🚪 Darüşşifa 2',pct:82},
-    {from:'🌊 Şifahane',to:'🩺 Osmanlı Tıbbı',pct:78},{from:'🎓 Medrese',to:'📚 Müfredat',pct:65},
-    {from:'📚 Müfredat',to:'🌿 Bahçe',pct:60},{from:'🍲 İmarethane',to:'🏠 Tabhane',pct:55},
-  ];
-  document.getElementById('page-flow-chart').innerHTML=pageFlows.map(f=>`
-    <div class="prog-row">
-      <div class="prog-label"><span style="font-size:11px;">${f.from} → ${f.to}</span><span>%${f.pct}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${f.pct}%"></div></div>
-    </div>`).join('');
+  try {
+    const snap=await db.collection('app_stats').doc('pageRoutes').get();
+    if(!snap.exists){
+      document.getElementById('page-usage-list').innerHTML=emptyState('📄','Sayfa güzergah verisi henüz yok.');
+      document.getElementById('page-flow-chart').innerHTML=emptyState('🔀','Geçiş verisi yok.');
+      document.getElementById('page-completion-chart').innerHTML=emptyState('📊','Tamamlama verisi yok.');
+      document.getElementById('page-route-flow').innerHTML=emptyState('🔭','Güzergah akışı yok.');
+      return;
+    }
+    const d=snap.data();
+    document.getElementById('pr-most').textContent=d.mostReadPage||'—';
+    document.getElementById('pr-skip').textContent='%'+(d.skipRate||0);
+    document.getElementById('pr-lastpage').textContent=d.lastExitPage||'—';
 
-  const completion=[100,90,82,76,71,65,58,52,45,40,35,32];
-  document.getElementById('page-completion-chart').innerHTML=GUIDE_PAGES.map((p,i)=>`
-    <div class="prog-row">
-      <div class="prog-label"><span style="font-size:11px;">${p.icon} ${p.title}</span><span>%${completion[i]}</span></div>
-      <div class="prog-bar"><div class="prog-fill ${completion[i]<50?'red':completion[i]<70?'':'green'}" style="width:${completion[i]}%"></div></div>
-    </div>`).join('');
-
-  // Page route flow - typical path through pages
-  document.getElementById('page-route-flow').innerHTML=`
-    <div style="overflow-x:auto;padding-bottom:8px;">
-      <div style="display:flex;align-items:flex-start;gap:0;min-width:600px;">
-        ${GUIDE_PAGES.map((p,i)=>`
-          <div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;">
-            <div style="width:100%;height:3px;background:linear-gradient(90deg,${i===0?'transparent':'rgba(184,134,11,0.4)'},rgba(184,134,11,0.4),${i===GUIDE_PAGES.length-1?'transparent':'rgba(184,134,11,0.4)'});margin-bottom:-6px;margin-top:14px;"></div>
-            <div style="background:rgba(184,134,11,${0.05+completion[i]/100*0.2});border:1px solid rgba(184,134,11,${0.2+completion[i]/100*0.4});border-radius:8px;padding:6px 4px;text-align:center;width:90%;margin:4px 2px;position:relative;">
-              <div style="font-size:16px;">${p.icon}</div>
-              <div style="font-size:9px;color:var(--parch2);line-height:1.2;margin-top:2px;">${p.title}</div>
-              <div style="font-family:var(--font-head);font-size:10px;color:${completion[i]<50?'#ff6b4a':completion[i]<70?'#f0c040':'#3daa55'};margin-top:3px;">%${completion[i]}</div>
-            </div>
+    if(d.pageViews&&Object.keys(d.pageViews).length){
+      const maxPV=Math.max(...Object.values(d.pageViews),1);
+      document.getElementById('page-usage-list').innerHTML=GUIDE_PAGES.map((p,i)=>{
+        const v=d.pageViews[String(p.id)]||0;
+        return `<div class="page-usage-row">
+          <div class="page-num">${i+1}</div>
+          <div class="page-icon">${p.icon}</div>
+          <div class="page-info">
+            <div class="page-name">${p.title}</div>
+            <div class="page-stats">${v.toLocaleString('tr')} görüntüleme • Bölge: ${ZONE_MAP.find(z=>z.id===p.zone)?.name||p.zone}</div>
           </div>
-        `).join('')}
-      </div>
-    </div>
-    <div style="display:flex;gap:16px;font-size:11px;color:var(--stone);margin-top:8px;">
-      <span style="color:#3daa55;">🟢 Yüksek tamamlama (%70+)</span>
-      <span style="color:#f0c040;">🟡 Orta (%50–70)</span>
-      <span style="color:#ff6b4a;">🔴 Düşük (%50 altı)</span>
-    </div>`;
+          <div class="page-bar-wrap">
+            <div class="prog-bar"><div class="prog-fill" style="width:${v/maxPV*100}%"></div></div>
+          </div>
+        </div>`;}).join('');
+    } else {
+      document.getElementById('page-usage-list').innerHTML=emptyState('📄','Sayfa kullanım verisi yok.');
+    }
+    document.getElementById('page-flow-chart').innerHTML=emptyState('🔀','Geçiş akışı verisi henüz işlenmedi.');
+    document.getElementById('page-completion-chart').innerHTML=emptyState('📊','Tamamlama verisi henüz işlenmedi.');
+    document.getElementById('page-route-flow').innerHTML=emptyState('🔭','Güzergah akışı verisi henüz yok.');
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('page-usage-list').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
 /* ══════════════════════════════════
@@ -1627,16 +1546,43 @@ function filterGuestbook(f,btn){
 
 async function loadGuestbook(){
   gbData=[];
-  if(db){
-    try{const snap=await db.collection('guestbook').orderBy('date','desc').limit(100).get();snap.forEach(doc=>gbData.push({id:doc.id,...doc.data()}));}
-    catch(e){console.error(e);}
+
+  if(!db){
+    document.getElementById('guestbook-list').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
   }
-  if(!gbData.length) gbData=generateDemoGuestbook();
+
+  try {
+    const snap=await db.collection('guestbook').orderBy('date','desc').limit(100).get();
+    snap.forEach(doc=>gbData.push({id:doc.id,...doc.data()}));
+  } catch(e){
+    console.error(e);
+    document.getElementById('guestbook-list').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+    return;
+  }
+
+  if(!gbData.length){
+    document.getElementById('gb-total').textContent='0';
+    document.getElementById('gb-pos').textContent='%0';
+    document.getElementById('gb-langs').textContent='0';
+    document.getElementById('gb-rating').textContent='—';
+    document.getElementById('gb-flagged').textContent='0';
+    document.getElementById('sentiment-meter').innerHTML='';
+    document.getElementById('sent-pos-pct').textContent='😊 Pozitif: 0%';
+    document.getElementById('sent-neu-pct').textContent='😐 Nötr: 0%';
+    document.getElementById('sent-neg-pct').textContent='😞 Negatif: 0%';
+    document.getElementById('nps-score').textContent='NPS: —';
+    document.getElementById('nps-bar-wrap').innerHTML='';
+    document.getElementById('gb-lang-chart').innerHTML='';
+    document.getElementById('gb-trend').innerHTML='';
+    document.getElementById('word-cloud').innerHTML=emptyState('☁️','Henüz mesaj yok.');
+    document.getElementById('guestbook-list').innerHTML=emptyState('📖','Henüz gönül defteri mesajı yok.');
+    return;
+  }
 
   const total=gbData.length;
   const pos=gbData.filter(m=>m.sentiment==='positive').length;
   const neg=gbData.filter(m=>m.sentiment==='negative').length;
-  const neu=gbData.filter(m=>m.sentiment==='neutral').length;
   const flagged=gbData.filter(m=>m.flagged).length;
   const langs=new Set(gbData.map(m=>m.lang||'tr')).size;
   const ratings=gbData.filter(m=>m.rating).map(m=>m.rating);
@@ -1645,7 +1591,7 @@ async function loadGuestbook(){
   document.getElementById('gb-total').textContent=total;
   document.getElementById('gb-pos').textContent='%'+Math.round(pos/total*100);
   document.getElementById('gb-langs').textContent=langs;
-  document.getElementById('gb-rating').textContent=avgRating+'⭐';
+  document.getElementById('gb-rating').textContent=avgRating?(avgRating+'⭐'):'—';
   document.getElementById('gb-flagged').textContent=flagged;
 
   const pp=Math.round(pos/total*100),np=Math.round(neg/total*100),nep=100-pp-np;
@@ -1660,7 +1606,7 @@ async function loadGuestbook(){
   const nps=Math.round((promoters-detractors)/total*100);
   document.getElementById('nps-score').textContent='NPS: '+nps;
   document.getElementById('nps-score').style.color=nps>50?'#3daa55':nps>0?'#f0c040':'#ff6b4a';
-  document.getElementById('nps-bar-wrap').innerHTML=`<div class="nps-bar"><div class="nps-det" style="flex:${detractors};"></div><div class="nps-pas" style="flex:${passives};"></div><div class="nps-pro" style="flex:${promoters};"></div></div>`;
+  document.getElementById('nps-bar-wrap').innerHTML=`<div class="nps-bar"><div class="nps-det" style="flex:${Math.max(detractors,1)};"></div><div class="nps-pas" style="flex:${Math.max(passives,1)};"></div><div class="nps-pro" style="flex:${Math.max(promoters,1)};"></div></div>`;
 
   const langC={};gbData.forEach(m=>{const l=m.lang||'tr';langC[l]=(langC[l]||0)+1;});
   const lt=Math.max(Object.values(langC).reduce((a,b)=>a+b,0),1);
@@ -1669,14 +1615,43 @@ async function loadGuestbook(){
     <div class="prog-row"><div class="prog-label"><span>${langLabels[k]||k}</span><span>${v}</span></div><div class="prog-bar"><div class="prog-fill purple" style="width:${v/lt*100}%"></div></div></div>`).join('');
 
   const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d);}
-  const trendC=days.map(day=>{const next=new Date(day);next.setDate(next.getDate()+1);return gbData.filter(m=>m.date>=day&&m.date<next).length;});
+  const trendC=days.map(day=>{
+    const next=new Date(day);next.setDate(next.getDate()+1);
+    return gbData.filter(m=>{
+      const d=m.date&&m.date.toDate?m.date.toDate():m.date;
+      return d instanceof Date && d>=day && d<next;
+    }).length;
+  });
   const maxT=Math.max(...trendC,1);
-  document.getElementById('gb-trend').innerHTML=trendC.map((v,i)=>`<div class="tl-col"><div class="tl-bar" style="height:${Math.max(2,v/maxT*55)}px;background:linear-gradient(180deg,#7a3ab0,#4a1a7a);" data-tip="${days[i].toLocaleDateString('tr-TR',{weekday:'short'})}: ${v}"></div><div class="tl-label">${days[i].toLocaleDateString('tr-TR',{weekday:'short'})}</div></div>`).join('');
+  document.getElementById('gb-trend').innerHTML=trendC.map((v,i)=>`
+    <div class="tl-col">
+      <div class="tl-bar" style="height:${Math.max(2,v/maxT*55)}px;background:linear-gradient(180deg,#7a3ab0,#4a1a7a);" data-tip="${days[i].toLocaleDateString('tr-TR',{weekday:'short'})}: ${v}"></div>
+      <div class="tl-label">${days[i].toLocaleDateString('tr-TR',{weekday:'short'})}</div>
+    </div>`).join('');
 
-  const words=[{word:'Harika',count:28},{word:'Excellent',count:19},{word:'Tarihi',count:24},{word:'Beautiful',count:15},{word:'Etkileyici',count:22},{word:'Wunderschön',count:11},{word:'Bilgilendirici',count:18},{word:'Müthiş',count:16},{word:'Magnifique',count:9},{word:'Amazing',count:12},{word:'Güzel',count:20},{word:'Historical',count:8},{word:'Tebrikler',count:14},{word:'Impressive',count:10},{word:'Eindrucksvoll',count:7},{word:'Tavsiye',count:13}];
-  const maxWC=Math.max(...words.map(w=>w.count));
-  const wcColors=['#f0c040','#d4a017','#3daa55','#5fa8e8','#c9a84c','#ff6b4a','#7a3ab0'];
-  document.getElementById('word-cloud').innerHTML=words.map((w,i)=>{const size=Math.round(10+w.count/maxWC*14);const opacity=0.5+w.count/maxWC*0.5;const color=wcColors[i%wcColors.length];return `<div class="word-item" style="font-size:${size}px;color:${color};opacity:${opacity};background:${color}18;border:1px solid ${color}33;" title="${w.count} kez">${w.word}</div>`;}).join('');
+  // Word cloud from actual messages
+  const wordFreq={};
+  const stopWords=new Set(['bir','ve','bu','da','de','mi','mu','mü','ile','için','çok','ama','var','yok','olan','daha','gibi','ben','sen','biz','siz','o','en','ne','ki','ya','ise','her','bu','şu','o','çok','çok','iyi','güzel','harika','müze','edirne','sultan','bayezid']);
+  gbData.forEach(m=>{
+    if(!m.text) return;
+    m.text.toLowerCase().split(/\s+/).forEach(w=>{
+      w=w.replace(/[.,!?;:'"()[\]]/g,'');
+      if(w.length>3&&!stopWords.has(w)) wordFreq[w]=(wordFreq[w]||0)+1;
+    });
+  });
+  const topWords=Object.entries(wordFreq).sort((a,b)=>b[1]-a[1]).slice(0,20);
+  if(topWords.length){
+    const maxWC=topWords[0][1];
+    const wcColors=['#f0c040','#d4a017','#3daa55','#5fa8e8','#c9a84c','#ff6b4a','#7a3ab0'];
+    document.getElementById('word-cloud').innerHTML=topWords.map(([word,count],i)=>{
+      const size=Math.round(10+count/maxWC*14);
+      const opacity=0.5+count/maxWC*0.5;
+      const color=wcColors[i%wcColors.length];
+      return `<div class="word-item" style="font-size:${size}px;color:${color};opacity:${opacity};background:${color}18;border:1px solid ${color}33;" title="${count} kez">${word}</div>`;
+    }).join('');
+  } else {
+    document.getElementById('word-cloud').innerHTML=emptyState('☁️','Kelime bulunamadı.');
+  }
 
   renderGuestbookList();
 }
@@ -1686,18 +1661,24 @@ function renderGuestbookList(){
   if(gbFilter==='positive') filtered=gbData.filter(m=>m.sentiment==='positive');
   else if(gbFilter==='negative') filtered=gbData.filter(m=>m.sentiment==='negative');
   else if(gbFilter==='flagged') filtered=gbData.filter(m=>m.flagged);
+  if(!filtered.length){
+    document.getElementById('guestbook-list').innerHTML=emptyState('📖','Bu kategoride mesaj yok.');
+    return;
+  }
   const sentIcon={positive:'😊',neutral:'😐',negative:'😞'};
   const sentColor={positive:'rgba(61,170,85,0.2)',neutral:'rgba(184,134,11,0.1)',negative:'rgba(139,32,0,0.15)'};
   const sentBorder={positive:'rgba(61,170,85,0.3)',neutral:'rgba(184,134,11,0.2)',negative:'rgba(192,48,32,0.3)'};
-  document.getElementById('guestbook-list').innerHTML=filtered.slice(0,20).map(m=>`
-    <div class="guestbook-card" style="background:${sentColor[m.sentiment]||sentColor.neutral};border-color:${sentBorder[m.sentiment]||sentBorder.neutral};">
+  document.getElementById('guestbook-list').innerHTML=filtered.slice(0,20).map(m=>{
+    const rawDate=m.date&&m.date.toDate?m.date.toDate():m.date;
+    const dateStr=rawDate instanceof Date?rawDate.toLocaleDateString('tr-TR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    return `<div class="guestbook-card" style="background:${sentColor[m.sentiment]||sentColor.neutral};border-color:${sentBorder[m.sentiment]||sentBorder.neutral};">
       <div class="gb-header">
-        <div><div class="gb-name">${sentIcon[m.sentiment]||'📝'} ${m.name||'Anonim'}</div><div class="gb-meta">${m.date instanceof Date?m.date.toLocaleDateString('tr-TR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div></div>
+        <div><div class="gb-name">${sentIcon[m.sentiment]||'📝'} ${m.name||'Anonim'}</div><div class="gb-meta">${dateStr}</div></div>
         <div style="text-align:right;"><div style="font-size:13px;">${'⭐'.repeat(m.rating||0)+'☆'.repeat(5-(m.rating||0))}</div>${m.flagged?'<div style="font-size:10px;color:#ff6b4a;margin-top:2px;">🚩 Onay Bekliyor</div>':''}</div>
       </div>
-      <div class="gb-text">"${m.text}"</div>
+      <div class="gb-text">"${m.text||''}"</div>
       <div class="gb-tags"><span class="gb-tag">${m.lang||'tr'}</span>${m.sentiment?`<span class="gb-tag">${sentIcon[m.sentiment]} ${m.sentiment}</span>`:''}</div>
-    </div>`).join('')||'<div class="empty-state">Bu kategoride mesaj yok.</div>';
+    </div>`;}).join('');
 }
 
 /* ══════════════════════════════════
@@ -1705,144 +1686,234 @@ function renderGuestbookList(){
 ══════════════════════════════════ */
 async function loadSessions(){
   const tbody=document.getElementById('sessions-tbody');
-  tbody.innerHTML='<tr><td colspan="8"><div class="empty-state">Yükleniyor…</div></td></tr>';
-  let sessions=[];
-  if(db){
-    try{const snap=await db.collection('visitor_sessions').orderBy('startTime','desc').limit(50).get();snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));}
-    catch(e){console.error(e);}
+  tbody.innerHTML=`<tr><td colspan="8">${emptyState('📋','Yükleniyor…')}</td></tr>`;
+
+  if(!db){
+    tbody.innerHTML=`<tr><td colspan="8">${emptyState('⚠️','Firebase bağlantısı yok.')}</td></tr>`;
+    return;
   }
-  if(!sessions.length) sessions=generateDemoSessions(25).map((s,i)=>({id:'demo-'+i,...s}));
-  const devIcons={mobile:'📱',tablet:'💻',desktop:'🖥️'};
-  const osLabels={android:'🤖',ios:'🍎',windows:'🪟',macos:'🍎'};
-  tbody.innerHTML=sessions.map(s=>{
-    const t=s.startTime?s.startTime.toDate():new Date();
-    return `<tr>
-      <td style="font-size:10px;color:var(--stone);">${(s.id||'').slice(-6)}</td>
-      <td>${t.toLocaleDateString('tr-TR')} ${t.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</td>
-      <td>${s.durationMin||'—'} dk</td>
-      <td>Durak ${s.maxStop||0}/11</td>
-      <td>${s.lang||'tr'}</td>
-      <td>${devIcons[s.device||'mobile']||'📱'} ${osLabels[s.os||'android']||''} <span style="font-size:10px;color:var(--stone);">${s.device||'mobile'}</span></td>
-      <td style="font-size:11px;">${s.locationGranted?'✅':'❌'}</td>
-      <td><span style="font-size:11px;padding:3px 8px;border-radius:10px;background:${s.active?'rgba(61,170,85,0.2)':'rgba(184,134,11,0.1)'};border:1px solid ${s.active?'rgba(61,170,85,0.4)':'rgba(184,134,11,0.2)'};color:${s.active?'#3daa55':'var(--stone)'};">${s.active?'🟢 Aktif':'✓ Tamamlandı'}</span></td>
-    </tr>`;}).join('')||'<tr><td colspan="8"><div class="empty-state">Kayıt yok.</div></td></tr>';
+
+  try {
+    const snap=await db.collection('visitor_sessions').orderBy('startTime','desc').limit(50).get();
+    const sessions=[];
+    snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));
+
+    if(!sessions.length){
+      tbody.innerHTML=`<tr><td colspan="8">${emptyState('📋','Henüz oturum kaydı yok.')}</td></tr>`;
+      return;
+    }
+
+    const devIcons={mobile:'📱',tablet:'💻',desktop:'🖥️'};
+    const osLabels={android:'🤖',ios:'🍎',windows:'🪟',macos:'🍎'};
+    tbody.innerHTML=sessions.map(s=>{
+      const t=s.startTime?s.startTime.toDate():new Date();
+      return `<tr>
+        <td style="font-size:10px;color:var(--stone);">${(s.id||'').slice(-6)}</td>
+        <td>${t.toLocaleDateString('tr-TR')} ${t.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</td>
+        <td>${s.durationMin||'—'} dk</td>
+        <td>Durak ${s.maxStop||0}/11</td>
+        <td>${s.lang||'tr'}</td>
+        <td>${devIcons[s.device||'mobile']||'📱'} ${osLabels[s.os||'']||''} <span style="font-size:10px;color:var(--stone);">${s.device||'mobile'}</span></td>
+        <td style="font-size:11px;">${s.locationGranted?'✅':'❌'}</td>
+        <td><span style="font-size:11px;padding:3px 8px;border-radius:10px;background:${s.active?'rgba(61,170,85,0.2)':'rgba(184,134,11,0.1)'};border:1px solid ${s.active?'rgba(61,170,85,0.4)':'rgba(184,134,11,0.2)'};color:${s.active?'#3daa55':'var(--stone)'};">${s.active?'🟢 Aktif':'✓ Tamamlandı'}</span></td>
+      </tr>`;
+    }).join('');
+  } catch(e){
+    console.error(e);
+    tbody.innerHTML=`<tr><td colspan="8">${emptyState('❌','Veri alınamadı: '+e.message)}</td></tr>`;
+  }
 }
 
 /* ══════════════════════════════════
    ZONE ANALYSIS TAB
 ══════════════════════════════════ */
 async function renderZoneAnalysis(){
-  const zoneData=generateDemoZones();
-  const maxV=Math.max(...Object.values(zoneData).map(z=>z.totalVisits),1);
-  const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>b.totalVisits-a.totalVisits);
-  document.getElementById('zone-bars').innerHTML=sorted.map(z=>`
-    <div class="prog-row">
-      <div class="prog-label"><span>${z.icon} ${z.name}</span><span style="color:var(--stone);">${(z.totalVisits||0).toLocaleString('tr')} ziyaret • ort. ${z.avgMinutes||0} dk</span></div>
-      <div class="prog-bar"><div class="prog-fill ${(z.totalVisits||0)/maxV>0.7?'red':''}" style="width:${(z.totalVisits||0)/maxV*100}%"></div></div>
-    </div>`).join('');
-  const total=sorted.reduce((a,z)=>a+(z.totalVisits||0),0)||1;
-  document.getElementById('top-zones-table').innerHTML=sorted.map((z,i)=>`
-    <tr>
-      <td><span class="rank-badge">${i+1}</span></td>
-      <td>${z.icon} ${z.name}</td>
-      <td>${(z.totalVisits||0).toLocaleString('tr')}</td>
-      <td>${z.avgMinutes||0} dk</td>
-      <td>${i<3?['🥇 Yüksek','🥈 Yüksek','🥉 Orta'][i]:'Normal'}</td>
-      <td>%${Math.round((z.totalVisits||0)/total*100)}</td>
-    </tr>`).join('');
-  const lowEng=sorted.filter(z=>(z.totalVisits||0)/maxV<0.3);
-  const highDwell=sorted.filter(z=>z.avgMinutes>13);
-  let recs='';
-  if(lowEng.length) recs+=`<div class="alert-box" style="margin-bottom:10px;"><span class="alert-icon">⚠️</span><div class="alert-text"><strong style="color:var(--gold3)">Düşük İlgi Alanları:</strong> ${lowEng.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde ziyaretçi sayısı düşük. İnteraktif unsurlar eklenebilir.</div></div>`;
-  if(highDwell.length) recs+=`<div class="alert-box success" style="margin-bottom:10px;"><span class="alert-icon">✅</span><div class="alert-text"><strong style="color:var(--green2)">Uzun Kalma Alanları:</strong> ${highDwell.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde içerik genişletilebilir.</div></div>`;
-  recs+=`<div class="alert-box info"><span class="alert-icon">📊</span><div class="alert-text"><strong>Genel Değerlendirme:</strong> Darüşşifa ve Medrese en yüksek ilgiyi çekiyor. Cami ve İmarethane bölgelerine yönelik rehber içeriği zenginleştirilerek ziyaretçi süresi artırılabilir.</div></div>`;
-  document.getElementById('recommendations').innerHTML=recs;
+  if(!db){
+    document.getElementById('zone-bars').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
+  }
+  try {
+    const snap=await db.collection('zone_visits').get();
+    const zoneData={};
+    snap.forEach(doc=>{zoneData[doc.id]=doc.data();});
+
+    if(!Object.keys(zoneData).length){
+      document.getElementById('zone-bars').innerHTML=emptyState('🏛️','Bölge verisi henüz yok.');
+      document.getElementById('top-zones-table').innerHTML=`<tr><td colspan="6">${emptyState('⭐','Veri yok.')}</td></tr>`;
+      document.getElementById('recommendations').innerHTML=emptyState('💡','Öneri üretmek için yeterli veri yok.');
+      return;
+    }
+
+    const maxV=Math.max(...ZONE_MAP.map(z=>(zoneData[z.id]?.totalVisits||0)),1);
+    const sorted=ZONE_MAP.map(z=>({...z,...(zoneData[z.id]||{totalVisits:0,avgMinutes:0})})).sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
+    document.getElementById('zone-bars').innerHTML=sorted.map(z=>`
+      <div class="prog-row">
+        <div class="prog-label"><span>${z.icon} ${z.name}</span><span style="color:var(--stone);">${(z.totalVisits||0).toLocaleString('tr')} ziyaret • ort. ${z.avgMinutes||0} dk</span></div>
+        <div class="prog-bar"><div class="prog-fill ${(z.totalVisits||0)/maxV>0.7?'red':''}" style="width:${(z.totalVisits||0)/maxV*100}%"></div></div>
+      </div>`).join('');
+
+    const total=sorted.reduce((a,z)=>a+(z.totalVisits||0),0)||1;
+    document.getElementById('top-zones-table').innerHTML=sorted.map((z,i)=>`
+      <tr>
+        <td><span class="rank-badge">${i+1}</span></td>
+        <td>${z.icon} ${z.name}</td>
+        <td>${(z.totalVisits||0).toLocaleString('tr')}</td>
+        <td>${z.avgMinutes||0} dk</td>
+        <td>${i<3?['🥇 Yüksek','🥈 Yüksek','🥉 Orta'][i]:'Normal'}</td>
+        <td>%${Math.round((z.totalVisits||0)/total*100)}</td>
+      </tr>`).join('');
+
+    const lowEng=sorted.filter(z=>(z.totalVisits||0)/maxV<0.3);
+    const highDwell=sorted.filter(z=>(z.avgMinutes||0)>13);
+    let recs='';
+    if(lowEng.length) recs+=`<div class="alert-box" style="margin-bottom:10px;"><span class="alert-icon">⚠️</span><div class="alert-text"><strong style="color:var(--gold3)">Düşük İlgi Alanları:</strong> ${lowEng.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde ziyaretçi sayısı düşük. İnteraktif unsurlar eklenebilir.</div></div>`;
+    if(highDwell.length) recs+=`<div class="alert-box success" style="margin-bottom:10px;"><span class="alert-icon">✅</span><div class="alert-text"><strong style="color:var(--green2)">Uzun Kalma Alanları:</strong> ${highDwell.map(z=>z.icon+' '+z.name).join(', ')} bölgelerinde içerik genişletilebilir.</div></div>`;
+    if(!recs) recs=emptyState('💡','Öneri üretmek için daha fazla ziyaretçi verisi gerekiyor.');
+    document.getElementById('recommendations').innerHTML=recs;
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('zone-bars').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
 /* ══════════════════════════════════
    FUNNEL TAB
 ══════════════════════════════════ */
-function renderFunnel(){
-  const steps=[
-    {label:'Müzeye Giriş Yapan',count:340,icon:'👋',color:'#2a6ab0'},
-    {label:'Rehber Uygulamasını Açan',count:298,icon:'📱',color:'#3d8a30'},
-    {label:'İlk Durağa Ulaşan',count:271,icon:'🗺️',color:'#5daa45'},
-    {label:'5+ Durak Tamamlayan',count:198,icon:'🎯',color:'#c9a030'},
-    {label:'Tüm Turu Bitiren',count:124,icon:'🏁',color:'#b8860b'},
-    {label:'Gönül Defterine Yazan',count:47,icon:'📖',color:'#7a3ab0'},
-  ];
-  document.getElementById('fn-enter').textContent=steps[0].count;
-  document.getElementById('fn-guide').textContent=steps[2].count;
-  document.getElementById('fn-complete').textContent=steps[4].count;
-  document.getElementById('fn-gb').textContent=steps[5].count;
-  const maxCount=steps[0].count;
-  document.getElementById('funnel-chart').innerHTML=steps.map((s,i)=>{
-    const pct=Math.round(s.count/maxCount*100);
-    const convRate=i>0?Math.round(s.count/steps[i-1].count*100):100;
-    return `<div class="funnel-step">
-      <div class="funnel-num">${s.icon} ${s.count}</div>
-      <div class="funnel-bar-outer"><div class="funnel-bar-inner" style="width:${pct}%;background:linear-gradient(90deg,${s.color}aa,${s.color});">${s.label}</div></div>
-      <div class="funnel-pct" style="color:${convRate<70?'#ff6b4a':convRate<85?'#f0c040':'#3daa55'}">${i>0?'→ %'+convRate:'%100'}</div>
-    </div>`;}).join('');
-  const dropoffs=steps.slice(1).map((s,i)=>({label:`${steps[i].icon}→${s.icon}`,dropped:steps[i].count-s.count,pct:Math.round((steps[i].count-s.count)/steps[i].count*100)}));
-  document.getElementById('dropoff-chart').innerHTML=dropoffs.map(d=>`
-    <div class="prog-row"><div class="prog-label"><span>${d.label}</span><span style="color:#ff6b4a;">-${d.dropped} kişi (%${d.pct})</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${d.pct*3}%"></div></div></div>`).join('');
-  const successMetrics=[{label:'Turu Tamamlama',val:Math.round(124/340*100),color:'green'},{label:'Rehber Kullanımı',val:Math.round(298/340*100),color:''},{label:'Konum İzni Verme',val:72,color:''},{label:'Gönül Defteri Yazma',val:Math.round(47/340*100),color:'purple'},{label:'5+ Durak Gezme',val:Math.round(198/340*100),color:''}];
-  document.getElementById('success-chart').innerHTML=successMetrics.map(m=>`
-    <div class="prog-row"><div class="prog-label"><span>${m.label}</span><span>%${m.val}</span></div><div class="prog-bar"><div class="prog-fill ${m.color}" style="width:${m.val}%"></div></div></div>`).join('');
+async function renderFunnel(){
+  if(!db){
+    document.getElementById('funnel-chart').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
+  }
+  try {
+    const snap=await db.collection('funnel_stats').doc('summary').get();
+    if(!snap.exists){
+      ['fn-enter','fn-guide','fn-complete','fn-gb'].forEach(id=>document.getElementById(id).textContent='0');
+      document.getElementById('funnel-chart').innerHTML=emptyState('🔻','Dönüşüm verisi henüz yok.');
+      document.getElementById('dropoff-chart').innerHTML=emptyState('📉','Terk verisi yok.');
+      document.getElementById('success-chart').innerHTML=emptyState('⭐','Başarı verisi yok.');
+      return;
+    }
+    const d=snap.data();
+    const steps=[
+      {label:'Müzeye Giriş Yapan',     count:d.entered||0,     icon:'👋',color:'#2a6ab0'},
+      {label:'Rehber Uygulamasını Açan',count:d.guideStarted||0,icon:'📱',color:'#3d8a30'},
+      {label:'İlk Durağa Ulaşan',       count:d.firstStop||0,   icon:'🗺️',color:'#5daa45'},
+      {label:'5+ Durak Tamamlayan',     count:d.fiveStops||0,   icon:'🎯',color:'#c9a030'},
+      {label:'Tüm Turu Bitiren',        count:d.completed||0,   icon:'🏁',color:'#b8860b'},
+      {label:'Gönül Defterine Yazan',   count:d.guestbook||0,   icon:'📖',color:'#7a3ab0'},
+    ];
+    document.getElementById('fn-enter').textContent=steps[0].count;
+    document.getElementById('fn-guide').textContent=steps[2].count;
+    document.getElementById('fn-complete').textContent=steps[4].count;
+    document.getElementById('fn-gb').textContent=steps[5].count;
+
+    const maxCount=Math.max(steps[0].count,1);
+    document.getElementById('funnel-chart').innerHTML=steps.map((s,i)=>{
+      const pct=Math.round(s.count/maxCount*100);
+      const convRate=i>0&&steps[i-1].count>0?Math.round(s.count/steps[i-1].count*100):100;
+      return `<div class="funnel-step">
+        <div class="funnel-num">${s.icon} ${s.count}</div>
+        <div class="funnel-bar-outer"><div class="funnel-bar-inner" style="width:${pct}%;background:linear-gradient(90deg,${s.color}aa,${s.color});">${s.label}</div></div>
+        <div class="funnel-pct" style="color:${convRate<70?'#ff6b4a':convRate<85?'#f0c040':'#3daa55'}">${i>0?'→ %'+convRate:'%100'}</div>
+      </div>`;}).join('');
+
+    const dropoffs=steps.slice(1).map((s,i)=>({
+      label:`${steps[i].icon}→${s.icon}`,
+      dropped:steps[i].count-s.count,
+      pct:steps[i].count>0?Math.round((steps[i].count-s.count)/steps[i].count*100):0
+    }));
+    document.getElementById('dropoff-chart').innerHTML=dropoffs.map(drop=>`
+      <div class="prog-row"><div class="prog-label"><span>${drop.label}</span><span style="color:#ff6b4a;">-${drop.dropped} kişi (%${drop.pct})</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${drop.pct*3}%"></div></div></div>`).join('');
+
+    const ent=Math.max(steps[0].count,1);
+    const successMetrics=[
+      {label:'Turu Tamamlama',    val:Math.round(steps[4].count/ent*100)},
+      {label:'Rehber Kullanımı',  val:Math.round(steps[1].count/ent*100)},
+      {label:'5+ Durak Gezme',    val:Math.round(steps[3].count/ent*100)},
+      {label:'Gönül Defteri',     val:Math.round(steps[5].count/ent*100)},
+    ];
+    document.getElementById('success-chart').innerHTML=successMetrics.map(m=>`
+      <div class="prog-row"><div class="prog-label"><span>${m.label}</span><span>%${m.val}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${m.val}%"></div></div></div>`).join('');
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('funnel-chart').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 
 /* ══════════════════════════════════
    ALERTS TAB
 ══════════════════════════════════ */
-function renderAlerts(){
-  const alerts=[
-    {type:'warn',icon:'⚠️',title:'Yüksek Yoğunluk',msg:'🌊 Şifahane bölgesi kapasitesinin %85\'inde — yönlendirme yapılabilir.',time:'5 dk önce'},
-    {type:'info',icon:'📱',title:'Uygulama Güncelleme',msg:'Rehber uygulaması v2.4.1 kullanıcıların %23\'ünde eski sürüm.',time:'22 dk önce'},
-    {type:'success',icon:'✅',title:'Günlük Hedef Aşıldı',msg:'Bugün 47 ziyaretçiyle aylık günlük ortalama (%+18) aşıldı.',time:'1 saat önce'},
-    {type:'warn',icon:'🔋',title:'Düşük Pil (Beacon)',msg:'Darüşşifa 2. Avlu beacon cihazının pili %12\'de.',time:'2 saat önce'},
-    {type:'info',icon:'🚩',title:'Gönül Defteri Onayı',msg:'3 yeni mesaj moderasyon onayı bekliyor.',time:'3 saat önce'},
-    {type:'success',icon:'🎯',title:'TTS Kullanımı Arttı',msg:'Sesli rehber kullanımı geçen haftaya göre %34 artış gösterdi.',time:'4 saat önce'},
-  ];
-  const typeColors={warn:'rgba(192,96,0,0.15)',info:'rgba(42,106,176,0.12)',success:'rgba(42,122,58,0.12)'};
-  const typeBorders={warn:'rgba(192,96,0,0.35)',info:'rgba(42,106,176,0.35)',success:'rgba(61,170,85,0.35)'};
-  document.getElementById('alerts-list').innerHTML=alerts.map(a=>`
-    <div class="alert-box ${a.type==='success'?'success':a.type==='info'?'info':''}" style="margin-bottom:10px;background:${typeColors[a.type]};border-color:${typeBorders[a.type]};">
-      <span class="alert-icon">${a.icon}</span>
-      <div class="alert-text"><strong style="display:block;margin-bottom:2px;color:var(--parch);">${a.title}</strong>${a.msg}<div style="font-size:10px;color:var(--stone);margin-top:4px;">🕐 ${a.time}</div></div>
-    </div>`).join('');
+async function renderAlerts(){
+  if(!db){
+    document.getElementById('alerts-list').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
+    return;
+  }
+  try {
+    const snap=await db.collection('alerts').orderBy('createdAt','desc').limit(20).get();
+    if(snap.empty){
+      document.getElementById('alerts-list').innerHTML=emptyState('🔔','Aktif uyarı bulunmuyor.');
+    } else {
+      const typeColors={warn:'rgba(192,96,0,0.15)',info:'rgba(42,106,176,0.12)',success:'rgba(42,122,58,0.12)'};
+      const typeBorders={warn:'rgba(192,96,0,0.35)',info:'rgba(42,106,176,0.35)',success:'rgba(61,170,85,0.35)'};
+      const typeIcons={warn:'⚠️',info:'ℹ️',success:'✅'};
+      const alerts=[];
+      snap.forEach(doc=>alerts.push({id:doc.id,...doc.data()}));
+      document.getElementById('alerts-list').innerHTML=alerts.map(a=>{
+        const t=a.type||'info';
+        const ts=a.createdAt?a.createdAt.toDate().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):'';
+        return `<div class="alert-box ${t==='success'?'success':t==='info'?'info':''}" style="margin-bottom:10px;background:${typeColors[t]||typeColors.info};border-color:${typeBorders[t]||typeBorders.info};">
+          <span class="alert-icon">${a.icon||typeIcons[t]||'🔔'}</span>
+          <div class="alert-text"><strong style="display:block;margin-bottom:2px;color:var(--parch);">${a.title||'Uyarı'}</strong>${a.message||''}<div style="font-size:10px;color:var(--stone);margin-top:4px;">🕐 ${ts}</div></div>
+        </div>`;}).join('');
+    }
 
-  // Capacity chart
-  const zones=[
-    {name:'🌊 Şifahane',cap:85,color:'#c03020'},
-    {name:'🎓 Medrese',cap:62,color:'#c9a030'},
-    {name:'⚖️ Darüşşifa 1',cap:55,color:'#f0c040'},
-    {name:'🕌 Cami İçi',cap:40,color:'#3daa55'},
-    {name:'🌿 Cami Bahçesi',cap:28,color:'#3daa55'},
-  ];
-  document.getElementById('capacity-chart').innerHTML=`
-    <div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin-bottom:12px;">ANLİK DOLULUK ORANI (Tahmini Max. Kapasiteye Göre)</div>
-    ${zones.map(z=>`<div class="prog-row">
-      <div class="prog-label"><span>${z.name}</span><span style="color:${z.cap>75?'#ff6b4a':z.cap>50?'#f0c040':'#3daa55'};">%${z.cap}</span></div>
-      <div class="prog-bar" style="height:12px;"><div class="prog-fill" style="width:${z.cap}%;background:${z.color};"></div></div>
-    </div>`).join('')}`;
+    // Capacity from realtime zone data
+    const capSnap=await db.collection('zone_visits').get();
+    if(capSnap.empty){
+      document.getElementById('capacity-chart').innerHTML=emptyState('📊','Kapasite verisi yok.');
+    } else {
+      const zones=[];
+      capSnap.forEach(doc=>{
+        const d=doc.data();
+        if(d.currentOccupancy!==undefined){
+          const zm=ZONE_MAP.find(z=>z.id===doc.id);
+          zones.push({name:(zm?zm.icon+' '+zm.name:doc.id),cap:d.currentOccupancy||0,color:d.currentOccupancy>75?'#c03020':d.currentOccupancy>50?'#c9a030':'#3daa55'});
+        }
+      });
+      if(zones.length){
+        document.getElementById('capacity-chart').innerHTML=`
+          <div style="font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.08em;margin-bottom:12px;">ANLİK DOLULUK ORANI</div>
+          ${zones.map(z=>`<div class="prog-row">
+            <div class="prog-label"><span>${z.name}</span><span style="color:${z.color};">%${z.cap}</span></div>
+            <div class="prog-bar" style="height:12px;"><div class="prog-fill" style="width:${z.cap}%;background:${z.color};"></div></div>
+          </div>`).join('')}`;
+      } else {
+        document.getElementById('capacity-chart').innerHTML=emptyState('📊','Anlık doluluk verisi kayıt edilmemiş.');
+      }
+    }
 
-  // Alert history table
-  const history=[
-    {time:'09:14',type:'⚠️ Uyarı',desc:'Şifahane kapasite uyarısı',status:'Aktif'},
-    {time:'08:52',type:'✅ Bilgi',desc:'Günlük hedef aşıldı',status:'Kapatıldı'},
-    {time:'08:30',type:'📱 Güncelleme',desc:'Uygulama sürüm uyarısı',status:'Aktif'},
-    {time:'07:15',type:'🔋 Teknik',desc:'Beacon pil uyarısı',status:'İletildi'},
-    {time:'06:00',type:'📊 Rapor',desc:'Günlük otomatik rapor',status:'Gönderildi'},
-    {time:'Dün 21:30',type:'🚩 Moderasyon',desc:'Yeni gönül defteri onayı',status:'Beklemede'},
-  ];
-  document.getElementById('alert-history').innerHTML=history.map(h=>`
-    <tr>
-      <td style="font-family:var(--font-head);font-size:10px;color:var(--stone);">${h.time}</td>
-      <td style="font-size:12px;">${h.type}</td>
-      <td style="font-size:12px;">${h.desc}</td>
-      <td><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(184,134,11,0.1);border:1px solid var(--border);color:var(--stone);">${h.status}</span></td>
-    </tr>`).join('');
+    // Alert history
+    const histSnap=await db.collection('alert_history').orderBy('createdAt','desc').limit(10).get();
+    if(histSnap.empty){
+      document.getElementById('alert-history').innerHTML=`<tr><td colspan="4">${emptyState('📋','Uyarı geçmişi yok.')}</td></tr>`;
+    } else {
+      const hist=[];
+      histSnap.forEach(doc=>hist.push({id:doc.id,...doc.data()}));
+      document.getElementById('alert-history').innerHTML=hist.map(h=>{
+        const ts=h.createdAt?h.createdAt.toDate().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):'—';
+        return `<tr>
+          <td style="font-family:var(--font-head);font-size:10px;color:var(--stone);">${ts}</td>
+          <td style="font-size:12px;">${h.type||'—'}</td>
+          <td style="font-size:12px;">${h.description||''}</td>
+          <td><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(184,134,11,0.1);border:1px solid var(--border);color:var(--stone);">${h.status||'—'}</span></td>
+        </tr>`;}).join('');
+    }
+  } catch(e){
+    console.error(e);
+    document.getElementById('alerts-list').innerHTML=emptyState('❌','Veri alınamadı: '+e.message);
+  }
 }
 </script>
 </body>
