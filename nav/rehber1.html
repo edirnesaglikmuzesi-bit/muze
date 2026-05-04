@@ -612,6 +612,97 @@ html,body{
   .content-text{font-size:14px;}
   .btn-back,.btn-forward,.btn-alt{font-size:10px;padding:12px 8px;}
 }
+
+/* ── KVKK BANNER ── */
+#kvkk-banner{
+  position:fixed;bottom:0;left:0;right:0;z-index:2000;
+  background:linear-gradient(135deg,rgba(14,10,4,0.98),rgba(30,18,8,0.98));
+  border-top:2px solid var(--gold);
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;
+  transform:translateY(100%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+#kvkk-banner.show{transform:translateY(0);}
+.kvkk-text{font-size:12px;color:rgba(240,220,180,0.8);line-height:1.6;flex:1;min-width:200px;}
+.kvkk-text a{color:var(--gold3);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+.kvkk-actions{display:flex;gap:8px;flex-shrink:0;}
+.kvkk-btn-ok{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--ink);border:none;border-radius:8px;
+  padding:9px 18px;font-family:var(--font-head);font-size:11px;
+  letter-spacing:0.1em;cursor:pointer;font-weight:700;white-space:nowrap;
+}
+.kvkk-btn-ok:active{opacity:0.85;}
+.kvkk-btn-info{
+  background:transparent;border:1px solid var(--border);color:var(--stone);
+  border-radius:8px;padding:9px 14px;font-family:var(--font-head);font-size:10px;
+  letter-spacing:0.08em;cursor:pointer;white-space:nowrap;
+}
+/* ── KVKK MODAL ── */
+#kvkk-modal{
+  position:fixed;inset:0;z-index:2100;
+  background:rgba(0,0,0,0.85);
+  display:none;align-items:flex-end;justify-content:center;
+}
+#kvkk-modal.open{display:flex;}
+.kvkk-sheet{
+  background:linear-gradient(160deg,#1a1005,#2e1c08);
+  border:2px solid var(--gold);border-bottom:none;
+  border-radius:20px 20px 0 0;
+  width:100%;max-width:680px;
+  max-height:85vh;overflow-y:auto;
+  padding:24px 20px 40px;
+}
+.kvkk-sheet-header{
+  font-family:var(--font-head);font-size:15px;color:var(--gold3);
+  letter-spacing:0.1em;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.kvkk-close-x{background:transparent;border:none;color:var(--stone);font-size:22px;cursor:pointer;}
+.kvkk-body{font-size:13.5px;line-height:1.9;color:rgba(240,220,180,0.85);}
+.kvkk-body h3{font-family:var(--font-head);font-size:12px;color:var(--gold);letter-spacing:0.1em;margin:16px 0 6px;}
+.kvkk-body p{margin-bottom:10px;}
+.kvkk-body ul{margin-left:18px;margin-bottom:10px;}
+.kvkk-body ul li{margin-bottom:6px;}
+.kvkk-body strong{color:var(--gold3);}
+/* ── KONUM İZNİ POPUP ── */
+#loc-permission-popup{
+  position:fixed;inset:0;z-index:1900;
+  background:rgba(0,0,0,0.8);
+  display:none;align-items:center;justify-content:center;padding:24px;
+}
+#loc-permission-popup.open{display:flex;}
+.loc-perm-box{
+  background:linear-gradient(160deg,#1e1208,#2e1c08);
+  border:2px solid var(--gold);border-radius:20px;
+  padding:28px 22px;max-width:360px;width:100%;text-align:center;
+}
+.loc-perm-icon{font-size:52px;margin-bottom:16px;display:block;}
+.loc-perm-title{font-family:var(--font-head);font-size:16px;color:var(--gold3);letter-spacing:0.1em;line-height:1.4;margin-bottom:10px;}
+.loc-perm-text{font-size:13.5px;color:rgba(240,220,180,0.8);line-height:1.8;margin-bottom:20px;}
+.loc-perm-text strong{color:var(--gold3);}
+.loc-perm-note{
+  font-size:11px;color:var(--stone);line-height:1.7;
+  margin-bottom:20px;padding:10px 14px;
+  background:rgba(184,134,11,0.08);border:1px solid rgba(184,134,11,0.2);
+  border-radius:8px;text-align:left;
+}
+.loc-perm-note a{color:var(--gold3);cursor:pointer;text-decoration:underline;}
+.loc-perm-btn-ok{
+  width:100%;background:linear-gradient(135deg,#2a7a3a,#3daa55);
+  color:#fff;border:none;border-radius:10px;padding:15px;
+  font-family:var(--font-head);font-size:12px;letter-spacing:0.12em;
+  cursor:pointer;font-weight:700;margin-bottom:10px;
+  box-shadow:0 4px 16px rgba(42,122,58,0.35);
+}
+.loc-perm-btn-skip{
+  width:100%;background:transparent;border:1px solid var(--border);
+  color:var(--stone);border-radius:10px;padding:12px;
+  font-family:var(--font-head);font-size:11px;letter-spacing:0.1em;cursor:pointer;
+}
+
 </style>
 </head>
 <body>
@@ -1245,7 +1336,7 @@ html,body{
     <button class="embed-back" onclick="showScreen('tour')">←</button>
     <div class="embed-title">🗺️ Harita &amp; Konum</div>
   </div>
-  <iframe class="embed-iframe" id="map-iframe" src="" height="100%" title="Harita"></iframe>
+  <iframe class="embed-iframe" id="map-iframe" src="" height="100%" title="Harita" allow="geolocation"></iframe>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -1287,8 +1378,8 @@ html,body{
 
     <div class="menu-section">SAYFALAR</div>
     <div class="menu-item" onclick="openMapScreen()"><span class="mi-icon">🗺️</span><span class="mi-name">Harita &amp; Konum</span></div>
-    <div class="menu-item" onclick="openDefterScreen()"><span class="mi-icon">🖋️</span><span class="mi-name">Gönül Köprüsü</span></div>
-    <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">✍️</span><span class="mi-name">Rehbere Sor / Defter</span></div>
+    <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">🖋️</span><span class="mi-name">Gönül Köprüsü</span></div>
+    <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">✍️</span><span class="mi-name">Rehbere Sor </span></div>
   </div>
 </div>
 
@@ -1303,8 +1394,7 @@ html,body{
       <button class="lang-btn" onclick="setLang('en')"><span class="lang-flag">🇬🇧</span>English</button>
       <button class="lang-btn" onclick="setLang('de')"><span class="lang-flag">🇩🇪</span>Deutsch</button>
       <button class="lang-btn" onclick="setLang('fr')"><span class="lang-flag">🇫🇷</span>Français</button>
-      <button class="lang-btn" onclick="setLang('ar')"><span class="lang-flag">🇸🇦</span>العربية</button>
-      <button class="lang-btn" onclick="setLang('bg')"><span class="lang-flag">🇧🇬</span>Български</button>
+         <button class="lang-btn" onclick="setLang('bg')"><span class="lang-flag">🇧🇬</span>Български</button>
       <button class="lang-btn" onclick="setLang('el')"><span class="lang-flag">🇬🇷</span>Ελληνικά</button>
       <button class="lang-btn" onclick="setLang('zh')"><span class="lang-flag">🇨🇳</span>中文</button>
       <button class="lang-btn" onclick="setLang('fa')"><span class="lang-flag">🇮🇷</span>فارسی</button>
@@ -1403,13 +1493,26 @@ const STOP_NAMES = [
   'Cami Avlusu','Cami İçi','Gönül Köprüsü Davet','Gönül Köprüsü'
 ];
 
-const AUDIO_FILES = [
-  'assets/audio/rehber-1.mp3','assets/audio/rehber-2.mp3','assets/audio/rehber-3.mp3',
-  'assets/audio/rehber-4.mp3','assets/audio/rehber-5.mp3','assets/audio/rehber-6.mp3',
-  'assets/audio/rehber-7.mp3','assets/audio/rehber-8.mp3','assets/audio/rehber-9.mp3',
-  'assets/audio/rehber-10.mp3','assets/audio/rehber-11.mp3'
-];
+const LANG_AUDIO_FOLDERS = {
+  tr:  'assets/audio/tr',
+  en:  'assets/audio/en',
+  de:  'assets/audio/de',
+  fr:  'assets/audio/fr',
+  ar:  'assets/audio/ar',
+  bg:  'assets/audio/bg',
+  el:  'assets/audio/gr',
+  zh:  'assets/audio/cn',
+  fa:  'assets/audio/fa',
+  ja:  'assets/audio/jpn',
+  ru:  'assets/audio/ru',
+  ro:  'assets/audio/rum',
+  it:  'assets/audio/it'
+};
 
+function getAudioFile(stopIndex, lang) {
+  const folder = LANG_AUDIO_FOLDERS[lang] || LANG_AUDIO_FOLDERS['tr'];
+  return folder + '/' + (stopIndex + 1) + '.mp3';
+}
 const EVLIYA_MSGS = [
   '🎭 Hoş geldiniz! Bu şifa yurdunda asırlar arasında bir yolculuğa çıkıyoruz… Ben Evliya Çelebi, size bu diyarın hikâyesini anlatacağım.',
   '👁️ Bu darüşşifada nice dertliler deva bulur, gönlü dar olan dahi ferahlık bulur.',
@@ -1495,12 +1598,10 @@ function updateProgressBar(){
 function playStopAudio(n){
   if(speakerMuted) return;
   const audio = document.getElementById('stop-audio');
-  const src = AUDIO_FILES[n];
-  if(!src) return;
+  const src = getAudioFile(n, currentLang);
   audio.src = src;
   audio.play().catch(()=>{});
 }
-
 function toggleSpeaker(){
   speakerMuted = !speakerMuted;
   const btn = document.getElementById('btn-speaker');
@@ -1567,7 +1668,7 @@ function setLang(code){
   // Modalları hemen kapat
   closeLang();
   closeMenu();
-
+  playStopAudio(currentStop);
   // DOM'u senkron olarak güncelle — anında dil değişimi
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key = el.getAttribute('data-i18n');
@@ -2985,6 +3086,337 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
   else{requestAnimationFrame(()=>requestAnimationFrame(init));}
 })();
+
+/* ════════════════════════════════════════════════════
+   VISITOR TRACKING SYSTEM — KVKK + KONUM + ANALİTİK
+════════════════════════════════════════════════════ */
+const TRACKING = {
+  sessionId: null, locationGranted: false, watchId: null,
+  currentZone: null, startTime: Date.now(), zoneEntryTime: null,
+  lastStop: 0, active: false
+};
+
+function generateSessionId(){
+  return 'sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+}
+
+// ── KVKK Banner
+function showKVKKBanner(){
+  if(localStorage.getItem('kvkk-accepted')) return;
+  setTimeout(()=>{ document.getElementById('kvkk-banner').classList.add('show'); },1200);
+}
+function acceptKVKK(){
+  localStorage.setItem('kvkk-accepted','1');
+  document.getElementById('kvkk-banner').classList.remove('show');
+  closeKVKK();
+}
+function openKVKK(){ document.getElementById('kvkk-modal').classList.add('open'); }
+function closeKVKK(){ document.getElementById('kvkk-modal').classList.remove('open'); }
+
+// ── Override startTour to add KVKK + konum izni akışı
+const _origStartTour = startTour;
+startTour = function(){
+  _origStartTour();
+  // Session başlat
+  TRACKING.sessionId = generateSessionId();
+  TRACKING.startTime = Date.now();
+  TRACKING.active = true;
+  createSession();
+  // Konum iznini her turda taze sor — eski kararı sil
+  localStorage.removeItem('loc-perm-decided');
+  setTimeout(()=>{
+    document.getElementById('loc-permission-popup').classList.add('open');
+  },1500);
+};
+
+function requestLocationPermission(btn){
+  // Popup'u kapat
+  document.getElementById('loc-permission-popup').classList.remove('open');
+
+  if(!navigator.geolocation){
+    showLocToast('⚠️ Tarayıcınız konum desteklemiyor.');
+    return;
+  }
+
+  // iframe permissions policy engeli var mı kontrol et
+  if(window.self !== window.top){
+    // iframe içindeyiz — üst sayfaya allow="geolocation" eklenmeli
+    showLocToast('⚠️ Konum takibi için sayfayı yeni sekmede açın.');
+    _showOpenInTabButton();
+    return;
+  }
+
+  // Permissions API ile mevcut durumu kontrol et
+  if(navigator.permissions){
+    navigator.permissions.query({name:'geolocation'}).then(function(result){
+      if(result.state === 'denied'){
+        showLocToast('⚠️ Konum izni tarayıcıda engellenmiş. Adres çubuğundaki kilit simgesinden izin verin.');
+        return;
+      }
+      _doGetLocation();
+    }).catch(function(){ _doGetLocation(); });
+  } else {
+    _doGetLocation();
+  }
+}
+
+function _showOpenInTabButton(){
+  // Kullanıcıya sayfayı yeni sekmede açma butonu göster
+  const existing = document.getElementById('open-in-tab-btn');
+  if(existing) return;
+  const btn = document.createElement('button');
+  btn.id = 'open-in-tab-btn';
+  btn.textContent = '🔗 Konum için yeni sekmede aç';
+  btn.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:3000;' +
+    'background:linear-gradient(135deg,#2a7a3a,#3daa55);color:#fff;border:none;border-radius:12px;' +
+    'padding:14px 24px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.4);';
+  btn.onclick = function(){ window.open(window.location.href,'_blank'); };
+  document.body.appendChild(btn);
+  setTimeout(()=>{ if(btn.parentNode) btn.parentNode.removeChild(btn); }, 8000);
+}
+
+function _doGetLocation(){
+  showLocToast('📍 Konum izni isteniyor…');
+
+  // getCurrentPosition — kullanıcı bu butona az önce bastı,
+  // gesture bağlamı hâlâ geçerli, tarayıcı izin diyaloğunu açar.
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      TRACKING.locationGranted = true;
+      localStorage.setItem('loc-perm-decided','granted');
+      updateSessionField({locationGranted:true});
+      showLocToast('📍 Konum takibi başladı.');
+      onLocationUpdate(pos.coords.latitude, pos.coords.longitude);
+      TRACKING.watchId = navigator.geolocation.watchPosition(
+        function(p){ onLocationUpdate(p.coords.latitude, p.coords.longitude); },
+        function(e){ console.warn('[Tracking] watch:', e.code); },
+        {enableHighAccuracy:true, timeout:20000, maximumAge:5000}
+      );
+    },
+    function(err){
+      console.warn('[Tracking] getCurrentPosition err:', err.code, err.message);
+      if(err.code === 1){
+        localStorage.setItem('loc-perm-decided','denied');
+        showLocToast('📍 Konum izni reddedildi. Adres çubuğundaki kilit → Konum → İzin Ver.');
+      } else {
+        TRACKING.locationGranted = true;
+        localStorage.setItem('loc-perm-decided','granted');
+        updateSessionField({locationGranted:true});
+        showLocToast('📍 GPS sinyali bekleniyor…');
+        TRACKING.watchId = navigator.geolocation.watchPosition(
+          function(p){ onLocationUpdate(p.coords.latitude, p.coords.longitude); },
+          function(e){ console.warn('[Tracking] watch:', e.code); },
+          {enableHighAccuracy:false, timeout:30000, maximumAge:10000}
+        );
+      }
+    },
+    {enableHighAccuracy:true, timeout:10000, maximumAge:0}
+  );
+}  // _doGetLocation sonu
+
+function skipLocationPermission(){
+  document.getElementById('loc-permission-popup').classList.remove('open');
+  localStorage.setItem('loc-perm-decided','denied');
+  TRACKING.locationGranted = false;
+  updateSessionField({locationGranted:false});
+}
+
+// ── Konum takibi
+function startLocationWatch(){
+  if(!navigator.geolocation) return;
+  if(TRACKING.watchId !== null) return; // zaten aktif
+  TRACKING.watchId = navigator.geolocation.watchPosition(
+    pos => onLocationUpdate(pos.coords.latitude, pos.coords.longitude),
+    err => console.warn('[Tracking] Konum hatası:', err.code),
+    {enableHighAccuracy:true, timeout:15000, maximumAge:5000}
+  );
+}
+function stopLocationWatch(){
+  if(TRACKING.watchId!==null){ navigator.geolocation.clearWatch(TRACKING.watchId); TRACKING.watchId=null; }
+}
+
+function onLocationUpdate(lat, lon){
+  const zone = ZONES.find(z=>ptInPoly(lat,lon,z.coords));
+  const zoneId = zone?zone.id:null;
+  if(zoneId !== TRACKING.currentZone){
+    if(TRACKING.currentZone && TRACKING.zoneEntryTime){
+      const dwellMin=(Date.now()-TRACKING.zoneEntryTime)/60000;
+      recordZoneVisit(TRACKING.currentZone, dwellMin);
+      removeVisitorLocation(TRACKING.currentZone);
+    }
+    TRACKING.currentZone = zoneId;
+    TRACKING.zoneEntryTime = Date.now();
+    if(zoneId) upsertVisitorLocation(zoneId);
+  } else {
+    if(zoneId) refreshVisitorLocation(zoneId);
+  }
+}
+
+// ── Firebase: oturum
+function createSession(){
+  if(!window.db||!TRACKING.sessionId) return;
+  try{
+    window.db.collection('visitor_sessions').doc(TRACKING.sessionId).set({
+      startTime: firebase.firestore.FieldValue.serverTimestamp(),
+      lang: currentLang||'tr', maxStop:0, durationMin:0,
+      locationGranted:false, active:true,
+      userAgent: navigator.userAgent.slice(0,80)
+    });
+  }catch(e){ console.warn('[Tracking]',e); }
+}
+function updateSessionField(data){
+  if(!window.db||!TRACKING.sessionId) return;
+  try{ window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update(data); }catch(e){}
+}
+function finalizeSession(){
+  if(!window.db||!TRACKING.sessionId||!TRACKING.active) return;
+  TRACKING.active=false;
+  const durationMin=Math.round((Date.now()-TRACKING.startTime)/60000);
+  try{
+    window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update({
+      endTime:firebase.firestore.FieldValue.serverTimestamp(), durationMin, active:false, maxStop:TRACKING.lastStop
+    });
+    if(TRACKING.currentZone) removeVisitorLocation(TRACKING.currentZone);
+  }catch(e){}
+}
+
+// ── Firebase: anlık ziyaretçi konumu
+function upsertVisitorLocation(zoneId){
+  if(!window.db||!TRACKING.sessionId) return;
+  try{
+    window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({
+      zone:zoneId, stop:currentStop||0, lang:currentLang||'tr',
+      visitorId:TRACKING.sessionId,
+      lastSeen:firebase.firestore.FieldValue.serverTimestamp(),
+      startTime:firebase.firestore.Timestamp.fromMillis(TRACKING.startTime)
+    },{merge:true});
+  }catch(e){}
+}
+function refreshVisitorLocation(zoneId){
+  if(!window.db||!TRACKING.sessionId) return;
+  try{ window.db.collection('visitor_locations').doc(TRACKING.sessionId).update({lastSeen:firebase.firestore.FieldValue.serverTimestamp(),stop:currentStop||0,zone:zoneId}); }catch(e){}
+}
+function removeVisitorLocation(){
+  if(!window.db||!TRACKING.sessionId) return;
+  try{ window.db.collection('visitor_locations').doc(TRACKING.sessionId).delete(); }catch(e){}
+}
+
+// ── Firebase: bölge ziyaret toplama
+function recordZoneVisit(zoneId, dwellMin){
+  if(!window.db||!zoneId) return;
+  try{
+    const ref=window.db.collection('zone_visits').doc(zoneId);
+    window.db.runTransaction(async tx=>{
+      const doc=await tx.get(ref);
+      if(doc.exists){
+        const d=doc.data();
+        const total=(d.totalVisits||0)+1;
+        const avgMin=((d.avgMinutes||0)*(d.totalVisits||0)+dwellMin)/total;
+        tx.update(ref,{totalVisits:total, avgMinutes:Math.round(avgMin*10)/10, lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});
+      } else {
+        tx.set(ref,{zoneId, totalVisits:1, avgMinutes:dwellMin, lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});
+      }
+    });
+  }catch(e){}
+}
+
+// ── goStop override: maxStop güncelle
+const _origGoStop = goStop;
+goStop = function(n){
+  _origGoStop(n);
+  if(TRACKING.active && n>TRACKING.lastStop){
+    TRACKING.lastStop=n;
+    updateSessionField({maxStop:n, lang:currentLang||'tr'});
+  }
+};
+
+// ── Sayfa kapanınca temizle
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){
+    if(TRACKING.currentZone&&TRACKING.zoneEntryTime){
+      recordZoneVisit(TRACKING.currentZone,(Date.now()-TRACKING.zoneEntryTime)/60000);
+    }
+    finalizeSession(); stopLocationWatch();
+  } else if(document.visibilityState==='visible'&&TRACKING.active){
+    if(TRACKING.locationGranted) startLocationWatch();
+    if(TRACKING.currentZone) refreshVisitorLocation(TRACKING.currentZone);
+  }
+});
+window.addEventListener('beforeunload',()=>{ finalizeSession(); stopLocationWatch(); });
+
+// ── KVKK banner'ı başlangıçta göster
+window.addEventListener('load',()=>{ showKVKKBanner(); });
+
 </script>
+
+<!-- ══ KVKK BANNER ══ -->
+<div id="kvkk-banner">
+  <div class="kvkk-text">
+    🍪 Bu rehber uygulaması, müze içi gezi deneyiminizi geliştirmek amacıyla konum verinizi kullanmaktadır.
+    Veriler yalnızca müze alanında kullanılır. <a onclick="openKVKK()">Gizlilik Politikasını Oku</a>
+  </div>
+  <div class="kvkk-actions">
+    <button class="kvkk-btn-info" onclick="openKVKK()">📄 DETAYLAR</button>
+    <button class="kvkk-btn-ok" onclick="acceptKVKK()">ANLADIM ✓</button>
+  </div>
+</div>
+
+<!-- ══ KVKK MODAL ══ -->
+<div id="kvkk-modal">
+  <div class="kvkk-sheet">
+    <div class="kvkk-sheet-header">
+      📄 GİZLİLİK POLİTİKASI — KVKK BİLDİRİMİ
+      <button class="kvkk-close-x" onclick="closeKVKK()">×</button>
+    </div>
+    <div class="kvkk-body">
+      <h3>VERİ SORUMLUSU</h3>
+      <p>Sultan II. Bayezid Külliyesi Sağlık Müzesi — Edirne<br>
+      Bu dijital rehber uygulaması Trakya Üniversitesi bünyesinde faaliyet göstermektedir.</p>
+      <h3>KONUM VERİSİ HAKKINDA</h3>
+      <p>Bu uygulama, <strong>müze içi gezi rehberliği</strong> amacıyla <strong>yalnızca sizin onayınız ile</strong> konum bilginizi kullanmaktadır. Konum verisi:</p>
+      <ul>
+        <li>Hangi bölümde olduğunuzu tespit ederek size özel rehberlik sunmak için kullanılır</li>
+        <li>Müze yönetimine, <strong>anonim ve toplu istatistik</strong> olarak iletilir — bireysel kimliğinizle eşleştirilerek hiçbir şekilde saklanmaz</li>
+        <li><strong>Sayfadan çıkış yaptığınızda konum takibi tamamen sonlandırılır</strong></li>
+      </ul>
+      <h3>TOPLANAN VERİLER</h3>
+      <ul>
+        <li><strong>Konum koordinatı</strong> — yalnızca hangi bölümde olduğunuzu belirlemek için</li>
+        <li><strong>Oturum süresi</strong> — müzede geçirdiğiniz toplam dakika</li>
+        <li><strong>Dil tercihi</strong> — hangi dilde rehber kullandığınız</li>
+        <li><strong>Ziyaret edilen duraklar</strong> — tamamlanan tur adımları</li>
+      </ul>
+      <p>Adınız, soyadınız veya herhangi bir kişisel tanımlayıcı bilginiz <strong>kesinlikle toplanmamaktadır</strong>.</p>
+      <h3>HAKLARINIZ</h3>
+      <ul>
+        <li>Konum iznini her zaman tarayıcı ayarlarından iptal edebilirsiniz</li>
+        <li>Konum izni vermeden de rehberi kullanabilirsiniz</li>
+      </ul>
+      <h3>İLETİŞİM</h3>
+      <p>Sultan II. Bayezid Külliyesi Sağlık Müzesi, Edirne<br>Trakya Üniversitesi Sağlık Bilimleri Fakültesi</p>
+    </div>
+    <button class="kvkk-btn-ok" style="width:100%;margin-top:16px;" onclick="acceptKVKK()">OKUDUM, ANLADIM ✓</button>
+  </div>
+</div>
+
+<!-- ══ KONUM İZNİ POPUP ══ -->
+<div id="loc-permission-popup">
+  <div class="loc-perm-box">
+    <span class="loc-perm-icon">📍</span>
+    <div class="loc-perm-title">KONUM İZNİ</div>
+    <div class="loc-perm-text">
+      Hangi bölümde olduğunuzu otomatik olarak algılayabilmemiz için <strong>konum iznine</strong> ihtiyacımız var.<br><br>
+      Bu sayede bulunduğunuz alana özel bilgiler anlık olarak sunulur.
+    </div>
+    <div class="loc-perm-note">
+      🔒 Konumunuz yalnızca müze içinde geçerlidir.<br>
+      Sayfadan çıkışınızla birlikte konum takibi sona erer.<br>
+      <a onclick="openKVKK()">Gizlilik Politikası →</a>
+    </div>
+    <button class="loc-perm-btn-ok" onclick="requestLocationPermission(this)">📍 KONUM İZNİ VER</button>
+    <button class="loc-perm-btn-skip" onclick="skipLocationPermission()">Hayır, Konum Paylaşmak İstemiyorum</button>
+  </div>
+</div>
+
 </body>
 </html>
