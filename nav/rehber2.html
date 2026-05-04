@@ -3362,19 +3362,33 @@ async function sendAiMessage(){
   const userText = input.value.trim();
   if(!userText) return;
 
-  // kullanıcı mesajı
-  chat.innerHTML += `<div style="margin-bottom:10px;"><b>Sen:</b> ${userText}</div>`;
+  chat.innerHTML += `<div><b>Sen:</b> ${userText}</div>`;
   input.value = "";
 
-  // geçici cevap
-  chat.innerHTML += `<div style="margin-bottom:14px; color:#7a4800;"><b>Rehber:</b> Düşünüyor...</div>`;
+  const loading = document.createElement("div");
+  loading.innerHTML = "<b>Rehber:</b> Düşünüyor...";
+  chat.appendChild(loading);
+
   chat.scrollTop = chat.scrollHeight;
 
-  // FAKE DELAY
-  setTimeout(()=>{
-    chat.innerHTML += `<div style="margin-bottom:14px;"><b>Rehber:</b> Bu alan yakında aktif olacak.</div>`;
-    chat.scrollTop = chat.scrollHeight;
-  },1000);
+  try {
+    const res = await fetch("api.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: userText })
+    });
+
+    const data = await res.json();
+
+    loading.innerHTML = `<b>Rehber:</b> ${data.reply}`;
+
+  } catch (err) {
+    loading.innerHTML = `<b>Rehber:</b> Bağlantı hatası`;
+  }
+
+  chat.scrollTop = chat.scrollHeight;
 }
 </script>
 
