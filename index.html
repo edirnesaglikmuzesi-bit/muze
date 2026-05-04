@@ -70,12 +70,13 @@
             min-width: 0;
         }
 
-        .logo-img {
+        .logo-img1, .logo-img2 {
             height: 65px;
             width: auto;
             transition: transform 0.3s;
+            flex-shrink: 0;
         }
-        .logo-img:hover { transform: scale(1.05); }
+        .logo-img1:hover, .logo-img2:hover { transform: scale(1.05); }
 
         .logo-text-group {
             color: var(--gold);
@@ -85,9 +86,11 @@
         }
 
         .logo-title {
-            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
             font-size: clamp(9px, 2vw, 11px);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            opacity: 0.75;
             white-space: nowrap;
         }
 
@@ -146,6 +149,18 @@
             background: rgba(212,175,55,0.15);
             padding-left: 30px;
             color: #fff;
+        }
+
+        .dropdown-link-highlight {
+            background: var(--gold);
+            color: var(--dark) !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .dropdown-link-highlight:hover {
+            background: var(--gold-bright, #f1d592);
+            color: var(--dark) !important;
+            padding-left: 30px;
         }
 
         /* =====================================================
@@ -883,7 +898,7 @@
 
         @media (max-width: 600px) {
             .nav { padding: 8px 15px; }
-            .logo-img { height: 45px; }
+            .logo-img1, .logo-img2 { height: 45px; }
             .menu-btn { padding: 8px 15px; font-size: 12px; }
             .site-footer { padding: 25px 15px; font-size: 12px; }
 
@@ -954,7 +969,8 @@
 <div class="nav-wrapper">
     <nav class="nav">
         <div class="logo-box">
-            <img src="assets/logo.png" alt="Logo" class="logo-img">
+            <img src="assets/logo1.png" alt="Logo 1" class="logo-img1">
+            <img src="assets/logo2.png" alt="Logo 2" class="logo-img2">
             <div class="logo-text-group">
                 <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
                 <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
@@ -972,7 +988,7 @@
             <a href="music/music.html" class="dropdown-link">Müzikle Tedavi</a>
             <a href="geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
             <a href="galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
-            <a href="nav/rehber.html" class="dropdown-link">İnteraktif Rehber</a>
+            <a href="nav/rehber.html" class="dropdown-link dropdown-link-highlight">İnteraktif Rehber</a>
             <a href="nav/ziyaretci-defteri.html" class="dropdown-link">Ziyaretçi Defteri</a>
             <a href="siir/siir.html" class="dropdown-link">Ağaçla Sarmaşık</a>
             <a href="kazancigil/kazancigil.html" class="dropdown-link">Dr. Ratıp Kazancıgil</a>
