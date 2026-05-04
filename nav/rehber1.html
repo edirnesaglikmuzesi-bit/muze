@@ -702,7 +702,52 @@ html,body{
   color:var(--stone);border-radius:10px;padding:12px;
   font-family:var(--font-head);font-size:11px;letter-spacing:0.1em;cursor:pointer;
 }
-
+/* ══ REHBERE SOR SCREEN ══ */
+#screen-rehber{background:var(--parch);flex-direction:column;}
+#rehber-topbar{background:linear-gradient(135deg,#1e1208,#2e1c08);border-bottom:2px solid var(--gold);padding:10px 14px;display:flex;align-items:center;gap:10px;height:56px;flex-shrink:0;}
+.rehber-back{width:40px;height:40px;flex-shrink:0;background:rgba(184,134,11,0.15);border:1px solid var(--border);border-radius:8px;color:var(--gold3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.rehber-bar-title{font-family:var(--font-head);font-size:13px;color:var(--gold3);letter-spacing:0.1em;flex:1;line-height:1.3;}
+.rehber-bar-sub{font-size:9px;color:rgba(240,192,64,0.6);letter-spacing:0.08em;}
+.rehber-status-dot{width:8px;height:8px;border-radius:50%;background:#3daa55;flex-shrink:0;box-shadow:0 0 6px rgba(61,170,85,0.7);animation:rDotPulse 2s ease-in-out infinite;}
+@keyframes rDotPulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+#rehber-chat-wrap{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+#rehber-messages{flex:1;overflow-y:auto;padding:16px 14px 8px;-webkit-overflow-scrolling:touch;}
+.r-welcome-card{background:linear-gradient(135deg,rgba(30,18,8,0.95),rgba(46,28,8,0.95));border:1.5px solid var(--gold);border-radius:var(--radius);padding:20px 16px;margin-bottom:16px;text-align:center;}
+.r-welcome-avatar{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);margin:0 auto 12px;overflow:hidden;background:linear-gradient(135deg,#2e1c08,#4a3010);display:flex;align-items:center;justify-content:center;font-size:36px;}
+.r-welcome-avatar img{width:100%;height:100%;object-fit:cover;}
+.r-welcome-name{font-family:var(--font-head);font-size:14px;color:var(--gold3);letter-spacing:0.1em;margin-bottom:4px;}
+.r-welcome-role{font-size:11px;color:rgba(240,192,64,0.6);letter-spacing:0.08em;margin-bottom:12px;}
+.r-welcome-msg{font-size:13.5px;color:rgba(240,220,180,0.9);line-height:1.8;font-style:italic;}
+.r-quick-label{font-family:var(--font-head);font-size:10px;color:var(--stone);letter-spacing:0.12em;margin-bottom:8px;}
+.r-quick-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.r-quick-btn{background:rgba(184,134,11,0.1);border:1px solid rgba(184,134,11,0.3);border-radius:20px;padding:7px 13px;font-family:var(--font-body);font-size:12px;color:rgba(240,220,180,0.85);cursor:pointer;transition:all 0.2s;line-height:1.4;}
+.r-quick-btn:active{background:rgba(184,134,11,0.25);border-color:var(--gold);}
+.r-ornament{display:flex;align-items:center;gap:8px;margin:4px 0 12px;font-size:11px;color:rgba(154,128,96,0.5);letter-spacing:0.1em;}
+.r-ornament::before,.r-ornament::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(184,134,11,0.2),transparent);}
+.r-msg-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:14px;animation:rMsgIn 0.3s ease;}
+@keyframes rMsgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.r-msg-row.r-user{flex-direction:row-reverse;}
+.r-msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--gold);overflow:hidden;background:linear-gradient(135deg,#2e1c08,#4a3010);display:flex;align-items:center;justify-content:center;font-size:16px;align-self:flex-end;}
+.r-msg-avatar img{width:100%;height:100%;object-fit:cover;}
+.r-bubble{max-width:80%;border-radius:16px;padding:11px 14px;font-size:14px;line-height:1.75;}
+.r-msg-row.r-assistant .r-bubble{background:linear-gradient(135deg,rgba(30,18,8,0.95),rgba(46,28,8,0.92));border:1px solid rgba(184,134,11,0.3);color:rgba(240,220,180,0.95);border-radius:4px 16px 16px 16px;}
+.r-msg-row.r-user .r-bubble{background:linear-gradient(135deg,#9a6a00,#b8860b);color:#1a0c02;font-weight:600;border-radius:16px 4px 16px 16px;}
+.r-msg-time{font-size:10px;color:var(--stone);margin-top:4px;}
+.r-typing{display:flex;gap:4px;align-items:center;padding:12px 16px;background:rgba(30,18,8,0.9);border:1px solid rgba(184,134,11,0.2);border-radius:4px 16px 16px 16px;width:fit-content;}
+.r-typing-dot{width:6px;height:6px;border-radius:50%;background:var(--gold3);animation:rTyping 1.2s ease-in-out infinite;}
+.r-typing-dot:nth-child(2){animation-delay:0.2s;}
+.r-typing-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes rTyping{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
+#rehber-input-area{background:linear-gradient(135deg,rgba(20,12,4,0.98),rgba(30,18,8,0.98));border-top:1px solid rgba(184,134,11,0.3);padding:10px 12px;display:flex;align-items:flex-end;gap:8px;flex-shrink:0;}
+#rehber-input{flex:1;min-height:42px;max-height:120px;background:rgba(247,237,216,0.08);border:1px solid rgba(184,134,11,0.3);border-radius:12px;padding:10px 13px;font-family:var(--font-body);font-size:14px;color:rgba(240,220,180,0.95);resize:none;outline:none;line-height:1.5;transition:border-color 0.2s;}
+#rehber-input:focus{border-color:var(--gold);}
+#rehber-input::placeholder{color:rgba(154,128,96,0.7);font-style:italic;}
+#rehber-send{width:44px;height:44px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#9a6a00,#b8860b);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(184,134,11,0.4);transition:all 0.2s;}
+#rehber-send:disabled{opacity:0.4;cursor:not-allowed;}
+#rehber-send:not(:disabled):active{transform:scale(0.93);}
+.r-error-bubble{background:rgba(139,32,0,0.15);border:1px solid rgba(139,32,0,0.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#e07060;line-height:1.6;}
+#rehber-messages::-webkit-scrollbar{width:4px;}
+#rehber-messages::-webkit-scrollbar-thumb{background:rgba(184,134,11,0.3);border-radius:2px;}
 </style>
 </head>
 <body>
@@ -1353,7 +1398,49 @@ html,body{
 <!-- ══════════════════════════════════════
      MENU OVERLAY
 ══════════════════════════════════════════ -->
-<div id="menu-overlay" onclick="closeMenu()">
+<!-- ══ REHBERE SOR SCREEN ══ -->
+<div id="screen-rehber" class="screen">
+  <div id="rehber-topbar">
+    <button class="rehber-back" onclick="showScreen('tour')">←</button>
+    <div class="rehber-bar-title">
+      🏛️ Rehbere Sor
+      <div class="rehber-bar-sub">SULTAN II. BAYEZİD KÜLLİYESİ AI REHBERİ</div>
+    </div>
+    <div class="rehber-status-dot"></div>
+  </div>
+  <div id="rehber-chat-wrap">
+    <div id="rehber-messages">
+      <div class="r-welcome-card">
+        <div class="r-welcome-avatar">
+          <img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.innerHTML='🏛️'">
+        </div>
+        <div class="r-welcome-name">REHBER EVLİYA</div>
+        <div class="r-welcome-role">Sultan II. Bayezid Külliyesi Dijital Rehberi</div>
+        <div class="r-welcome-msg">
+          "Hoş geldiniz, aziz misafir! Bu kadim şifa yurdunun her taşında bir sır, her köşesinde bir hikâye saklıdır. Külliyemiz hakkında aklınıza takılan her şeyi sorabilirsiniz — tarihi, mimarisi, tedavi yöntemleri, Evliya Çelebi'nin notları…"
+        </div>
+      </div>
+      <div class="r-quick-label">💬 SIKÇA SORULAN SORULAR</div>
+      <div class="r-quick-grid" id="r-quick-grid">
+        <button class="r-quick-btn" onclick="rSendQuick(this)">🏥 Darüşşifa ne zaman kuruldu?</button>
+        <button class="r-quick-btn" onclick="rSendQuick(this)">🎵 Müzikle tedavi nasıl yapılırdı?</button>
+        <button class="r-quick-btn" onclick="rSendQuick(this)">🎓 Tıp Medresesi'nde neler öğretilirdi?</button>
+        <button class="r-quick-btn" onclick="rSendQuick(this)">🍲 Yahya Baba kimdir?</button>
+        <button class="r-quick-btn" onclick="rSendQuick(this)">🕌 Cami nasıl bir mimari özelliğe sahip?</button>
+        <button class="r-quick-btn" onclick="rSendQuick(this)">👁️ Kehhal kimlerdir?</button>
+        <button class="r-quick-btn" onclick="rSendQuick(this)">💧 Süt kuyusunun önemi nedir?</button>
+        <button class="r-quick-btn" onclick="rSendQuick(this)">📜 Evliya Çelebi külliye hakkında ne yazmış?</button>
+      </div>
+      <div class="r-ornament">✦ SOHBET BAŞLIYOR ✦</div>
+      <div id="r-messages-list"></div>
+    </div>
+    <div id="rehber-input-area">
+      <textarea id="rehber-input" placeholder="Külliye hakkında bir şey sorun…" rows="1"
+        onkeydown="rHandleKey(event)" oninput="rAutoResize(this)"></textarea>
+      <button id="rehber-send" onclick="rSendMessage()">➤</button>
+    </div>
+  </div>
+</div><div id="menu-overlay" onclick="closeMenu()">
   <div id="menu-panel" onclick="event.stopPropagation()">
     <div class="menu-header">
       <button class="menu-close" onclick="closeMenu()">×</button>
@@ -1379,9 +1466,7 @@ html,body{
     <div class="menu-section">SAYFALAR</div>
     <div class="menu-item" onclick="openMapScreen()"><span class="mi-icon">🗺️</span><span class="mi-name">Harita &amp; Konum</span></div>
     <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">🖋️</span><span class="mi-name">Gönül Köprüsü</span></div>
-    <div class="menu-item" onclick="closeMenu();showScreen('defter');document.getElementById('defter-iframe').src='rehbere-sor.html'">
-  <span class="mi-icon">✍️</span>
-  <span class="mi-name">Rehbere Sor</span>
+    <div class="menu-item" onclick="openRehberesor()"><span class="mi-icon">✍️</span><span class="mi-name">Rehbere Sor</span></div>
 </div>
 </div>
 
@@ -1467,7 +1552,95 @@ html,body{
 ══════════════════════════════════════════ -->
 <script>
 /* ── Firebase init ── */
-(function initFirebase(){
+/* ════════════════════════════════
+   REHBERE SOR — AI CHAT
+════════════════════════════════ */
+const R_SYSTEM = `Sen Sultan II. Bayezid Külliyesi Sağlık Müzesi'nin dijital rehberi "Evliya"sın. Ziyaretçilerin sorularını sıcak, bilgili ve lirik bir rehber diliyle yanıtla. 2-4 paragraf yaz.
+
+TARİH: Külliye 1484–1488. Banisi Sultan II. Bayezid. Mimarbaşı Hayrettin. Tunca Nehri kıyısı, Edirne. Osmanlı'nın en sağlam ulaşan külliyesi.
+
+CAMİ: ~31m yüksek ~22m çap tek kubbe, ara sütun yok. Türk-İslam'da ilk hünkâr mahfili. Kündekâri kapı. Tepsi+karpuz=imaret sembolü. Denge taşları çevrilebilir. Selimiye'nin habercisi.
+
+DARÜŞŞİFA: Merkezi planlı sekizgen hastane. Batı'ya 200 yıl önce örnek. 1.AVLU: 6 poliklinik odası, SÜT KUYUSU (emziren annelerin sütünü artırır inanışı). 2.AVLU: Hekimbaşı yönetim odaları. YATAKLI BÖLÜM: 6 kışlık+4 yazlık oda, şadırvan, müzik sahnesi, meyilli zemin. TEDAVİ: Müzik (Uşşak=melankoliklere, Rast=beyin/sinir, Hicaz=karaciğer, Segâh=ateş), su sesi, aromaterapi (gül/lavanta/biberiye), ergoterapy (sepet/örgü). PERSONEL: Hekimbaşı, 2 hekim, 2 cerrah, 2 kehhal (göz hekimi), 1 eczacı. 400 YIL ARALIKSIIZ HİZMET.
+
+TIP MEDRESESİ: 60'lık medrese. 18 öğrenci odası+dershane. Müderris 60 akçe/gün, öğrenciye 2 akçe burs. Evliya Çelebi (1652): "Her biri Eflatun, Sokrat, Aristoteles, Galinos gibi âlimlerden bahseden olgun tabiplerdir." 38 el yazması Selimiye Kütüphanesi'nde. 2007'de Trakya Ün. müze olarak açtı.
+
+İMARET: Günde 3 öğün ücretsiz. YAHYA BABA: Baş aşçı, duayla pişirdiği pilavın artanını Tunca balıklarına verirdi. Kilercibaşı pirinç azalttı ama pilav yine bereketliydi. Sultan bizzat izledi, balıklar dile geldi, Yahya Baba utancından secdeye kapanıp ruhunu teslim etti. Türbesi imaretten hemen arkada.
+
+DİĞER: Kehhal=Osmanlı göz hekimi. Ahmet Kutsi Tecer'in ağaç-sarmaşık şiiri. Su terazisi=camii köşesinde basınç dengesi. Tabhane=şimdi müze kafe+kütüphane.`;
+
+const rHistory = [];
+let rLoading = false;
+
+function rGetTime(){ return new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}); }
+function rEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function rFormat(t){ return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'); }
+function rScrollBottom(){ const a=document.getElementById('rehber-messages'); setTimeout(()=>{a.scrollTop=a.scrollHeight;},50); }
+function rAutoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+function rHandleKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();rSendMessage();} }
+
+function rAddMsg(role,text,isError=false){
+  const list=document.getElementById('r-messages-list');
+  const row=document.createElement('div');
+  row.className=`r-msg-row r-${role}`;
+  if(role==='assistant'){
+    row.innerHTML=`<div class="r-msg-avatar"><img src="assets/img/evliya.gif" alt="" onerror="this.style.display='none';this.parentElement.innerHTML='🏛️'"></div><div>${isError?`<div class="r-error-bubble">${rEsc(text)}</div>`:`<div class="r-bubble">${rFormat(text)}</div>`}<div class="r-msg-time">${rGetTime()}</div></div>`;
+  } else {
+    row.innerHTML=`<div><div class="r-bubble">${rEsc(text)}</div><div class="r-msg-time" style="text-align:right">${rGetTime()}</div></div><div class="r-msg-avatar">🧑</div>`;
+  }
+  list.appendChild(row); rScrollBottom();
+}
+function rShowTyping(){
+  const list=document.getElementById('r-messages-list');
+  const row=document.createElement('div');
+  row.className='r-msg-row r-assistant'; row.id='r-typing';
+  row.innerHTML=`<div class="r-msg-avatar">🏛️</div><div class="r-typing"><div class="r-typing-dot"></div><div class="r-typing-dot"></div><div class="r-typing-dot"></div></div>`;
+  list.appendChild(row); rScrollBottom();
+}
+function rRemoveTyping(){ const el=document.getElementById('r-typing'); if(el)el.remove(); }
+
+async function rSendMessage(){
+  if(rLoading)return;
+  const input=document.getElementById('rehber-input');
+  const text=input.value.trim();
+  if(!text)return;
+  const qg=document.getElementById('r-quick-grid');
+  if(qg){qg.style.display='none'; document.querySelector('.r-quick-label').style.display='none';}
+  input.value=''; input.style.height='auto';
+  rAddMsg('user',text);
+  rHistory.push({role:'user',content:text});
+  rLoading=true;
+  document.getElementById('rehber-send').disabled=true;
+  rShowTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:R_SYSTEM,messages:rHistory})
+    });
+    rRemoveTyping();
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${res.status}`);}
+    const data=await res.json();
+    const reply=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    rHistory.push({role:'assistant',content:reply});
+    rAddMsg('assistant',reply);
+  }catch(err){
+    rRemoveTyping();
+    rAddMsg('assistant',`⚠️ Hata: ${err.message}`,true);
+    if(rHistory[rHistory.length-1]?.role==='user')rHistory.pop();
+  }
+  rLoading=false;
+  document.getElementById('rehber-send').disabled=false;
+}
+
+function rSendQuick(btn){ document.getElementById('rehber-input').value=btn.textContent.trim(); rSendMessage(); }
+
+function openRehberesor(){
+  closeMenu();
+  showScreen('rehber');
+  setTimeout(()=>document.getElementById('rehber-input').focus(),300);
+}
+   (function initFirebase(){
   const cfg = {
     apiKey:"AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",
     authDomain:"edirnesaglikmuze.firebaseapp.com",
