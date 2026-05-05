@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ziyaretçi İstatistikleri - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    <title>Sultan II. Bayezid - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <style>
-/* --- TEMEL AYARLAR --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
 
 :root {
-            --nav-height: 100px;
-    --gold: #d4af37;
+            --nav-height: 100px; 
+    --gold: #d4af37; 
     --gold-bright: #f1d592;
-    --dark: #0f1a24;
-    --parchment: #f4e7c8;
-    --v-red: #8b0000;
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
     --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-    --chart-1: #d4af37;
-    --chart-2: #8b4513;
-    --chart-3: #2e6b5e;
-    --chart-4: #5b2d8e;
-    --closed-bg: #3d0000;
-    --closed-text: #ff6b6b;
 }
 
 body {
@@ -34,7 +32,7 @@ body {
     color: #2b2b2b;
 }
 
-/* --- NAVİGASYON --- */
+/* --- 2. NAVİGASYON --- */
         .nav-wrapper {
             width: 100%;
             position: fixed;
@@ -429,25 +427,19 @@ body {
 .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
 .site-footer { width: 100%; max-width: 1240px; background: var(--dark); border: 2px solid var(--gold); border-radius: 15px; padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px; }
 
-/* --- MOBİL --- */
+/* --- 7. MOBİL UYUMLULUK --- */
 @media (max-width: 768px) {
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; }
     .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
-    .banner-box { height: 260px; }
+    .banner-box { height: 250px; }
     .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
-    body { padding-top: calc(var(--nav-height) + 20px); }
+    .content-area { padding: 30px 20px; font-size: 16px; }
     .corner-frame { width: 45px; height: 45px; }
-    .tab-header { flex-wrap: wrap; }
-    .tab-btn { min-width: 45%; }
-    .counter-display { font-size: 56px; letter-spacing: 4px; }
+    body { padding-top: calc(var(--nav-height) + 20px); }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
 }
 
-.gold-divider { border: none; border-top: 1px solid rgba(212,175,55,0.3); margin: 0; }
-            .footer-title {
-            font-family: 'Cinzel', serif;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
 
         .footer-subtitle {
             font-family: 'Cinzel', serif;
