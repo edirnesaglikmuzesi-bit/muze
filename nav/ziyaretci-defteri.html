@@ -3,44 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gönül Köprüsü — Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
-
+    <title>Sultan II. Bayezid - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
     <style>
-/* --- 1. TEMEL AYARLAR --- */
-*, *::before, *::after {
-    margin: 0; padding: 0; box-sizing: border-box;
+/* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
 }
 
 :root {
-            --nav-height: 100px;
-    --gold:        #d4af37;
+            --nav-height: 100px; 
+    --gold: #d4af37; 
     --gold-bright: #f1d592;
-    --gold-pale:   rgba(212,175,55,0.12);
-    --dark:        #0f1a24;
-    --dark-mid:    #162230;
-    --parchment:   #f4e7c8;
-    --parch-deep:  #ede0b0;
-    --v-red:       #8b0000;
-    --ink:         #2b2b2b;
-    --ink-soft:    #5a4a30;
-    --transition:  all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 body {
     font-family: 'Playfair Display', serif;
     background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
     padding-top: calc(var(--nav-height) + 20px);
-    color: var(--ink);
-    min-height: 100vh;
+    color: #2b2b2b;
 }
 
 /* --- 2. NAVİGASYON --- */
-                .nav-wrapper {
+        .nav-wrapper {
             width: 100%;
             position: fixed;
             top: 0; left: 0;
@@ -445,13 +438,17 @@ body {
     padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
 }
 
-/* --- 10. MOBİL --- */
+/* --- 7. MOBİL UYUMLULUK --- */
 @media (max-width: 768px) {
-    body { padding-top: 160px; }
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; }
     .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
-    .banner-box { height: 260px; }
+    .banner-box { height: 250px; }
     .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
     .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: calc(var(--nav-height) + 20px); }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
 }
     
         .footer-title {
@@ -472,10 +469,9 @@ body {
 </head>
 <body>
 
-<!-- NAVİGASYON -->
-<div class="nav-wrapper">
-    <nav class="nav">
-        <div class="logo-box">
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <div class="logo-box">
             <img src="../assets/logo1.png" alt="Logo 1" class="logo-img1">
             <img src="../assets/logo2.png" alt="Logo 2" class="logo-img2">
             <div class="logo-text-group">
@@ -483,9 +479,9 @@ body {
                 <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
             </div>
         </div>
-        <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
-        <div id="globalDropdown">
-            <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+            <div id="globalDropdown">
+               <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
             <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
             <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
             <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
@@ -505,9 +501,10 @@ body {
             <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
             <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
             <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
-        </div>
-    </nav>
-</div>
+            </div>
+        </nav>
+    </div>
+
 
 <!-- BANNER -->
 <div class="banner-container">
