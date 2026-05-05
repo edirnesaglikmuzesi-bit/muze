@@ -1230,8 +1230,15 @@ const MENU_DEFTER_I18N = {
 };
 
 const MENU_NOTEBOOK_I18N = {
-  tr:'Rehbere Sor / Defter',en:'Ask Guide / Notebook',de:'Führer / Notizbuch',fr:'Guide / Carnet',
-  ar:'اسأل المرشد / الدفتر',bg:'Наръчник / Тетрадка',el:'Οδηγός / Σημειωματάριο',zh:'问向导 / 留言本',fa:'راهنما / دفترچه'
+  tr:'Gönül Defteri',
+  en:'Guestbook',
+  de:'Gästebuch',
+  fr:'Livre d’or',
+  ar:'دفتر الزوار',
+  bg:'Книга за гости',
+  el:'Βιβλίο επισκεπτών',
+  zh:'留言簿',
+  fa:'دفتر مهمانان'
 };
 
 const LANG_CLOSE_I18N = {
