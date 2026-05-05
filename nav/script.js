@@ -1667,7 +1667,8 @@ Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 - Farabi (870-950): Makamların insan ruhu üzerindeki etkilerini sistematik olarak inceleyen ilk İslam bilgini. Rast→neşe, Neva→ferahlık, Uşşak→gülme, Hüseyni→sakinlik, Hicaz→alçakgönüllülük, Buselik→kuvvet, Zirgüle→uyku, Saba→cesaret.
 - İbn Sina (980-1037): Müziği tıp eğitiminin bir parçası olarak ele aldı; makamların fizyolojik ve psikolojik etkilerini yazdı.
 - Osmanlı'da müzik tedavisi bireysel hekimlik uygulamasından başlayarak kurumsal hastane ortamına taşındı.
-
+- Önemli not: Vakfiyelerde ve masraf defterlerinde müzik tedavisine dair doğrudan kayda rastlanmamıştır; bu bilgiler büyük ölçüde Evliya Çelebi'nin gözlemlerine dayanır.
+- Mehterhane de külliye bünyesindeydi; mehter müzisyenlerinin tedavi seanslarına katıldığı düşünülmektedir.
 ### DARÜŞŞİFA MİMARİSİ
 - Dünyada merkezi planlı ilk hastane örneklerinden biri olarak kabul edilir; batıdaki benzerleri 200 yıl sonra yapılmıştır.
 - Üç ana bölümden oluşur:
@@ -1679,6 +1680,9 @@ Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 - Şadırvan: Merkez kubbenin tam altında, 12 köşeli, fıskiyeli. Evliya kaydı: "Kimisi havuz ve şadırvanlara bakıp kalender hülyası kabilinden sözler eder."
 - Havalandırma: Kubbe üzerindeki fener + kışlık odalardaki bacalar ile çözülmüştür. 18-19. yy Batı hastaneleri benzer sisteme ancak sonra ulaşmıştır.
 - Kitabesi: Günümüze ulaşan bir kitabesi yoktur. Prof. Süheyl Ünver, Topkapı Arşivi'nde 2580 sayılı belgenin taslak kitabe olabileceğini belirtmiştir: "Kanun sığınağı Şah Bayezid Han, Alamın def'i için bir ev yaptı."
+- Müzik sahnesi konusunda not: Bazı araştırmacılar bu bölümün mescit olduğunu öne sürmüş ancak bu görüş pek kabul görmemiştir.
+- Kitabesi: Günümüze ulaşan bir kitabesi yoktur. Prof. Süheyl Ünver, Topkapı Arşivi'nde 2580 sayılı belgenin taslak kitabe olabileceğini belirtmiştir: "Kanun sığınağı Şah Bayezid Han, Alamın def'i için bir ev yaptı."
+- L.Ch. Sturm'un 1720 tarihli merkezi hastane projesindeki havalandırma feneri, Edirne Darüşşifası'na çok benzer.
 
 ### DARÜŞŞİFA — PERSONEL (KURULUŞ YILLARI, VAKFİYE'YE GÖRE)
 - 3 tabip (hekim): Biri baştabip (günlük 30 akçe), diğerleri 10'ar akçe
@@ -1694,7 +1698,9 @@ Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 - Toplam kuruluşta ~21 personel; günlük 126 akçe maaş + 200 akçe ilaç/erzak ödeneği
 - 1617 defterine göre personel 27'ye, maaş 142 akçeye yükselmiştir.
 - Kuruluşta 30 yataklıydı (vakfiyede: "30 döşek, 30 yorgan, 64 yastık").
-
+- Hizmetkârlar için vakfiye notu: "hastalara güler yüzle ve iyilikle hizmet edecekler"
+- Vekilharç için vakfiye notu: "otların iyisini kötüsünden ayırt edecek"
+- Aşçılar için vakfiye notu: "hekimin emrettiği şekilde pişirecek"
 ### DARÜŞŞİFA — MÜZİK TEDAVİSİ (EVLİYA ÇELEBİ'NİN GÖZLEM VE KAYITLARI, 1652)
 - Evliya'nın Seyahatnâme kaydı: Vakfiye şartına göre 10 kişilik hanende ve sazende grubu:
   3 hanende, 1 neyzen, 1 kemancı, 1 musikarcı, 1 santurcu, 1 çengi, 1 çeng-santurcu, 1 udcu
@@ -1729,6 +1735,10 @@ Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 ### KÜLLİYEDE DİĞER YAPILAR
 - Tabhane (misafirhane): Caminin iki yanında, dokuzar kubbeli iki blok. "Güç ve kuvvet bulma evi" anlamına gelir. Uzak yoldan gelen yolcular ve hastane yakınları ücretsiz yatıp yiyebilirdi (en fazla 3 gün). Taburcu olan hastalar nekahet dönemini burada geçirirdi. 30 yatak kapasiteliydi.
 - İmaret (aşevi): Caminin solunda, iki büyük taş blok. İçinde mutfak, aşevi, fodlahane (ekmekçi), mumhane, helvahane, kiler, depo, ahır bölümleri. Her gün iki öğün pişirilir; külliye personeli ve fakir fukara ücretsiz yerdi.
+- İmaret içindeki bölümler: mutfak, aşevi, fodlahane (ekmekçi), mumhane, helvahane, kiler, depo, ahır.
+- İmaret personeli (vakfiyeye göre): 1 şeyh, 2 vekilharç, 1 kilerci, 1 ambarcı, 1 aşçıbaşı, 5 aşçı, 6 ekmekçi, 2 kapıcı, 2 bahçıvan ve daha birçok görevli.
+- Tabhane notu: "Güç ve kuvvet bulma evi" anlamına gelir. Taburcu olan hastalar nekahet dönemini burada geçirirdi.
+- Hamam notu: Kadın ve erkek için ayrı bölümler. Tunca Nehri suyuyla beslenirdi. Vakfiyedeki kayıt: "Hamamın her yılda hasılı 10 bin akçedir."
 - İmaret personeli (vakfiyeye göre): 1 şeyh, 2 vekilharç, 1 kilerci, 1 ambarcı, 1 aşçıbaşı, 5 aşçı, 6 ekmekçi, 2 kapıcı, 2 bahçıvan ve daha birçok görevli. 1617 yılında tüm külliyede çalışan sayısı 228 kişiydi; bunlara günde 1018 akçe ödenirdi.
 - Hamam: Çifte hamam — kadın ve erkek için ayrı bölümler. Darüşşifa hastalarına da hizmet verdiği düşünülür. Günümüzde yıkılmış; yalnızca eski fotoğraflardan bilinir. Tunca Nehri suyuyla beslenirdi. Vakfiyedeki not: "Hamamın her yılda hasılı 10 bin akçedir."
 - Mehterhane: Külliye imaret blokları arasında bir mehterhane bulunduğu kaynaklarda geçer. I. Sultan Ahmet tarafından inşa ettirilmiştir. Darüşşifaya müzisyen sağladığı kuvvetle muhtemeldir.
@@ -1753,7 +1763,7 @@ Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 - Orta şadırvandan fıskiyeler aracılığıyla yükselen su sesi, müzikle birlikte tedavi edici bir ortam oluşturuyordu.
 - "İnsanları rahatlatmak için sadece musiki değil, bunu tamamlayan bir de su sesi devreye sokulmuştur." (Araştırmacıların genel görüşü)
 - 2007'de yapılan araştırma: 100 ziyaretçinin 92'si darüşşifada çalınan müziğin kendilerini olağanüstü rahatlattığını söyledi. Uzunköprü Rehabilitasyon Merkezi'nden getirilen zihinsel engelli bireyler mekândan ayrılmak istemedi.
-
+- Uzunköprü Rehabilitasyon Merkezi'nden getirilen zihinsel engelli bireyler mekândan ayrılmak istemedi. (2007 araştırması)
 ### VAKFİYE VE GELİR KAYNAKLARI
 - Külliyenin masrafları bir vakıf sistemiyle karşılanırdı. Sultan II. Bayezid bu amaçla İstanbul ve Edirne'de çok sayıda dükkân, hamam, köy, arsa vakfetti.
 - Edirne'de vakfedilenler: Tunca kenarındaki bahçeler, değirmenler, su dolapları, 164 adet saraç dükkânı, tahıl pazarındaki 9 dükkân, Salhane'deki 35 dükkân ve Şahabettin Paşa Çifte Hamamı.
@@ -1761,7 +1771,9 @@ Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 - 1493'te vakıf geliri: 782.930 akçe. 1574'e yükselince 1.552.131 akçeye çıktı — külliyenin büyüklüğünü gösteren çarpıcı bir rakam.
 - Külliyenin inşaatı, Basarabya fethinden elde edilen ganimet ile finanse edildi.
 - Vakfiye yönetimi: Mütevelli (padişah temsilcisi) günde 50 akçe, nazır günde 10 akçe, kâtip günde 10 akçe alırdı.
-
+- Edirne'de vakfedilenler: Tunca kenarındaki bahçeler, değirmenler, su dolapları, 164 adet saraç dükkânı, tahıl pazarındaki 9 dükkân, Salhane'deki 35 dükkân ve Şahabettin Paşa Çifte Hamamı.
+- Edirne, Dimetoka, Filibe, Gümülcine ve çevre kasabalara bağlı toplam 88 köy vakfedildi.
+- Vakfiye yönetimi: Mütevelli günde 50 akçe, nazır günde 10 akçe, kâtip günde 10 akçe alırdı.
 ### TARİHSEL SÜREÇ
 - 1488: Hizmete açıldı. Tam teşekküllü hastane — akıl, göz, dahiliye, cerrahi.
 - Kuruluşundan 1877-78 Osmanlı-Rus Savaşı'na kadar 389 yıl aralıksız hizmet verdi.
@@ -1783,13 +1795,31 @@ Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 - Tıp Medresesi bölümü (2008'de açıldı): Bekçi Odası, Osmanlı'da Tıp Eğitimi Odası, Öğrenci Odaları, Uygulamalı Eğitim Odaları, Müderris Odası, Türk Deneysel Tıbbı Odası, Dershane. Üç oda "Yaşayan Oda" olarak düzenlenmiş: Musiki Odası, Ebru Odası, Geleneksel El Sanatları Odası.
 - Psikiyatri Tarihi Bölümü'nde canlandırılan sahneler: Hasta kabulü, melankolik hasta odası, depresif hasta odası, hekimbaşı-hasta görüşmesi, müzik sahnesi (hanende ve sazendeler), meşguliyetle tedavi odası, epilepsi hastası, eczane ve laboratuvar.
 - Süheyl Ünver, müzenin ilk fikir babasıdır; "Ben artık Edirne için yaşıyorum" demiştir.
-
+- Külliye 22.000 m² alana kurulmuştur. 100'den fazla kubbesi vardır.
+- Psikiyatri Tarihi Bölümü'nde canlandırılan sahneler: Hasta kabulü, melankolik hasta odası, depresif hasta odası, hekimbaşı-hasta görüşmesi, müzik sahnesi (hanende ve sazendeler), meşguliyetle tedavi odası, epilepsi hastası, eczane ve laboratuvar.
+- Tıp Medresesi'nde üç oda "Yaşayan Oda" olarak düzenlenmiş: Musiki Odası, Ebru Odası, Geleneksel El Sanatları Odası.
+- Süheyl Ünver, müzenin ilk fikir babasıdır; "Ben artık Edirne için yaşıyorum" demiştir.
 ### PERSONEL GENEL YAPISI (KÜLLİYENİN TAMAMI)
 - 1617 yılındaki kayıtlara göre tüm külliyede 228 kişi çalışıyordu.
 - Bunlara günde 1.018 akçe, yılda toplam 397.020 akçe ücret ödeniyordu.
 - Yalnızca darüşşifada 21 personel; 1617'de bu sayı 27'ye çıktı.
 - Mütevelli (padişah temsilcisi) tüm vakfı denetlerdi.
 
+--- SULTAN II. BAYEZİD KİŞİLİĞİ VE HAYATI ---
+- 1447'de Dimetoka'da doğdu. Fatih Sultan Mehmet'in büyük oğlu.
+- 7 yaşında Amasya Valisi oldu. 21 Mayıs 1481'de tahta çıktı; 1512'ye kadar 31 yıl saltanat sürdü.
+- Kardeşi Cem Sultan ile 14 yıl taht mücadelesi yaşadı.
+- Barışçıl bir yönetici olarak tanındı; Yeniçeri Ocağı'nı genişletti, donanmayı güçlendirdi.
+- Arapça ve Farsça bilirdi. Bestekârdı, şiir yazardı, hat sanatıyla uğraştı. İslami ilimlerin yanında matematik ve felsefe eğitimi gördü.
+- Son yıllarını hayır ve din işlerine adadığı için "Veli" lakabını aldı.
+- Oğlu I. Selim'in baskısıyla 1512'de tahtı bıraktı; Dimetoka'ya giderken Havsa'nın Sazlıdere Köyü yakınında vefat etti. Mezarı İstanbul'daki kendi adını taşıyan caminin yanında.
+- Külliye kurma kararı: Kili ve Akkirman seferine hazırlanmak için Edirne'ye gelen Sultan'a halkın "şehrin bir hastaneye ihtiyacı var" demesiyle başladı.
+--- TARİHSEL SÜREÇ ---
+- 1915 notu: Dr. Mazhar Osman'ın kurtardığı dönemde yaklaşık 40 hasta vardı (5'i kadın). Pomak bir "güllabici" (su dağıtıcı) ile koğuşları yönetiliyordu.
+- 1916 sonrası: Vakıf sisteminin çöküşü ve ilgisizlik nedeniyle tamamen kapandı.
+- 1964: Vakıflar Genel Müdürlüğü onarım yaptı.
+- Müze ziyaretçi sayıları: 1997'de 3.200 → 2004'te 94.672 → 2005'te 111.273 → 2006'da 122.691 → 2007'de 132.825
+- Kazanılan ödüller: 2004 Avrupa Konseyi Müze Ödülü, 2005 Dubrovnik "En İyi 2. Sunum", 2006 Edirne "Yılın Başarı Ödülü", 2007 Köln "En İyi Sunum Ödülü"
 ### EVLİYA ÇELEBİ HAKKINDA
 - 1611 doğumlu, İstanbul'lu. Seyahatnâme'yi 10 ciltte yazdı; 40 yılı aşan gezi notlarıdır.
 - 1652'de Edirne'ye geldi; külliyeyi ve darüşşifayı ayrıntılı inceledi, Seyahatnâme'nin 6. cildine yazdı.
