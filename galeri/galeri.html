@@ -3,30 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Görsel Galeri - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    <title>Sultan II. Bayezid - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root {
+/* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+:root {
             --nav-height: 100px; 
-            --gold: #d4af37; 
-            --gold-bright: #f1d592;
-            --dark: #0f1a24; 
-            --parchment: #f4e7c8; 
-        }
+    --gold: #d4af37; 
+    --gold-bright: #f1d592;
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Playfair Display', serif;
-            background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
-            padding-top: calc(var(--nav-height) + 20px);
-            color: #2b2b2b;
-            overflow-x: hidden;
-        }
+body {
+    font-family: 'Playfair Display', serif;
+    background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
+    padding-top: calc(var(--nav-height) + 20px);
+    color: #2b2b2b;
+}
 
-        /* --- NAVİGASYON --- */
+/* --- 2. NAVİGASYON --- */
         .nav-wrapper {
             width: 100%;
             position: fixed;
@@ -218,17 +224,32 @@
         }
         .footer-divider { width: 60px; height: 1px; background: var(--gold); margin: 20px auto; }
 
-        /* --- MOBİL AYARLAR --- */
-        @media (max-width: 1100px) {
-            body { padding-top: calc(var(--nav-height) + 20px); }
-            .lb-content { width: 100vw; border: none; }
-            .lb-nav { top: auto; bottom: -80px; width: 55px; height: 55px; }
-            .lb-prev { left: 20%; transform: translateX(-50%); }
-            .lb-next { right: 20%; transform: translateX(50%); }
-            .lb-info { bottom: -130px; font-size: 12px; }
-            .close-lb { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 24px; }
-            .nav { padding: 10px 20px; }
-            .logo-subtitle { font-size: 13px; }
+       /* --- 7. MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; }
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: calc(var(--nav-height) + 20px); }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+}
+    
+        .footer-title {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .footer-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 17px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -246,7 +267,7 @@
         </div>
             <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
             <div id="globalDropdown">
-              <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+               <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
             <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
             <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
             <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
@@ -269,6 +290,7 @@
             </div>
         </nav>
     </div>
+
 
     <div class="banner-container">
         <div class="banner-box">
