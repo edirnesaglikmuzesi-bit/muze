@@ -18,8 +18,7 @@
   --gold2:#d4a017;
   --gold3:#f0c040;
   --parch:#f7edd8;
-  --parch2:#efe0c0;Gönül Köprüsü
-   
+  --parch2:#efe0c0;
   --parch3:#e8d5a8;
   --ink:#2c1a06;
   --ink2:#4a3010;
@@ -337,33 +336,6 @@ html,body{
   display:flex;align-items:center;justify-content:center;
 }
 
-/* ── EVLIYA GIF BUBBLE ── */
-.evliya-wrap{
-  position:fixed;bottom:80px;right:12px;z-index:300;
-  display:none;flex-direction:column;align-items:flex-end;gap:6px;
-  max-width:200px;pointer-events:none;
-}
-.evliya-wrap.show{display:flex;}
-.evliya-bubble{
-  background:rgba(30,18,8,0.92);
-  border:1px solid var(--gold);border-radius:12px 12px 0 12px;
-  padding:10px 14px;font-size:12px;
-  color:var(--gold3);line-height:1.6;
-  box-shadow:0 6px 20px rgba(0,0,0,0.4);
-  animation:bubbleFade 5s ease forwards;
-}
-@keyframes bubbleFade{
-  0%{opacity:0;transform:translateY(8px);}
-  15%{opacity:1;transform:translateY(0);}
-  80%{opacity:1;}
-  100%{opacity:0;}
-}
-.evliya-gif{
-  width:60px;height:60px;border-radius:50%;
-  border:2px solid var(--gold);
-  box-shadow:0 4px 12px rgba(184,134,11,0.3);
-}
-
 /* ══════════════════════════════════════════
    MENU OVERLAY
 ══════════════════════════════════════════ */
@@ -668,6 +640,7 @@ html,body{
 .kvkk-body ul{margin-left:18px;margin-bottom:10px;}
 .kvkk-body ul li{margin-bottom:6px;}
 .kvkk-body strong{color:var(--gold3);}
+
 /* ══════════════════════════════════════════
    EVLİYA ÇELEBİ AI CHAT PANELİ
 ══════════════════════════════════════════ */
@@ -781,18 +754,29 @@ html,body{
 }
 
 .evliya-chat-input-area{
-  padding:12px 14px 14px;
+  padding:10px 14px 14px;
   border-top:1px solid rgba(184,134,11,0.25);
   background:rgba(0,0,0,0.15);flex-shrink:0;
 }
+
+/* ── QUICK BUTTONS: tek satır yatay scroll ── */
 .evliya-chat-quick{
-  display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;
+  display:flex;gap:6px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  margin-bottom:10px;
+  padding-bottom:4px;
+  flex-wrap:nowrap;
 }
+.evliya-chat-quick::-webkit-scrollbar{display:none;}
 .quick-btn{
   font-size:11px;font-family:var(--font-head);
   background:rgba(184,134,11,0.1);border:1px solid rgba(184,134,11,0.25);
-  color:var(--gold3);border-radius:20px;padding:5px 12px;
-  cursor:pointer;letter-spacing:0.04em;transition:all 0.2s;white-space:nowrap;
+  color:var(--gold3);border-radius:20px;
+  padding:6px 14px;
+  cursor:pointer;letter-spacing:0.04em;transition:all 0.2s;
+  white-space:nowrap;flex-shrink:0;
 }
 .quick-btn:active{background:rgba(184,134,11,0.25);}
 
@@ -818,7 +802,6 @@ html,body{
 }
 #evliya-send-btn:active{transform:scale(0.94);}
 #evliya-send-btn:disabled{opacity:0.5;cursor:not-allowed;}
-
 
 /* ── KONUM İZNİ POPUP ── */
 #loc-permission-popup{
@@ -856,120 +839,62 @@ html,body{
   font-family:var(--font-head);font-size:11px;letter-spacing:0.1em;cursor:pointer;
 }
 
-/* ── EVLİYA FLOATING CHAT BUTONU (FAB) ── */
-#evliya-fab {
-  position: fixed;
-  bottom: 16px;
-  left: 16px;
-  z-index: 1200;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2a1a06, #3e2a0a);
-  border: 2px solid var(--gold);
-  box-shadow: 0 4px 20px rgba(184,134,11,0.45), 0 2px 8px rgba(0,0,0,0.5);
-  display: none; /* intro'da başlangıçta gizli */
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
+/* ══════════════════════════════════════════
+   EVLİYA FAB — YENİ TASARIM (pulse yok)
+══════════════════════════════════════════ */
+#evliya-fab-wrap{
+  position:fixed;
+  bottom:10px;left:16px;
+  z-index:1200;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  cursor:pointer;
 }
-#evliya-fab:active {
-  transform: scale(0.93);
-  box-shadow: 0 2px 10px rgba(184,134,11,0.3);
+#evliya-fab{
+  width:58px;height:58px;border-radius:50%;
+  background:linear-gradient(135deg,#2a1a06,#3e2a0a);
+  border:2px solid var(--gold);
+  box-shadow:0 4px 20px rgba(184,134,11,0.45),0 2px 8px rgba(0,0,0,0.5);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform 0.2s,box-shadow 0.2s;
 }
-#evliya-fab img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-#evliya-fab .fab-fallback {
-  font-size: 26px;
-  display: none;
-}
-#evliya-fab .fab-pulse {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid rgba(184,134,11,0.5);
-  animation: fabPulse 2.5s ease-in-out infinite;
-}
-#evliya-fab .fab-badge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  width: 18px;
-  height: 18px;
-  background: var(--gold3);
-  border-radius: 50%;
-  border: 1.5px solid #1a0c02;
-  font-size: 10px;
-  color: var(--ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-family: var(--font-head);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-#evliya-fab .fab-badge.show { opacity: 1; }
-#evliya-fab .fab-tooltip {
-  position: absolute;
-  left: 68px;
-  bottom: 50%;
-  transform: translateY(50%);
-  background: linear-gradient(135deg,#2a1a06,#3e2a0a);
-  border: 1px solid var(--gold);
-  color: var(--gold3);
-  font-family: var(--font-head);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  padding: 6px 12px;
-  border-radius: 8px;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-}
-#evliya-fab:hover .fab-tooltip { opacity: 1; }
-
-/* Bana Sor etiketi */
-#evliya-fab-wrap {
-  position: fixed;
-  bottom: 10px;
-  left: 16px;
-  z-index: 1200;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-}
-#evliya-fab-wrap #evliya-fab {
-  position: static;
-  bottom: auto;
-  left: auto;
-  z-index: auto;
-  display: flex;
-}
-#evliya-fab-label {
-  font-family: var(--font-head);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--gold3);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-  white-space: nowrap;
-}
-@keyframes fabPulse {
-  0%,100% { opacity: 0; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.15); }
+#evliya-fab:active{transform:scale(0.93);}
+#evliya-fab img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+#evliya-fab .fab-fallback{font-size:26px;display:none;}
+#evliya-fab-label{
+  font-family:var(--font-head);
+  font-size:9px;letter-spacing:0.12em;
+  color:var(--gold3);
+  text-shadow:0 1px 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.8);
+  white-space:nowrap;
+  font-weight:700;
 }
 
+/* ── FAB BİLGİ BALONCUĞU (durak açıldığında) ── */
+#fab-info-bubble{
+  position:fixed;
+  bottom:82px;left:12px;
+  z-index:1201;
+  max-width:220px;
+  background:rgba(30,18,8,0.95);
+  border:1px solid var(--gold);
+  border-radius:12px 12px 12px 4px;
+  padding:10px 14px;
+  font-size:12px;color:var(--gold3);
+  line-height:1.6;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity 0.3s ease,transform 0.3s ease;
+}
+#fab-info-bubble.show{
+  opacity:1;transform:translateY(0);
+}
 </style>
 </head>
 <body>
@@ -980,10 +905,8 @@ html,body{
 <div id="screen-intro" class="screen active">
   <canvas id="water-canvas"></canvas>
   <div class="intro-bg-rings">
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
+    <div class="ring"></div><div class="ring"></div>
+    <div class="ring"></div><div class="ring"></div>
   </div>
   <div class="intro-glow"></div>
   <div class="intro-img-wrap">
@@ -999,7 +922,6 @@ html,body{
      TOUR SCREEN
 ══════════════════════════════════════════ -->
 <div id="screen-tour" class="screen">
-
   <div id="top-bar">
     <button class="btn-menu" onclick="openMenu()">☰</button>
     <div id="progress-bar-wrap">
@@ -1015,7 +937,7 @@ html,body{
 
   <div id="tour-content">
 
-    <!-- ══ DURAK 0: Müze Girişi ══ -->
+     <!-- ══ DURAK 0: Müze Girişi ══ -->
     <div class="stop-page active" id="stop-0">
       <div class="stop-header">
         <div class="stop-main-title" data-i18n="s0_main">🏛️ SULTAN II. BAYEZİD KÜLLİYESİ</div>
@@ -1595,9 +1517,8 @@ html,body{
   </div><!-- /tour-content -->
 </div><!-- /screen-tour -->
 
-<!-- ══════════════════════════════════════
-     HARITA SCREEN
-══════════════════════════════════════════ -->
+
+<!-- ══ HARITA SCREEN ══ -->
 <div id="screen-map" class="screen">
   <div class="embed-topbar">
     <button class="embed-back" onclick="showScreen('tour')">←</button>
@@ -1606,9 +1527,7 @@ html,body{
   <iframe class="embed-iframe" id="map-iframe" src="" height="100%" title="Harita" allow="geolocation"></iframe>
 </div>
 
-<!-- ══════════════════════════════════════
-     GÖNÜL KÖPRÜSÜ SCREEN (full page)
-══════════════════════════════════════════ -->
+<!-- ══ GÖNÜL KÖPRÜSÜ SCREEN ══ -->
 <div id="screen-defter" class="screen">
   <div class="embed-topbar">
     <button class="embed-back" onclick="showScreen('tour')">←</button>
@@ -1617,9 +1536,7 @@ html,body{
   <iframe class="embed-iframe" id="defter-iframe" src="" height="100%" title="Ziyaretçi Defteri"></iframe>
 </div>
 
-<!-- ══════════════════════════════════════
-     MENU OVERLAY
-══════════════════════════════════════════ -->
+<!-- ══ MENU OVERLAY ══ -->
 <div id="menu-overlay" onclick="closeMenu()">
   <div id="menu-panel" onclick="event.stopPropagation()">
     <div class="menu-header">
@@ -1627,7 +1544,6 @@ html,body{
       <div class="menu-logo">🏛️</div>
       <div class="menu-title">Sultan II. Bayezid Külliyesi<br>Dijital Rehber</div>
     </div>
-
     <div class="menu-section">TUR DURAKLARI</div>
     <div class="menu-item" onclick="menuGoStop(0)"><span class="mi-icon">🏛️</span><span class="mi-name">Müze Girişi</span></div>
     <div class="menu-item" onclick="menuGoStop(1)"><span class="mi-icon">⚖️</span><span class="mi-name">Darüşşifa 1. Avlu</span></div>
@@ -1639,10 +1555,8 @@ html,body{
     <div class="menu-item" onclick="menuGoStop(7)"><span class="mi-icon">🕌</span><span class="mi-name">Cami Avlusu</span></div>
     <div class="menu-item" onclick="menuGoStop(8)"><span class="mi-icon">🕌</span><span class="mi-name">Cami İçi</span></div>
     <div class="menu-item" onclick="menuGoStop(9)"><span class="mi-icon">🌊</span><span class="mi-name">Gönül Köprüsü Davet</span></div>
-
     <div class="menu-section">AYARLAR</div>
     <div class="menu-item" onclick="openLangFromMenu()"><span class="mi-icon">🌐</span><span class="mi-name" id="menu-lang-label">Dil: Türkçe 🇹🇷</span></div>
-
     <div class="menu-section">SAYFALAR</div>
     <div class="menu-item" onclick="openMapScreen()"><span class="mi-icon">🗺️</span><span class="mi-name">Harita &amp; Konum</span></div>
     <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">🖋️</span><span class="mi-name">Gönül Köprüsü</span></div>
@@ -1659,9 +1573,7 @@ html,body{
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     LANGUAGE MODAL
-══════════════════════════════════════════ -->
+<!-- ══ LANGUAGE MODAL ══ -->
 <div id="lang-modal">
   <div class="lang-box">
     <div class="lang-title">🌐 DİL SEÇİNİZ</div>
@@ -1670,7 +1582,7 @@ html,body{
       <button class="lang-btn" onclick="setLang('en')"><span class="lang-flag">🇬🇧</span>English</button>
       <button class="lang-btn" onclick="setLang('de')"><span class="lang-flag">🇩🇪</span>Deutsch</button>
       <button class="lang-btn" onclick="setLang('fr')"><span class="lang-flag">🇫🇷</span>Français</button>
-         <button class="lang-btn" onclick="setLang('bg')"><span class="lang-flag">🇧🇬</span>Български</button>
+      <button class="lang-btn" onclick="setLang('bg')"><span class="lang-flag">🇧🇬</span>Български</button>
       <button class="lang-btn" onclick="setLang('el')"><span class="lang-flag">🇬🇷</span>Ελληνικά</button>
       <button class="lang-btn" onclick="setLang('zh')"><span class="lang-flag">🇨🇳</span>中文</button>
       <button class="lang-btn" onclick="setLang('fa')"><span class="lang-flag">🇮🇷</span>فارسی</button>
@@ -1679,171 +1591,203 @@ html,body{
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     YOUTUBE POPUP
-══════════════════════════════════════════ -->
+<!-- ══ YOUTUBE POPUP ══ -->
 <div id="yt-popup">
   <div class="yt-box">
-    <iframe id="yt-iframe" src="" frameborder="0" allowfullscreen
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    <iframe id="yt-iframe" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
   </div>
   <button class="yt-close" onclick="closeYT()">KAPAT VE DEVAM ET →</button>
 </div>
 
-<!-- ══════════════════════════════════════
-     IMAGE FULLSCREEN
-══════════════════════════════════════════ -->
+<!-- ══ IMAGE FULLSCREEN ══ -->
 <div id="img-popup">
   <img id="img-popup-img" src="" alt="Tam Ekran Görsel">
   <button id="img-popup-close" onclick="closeImg()">×</button>
 </div>
 
-<!-- ══════════════════════════════════════
-     CONFIRM POPUP
-══════════════════════════════════════════ -->
+<!-- ══ CONFIRM POPUP ══ -->
 <div id="confirm-popup">
   <div class="confirm-box">
     <span class="confirm-emoji">✨</span>
-    <div class="confirm-text">
-      <strong>Duygularınız Gönül Köprüsü'ne mühürlendi.</strong><br><br>
-      Bıraktığınız bu anlamlı iz, külliyemizin manevi mirasını zenginleştirdi…
-    </div>
+    <div class="confirm-text"><strong>Duygularınız Gönül Köprüsü'ne mühürlendi.</strong><br><br>Bıraktığınız bu anlamlı iz, külliyemizin manevi mirasını zenginleştirdi…</div>
     <button class="confirm-close" onclick="closeConfirm()">ŞİFANIZ BOL OLSUN 🌿</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     FIXED LOCATION BUTTON
-══════════════════════════════════════════ -->
+<!-- ══ FIXED LOCATION BUTTON ══ -->
 <button class="btn-location-fixed" id="btn-loc-fixed" onclick="checkLocation()" title="Konumumu Göster" style="display:none;">📍</button>
 
-<!-- ══════════════════════════════════════
-     LOC TOAST
-══════════════════════════════════════════ -->
+<!-- ══ LOC TOAST ══ -->
 <div id="loc-toast"></div>
 
-<!-- ══════════════════════════════════════
-     EVLIYA GIF BUBBLE
-══════════════════════════════════════════ -->
-<div class="evliya-wrap" id="evliya-wrap">
-  <div class="evliya-bubble" id="evliya-bubble"></div>
-  <img class="evliya-gif" src="assets/img/evliya.gif" alt="Evliya Çelebi" onerror="this.style.display='none'">
-</div>
-
-<!-- ══════════════════════════════════════
-     AUDIO
-══════════════════════════════════════════ -->
+<!-- ══ AUDIO ══ -->
 <audio id="stop-audio" preload="none"></audio>
 <audio id="intro-audio" src="assets/audio/intro-bg.mp3" loop preload="auto"></audio>
 
-<!-- ══════════════════════════════════════
-     FIREBASE + MAIN JS
-══════════════════════════════════════════ -->
+<!-- ══ EVLİYA CHAT PANELİ ══ -->
+<div id="evliya-chat-panel">
+  <div class="evliya-chat-sheet">
+    <div class="evliya-chat-header">
+      <div class="evliya-chat-avatar">
+        <img src="assets/img/evliya.gif" alt="Evliya Çelebi" onerror="this.style.display='none';this.parentElement.textContent='🎭'">
+      </div>
+      <div class="evliya-chat-info">
+        <div class="evliya-chat-name">REHBER EVLİYA</div>
+        <div class="evliya-chat-desc">Sultan II. Bayezid Külliyesi Dijital Rehberi</div>
+      </div>
+      <button class="evliya-chat-close" onclick="closeEvliyaChat()">×</button>
+    </div>
+    <div class="evliya-chat-messages" id="evliya-chat-messages"></div>
+    <div class="evliya-chat-input-area">
+      <div class="evliya-chat-quick" id="evliya-quick-btns">
+        <button class="quick-btn" onclick="evliyaQuick('Bu külliyeyi bana tanıt, neden önemli?')">🏛️ Külliye</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifa\'nın mimarisi ve bölümleri nasıldı?')">🏥 Darüşşifa</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada müzikle tedavi nasıl yapılırdı?')">🎵 Müzik Tedavisi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Su sesi ve koku ile tedavi nasıl uygulanırdı?')">💧 Su & Koku</button>
+        <button class="quick-btn" onclick="evliyaQuick('Makamların hastalıklar üzerindeki etkisini anlat')">🎼 Makam & Şifa</button>
+        <button class="quick-btn" onclick="evliyaQuick('Tıp medresesinde kimler okudu, nasıl bir eğitim vardı?')">📚 Medrese</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada kaç hekim çalışırdı?')">🩺 Hekimler</button>
+        <button class="quick-btn" onclick="evliyaQuick('Yahya Baba\'nın efsanesini anlat')">🍲 Yahya Baba</button>
+        <button class="quick-btn" onclick="evliyaQuick('İmarethanede ne pişirilir, kim yiyebilirdi?')">🥘 İmarethane</button>
+        <button class="quick-btn" onclick="evliyaQuick('Caminin kündekâri işçiliği ve hünkâr mahfilini anlat')">🕌 Cami</button>
+        <button class="quick-btn" onclick="evliyaQuick('Sultan II. Bayezid kim, bu külliyeyi neden yaptırdı?')">👑 Sultan</button>
+        <button class="quick-btn" onclick="evliyaQuick('1652\'deki ziyaretinde neler gördün?')">📜 Seyahatnâme</button>
+      </div>
+      <div class="evliya-chat-row">
+        <textarea id="evliya-chat-input" placeholder="Evliya Çelebi'ye bir şey sor…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendEvliyaMsg();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
+        <button id="evliya-send-btn" onclick="sendEvliyaMsg()" title="Gönder">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KONUM İZNİ POPUP ══ -->
+<div id="loc-permission-popup">
+  <div class="loc-perm-box">
+    <span class="loc-perm-icon">📍</span>
+    <div class="loc-perm-title">KONUM İZNİ</div>
+    <div class="loc-perm-text">Hangi bölümde olduğunuzu otomatik algılayabilmemiz için <strong>konum iznine</strong> ihtiyacımız var.</div>
+    <div class="loc-perm-note">🔒 Konumunuz yalnızca müze içinde geçerlidir. Sayfadan çıkışınızla takip sona erer. <a onclick="openKVKK()">Gizlilik Politikası →</a></div>
+    <button class="loc-perm-btn-ok" onclick="requestLocationPermission(this)">📍 KONUM İZNİ VER</button>
+    <button class="loc-perm-btn-skip" onclick="skipLocationPermission()">Hayır, Konum Paylaşmak İstemiyorum</button>
+  </div>
+</div>
+
+<!-- ══ EVLİYA FAB ══ -->
+<div id="evliya-fab-wrap" onclick="openEvliyaChat()">
+  <div id="evliya-fab">
+    <img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span class="fab-fallback">🎭</span>
+  </div>
+  <div id="evliya-fab-label">BANA SOR</div>
+</div>
+
+<!-- ══ FAB BİLGİ BALONU ══ -->
+<div id="fab-info-bubble"></div>
+
+<!-- ══ KVKK BANNER ══ -->
+<div id="kvkk-banner">
+  <div class="kvkk-text">🍪 Bu rehber uygulaması, müze içi gezi deneyiminizi geliştirmek amacıyla konum verinizi kullanmaktadır. <a onclick="openKVKK()">Gizlilik Politikasını Oku</a></div>
+  <div class="kvkk-actions">
+    <button class="kvkk-btn-info" onclick="openKVKK()">📄 DETAYLAR</button>
+    <button class="kvkk-btn-ok" onclick="acceptKVKK()">ANLADIM ✓</button>
+  </div>
+</div>
+
+<!-- ══ KVKK MODAL ══ -->
+<div id="kvkk-modal">
+  <div class="kvkk-sheet">
+    <div class="kvkk-sheet-header">
+      📄 GİZLİLİK POLİTİKASI — KVKK BİLDİRİMİ
+      <button class="kvkk-close-x" onclick="closeKVKK()">×</button>
+    </div>
+    <div class="kvkk-body">
+      <h3>VERİ SORUMLUSU</h3>
+      <p>Sultan II. Bayezid Külliyesi Sağlık Müzesi — Edirne<br>Trakya Üniversitesi Sağlık Bilimleri Fakültesi</p>
+      <h3>KONUM VERİSİ HAKKINDA</h3>
+      <ul>
+        <li>Hangi bölümde olduğunuzu tespit ederek size özel rehberlik sunmak için kullanılır</li>
+        <li>Müze yönetimine anonim ve toplu istatistik olarak iletilir</li>
+        <li>Sayfadan çıkış yaptığınızda konum takibi tamamen sonlandırılır</li>
+      </ul>
+      <h3>HAKLARINIZ</h3>
+      <ul>
+        <li>Konum iznini her zaman tarayıcı ayarlarından iptal edebilirsiniz</li>
+        <li>Konum izni vermeden de rehberi kullanabilirsiniz</li>
+      </ul>
+    </div>
+    <button class="kvkk-btn-ok" style="width:100%;margin-top:16px;" onclick="acceptKVKK()">OKUDUM, ANLADIM ✓</button>
+  </div>
+</div>
+
 <script>
-/* ── Firebase init ── */
-(function initFirebase(){
-  const cfg = {
-    apiKey:"AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",
-    authDomain:"edirnesaglikmuze.firebaseapp.com",
-    projectId:"edirnesaglikmuze",
-    storageBucket:"edirnesaglikmuze.firebasestorage.app",
-    messagingSenderId:"707402210781",
-    appId:"1:707402210781:web:fb65c71ca2557575e4aa34"
-  };
-  try{
-    if(typeof firebase!=='undefined'){
-      if(!firebase.apps.length){firebase.initializeApp(cfg);}
-      window.db = firebase.firestore();
-    }
-  }catch(e){ console.warn('Firebase init failed:',e); window.db=null; }
+/* ────────────────────────────────────────
+   FIREBASE INIT
+──────────────────────────────────────── */
+(function(){
+  const cfg={apiKey:"AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",authDomain:"edirnesaglikmuze.firebaseapp.com",projectId:"edirnesaglikmuze",storageBucket:"edirnesaglikmuze.firebasestorage.app",messagingSenderId:"707402210781",appId:"1:707402210781:web:fb65c71ca2557575e4aa34"};
+  try{if(typeof firebase!=='undefined'){if(!firebase.apps.length){firebase.initializeApp(cfg);}window.db=firebase.firestore();}}catch(e){console.warn('Firebase:',e);window.db=null;}
 })();
 
 /* ────────────────────────────────────────
    CONSTANTS
 ──────────────────────────────────────── */
-const TOTAL_STOPS = 11;
+const TOTAL_STOPS=11;
+let STOP_NAMES=['Müze Girişi','Darüşşifa 1. Avlu','Darüşşifa 2. Avlu','Şifahane','Medrese','Büyük Avlu','İmarethane','Cami Avlusu','Cami İçi','Gönül Köprüsü Davet','Gönül Köprüsü'];
 
-const STOP_NAMES = [
-  'Müze Girişi','Darüşşifa 1. Avlu','Darüşşifa 2. Avlu',
-  'Şifahane','Medrese','Büyük Avlu','İmarethane',
-  'Cami Avlusu','Cami İçi','Gönül Köprüsü Davet','Gönül Köprüsü'
+/* Her durak için FAB'da gösterilecek kısa bilgi */
+const FAB_STOP_HINTS=[
+  '🏛️ Büyük külliye fotoğrafını inceleyin, Darüşşifa sizi bekliyor.',
+  '⚖️ Sol taraftaki Süt Kuyusu\'na ve bahçedeki şiir tabelasına dikkat!',
+  '🚪 Kapının üzerindeki kitabeyi okuyun, nefes alın ve içeri girin.',
+  '🎵 Şadırvanın sesini dinleyin — bu ses 500 yıllık şifa ritmidir.',
+  '📚 Evliya Çelebi 1652\'de bu medreseyi gezdi. Dershaneyi kaçırmayın!',
+  '🌳 Su terazisini ve asırlık çınarları görün, İmaret sizi bekliyor.',
+  '🍲 Yahya Baba\'nın türbesini ziyaret etmeyi unutmayın.',
+  '⛲ Şadırvanın başında durun, sütunların arasından geçin.',
+  '🌌 Başınızı kaldırın ve 31 metrelik kubbeyi seyredin!',
+  '✍️ Gönül Köprüsü\'nde duygularınızı bırakın.',
+  '🪨 İlk taşı siz koyun — köprüde yeriniz hazır!'
 ];
 
-const LANG_AUDIO_FOLDERS = {
-  tr:  'assets/audio/tr',
-  en:  'assets/audio/en',
-  de:  'assets/audio/de',
-  fr:  'assets/audio/fr',
-  ar:  'assets/audio/ar',
-  bg:  'assets/audio/bg',
-  el:  'assets/audio/gr',
-  zh:  'assets/audio/cn',
-  fa:  'assets/audio/fa',
-  ja:  'assets/audio/jpn',
-  ru:  'assets/audio/ru',
-  ro:  'assets/audio/rum',
-  it:  'assets/audio/it'
-};
-
-function getAudioFile(stopIndex, lang) {
-  const folder = LANG_AUDIO_FOLDERS[lang] || LANG_AUDIO_FOLDERS['tr'];
-  return folder + '/' + (stopIndex + 1) + '.mp3';
-}
-const EVLIYA_MSGS = [
-  '🎭 Hoş geldiniz! Bu şifa yurdunda asırlar arasında bir yolculuğa çıkıyoruz… Ben Evliya Çelebi, size bu diyarın hikâyesini anlatacağım.',
-  '👁️ Bu darüşşifada nice dertliler deva bulur, gönlü dar olan dahi ferahlık bulur.',
-  '📜 Her şeyin bir düzen üzere olduğu bu mekânda, şifa da nizam ile dağıtılır.',
-  '🎵 Bu darüşşifada suyun sesi ile gönüller, musikinin nağmesi ile ruhlar şifa bulur.',
-  '📚 Kalem ile başlayan yol, burada hikmete ve olgunluğa çıkar.',
-  '🌳 Asırlık çınarlar burada nice şifalı nesli gördü. Şimdi sizi görüyorlar.',
-  '🍲 Bu imarette aç olan doyurulur, yolcu olan ağırlanır; gönüller ferahlanır.',
-  '🕌 Tek kubbenin altına girin ve bir an susun. Bu sessizlik 500 yıllık huzurun sesidir.',
-  '🕌 Kubbenin zarafeti altında tarihe dokunan her ruh, bir parça şifa taşır.',
-  '🖋️ Son durağa hoş geldiniz. Kalbinizden geçenleri bu sayfaya bırakın, ebediyen kalsın.',
-  '✨ Gönül Köprüsü\'nde sizin de bir taşınız olsun…'
-];
+const LANG_AUDIO_FOLDERS={tr:'assets/audio/tr',en:'assets/audio/en',de:'assets/audio/de',fr:'assets/audio/fr',ar:'assets/audio/ar',bg:'assets/audio/bg',el:'assets/audio/gr',zh:'assets/audio/cn',fa:'assets/audio/fa'};
+function getAudioFile(n,lang){const f=LANG_AUDIO_FOLDERS[lang]||LANG_AUDIO_FOLDERS['tr'];return f+'/'+(n+1)+'.mp3';}
 
 /* ────────────────────────────────────────
    STATE
 ──────────────────────────────────────── */
-let currentStop = 0;
-let speakerMuted = false;
-let currentLang = 'tr';
-let evliyaTimer = null;
-let allMessages = [];
-let archivePage = 1;
-const LATEST = 10, PER_PAGE = 10;
+let currentStop=0,speakerMuted=false,currentLang='tr';
+let allMessages=[],archivePage=1;
+const LATEST=10,PER_PAGE=10;
+let fabBubbleTimer=null;
 
 /* ────────────────────────────────────────
-   SCREEN MANAGEMENT
+   SCREEN
 ──────────────────────────────────────── */
 function showScreen(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
-  const locBtn = document.getElementById('btn-loc-fixed');
-  if(locBtn) locBtn.style.display = (name==='tour') ? 'flex' : 'none';
-  // FAB her sayfada görünür, sadece intro'da gizle
-  const fab = document.getElementById('evliya-fab-wrap');
-  if(fab) fab.style.display = (name==='intro') ? 'none' : 'flex';
+  const locBtn=document.getElementById('btn-loc-fixed');
+  if(locBtn)locBtn.style.display=(name==='tour')?'flex':'none';
+  const fab=document.getElementById('evliya-fab-wrap');
+  if(fab)fab.style.display=(name==='intro')?'none':'flex';
 }
 
 function startTour(){
-  const introAudio = document.getElementById('intro-audio');
-  introAudio.pause();
-  introAudio.currentTime = 0;
+  const introAudio=document.getElementById('intro-audio');
+  introAudio.pause();introAudio.currentTime=0;
   showScreen('tour');
-  const locBtn = document.getElementById('btn-loc-fixed');
-  if(locBtn) locBtn.style.display='flex';
-  // FAB'ı göster ve ilk kez badge ile dikkat çek
-  const fab = document.getElementById('evliya-fab-wrap');
-  const badge = document.getElementById('fab-badge');
-  if(fab) fab.style.display='flex';
-  if(badge) {
-    badge.classList.add('show');
-    setTimeout(()=>badge.classList.remove('show'), 5000);
-  }
-  goStop(0);
-  loadMessages();
+  document.getElementById('btn-loc-fixed').style.display='flex';
+  document.getElementById('evliya-fab-wrap').style.display='flex';
+  goStop(0);loadMessages();
+  // Tracking
+  TRACKING.sessionId='sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+  TRACKING.startTime=Date.now();TRACKING.active=true;
+  createSession();
+  localStorage.removeItem('loc-perm-decided');
+  setTimeout(()=>{document.getElementById('loc-permission-popup').classList.add('open');},1500);
 }
 
 /* ────────────────────────────────────────
@@ -1854,81 +1798,72 @@ function goStop(n){
   document.querySelectorAll('.stop-page').forEach(p=>p.classList.remove('active'));
   document.getElementById('stop-'+n).classList.add('active');
   const tc=document.getElementById('tour-content');
-  if(tc){tc.scrollTop=0;}
-  currentStop = n;
+  if(tc)tc.scrollTop=0;
+  currentStop=n;
   updateProgressBar();
   applyTranslations();
   playStopAudio(n);
-  showEvliya(n);
+  showFabHint(n);
+  // Tracking
+  if(TRACKING.active&&n>TRACKING.lastStop){
+    TRACKING.lastStop=n;
+    updateSessionField({maxStop:n,lang:currentLang||'tr'});
+  }
 }
 
-function menuGoStop(n){
-  closeMenu();
-  showScreen('tour');
-  goStop(n);
+function menuGoStop(n){closeMenu();showScreen('tour');goStop(n);}
+
+/* ────────────────────────────────────────
+   FAB HINT BUBBLE (her durakta)
+──────────────────────────────────────── */
+function showFabHint(n){
+  clearTimeout(fabBubbleTimer);
+  const bubble=document.getElementById('fab-info-bubble');
+  if(!bubble)return;
+  bubble.classList.remove('show');
+  const hint=FAB_STOP_HINTS[n];
+  if(!hint)return;
+  bubble.textContent=hint;
+  // Kısa gecikmeyle göster (sayfa geçiş animasyonu bitmesini bekle)
+  fabBubbleTimer=setTimeout(()=>{
+    bubble.classList.add('show');
+    fabBubbleTimer=setTimeout(()=>bubble.classList.remove('show'),5000);
+  },600);
 }
 
 /* ────────────────────────────────────────
    PROGRESS BAR
 ──────────────────────────────────────── */
 function updateProgressBar(){
-  const pct = (currentStop/(TOTAL_STOPS-1))*100;
-  document.getElementById('pb-fill').style.width = pct+'%';
-  document.getElementById('pb-cur').textContent = STOP_NAMES[currentStop]||'';
-  document.getElementById('pb-prev').textContent = currentStop>0?(STOP_NAMES[currentStop-1]||''):'';
-  document.getElementById('pb-next').textContent = currentStop<TOTAL_STOPS-1?(STOP_NAMES[currentStop+1]||''):'';
+  const pct=(currentStop/(TOTAL_STOPS-1))*100;
+  document.getElementById('pb-fill').style.width=pct+'%';
+  document.getElementById('pb-cur').textContent=STOP_NAMES[currentStop]||'';
+  document.getElementById('pb-prev').textContent=currentStop>0?(STOP_NAMES[currentStop-1]||''):'';
+  document.getElementById('pb-next').textContent=currentStop<TOTAL_STOPS-1?(STOP_NAMES[currentStop+1]||''):'';
 }
 
 /* ────────────────────────────────────────
    AUDIO
 ──────────────────────────────────────── */
 function playStopAudio(n){
-  if(speakerMuted) return;
-  const audio = document.getElementById('stop-audio');
-  const src = getAudioFile(n, currentLang);
-  audio.src = src;
+  if(speakerMuted)return;
+  const audio=document.getElementById('stop-audio');
+  audio.src=getAudioFile(n,currentLang);
   audio.play().catch(()=>{});
 }
 function toggleSpeaker(){
-  speakerMuted = !speakerMuted;
-  const btn = document.getElementById('btn-speaker');
-  btn.textContent = speakerMuted ? '🔇' : '🔊';
-  const audio = document.getElementById('stop-audio');
-  if(speakerMuted){ audio.pause(); }
-  else { playStopAudio(currentStop); }
-  localStorage.setItem('rehber-speaker-muted', speakerMuted?'1':'0');
-}
-
-/* ────────────────────────────────────────
-   EVLIYA BUBBLE
-──────────────────────────────────────── */
-function showEvliya(n){
-  clearTimeout(evliyaTimer);
-  const wrap = document.getElementById('evliya-wrap');
-  const bubble = document.getElementById('evliya-bubble');
-  wrap.classList.remove('show');
-  const msg = EVLIYA_MSGS[n]||EVLIYA_MSGS[0];
-  bubble.textContent = msg;
-  setTimeout(()=>{
-    wrap.classList.add('show');
-    bubble.style.animation='none';
-    bubble.offsetHeight;
-    bubble.style.animation='';
-    evliyaTimer = setTimeout(()=>wrap.classList.remove('show'), 5500);
-  }, 800);
+  speakerMuted=!speakerMuted;
+  document.getElementById('btn-speaker').textContent=speakerMuted?'🔇':'🔊';
+  const audio=document.getElementById('stop-audio');
+  if(speakerMuted)audio.pause();else playStopAudio(currentStop);
+  localStorage.setItem('rehber-speaker-muted',speakerMuted?'1':'0');
 }
 
 /* ────────────────────────────────────────
    MENU
 ──────────────────────────────────────── */
-function openMenu(){
-  document.getElementById('menu-overlay').classList.add('open');
-  document.getElementById('menu-panel').classList.add('open');
-}
-function closeMenu(){
-  document.getElementById('menu-overlay').classList.remove('open');
-  document.getElementById('menu-panel').classList.remove('open');
-}
+function openMenu(){document.getElementById('menu-overlay').classList.add('open');document.getElementById('menu-panel').classList.add('open');}
+function closeMenu(){document.getElementById('menu-overlay').classList.remove('open');document.getElementById('menu-panel').classList.remove('open');}
 
 /* ────────────────────────────────────────
    LANGUAGE
@@ -2017,7 +1952,6 @@ function openLangFromMenu(){
 const TRANSLATIONS = {
   tr:{
     start:'YOLCULUĞA BAŞLA',intro_title:'Eşiğe Davet',intro_sub:'Zamanın ötesine, şifanın merkezine bir yolculuk…',
-    fab_label:'BANA SOR',
     back:'← GERİ',menu_stops:'TUR DURAKLARI',menu_pages:'SAYFALAR',menu_settings:'AYARLAR',
     menu_lang:'Dil: Türkçe 🇹🇷',menu_map:'Harita & Konum',menu_defter:'Gönül Köprüsü',
     loc_searching:'📍 Konum alınıyor…',loc_outside:'📍 Külliye alanı dışındasınız.',
@@ -2042,7 +1976,6 @@ const TRANSLATIONS = {
   },
   en:{
     start:'BEGIN THE JOURNEY',intro_title:'Invitation to the Threshold',intro_sub:'A journey beyond time, to the center of healing…',
-    fab_label:'ASK ME',
     back:'← BACK',menu_lang:'Language: English 🇬🇧',menu_map:'Map & Location',menu_defter:'Heart Bridge',
     loc_searching:'📍 Getting location…',loc_outside:'📍 You are outside the Külliye area.',
     loc_error:'📍 Could not get location. Please enable location permission.',
@@ -2169,7 +2102,6 @@ const TRANSLATIONS = {
   },
    de:{
     start:'REISE BEGINNEN',intro_title:'Einladung zur Schwelle',intro_sub:'Eine Reise jenseits der Zeit, zum Zentrum der Heilung…',
-    fab_label:'FRAG MICH',
     back:'← ZURÜCK',menu_lang:'Sprache: Deutsch 🇩🇪',menu_map:'Karte & Standort',menu_defter:'Herzbrücke',
     loc_searching:'📍 Standort wird ermittelt…',loc_outside:'📍 Sie befinden sich außerhalb des Külliye-Gebiets.',
     loc_error:'📍 Standort konnte nicht ermittelt werden. Bitte aktivieren Sie die Standortberechtigung.',
@@ -2297,7 +2229,6 @@ const TRANSLATIONS = {
 
   fr:{
     start:'COMMENCER LE VOYAGE',intro_title:'Invitation au Seuil',intro_sub:'Un voyage au-delà du temps, vers le centre de la guérison…',
-    fab_label:'DEMANDEZ-MOI',
     back:'← RETOUR',menu_lang:'Langue: Français 🇫🇷',menu_map:'Carte & Position',menu_defter:'Pont du Cœur',
     loc_searching:'📍 Localisation en cours…',loc_outside:'📍 Vous êtes en dehors du Külliye.',
     loc_error:'📍 Localisation impossible. Veuillez activer les autorisations de localisation.',
@@ -2446,7 +2377,6 @@ const TRANSLATIONS = {
   },
   bg:{
     start:'ЗАПОЧНИ ПЪТУВАНЕТО',intro_title:'Покана към Прага',intro_sub:'Пътуване отвъд времето, към центъра на изцелението…',
-    fab_label:'ПИТАЙ МЕ',
     back:'← НАЗАД',menu_lang:'Език: Български 🇧🇬',menu_map:'Карта & Местоположение',menu_defter:'Мост на Сърцето',
     menu_stops:'СПИРКИ НА ОБИКОЛКАТА',menu_settings:'НАСТРОЙКИ',menu_pages:'СТРАНИЦИ',
     loc_searching:'📍 Определяне на местоположението…',loc_outside:'📍 Намирате се извън района на Кюллието.',
@@ -3025,7 +2955,8 @@ const MENU_DEFTER_I18N = {
 };
 
 const MENU_NOTEBOOK_I18N = {
-  tr: "Gönül Köprüsü",en: "Bridge of Hearts",de: "Brücke der Herzen",fr: "Pont des Cœurs",ar: "جسر القلوب",bg: "Мост на сърцата",el: "Γέφυρα των Καρδιών",zh: "心灵之桥",fa: "پل دل‌ها"
+  tr:'Rehbere Sor / Defter',en:'Ask Guide / Notebook',de:'Führer / Notizbuch',fr:'Guide / Carnet',
+  ar:'اسأل المرشد / الدفتر',bg:'Наръчник / Тетрадка',el:'Οδηγός / Σημειωματάριο',zh:'问向导 / 留言本',fa:'راهنما / دفترچه'
 };
 
 const LANG_CLOSE_I18N = {
@@ -3084,7 +3015,7 @@ const ZONES = [
 function ptInPoly(lat,lon,coords){
   let inside=false;
   for(let i=0,j=coords.length-1;i<coords.length;j=i++){
-    const [yi,xi]=coords[i],[yj,xj]=coords[j];
+    const[yi,xi]=coords[i],[yj,xj]=coords[j];
     if(((yi>lat)!==(yj>lat))&&(lon<(xj-xi)*(lat-yi)/(yj-yi)+xi))inside=!inside;
   }
   return inside;
@@ -3093,10 +3024,8 @@ function ptInPoly(lat,lon,coords){
 function speakText(text){
   if(!('speechSynthesis' in window))return;
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = currentLang==='en'?'en-US':currentLang==='de'?'de-DE':currentLang==='fr'?'fr-FR':
-           currentLang==='ar'?'ar-SA':currentLang==='el'?'el-GR':currentLang==='zh'?'zh-CN':
-           currentLang==='fa'?'fa-IR':'tr-TR';
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=currentLang==='en'?'en-US':currentLang==='de'?'de-DE':currentLang==='fr'?'fr-FR':currentLang==='el'?'el-GR':currentLang==='zh'?'zh-CN':currentLang==='fa'?'fa-IR':'tr-TR';
   u.rate=0.92;u.pitch=1;
   const voices=window.speechSynthesis.getVoices();
   const match=voices.find(v=>v.lang.startsWith(u.lang.split('-')[0]));
@@ -3108,15 +3037,12 @@ function checkLocation(){
   if(!navigator.geolocation){showLocToast('Konum desteklenmiyor');return;}
   showLocToast('📍 Konum alınıyor…');
   navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude:lat,longitude:lon}=pos.coords;
+    const{latitude:lat,longitude:lon}=pos.coords;
     const zone=ZONES.find(z=>ptInPoly(lat,lon,z.coords));
-    const msg=zone?'📍 '+zone.announce:t('loc_outside');
+    const msg=zone?'📍 '+zone.announce:'📍 Külliye alanı dışındasınız.';
     showLocToast(msg);
-    speakText(zone?zone.announce:(TRANSLATIONS[currentLang]||TRANSLATIONS.tr).loc_outside.replace('📍 ',''));
-  },err=>{
-    showLocToast(t('loc_error'));
-    speakText((TRANSLATIONS[currentLang]||TRANSLATIONS.tr).loc_error.replace('📍 ',''));
-  },{enableHighAccuracy:true,timeout:10000,maximumAge:5000});
+    speakText(zone?zone.announce:'Külliye alanı dışındasınız.');
+  },err=>{showLocToast('📍 Konum alınamadı.');},{enableHighAccuracy:true,timeout:10000,maximumAge:5000});
 }
 
 function showLocToast(msg){
@@ -3127,49 +3053,22 @@ function showLocToast(msg){
 }
 
 /* ────────────────────────────────────────
-   YOUTUBE POPUP
+   YOUTUBE / IMAGE / CONFIRM
 ──────────────────────────────────────── */
-function openYT(){
-  document.getElementById('yt-iframe').src='https://www.youtube.com/embed/YUw2S2MrHow?autoplay=1';
-  document.getElementById('yt-popup').classList.add('open');
-}
-function closeYT(){
-  document.getElementById('yt-iframe').src='';
-  document.getElementById('yt-popup').classList.remove('open');
-  goStop(2);
-}
+function openYT(){document.getElementById('yt-iframe').src='https://www.youtube.com/embed/YUw2S2MrHow?autoplay=1';document.getElementById('yt-popup').classList.add('open');}
+function closeYT(){document.getElementById('yt-iframe').src='';document.getElementById('yt-popup').classList.remove('open');goStop(2);}
+function openImg(src){document.getElementById('img-popup-img').src=src;document.getElementById('img-popup').classList.add('open');}
+function closeImg(){document.getElementById('img-popup').classList.remove('open');}
+function openConfirm(){document.getElementById('confirm-popup').classList.add('open');}
+function closeConfirm(){document.getElementById('confirm-popup').classList.remove('open');}
 
 /* ────────────────────────────────────────
-   IMAGE POPUP
+   MAP / DEFTER
 ──────────────────────────────────────── */
-function openImg(src){
-  document.getElementById('img-popup-img').src=src;
-  document.getElementById('img-popup').classList.add('open');
-}
-function closeImg(){ document.getElementById('img-popup').classList.remove('open'); }
+function openMapScreen(){closeMenu();document.getElementById('map-iframe').src='https://edirnesaglikmuzesi-bit.github.io/muze/nav/konum.html';showScreen('map');}
 
 /* ────────────────────────────────────────
-   CONFIRM POPUP
-──────────────────────────────────────── */
-function openConfirm(){ document.getElementById('confirm-popup').classList.add('open'); }
-function closeConfirm(){ document.getElementById('confirm-popup').classList.remove('open'); }
-
-/* ────────────────────────────────────────
-   MAP & DEFTER SCREENS
-──────────────────────────────────────── */
-function openMapScreen(){
-  closeMenu();
-  document.getElementById('map-iframe').src='https://edirnesaglikmuzesi-bit.github.io/muze/nav/konum.html';
-  showScreen('map');
-}
-function openDefterScreen(){
-  closeMenu();
-  document.getElementById('defter-iframe').src='nav/ziyaretci-defteri.html';
-  showScreen('defter');
-}
-
-/* ────────────────────────────────────────
-   GÖNÜL KÖPRÜSÜ FORM
+   GÖNÜL KÖPRÜSÜ
 ──────────────────────────────────────── */
 async function submitGonul(){
   const name=document.getElementById('gb-name').value.trim();
@@ -3180,41 +3079,21 @@ async function submitGonul(){
   btn.disabled=true;btn.textContent='Mühürleniyor…';
   if(!window.db){showLocToast('Bağlantı kurulamadı.');btn.disabled=false;btn.textContent=t('gb_submit');return;}
   try{
-    await window.db.collection('messages').add({
-      user:name||'Anonim Ziyaretçi',city:city||'Belirtilmedi',text,
-      timestamp:firebase.firestore.FieldValue.serverTimestamp()
-    });
-    document.getElementById('gb-name').value='';
-    document.getElementById('gb-city').value='';
-    document.getElementById('gb-text').value='';
+    await window.db.collection('messages').add({user:name||'Anonim',city:city||'Belirtilmedi',text,timestamp:firebase.firestore.FieldValue.serverTimestamp()});
+    document.getElementById('gb-name').value='';document.getElementById('gb-city').value='';document.getElementById('gb-text').value='';
     openConfirm();
-  }catch(e){showLocToast('Bağlantı hatası. Tekrar deneyin.');console.error(e);}
+  }catch(e){showLocToast('Bağlantı hatası.');console.error(e);}
   btn.disabled=false;btn.textContent=t('gb_submit');
 }
 
-/* ────────────────────────────────────────
-   MESSAGES
-──────────────────────────────────────── */
-function fmtDate(ts){
-  if(!ts)return'';
-  return new Date(ts.seconds*1000).toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
-}
+function fmtDate(ts){if(!ts)return'';return new Date(ts.seconds*1000).toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function renderMessages(){
   const latest=allMessages.slice(0,LATEST);
   const latEl=document.getElementById('latest-msgs');
   if(!latEl)return;
-  if(!latest.length){latEl.innerHTML='<div class="msg-loading">Henüz mesaj yok. İlk taşı siz koyun! ✨</div>';}
-  else{
-    latEl.innerHTML=latest.map(m=>`
-      <div class="msg-card">
-        <div class="msg-author">👤 ${esc(m.user)}</div>
-        <div class="msg-city">📍 ${esc(m.city)}</div>
-        <div class="msg-body">${esc(m.text)}</div>
-        <div class="msg-date">${fmtDate(m.timestamp)}</div>
-      </div>`).join('');
-  }
+  latEl.innerHTML=latest.length?latest.map(m=>`<div class="msg-card"><div class="msg-author">👤 ${esc(m.user)}</div><div class="msg-city">📍 ${esc(m.city)}</div><div class="msg-body">${esc(m.text)}</div><div class="msg-date">${fmtDate(m.timestamp)}</div></div>`).join(''):'<div class="msg-loading">Henüz mesaj yok. İlk taşı siz koyun! ✨</div>';
   const archive=allMessages.slice(LATEST);
   const archEl=document.getElementById('archive-msgs');
   const pgEl=document.getElementById('pg-wrap');
@@ -3223,33 +3102,72 @@ function renderMessages(){
   const total=Math.ceil(archive.length/PER_PAGE);
   if(archivePage>total)archivePage=1;
   const slice=archive.slice((archivePage-1)*PER_PAGE,archivePage*PER_PAGE);
-  archEl.innerHTML=`<div class="msg-section-title" style="margin-top:20px;">🗂️ Arşiv</div>`+
-    slice.map(m=>`
-      <div class="msg-card" style="opacity:0.85;">
-        <div class="msg-author">👤 ${esc(m.user)} <span style="font-weight:400;color:var(--stone);font-size:11px;">— ${esc(m.city)}</span></div>
-        <div class="msg-body" style="margin-top:6px;">${esc(m.text)}</div>
-        <div class="msg-date">${fmtDate(m.timestamp)}</div>
-      </div>`).join('');
+  archEl.innerHTML='<div class="msg-section-title">🗂️ Arşiv</div>'+slice.map(m=>`<div class="msg-card" style="opacity:0.85;"><div class="msg-author">👤 ${esc(m.user)} <span style="font-weight:400;color:var(--stone);font-size:11px;">— ${esc(m.city)}</span></div><div class="msg-body" style="margin-top:6px;">${esc(m.text)}</div><div class="msg-date">${fmtDate(m.timestamp)}</div></div>`).join('');
   pgEl.innerHTML='';
-  if(total>1){
-    for(let i=1;i<=total;i++){
-      const b=document.createElement('button');
-      b.textContent=i;b.className='pg-btn'+(i===archivePage?' active':'');
-      b.onclick=()=>{archivePage=i;renderMessages();archEl.scrollIntoView({behavior:'smooth'});};
-      pgEl.appendChild(b);
-    }
-  }
+  if(total>1){for(let i=1;i<=total;i++){const b=document.createElement('button');b.textContent=i;b.className='pg-btn'+(i===archivePage?' active':'');b.onclick=()=>{archivePage=i;renderMessages();archEl.scrollIntoView({behavior:'smooth'});};pgEl.appendChild(b);}}
 }
 
 function loadMessages(){
-  if(typeof window.db==='undefined'||!window.db)return;
-  window.db.collection('messages').orderBy('timestamp','desc')
-    .onSnapshot(snap=>{
-      allMessages=[];
-      snap.forEach(doc=>allMessages.push(doc.data()));
-      renderMessages();
-    },err=>console.error('[Messages]',err));
+  if(!window.db)return;
+  window.db.collection('messages').orderBy('timestamp','desc').onSnapshot(snap=>{allMessages=[];snap.forEach(doc=>allMessages.push(doc.data()));renderMessages();},err=>console.error(err));
 }
+
+/* ────────────────────────────────────────
+   TRACKING
+──────────────────────────────────────── */
+const TRACKING={sessionId:null,locationGranted:false,watchId:null,currentZone:null,startTime:Date.now(),zoneEntryTime:null,lastStop:0,active:false};
+
+function showKVKKBanner(){if(localStorage.getItem('kvkk-accepted'))return;setTimeout(()=>document.getElementById('kvkk-banner').classList.add('show'),1200);}
+function acceptKVKK(){localStorage.setItem('kvkk-accepted','1');document.getElementById('kvkk-banner').classList.remove('show');closeKVKK();}
+function openKVKK(){document.getElementById('kvkk-modal').classList.add('open');}
+function closeKVKK(){document.getElementById('kvkk-modal').classList.remove('open');}
+
+function requestLocationPermission(){
+  document.getElementById('loc-permission-popup').classList.remove('open');
+  if(!navigator.geolocation){showLocToast('⚠️ Tarayıcınız konum desteklemiyor.');return;}
+  if(window.self!==window.top){showLocToast('⚠️ Konum için sayfayı yeni sekmede açın.');return;}
+  if(navigator.permissions){
+    navigator.permissions.query({name:'geolocation'}).then(r=>{if(r.state==='denied'){showLocToast('⚠️ Konum izni engellenmiş.');return;}_doGetLocation();}).catch(()=>_doGetLocation());
+  } else _doGetLocation();
+}
+
+function _doGetLocation(){
+  showLocToast('📍 Konum izni isteniyor…');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    TRACKING.locationGranted=true;localStorage.setItem('loc-perm-decided','granted');updateSessionField({locationGranted:true});showLocToast('📍 Konum takibi başladı.');
+    onLocationUpdate(pos.coords.latitude,pos.coords.longitude);
+    TRACKING.watchId=navigator.geolocation.watchPosition(p=>onLocationUpdate(p.coords.latitude,p.coords.longitude),e=>console.warn(e.code),{enableHighAccuracy:true,timeout:20000,maximumAge:5000});
+  },err=>{
+    if(err.code===1){localStorage.setItem('loc-perm-decided','denied');showLocToast('📍 Konum izni reddedildi.');}
+    else{TRACKING.locationGranted=true;localStorage.setItem('loc-perm-decided','granted');updateSessionField({locationGranted:true});showLocToast('📍 GPS sinyali bekleniyor…');TRACKING.watchId=navigator.geolocation.watchPosition(p=>onLocationUpdate(p.coords.latitude,p.coords.longitude),e=>console.warn(e.code),{enableHighAccuracy:false,timeout:30000,maximumAge:10000});}
+  },{enableHighAccuracy:true,timeout:10000,maximumAge:0});
+}
+
+function skipLocationPermission(){document.getElementById('loc-permission-popup').classList.remove('open');localStorage.setItem('loc-perm-decided','denied');TRACKING.locationGranted=false;updateSessionField({locationGranted:false});}
+
+function onLocationUpdate(lat,lon){
+  const zone=ZONES.find(z=>ptInPoly(lat,lon,z.coords));const zoneId=zone?zone.id:null;
+  if(zoneId!==TRACKING.currentZone){
+    if(TRACKING.currentZone&&TRACKING.zoneEntryTime){recordZoneVisit(TRACKING.currentZone,(Date.now()-TRACKING.zoneEntryTime)/60000);removeVisitorLocation();}
+    TRACKING.currentZone=zoneId;TRACKING.zoneEntryTime=Date.now();
+    if(zoneId)upsertVisitorLocation(zoneId);
+  } else {if(zoneId)refreshVisitorLocation(zoneId);}
+}
+
+function createSession(){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).set({startTime:firebase.firestore.FieldValue.serverTimestamp(),lang:currentLang||'tr',maxStop:0,durationMin:0,locationGranted:false,active:true,userAgent:navigator.userAgent.slice(0,80)});}catch(e){}}
+function updateSessionField(data){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update(data);}catch(e){}}
+function finalizeSession(){if(!window.db||!TRACKING.sessionId||!TRACKING.active)return;TRACKING.active=false;const d=Math.round((Date.now()-TRACKING.startTime)/60000);try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update({endTime:firebase.firestore.FieldValue.serverTimestamp(),durationMin:d,active:false,maxStop:TRACKING.lastStop});if(TRACKING.currentZone)removeVisitorLocation();}catch(e){}}
+function upsertVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({zone:zoneId,stop:currentStop||0,lang:currentLang||'tr',visitorId:TRACKING.sessionId,lastSeen:firebase.firestore.FieldValue.serverTimestamp(),startTime:firebase.firestore.Timestamp.fromMillis(TRACKING.startTime)},{merge:true});}catch(e){}}
+function refreshVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).update({lastSeen:firebase.firestore.FieldValue.serverTimestamp(),stop:currentStop||0,zone:zoneId});}catch(e){}}
+function removeVisitorLocation(){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).delete();}catch(e){}}
+function recordZoneVisit(zoneId,dwellMin){if(!window.db||!zoneId)return;try{const ref=window.db.collection('zone_visits').doc(zoneId);window.db.runTransaction(async tx=>{const doc=await tx.get(ref);if(doc.exists){const d=doc.data();const total=(d.totalVisits||0)+1;const avgMin=((d.avgMinutes||0)*(d.totalVisits||0)+dwellMin)/total;tx.update(ref,{totalVisits:total,avgMinutes:Math.round(avgMin*10)/10,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});}else{tx.set(ref,{zoneId,totalVisits:1,avgMinutes:dwellMin,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});}});}catch(e){}}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){if(TRACKING.currentZone&&TRACKING.zoneEntryTime){recordZoneVisit(TRACKING.currentZone,(Date.now()-TRACKING.zoneEntryTime)/60000);}finalizeSession();if(TRACKING.watchId!==null){navigator.geolocation.clearWatch(TRACKING.watchId);TRACKING.watchId=null;}}
+  else if(document.visibilityState==='visible'&&TRACKING.active){if(TRACKING.locationGranted&&TRACKING.watchId===null){TRACKING.watchId=navigator.geolocation.watchPosition(p=>onLocationUpdate(p.coords.latitude,p.coords.longitude),()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:5000});}}
+});
+window.addEventListener('beforeunload',()=>{finalizeSession();if(TRACKING.watchId!==null){navigator.geolocation.clearWatch(TRACKING.watchId);}});
+window.addEventListener('load',()=>showKVKKBanner());
 
 /* ────────────────────────────────────────
    INIT
@@ -3258,708 +3176,147 @@ window.addEventListener('DOMContentLoaded',()=>{
   const introAudio=document.getElementById('intro-audio');
   introAudio.volume=0.45;
   let introStarted=false;
-  function tryPlayIntro(){
-    if(introStarted)return;
-    if(!document.getElementById('screen-intro').classList.contains('active'))return;
-    introStarted=true;
-    introAudio.play().catch(()=>{introStarted=false;});
-  }
+  function tryPlayIntro(){if(introStarted)return;if(!document.getElementById('screen-intro').classList.contains('active'))return;introStarted=true;introAudio.play().catch(()=>{introStarted=false;});}
   setTimeout(tryPlayIntro,300);
-  ['touchstart','mousedown','pointerdown'].forEach(ev=>{
-    document.addEventListener(ev,tryPlayIntro,{once:false,passive:true});
-  });
+  ['touchstart','mousedown','pointerdown'].forEach(ev=>{document.addEventListener(ev,tryPlayIntro,{once:false,passive:true});});
   const muteStored=localStorage.getItem('rehber-speaker-muted');
   if(muteStored==='1'){speakerMuted=true;document.getElementById('btn-speaker').textContent='🔇';}
-  // Orijinal Türkçe metinleri data-tr attribute'una kaydet (sayfa ilk açıldığında HTML zaten Türkçe)
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    if(!el.hasAttribute('data-tr')){
-      el.setAttribute('data-tr', el.classList.contains('stop-callout')||el.classList.contains('stop-slogan') ? el.innerHTML : el.textContent);
-    }
-  });
-  currentLang='tr';
-  document.documentElement.lang='tr';
-  localStorage.setItem('rehber-lang','tr');
-  document.querySelectorAll('.lang-btn').forEach(b=>{
-    b.classList.toggle('active',b.getAttribute('onclick').includes("'tr'"));
-  });
-  applyTranslations();
-  updateProgressBar();
-  if('speechSynthesis' in window){
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.addEventListener('voiceschanged',()=>window.speechSynthesis.getVoices());
-  }
+  document.querySelectorAll('[data-i18n]').forEach(el=>{if(!el.hasAttribute('data-tr')){el.setAttribute('data-tr',el.classList.contains('stop-callout')||el.classList.contains('stop-slogan')?el.innerHTML:el.textContent);}});
+  currentLang='tr';document.documentElement.lang='tr';
+  document.querySelectorAll('.lang-btn').forEach(b=>{b.classList.toggle('active',b.getAttribute('onclick').includes("'tr'"));});
+  applyTranslations();updateProgressBar();
+  if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.addEventListener('voiceschanged',()=>window.speechSynthesis.getVoices());}
 });
 
 /* ────────────────────────────────────────
-   WATER RIPPLE EFFECT
+   WATER RIPPLE
 ──────────────────────────────────────── */
 (function(){
-  const canvas=document.getElementById('water-canvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  let W,H,cols,rows,current,previous;
-  const DAMP=0.97,DROP_INTERVAL=900;
-
-  function resize(){
-    const pw=canvas.parentElement?canvas.parentElement.offsetWidth:window.innerWidth;
-    const ph=canvas.parentElement?canvas.parentElement.offsetHeight:window.innerHeight;
-    W=canvas.width=pw||window.innerWidth;
-    H=canvas.height=ph||window.innerHeight;
-    if(W<1)W=canvas.width=window.innerWidth;
-    if(H<1)H=canvas.height=window.innerHeight;
-    cols=W;rows=H;
-    current=new Float32Array(cols*rows);
-    previous=new Float32Array(cols*rows);
-  }
-
-  function drop(x,y,radius,strength){
-    x=Math.round(x);y=Math.round(y);
-    for(let dy=-radius;dy<=radius;dy++){
-      for(let dx=-radius;dx<=radius;dx++){
-        if(dx*dx+dy*dy<=radius*radius){
-          const nx=x+dx,ny=y+dy;
-          if(nx>=0&&nx<cols&&ny>=0&&ny<rows)previous[ny*cols+nx]+=strength;
-        }
-      }
-    }
-  }
-
-  function update(){
-    for(let y=1;y<rows-1;y++){
-      for(let x=1;x<cols-1;x++){
-        const i=y*cols+x;
-        current[i]=(previous[(y-1)*cols+x]+previous[(y+1)*cols+x]+previous[y*cols+(x-1)]+previous[y*cols+(x+1)])/2-current[i];
-        current[i]*=DAMP;
-      }
-    }
-    [current,previous]=[previous,current];
-  }
-
-  function render(){
-    const imgData=ctx.createImageData(W,H);
-    const data=imgData.data;
-    for(let y=1;y<rows-1;y++){
-      for(let x=1;x<cols-1;x++){
-        const i=y*cols+x;
-        const dx=previous[y*cols+(x+1)]-previous[y*cols+(x-1)];
-        const dy=previous[(y+1)*cols+x]-previous[(y-1)*cols+x];
-        const base=180+Math.round(dx*0.4);
-        const pi=(y*W+x)*4;
-        data[pi]=Math.min(255,Math.max(0,base+40));
-        data[pi+1]=Math.min(255,Math.max(0,base-30));
-        data[pi+2]=Math.min(255,Math.max(0,10));
-        data[pi+3]=Math.min(200,Math.max(0,Math.abs(dx*6+dy*6)));
-      }
-    }
-    ctx.putImageData(imgData,0,0);
-  }
-
+  const canvas=document.getElementById('water-canvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');let W,H,cols,rows,current,previous;const DAMP=0.97,DROP_INTERVAL=900;
+  function resize(){const pw=canvas.parentElement?canvas.parentElement.offsetWidth:window.innerWidth;const ph=canvas.parentElement?canvas.parentElement.offsetHeight:window.innerHeight;W=canvas.width=pw||window.innerWidth;H=canvas.height=ph||window.innerHeight;if(W<1)W=canvas.width=window.innerWidth;if(H<1)H=canvas.height=window.innerHeight;cols=W;rows=H;current=new Float32Array(cols*rows);previous=new Float32Array(cols*rows);}
+  function drop(x,y,radius,strength){x=Math.round(x);y=Math.round(y);for(let dy=-radius;dy<=radius;dy++){for(let dx=-radius;dx<=radius;dx++){if(dx*dx+dy*dy<=radius*radius){const nx=x+dx,ny=y+dy;if(nx>=0&&nx<cols&&ny>=0&&ny<rows)previous[ny*cols+nx]+=strength;}}}}
+  function update(){for(let y=1;y<rows-1;y++){for(let x=1;x<cols-1;x++){const i=y*cols+x;current[i]=(previous[(y-1)*cols+x]+previous[(y+1)*cols+x]+previous[y*cols+(x-1)]+previous[y*cols+(x+1)])/2-current[i];current[i]*=DAMP;}}[current,previous]=[previous,current];}
+  function render(){const imgData=ctx.createImageData(W,H);const data=imgData.data;for(let y=1;y<rows-1;y++){for(let x=1;x<cols-1;x++){const i=y*cols+x;const dx=previous[y*cols+(x+1)]-previous[y*cols+(x-1)];const dy=previous[(y+1)*cols+x]-previous[(y-1)*cols+x];const base=180+Math.round(dx*0.4);const pi=(y*W+x)*4;data[pi]=Math.min(255,Math.max(0,base+40));data[pi+1]=Math.min(255,Math.max(0,base-30));data[pi+2]=Math.min(255,Math.max(0,10));data[pi+3]=Math.min(200,Math.max(0,Math.abs(dx*6+dy*6)));}}ctx.putImageData(imgData,0,0);}
   function loop(){update();render();requestAnimationFrame(loop);}
-
-  function autoDrop(){
-    if(document.getElementById('screen-intro').classList.contains('active')){
-      drop(Math.random()*W,Math.random()*H,Math.random()*18+8,Math.random()*180+80);
-    }
-    setTimeout(autoDrop,DROP_INTERVAL+Math.random()*600);
-  }
-
-  canvas.addEventListener('click',e=>{
-    const r=canvas.getBoundingClientRect();drop(e.clientX-r.left,e.clientY-r.top,22,220);
-  });
-  canvas.addEventListener('touchstart',e=>{
-    const r=canvas.getBoundingClientRect();
-    Array.from(e.touches).forEach(t=>{drop(t.clientX-r.left,t.clientY-r.top,18,180);});
-  },{passive:true});
-
+  function autoDrop(){if(document.getElementById('screen-intro').classList.contains('active')){drop(Math.random()*W,Math.random()*H,Math.random()*18+8,Math.random()*180+80);}setTimeout(autoDrop,DROP_INTERVAL+Math.random()*600);}
+  canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect();drop(e.clientX-r.left,e.clientY-r.top,22,220);});
+  canvas.addEventListener('touchstart',e=>{const r=canvas.getBoundingClientRect();Array.from(e.touches).forEach(t=>{drop(t.clientX-r.left,t.clientY-r.top,18,180);});},{passive:true});
   window.addEventListener('resize',resize);
-
   function init(){resize();loop();setTimeout(autoDrop,400);}
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
-  else{requestAnimationFrame(()=>requestAnimationFrame(init));}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{requestAnimationFrame(()=>requestAnimationFrame(init));}
 })();
 
 /* ════════════════════════════════════════════════════
-   VISITOR TRACKING SYSTEM — KVKK + KONUM + ANALİTİK
+   EVLİYA ÇELEBİ AI CHAT
 ════════════════════════════════════════════════════ */
-const TRACKING = {
-  sessionId: null, locationGranted: false, watchId: null,
-  currentZone: null, startTime: Date.now(), zoneEntryTime: null,
-  lastStop: 0, active: false
-};
-
-function generateSessionId(){
-  return 'sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
-}
-
-// ── KVKK Banner
-function showKVKKBanner(){
-  if(localStorage.getItem('kvkk-accepted')) return;
-  setTimeout(()=>{ document.getElementById('kvkk-banner').classList.add('show'); },1200);
-}
-function acceptKVKK(){
-  localStorage.setItem('kvkk-accepted','1');
-  document.getElementById('kvkk-banner').classList.remove('show');
-  closeKVKK();
-}
-function openKVKK(){ document.getElementById('kvkk-modal').classList.add('open'); }
-function closeKVKK(){ document.getElementById('kvkk-modal').classList.remove('open'); }
-
-// ── Override startTour to add KVKK + konum izni akışı
-const _origStartTour = startTour;
-startTour = function(){
-  _origStartTour();
-  // Session başlat
-  TRACKING.sessionId = generateSessionId();
-  TRACKING.startTime = Date.now();
-  TRACKING.active = true;
-  createSession();
-  // Konum iznini her turda taze sor — eski kararı sil
-  localStorage.removeItem('loc-perm-decided');
-  setTimeout(()=>{
-    document.getElementById('loc-permission-popup').classList.add('open');
-  },1500);
-};
-
-function requestLocationPermission(btn){
-  // Popup'u kapat
-  document.getElementById('loc-permission-popup').classList.remove('open');
-
-  if(!navigator.geolocation){
-    showLocToast('⚠️ Tarayıcınız konum desteklemiyor.');
-    return;
-  }
-
-  // iframe permissions policy engeli var mı kontrol et
-  if(window.self !== window.top){
-    // iframe içindeyiz — üst sayfaya allow="geolocation" eklenmeli
-    showLocToast('⚠️ Konum takibi için sayfayı yeni sekmede açın.');
-    _showOpenInTabButton();
-    return;
-  }
-
-  // Permissions API ile mevcut durumu kontrol et
-  if(navigator.permissions){
-    navigator.permissions.query({name:'geolocation'}).then(function(result){
-      if(result.state === 'denied'){
-        showLocToast('⚠️ Konum izni tarayıcıda engellenmiş. Adres çubuğundaki kilit simgesinden izin verin.');
-        return;
-      }
-      _doGetLocation();
-    }).catch(function(){ _doGetLocation(); });
-  } else {
-    _doGetLocation();
-  }
-}
-
-function _showOpenInTabButton(){
-  // Kullanıcıya sayfayı yeni sekmede açma butonu göster
-  const existing = document.getElementById('open-in-tab-btn');
-  if(existing) return;
-  const btn = document.createElement('button');
-  btn.id = 'open-in-tab-btn';
-  btn.textContent = '🔗 Konum için yeni sekmede aç';
-  btn.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:3000;' +
-    'background:linear-gradient(135deg,#2a7a3a,#3daa55);color:#fff;border:none;border-radius:12px;' +
-    'padding:14px 24px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.4);';
-  btn.onclick = function(){ window.open(window.location.href,'_blank'); };
-  document.body.appendChild(btn);
-  setTimeout(()=>{ if(btn.parentNode) btn.parentNode.removeChild(btn); }, 8000);
-}
-
-function _doGetLocation(){
-  showLocToast('📍 Konum izni isteniyor…');
-
-  // getCurrentPosition — kullanıcı bu butona az önce bastı,
-  // gesture bağlamı hâlâ geçerli, tarayıcı izin diyaloğunu açar.
-  navigator.geolocation.getCurrentPosition(
-    function(pos){
-      TRACKING.locationGranted = true;
-      localStorage.setItem('loc-perm-decided','granted');
-      updateSessionField({locationGranted:true});
-      showLocToast('📍 Konum takibi başladı.');
-      onLocationUpdate(pos.coords.latitude, pos.coords.longitude);
-      TRACKING.watchId = navigator.geolocation.watchPosition(
-        function(p){ onLocationUpdate(p.coords.latitude, p.coords.longitude); },
-        function(e){ console.warn('[Tracking] watch:', e.code); },
-        {enableHighAccuracy:true, timeout:20000, maximumAge:5000}
-      );
-    },
-    function(err){
-      console.warn('[Tracking] getCurrentPosition err:', err.code, err.message);
-      if(err.code === 1){
-        localStorage.setItem('loc-perm-decided','denied');
-        showLocToast('📍 Konum izni reddedildi. Adres çubuğundaki kilit → Konum → İzin Ver.');
-      } else {
-        TRACKING.locationGranted = true;
-        localStorage.setItem('loc-perm-decided','granted');
-        updateSessionField({locationGranted:true});
-        showLocToast('📍 GPS sinyali bekleniyor…');
-        TRACKING.watchId = navigator.geolocation.watchPosition(
-          function(p){ onLocationUpdate(p.coords.latitude, p.coords.longitude); },
-          function(e){ console.warn('[Tracking] watch:', e.code); },
-          {enableHighAccuracy:false, timeout:30000, maximumAge:10000}
-        );
-      }
-    },
-    {enableHighAccuracy:true, timeout:10000, maximumAge:0}
-  );
-}  // _doGetLocation sonu
-
-function skipLocationPermission(){
-  document.getElementById('loc-permission-popup').classList.remove('open');
-  localStorage.setItem('loc-perm-decided','denied');
-  TRACKING.locationGranted = false;
-  updateSessionField({locationGranted:false});
-}
-
-// ── Konum takibi
-function startLocationWatch(){
-  if(!navigator.geolocation) return;
-  if(TRACKING.watchId !== null) return; // zaten aktif
-  TRACKING.watchId = navigator.geolocation.watchPosition(
-    pos => onLocationUpdate(pos.coords.latitude, pos.coords.longitude),
-    err => console.warn('[Tracking] Konum hatası:', err.code),
-    {enableHighAccuracy:true, timeout:15000, maximumAge:5000}
-  );
-}
-function stopLocationWatch(){
-  if(TRACKING.watchId!==null){ navigator.geolocation.clearWatch(TRACKING.watchId); TRACKING.watchId=null; }
-}
-
-function onLocationUpdate(lat, lon){
-  const zone = ZONES.find(z=>ptInPoly(lat,lon,z.coords));
-  const zoneId = zone?zone.id:null;
-  if(zoneId !== TRACKING.currentZone){
-    if(TRACKING.currentZone && TRACKING.zoneEntryTime){
-      const dwellMin=(Date.now()-TRACKING.zoneEntryTime)/60000;
-      recordZoneVisit(TRACKING.currentZone, dwellMin);
-      removeVisitorLocation(TRACKING.currentZone);
-    }
-    TRACKING.currentZone = zoneId;
-    TRACKING.zoneEntryTime = Date.now();
-    if(zoneId) upsertVisitorLocation(zoneId);
-  } else {
-    if(zoneId) refreshVisitorLocation(zoneId);
-  }
-}
-
-// ── Firebase: oturum
-function createSession(){
-  if(!window.db||!TRACKING.sessionId) return;
-  try{
-    window.db.collection('visitor_sessions').doc(TRACKING.sessionId).set({
-      startTime: firebase.firestore.FieldValue.serverTimestamp(),
-      lang: currentLang||'tr', maxStop:0, durationMin:0,
-      locationGranted:false, active:true,
-      userAgent: navigator.userAgent.slice(0,80)
-    });
-  }catch(e){ console.warn('[Tracking]',e); }
-}
-function updateSessionField(data){
-  if(!window.db||!TRACKING.sessionId) return;
-  try{ window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update(data); }catch(e){}
-}
-function finalizeSession(){
-  if(!window.db||!TRACKING.sessionId||!TRACKING.active) return;
-  TRACKING.active=false;
-  const durationMin=Math.round((Date.now()-TRACKING.startTime)/60000);
-  try{
-    window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update({
-      endTime:firebase.firestore.FieldValue.serverTimestamp(), durationMin, active:false, maxStop:TRACKING.lastStop
-    });
-    if(TRACKING.currentZone) removeVisitorLocation(TRACKING.currentZone);
-  }catch(e){}
-}
-
-// ── Firebase: anlık ziyaretçi konumu
-function upsertVisitorLocation(zoneId){
-  if(!window.db||!TRACKING.sessionId) return;
-  try{
-    window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({
-      zone:zoneId, stop:currentStop||0, lang:currentLang||'tr',
-      visitorId:TRACKING.sessionId,
-      lastSeen:firebase.firestore.FieldValue.serverTimestamp(),
-      startTime:firebase.firestore.Timestamp.fromMillis(TRACKING.startTime)
-    },{merge:true});
-  }catch(e){}
-}
-function refreshVisitorLocation(zoneId){
-  if(!window.db||!TRACKING.sessionId) return;
-  try{ window.db.collection('visitor_locations').doc(TRACKING.sessionId).update({lastSeen:firebase.firestore.FieldValue.serverTimestamp(),stop:currentStop||0,zone:zoneId}); }catch(e){}
-}
-function removeVisitorLocation(){
-  if(!window.db||!TRACKING.sessionId) return;
-  try{ window.db.collection('visitor_locations').doc(TRACKING.sessionId).delete(); }catch(e){}
-}
-
-// ── Firebase: bölge ziyaret toplama
-function recordZoneVisit(zoneId, dwellMin){
-  if(!window.db||!zoneId) return;
-  try{
-    const ref=window.db.collection('zone_visits').doc(zoneId);
-    window.db.runTransaction(async tx=>{
-      const doc=await tx.get(ref);
-      if(doc.exists){
-        const d=doc.data();
-        const total=(d.totalVisits||0)+1;
-        const avgMin=((d.avgMinutes||0)*(d.totalVisits||0)+dwellMin)/total;
-        tx.update(ref,{totalVisits:total, avgMinutes:Math.round(avgMin*10)/10, lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});
-      } else {
-        tx.set(ref,{zoneId, totalVisits:1, avgMinutes:dwellMin, lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});
-      }
-    });
-  }catch(e){}
-}
-
-// ── goStop override: maxStop güncelle
-const _origGoStop = goStop;
-goStop = function(n){
-  _origGoStop(n);
-  if(TRACKING.active && n>TRACKING.lastStop){
-    TRACKING.lastStop=n;
-    updateSessionField({maxStop:n, lang:currentLang||'tr'});
-  }
-};
-
-// ── Sayfa kapanınca temizle
-document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='hidden'){
-    if(TRACKING.currentZone&&TRACKING.zoneEntryTime){
-      recordZoneVisit(TRACKING.currentZone,(Date.now()-TRACKING.zoneEntryTime)/60000);
-    }
-    finalizeSession(); stopLocationWatch();
-  } else if(document.visibilityState==='visible'&&TRACKING.active){
-    if(TRACKING.locationGranted) startLocationWatch();
-    if(TRACKING.currentZone) refreshVisitorLocation(TRACKING.currentZone);
-  }
-});
-window.addEventListener('beforeunload',()=>{ finalizeSession(); stopLocationWatch(); });
-
-// ── KVKK banner'ı başlangıçta göster
-window.addEventListener('load',()=>{ showKVKKBanner(); });
-
-</script>
-
-<!-- ══ KVKK BANNER ══ -->
-<div id="kvkk-banner">
-  <div class="kvkk-text">
-    🍪 Bu rehber uygulaması, müze içi gezi deneyiminizi geliştirmek amacıyla konum verinizi kullanmaktadır.
-    Veriler yalnızca müze alanında kullanılır. <a onclick="openKVKK()">Gizlilik Politikasını Oku</a>
-  </div>
-  <div class="kvkk-actions">
-    <button class="kvkk-btn-info" onclick="openKVKK()">📄 DETAYLAR</button>
-    <button class="kvkk-btn-ok" onclick="acceptKVKK()">ANLADIM ✓</button>
-  </div>
-</div>
-
-<!-- ══ KVKK MODAL ══ -->
-<div id="kvkk-modal">
-  <div class="kvkk-sheet">
-    <div class="kvkk-sheet-header">
-      📄 GİZLİLİK POLİTİKASI — KVKK BİLDİRİMİ
-      <button class="kvkk-close-x" onclick="closeKVKK()">×</button>
-    </div>
-    <div class="kvkk-body">
-      <h3>VERİ SORUMLUSU</h3>
-      <p>Sultan II. Bayezid Külliyesi Sağlık Müzesi — Edirne<br>
-      Bu dijital rehber uygulaması Trakya Üniversitesi bünyesinde faaliyet göstermektedir.</p>
-      <h3>KONUM VERİSİ HAKKINDA</h3>
-      <p>Bu uygulama, <strong>müze içi gezi rehberliği</strong> amacıyla <strong>yalnızca sizin onayınız ile</strong> konum bilginizi kullanmaktadır. Konum verisi:</p>
-      <ul>
-        <li>Hangi bölümde olduğunuzu tespit ederek size özel rehberlik sunmak için kullanılır</li>
-        <li>Müze yönetimine, <strong>anonim ve toplu istatistik</strong> olarak iletilir — bireysel kimliğinizle eşleştirilerek hiçbir şekilde saklanmaz</li>
-        <li><strong>Sayfadan çıkış yaptığınızda konum takibi tamamen sonlandırılır</strong></li>
-      </ul>
-      <h3>TOPLANAN VERİLER</h3>
-      <ul>
-        <li><strong>Konum koordinatı</strong> — yalnızca hangi bölümde olduğunuzu belirlemek için</li>
-        <li><strong>Oturum süresi</strong> — müzede geçirdiğiniz toplam dakika</li>
-        <li><strong>Dil tercihi</strong> — hangi dilde rehber kullandığınız</li>
-        <li><strong>Ziyaret edilen duraklar</strong> — tamamlanan tur adımları</li>
-      </ul>
-      <p>Adınız, soyadınız veya herhangi bir kişisel tanımlayıcı bilginiz <strong>kesinlikle toplanmamaktadır</strong>.</p>
-      <h3>HAKLARINIZ</h3>
-      <ul>
-        <li>Konum iznini her zaman tarayıcı ayarlarından iptal edebilirsiniz</li>
-        <li>Konum izni vermeden de rehberi kullanabilirsiniz</li>
-      </ul>
-      <h3>İLETİŞİM</h3>
-      <p>Sultan II. Bayezid Külliyesi Sağlık Müzesi, Edirne<br>Trakya Üniversitesi Sağlık Bilimleri Fakültesi</p>
-    </div>
-    <button class="kvkk-btn-ok" style="width:100%;margin-top:16px;" onclick="acceptKVKK()">OKUDUM, ANLADIM ✓</button>
-  </div>
-</div>
-
-<!-- ══ EVLİYA ÇELEBİ AI CHAT PANELİ ══ -->
-<div id="evliya-chat-panel">
-  <div class="evliya-chat-sheet">
-    <div class="evliya-chat-header">
-      <div class="evliya-chat-avatar">
-        <img src="assets/img/evliya.gif" alt="Evliya Çelebi" onerror="this.style.display='none';this.parentElement.textContent='🎭'">
-      </div>
-      <div class="evliya-chat-info">
-        <div class="evliya-chat-name">REHBER EVLİYA</div>
-        <div class="evliya-chat-desc">Sultan II. Bayezid Külliyesi Dijital Rehberi</div>
-      </div>
-      <button class="evliya-chat-close" onclick="closeEvliyaChat()">×</button>
-    </div>
-
-    <div class="evliya-chat-messages" id="evliya-chat-messages">
-      <!-- Hoş geldin mesajı JS ile eklenir -->
-    </div>
-
-    <div class="evliya-chat-input-area">
-      <div class="evliya-chat-quick" id="evliya-quick-btns">
-        <button class="quick-btn" onclick="evliyaQuick('Bu külliyeyi bana tanıt, neden önemli?')">🏛️ Külliye nedir?</button>
-        <button class="quick-btn" onclick="evliyaQuick('Darüşşifa\'nın mimarisi ve bölümleri nasıldı?')">🏥 Darüşşifa</button>
-        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada müzikle tedavi nasıl yapılırdı? Hangi enstrümanlar, hangi makamlar kullanılırdı?')">🎵 Müzik Tedavisi</button>
-        <button class="quick-btn" onclick="evliyaQuick('Su sesi ve koku ile tedavi nasıl uygulanırdı?')">💧 Su & Koku Terapisi</button>
-        <button class="quick-btn" onclick="evliyaQuick('Darüşşifanın musiki sahnesini ve akustiğini anlat')">🎭 Musiki Sahnesi</button>
-        <button class="quick-btn" onclick="evliyaQuick('Makamların hastalıklar üzerindeki etkisini anlat — Farabi ve İbn Sina ne demiş?')">🎼 Makam & Şifa</button>
-        <button class="quick-btn" onclick="evliyaQuick('Tıp medresesinde kimler okudu, nasıl bir eğitim vardı?')">📚 Tıp Medresesi</button>
-        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada kaç hekim çalışırdı, kadro nasıldı?')">🩺 Hekimler</button>
-        <button class="quick-btn" onclick="evliyaQuick('Yahya Baba\'nın efsanesini anlat')">🍲 Yahya Baba</button>
-        <button class="quick-btn" onclick="evliyaQuick('İmarethanede ne pişirilir, kim yiyebilirdi?')">🥘 İmarethane</button>
-        <button class="quick-btn" onclick="evliyaQuick('Caminin kündekâri ahşap işçiliği ve hünkâr mahfilini anlat')">🕌 Cami</button>
-        <button class="quick-btn" onclick="evliyaQuick('Sultan II. Bayezid kim, bu külliyeyi neden yaptırdı?')">👑 Sultan Bayezid</button>
-        <button class="quick-btn" onclick="evliyaQuick('Mimar Hayreddin kimdir? Külliyenin mimarisini nasıl tasarladı?')">🏗️ Mimari</button>
-        <button class="quick-btn" onclick="evliyaQuick('1652\'deki ziyaretinde neler gördün? Seyahatnâme\'ye ne yazdın?')">📜 Seyahatnâme</button>
-        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada hastalar ne yiyip içerdi, mutfak nasıl işlerdi?')">🍗 Hasta Mutfağı</button>
-        <button class="quick-btn" onclick="evliyaQuick('Osmanlı tıbbında İbn Sina\'nın yeri neydi?')">⚗️ İbn Sina</button>
-      </div>
-      <div class="evliya-chat-row">
-        <textarea id="evliya-chat-input" placeholder="Evliya Çelebi'ye bir şey sor…" rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendEvliyaMsg();}"
-          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
-        <button id="evliya-send-btn" onclick="sendEvliyaMsg()" title="Gönder">➤</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ KONUM İZNİ POPUP ══ -->
-
-<script>
-/* ══════════════════════════════════════════
-   EVLİYA ÇELEBİ AI CHAT SİSTEMİ
-══════════════════════════════════════════ */
-
-const EVLIYA_SYSTEM_PROMPT = `Sen Evliya Çelebi'sin — 17. yüzyılın büyük Osmanlı seyyahı, Seyahatnâme'nin müellifi. Şu an Sultan II. Bayezid Külliyesi Sağlık Müzesi'nde (Edirne) dijital bir rehber olarak ziyaretçilerle sohbet ediyorsun.
+const EVLIYA_SYSTEM_PROMPT=`Sen Evliya Çelebi'sin — 17. yüzyılın büyük Osmanlı seyyahı, Seyahatnâme'nin müellifi. Şu an Sultan II. Bayezid Külliyesi Sağlık Müzesi'nde (Edirne) dijital bir rehber olarak ziyaretçilerle sohbet ediyorsun.
 
 ## KİŞİLİĞİN
-- Sıcak, bilge, hafifçe meraklı bir anlatıcısın — bir dervişin hoşgörüsüyle bir bilgenin keskinliğini birleştirirsin
-- Eski Türkçe ve Osmanlıca kelimeler nadiren ve yerinde kullanırsın (anlamı bağlamdan anlaşılmalı)
-- Külliyeyi 1652'de bizzat gezdin; o deneyimden kısa, somut anekdotlarla bahsedebilirsin
-- Her anekdotu farklı bir duyuya bağla: kimi zaman ses, kimi zaman koku, kimi zaman bir yüz
-- Dini ifadeleri (Maşallah, Subhanallah vb.) yalnızca gerçekten şaşırtıcı bir şey anlatırken kullan — en fazla cevap başına bir kez, cümle başında değil, anın içinde
-- Müzisyensin; dönemin üstadı Derviş Ömer Gülşeni'den musiki dersleri aldın — darüşşifadaki musiki tedavisini hem hekim hem sanatçı gözüyle anlatırsın
+- Sıcak, bilge, hafifçe meraklı bir anlatıcısın
+- Eski Türkçe ve Osmanlıca kelimeler nadiren ve yerinde kullanırsın
+- Külliyeyi 1652'de bizzat gezdin; somut anekdotlarla bahsedebilirsin
+- Her anekdotu farklı bir duyuya bağla: ses, koku, yüz
+- Dini ifadeleri (Maşallah vb.) yalnızca gerçekten şaşırtıcı bir şey anlatırken kullan
 
 ## BİLGİ ALANLARIN — MUSİKİ TEDAVİSİ
-- Darüşşifada 10 kişilik hanende ve sazende kadrosu: 3 hanende, 1 neyzen, 1 kemancı, 1 musikarcı (pan flüte benzer), 1 santurcu, 1 çengi (harpa benzer), 1 çeng-santurcu, 1 udcu
+- Darüşşifada 10 kişilik hanende ve sazende kadrosu: 3 hanende, 1 neyzen, 1 kemancı, 1 musikarcı, 1 santurcu, 1 çengi, 1 çeng-santurcu, 1 udcu
 - Haftada 3 kez müzik faslı — hem akıl hastalarına hem bedensel hastalara
-- Seyahatnâme'deki kendi kaydın: "Zengule makamı ile buselik makamında rast karar kılsa insana hayat verir. Bütün saz ve makamlarda ruha gıda vardır."
+- Seyahatnâme kaydın: "Zengule makamı ile buselik makamında rast karar kılsa insana hayat verir."
 - Çalınan makamlar: neva, rast, dügâh, segâh, çargâh, suzinak, zengule, buselik
-- Farabi'ye göre makamların etkileri: Rast→neşe ve huzur, Neva→ferahlık, Uşşak→gülme, Hüseyni→sakinlik, Hicaz→alçakgönüllülük, Buselik→kuvvet, Zirgüle→uyku, Saba→cesaret
-- Bahar mevsiminde koku terapisi: yasemin, gülnesrin, şebboy, karanfil, reyhan, lale, sümbül — hastaların koklayarak iyileşmesi için
-- Musiki sahnesi: giriş kapısının tam karşısında yarım kubbeli açık sayvan — akustik hesaplanarak inşa edilmiş, Mimar Hayreddin'in eseri
+- Farabi'ye göre: Rast→neşe, Neva→ferahlık, Uşşak→gülme, Hüseyni→sakinlik, Hicaz→alçakgönüllülük, Buselik→kuvvet, Zirgüle→uyku, Saba→cesaret
+- Bahar mevsiminde koku terapisi: yasemin, gülnesrin, şebboy, karanfil, reyhan, lale, sümbül
 
-## BİLGİ ALANLARIN — KÜLLİYE YAPILARI
-- Darüşşifa (1488): sekizgen kubbe altında 8 kışlık + 8 yazlık oda, ortada şadırvan (su sesi terapisi)
-- Evliya'nın kendi tarifi: "Orada bir Darüşşifa vardır ki dil ile tarif edilmez, kalemler ile yazılmaz."
-- Kuruluşta 30 yataklı; 3 tabip, 2 göz hekimi (kehhal), 2 cerrah, 1 eczacı, 4 hizmetçi — 21 kişilik kadro
-- Mutfaktan gece gündüz üç kez hastanın derdine göre yemek: keklik, turaç, sülün, güvercin, ördek, kaz, bülbüle kadar
-- Haftada 2 gün macunhane (eczane) açılır, Edirne'nin tüm hastaları ilaç alırdı
-- Tıp Medresesi: hem nazari hem pratik tıp; hekim-şairler yetiştirdi (Şifai, Atai, Ahi Çelebi, Destari)
-- Ahi Çelebi: hem padişah hekimi hem darüşşifa baştabibi; böbrek taşları üzerine Türkçe kitap yazdı
-- İmarethane: her gün iki öğün ücretsiz yemek; Yahya Baba efsanesiyle anılır
-- Cami: kündekâri ahşap işçiliği (çivisiz birleştirme), hünkâr mahfili
-- Sultan II. Bayezid: ilim ve sanata meraklı, mütevazı; "Veli" lakaplı sekizinci Osmanlı padişahı
-- Mimar: Hayreddin — Sinan öncesi dönemin en önemli ustası; 1484-1488 arası inşa
-- Avrupa'da benzer merkezi hastane planları ancak 200 yıl sonra yapılabildi
+## BİLGİ ALANLARIN — KÜLLİYE
+- Darüşşifa (1488): 8 kışlık + 8 yazlık oda, ortada şadırvan
+- Evliya kaydı: "Orada bir Darüşşifa vardır ki dil ile tarif edilmez."
+- Kuruluşta: 3 tabip, 2 göz hekimi (kehhal), 2 cerrah, 1 eczacı, 4 hizmetçi
+- Tıp Medresesi: teorik + pratik eğitim; hekim-şairler yetiştirdi
+- İmarethane: her gün iki öğün; Yahya Baba efsanesiyle anılır
+- Cami: kündekâri ahşap, hünkâr mahfili (ilk Türk-İslam örneği)
+- Sultan II. Bayezid: "Veli" lakaplı sekizinci Osmanlı padişahı
+- Mimar Hayreddin: Sinan öncesi dönemin ustası; 1484-1488 arası inşa
 - 1997'de Sağlık Müzesi; 2004'te Avrupa Müze Ödülü
 
 ## CEVAP STİLİ
-- 2-3 paragraf ideal, 4 paragraf mutlak maksimum
-- Doğrudan konuya gir — dini ifade veya "Ben Evliya Çelebi'yim" tanıtımıyla başlama
-- Anekdot girişlerini çeşitlendir: "O gün darüşşifadan geçerken…" / "Tabib efendi bana anlatmıştı ki…" / "Avluda oturan bir hasta…" / "Seyahatnâme'me şöyle kaydetmişim…"
-- Her 2-3 cevaptan birinde ziyaretçiyi keşfe yönlendir: "Peki siz hangi odaya bakmak istersiniz?"
-- CRITICAL — DİL KURALI: Kullanıcının yazdığı dilde cevap ver, asla değiştirme.
-  Türkçe → Türkçe | English → English | Deutsch → Deutsch | Français → Français
-  Български → Български | Ελληνικά → Ελληνικά | 中文 → 中文 | 日本語 → 日本語
-  فارسی → فارسی | Română → Română
-  Hangi dilde yazılırsa yazılsın Evliya Çelebi karakterini ve anlatım tonunu koru.
-  Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa o dilde cevapla.
-- Konu dışı sorularda nazikçe külliyeye döndür
-- Bilmediğin şeyi uydurma: "Seyahatnâme'mde buna dair kayıt bulamadım, müze görevlileri daha iyi bilir" de
+- 2-3 paragraf ideal
+- Doğrudan konuya gir, tanıtımla başlama
+- Her 2-3 cevaptan birinde ziyaretçiyi keşfe yönlendir
+- Bilmediğini uydurma
 
-## YASAK KALIPLAR
-- Her cevabı "Maşallah" veya dini ifadeyle açma
-- "Ben Evliya Çelebi olarak…" diye başlama
-- Modern müze terminolojisi (interaktif, dijital, QR kod vb.) kullanma
-- Kuru bilgi sıralama — her bilgiyi bir deneyime, sese veya kişiye bağla`;
+## !! MUTLAK DİL KURALI — HİÇBİR İSTİSNA YOK !!
+Kullanıcının mesajı hangi dilde yazılmışsa YALNIZCA o dilde cevap ver.
+Türkçe → sadece Türkçe
+English → sadece English
+Deutsch → sadece Deutsch
+Français → sadece Français
+Български → sadece Български
+Ελληνικά → sadece Ελληνικά
+中文 → sadece 中文
+فارسی → sadece فارسی
+Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE o dilde cevapla.
+İki dil ASLA karıştırılmaz. Evliya Çelebi karakterini koru ama dili değiştirme.`;
 
-let evliyaChatHistory = [];
-let evliyaChatOpen = false;
-let evliyaThinking = false;
+let evliyaChatHistory=[];let evliyaThinking=false;
 
-function openEvliyaChat() {
+function openEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.add('open');
-  evliyaChatOpen = true;
-  const stopAudio = document.getElementById('stop-audio');
-  const introAudio = document.getElementById('intro-audio');
-  if (stopAudio && !stopAudio.paused) { stopAudio._wasPlaying = true; stopAudio.pause(); }
-  if (introAudio && !introAudio.paused) { introAudio._wasPlaying = true; introAudio.pause(); }
-  if (evliyaChatHistory.length === 0) {
-    addEvliyaMsg('bot', `Sultan II. Bayezid Külliyesi'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652'de burayı bizzat gezdim ve gördüklerimi Seyahatnâme'me yazdım.\n\nDarüşşifa'nın müzik tedavisinden Yahya Baba'nın efsanesine, tıp medresesinin bilge hekimlerinden kubbenin altındaki tılsımlı sessizliğe kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️`);
+  const stopAudio=document.getElementById('stop-audio');const introAudio=document.getElementById('intro-audio');
+  if(stopAudio&&!stopAudio.paused){stopAudio._wasPlaying=true;stopAudio.pause();}
+  if(introAudio&&!introAudio.paused){introAudio._wasPlaying=true;introAudio.pause();}
+  if(evliyaChatHistory.length===0){
+    addEvliyaMsg('bot','Sultan II. Bayezid Külliyesi\'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652\'de burayı bizzat gezdim.\n\nDarüşşifa\'nın müzik tedavisinden Yahya Baba\'nın efsanesine kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️');
   }
-  // Floating buton gizle
-  const fab = document.getElementById('evliya-fab-wrap');
-  if (fab) fab.style.display = 'none';
+  // FAB balonu gizle
+  const bubble=document.getElementById('fab-info-bubble');
+  if(bubble)bubble.classList.remove('show');
 }
 
-function closeEvliyaChat() {
+function closeEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.remove('open');
-  evliyaChatOpen = false;
-  const stopAudio = document.getElementById('stop-audio');
-  const introAudio = document.getElementById('intro-audio');
-  if (stopAudio && stopAudio._wasPlaying) { stopAudio.play().catch(()=>{}); stopAudio._wasPlaying = false; }
-  if (introAudio && introAudio._wasPlaying) { introAudio.play().catch(()=>{}); introAudio._wasPlaying = false; }
-  // Floating buton tekrar göster
-  const fab = document.getElementById('evliya-fab-wrap');
-  if (fab) fab.style.display = 'flex';
+  const stopAudio=document.getElementById('stop-audio');const introAudio=document.getElementById('intro-audio');
+  if(stopAudio&&stopAudio._wasPlaying){stopAudio.play().catch(()=>{});stopAudio._wasPlaying=false;}
+  if(introAudio&&introAudio._wasPlaying){introAudio.play().catch(()=>{});introAudio._wasPlaying=false;}
 }
 
-function evliyaQuick(text) {
-  document.getElementById('evliya-chat-input').value = text;
-  sendEvliyaMsg();
+function evliyaQuick(text){document.getElementById('evliya-chat-input').value=text;sendEvliyaMsg();}
+
+function addEvliyaMsg(role,text){
+  const container=document.getElementById('evliya-chat-messages');
+  const isBot=role==='bot';
+  const div=document.createElement('div');div.className='chat-msg '+(isBot?'bot':'user');
+  const avatarEl=isBot?`<div class="chat-msg-avatar"><img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.textContent='🎭'"></div>`:`<div class="chat-msg-avatar" style="background:linear-gradient(135deg,#6b1500,#a02010);">👤</div>`;
+  div.innerHTML=avatarEl+`<div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  container.appendChild(div);container.scrollTop=container.scrollHeight;return div;
 }
 
-function addEvliyaMsg(role, text) {
-  const container = document.getElementById('evliya-chat-messages');
-  const isBot = role === 'bot';
+function addTypingIndicator(){
+  const container=document.getElementById('evliya-chat-messages');
+  const div=document.createElement('div');div.className='chat-msg bot';div.id='evliya-typing';
+  div.innerHTML=`<div class="chat-msg-avatar"><img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.textContent='🎭'"></div><div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>`;
+  container.appendChild(div);container.scrollTop=container.scrollHeight;
+}
+function removeTypingIndicator(){const el=document.getElementById('evliya-typing');if(el)el.remove();}
 
-  const div = document.createElement('div');
-  div.className = 'chat-msg ' + (isBot ? 'bot' : 'user');
-
-  const avatarEl = isBot ? `<div class="chat-msg-avatar">
-    <img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.innerHTML='<img src=assets/img/evliya.gif style=width:100%;height:100%;object-fit:cover;border-radius:50%;>'">
-  </div>` : `<div class="chat-msg-avatar" style="background:linear-gradient(135deg,#6b1500,#a02010);">👤</div>`;
-
-  div.innerHTML = avatarEl + `<div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return div;
+async function sendEvliyaMsg(){
+  if(evliyaThinking)return;
+  const input=document.getElementById('evliya-chat-input');
+  const text=input.value.trim();if(!text)return;
+  input.value='';input.style.height='auto';
+  addEvliyaMsg('user',text);
+  evliyaChatHistory.push({role:'user',content:text});
+  evliyaThinking=true;document.getElementById('evliya-send-btn').disabled=true;addTypingIndicator();
+  try{
+    const msgs=[{role:'system',content:EVLIYA_SYSTEM_PROMPT},...evliyaChatHistory.map(m=>({role:m.role==='assistant'?'assistant':m.role,content:m.content}))];
+    const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85})});
+    const data=await response.json();removeTypingIndicator();
+    if(data.error){addEvliyaMsg('bot','⚠️ Hata: '+(data.error.message||'Bilinmeyen hata'));}
+    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);}
+  }catch(e){removeTypingIndicator();addEvliyaMsg('bot','🕯️ Bağlantı kurulamadı. Lütfen tekrar deneyin.');console.error(e);}
+  evliyaThinking=false;document.getElementById('evliya-send-btn').disabled=false;
 }
 
-function addTypingIndicator() {
-  const container = document.getElementById('evliya-chat-messages');
-  const div = document.createElement('div');
-  div.className = 'chat-msg bot';
-  div.id = 'evliya-typing';
-  div.innerHTML = `<div class="chat-msg-avatar">
-    <img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.textContent='🎭'">
-  </div><div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>`;  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function removeTypingIndicator() {
-  const el = document.getElementById('evliya-typing');
-  if (el) el.remove();
-}
-
-async function sendEvliyaMsg() {
-  if (evliyaThinking) return;
-  const input = document.getElementById('evliya-chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = '';
-  input.style.height = 'auto';
-
-  addEvliyaMsg('user', text);
-  evliyaChatHistory.push({ role: 'user', content: text });
-
-  evliyaThinking = true;
-  document.getElementById('evliya-send-btn').disabled = true;
-  addTypingIndicator();
-
-  try {
-    const groqMessages = [
-      { role: 'system', content: EVLIYA_SYSTEM_PROMPT },
-      ...evliyaChatHistory.map(m => ({ role: m.role === 'assistant' ? 'assistant' : m.role, content: m.content }))
-    ];
-
-   const response = await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    model: 'llama-3.3-70b-versatile',
-    messages: groqMessages,
-    max_tokens: 600,
-    temperature: 0.85
-  })
-});
-
-    const data = await response.json();
-    removeTypingIndicator();
-
-    if (data.error) {
-      const errMsg = '⚠️ Bir hata oluştu: ' + (data.error.message || 'Bilinmeyen hata');
-      addEvliyaMsg('bot', errMsg);
-    } else {
-      const reply = data.choices?.[0]?.message?.content || '🕯️ Cevap alınamadı, lütfen tekrar deneyin.';
-      evliyaChatHistory.push({ role: 'assistant', content: reply });
-      if (evliyaChatHistory.length > 20) evliyaChatHistory = evliyaChatHistory.slice(-18);
-      addEvliyaMsg('bot', reply);
-    }
-  } catch (e) {
-    removeTypingIndicator();
-    addEvliyaMsg('bot', '🕯️ Bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.');
-    console.error('[EvliyaChat]', e);
-  }
-
-  evliyaThinking = false;
-  document.getElementById('evliya-send-btn').disabled = false;
-}
-
-// Panel dışına tıklayınca kapat
-document.getElementById('evliya-chat-panel').addEventListener('click', function(e){
-  if(e.target === this) closeEvliyaChat();
-});
+document.getElementById('evliya-chat-panel').addEventListener('click',function(e){if(e.target===this)closeEvliyaChat();});
 </script>
-
-<!-- ══ KONUM İZNİ POPUP ══ -->
-<div id="loc-permission-popup">
-  <div class="loc-perm-box">
-    <span class="loc-perm-icon">📍</span>
-    <div class="loc-perm-title">KONUM İZNİ</div>
-    <div class="loc-perm-text">
-      Hangi bölümde olduğunuzu otomatik olarak algılayabilmemiz için <strong>konum iznine</strong> ihtiyacımız var.<br><br>
-      Bu sayede bulunduğunuz alana özel bilgiler anlık olarak sunulur.
-    </div>
-    <div class="loc-perm-note">
-      🔒 Konumunuz yalnızca müze içinde geçerlidir.<br>
-      Sayfadan çıkışınızla birlikte konum takibi sona erer.<br>
-      <a onclick="openKVKK()">Gizlilik Politikası →</a>
-    </div>
-    <button class="loc-perm-btn-ok" onclick="requestLocationPermission(this)">📍 KONUM İZNİ VER</button>
-    <button class="loc-perm-btn-skip" onclick="skipLocationPermission()">Hayır, Konum Paylaşmak İstemiyorum</button>
-  </div>
-</div>
-
-<!-- ══ EVLİYA FLOATING CHAT BUTONU ══ -->
-<div id="evliya-fab-wrap" onclick="openEvliyaChat()">
-  <div id="evliya-fab">
-    <div class="fab-pulse"></div>
-    <img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-    <span class="fab-fallback">🎭</span>
-    <div class="fab-badge" id="fab-badge">!</div>
-    <div class="fab-tooltip">Evliya Çelebi ile Sohbet</div>
-  </div>
-  <div id="evliya-fab-label">BANA SOR</div>
-</div>
-
 </body>
 </html>
