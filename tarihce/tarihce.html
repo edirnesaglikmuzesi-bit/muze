@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarihçe - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+    <title>Sultan II. Bayezid - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-/* --- 1. TEMEL AYARLAR --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
 
-:root { 
+:root {
+            --nav-height: 100px; 
     --gold: #d4af37; 
     --gold-bright: #f1d592;
     --dark: #0f1a24; 
@@ -28,8 +33,6 @@ body {
 }
 
 /* --- 2. NAVİGASYON --- */
-        :root { --nav-height: 100px; }
-
         .nav-wrapper {
             width: 100%;
             position: fixed;
@@ -257,21 +260,18 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
 .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
 .site-footer { width: 100%; max-width: 1240px; background: var(--dark); border: 2px solid var(--gold); border-radius: 15px; padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px; }
 
-/* --- 12. MOBİL --- */
-@media (max-width: 768px) { .nav { flex-direction: column; gap: 10px; padding: 10px 20px; } .banner-box { height: 250px; } .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; } .content-area { padding: 30px 20px; font-size: 16px; } .corner-frame { width: 45px; height: 45px; } body { padding-top: calc(var(--nav-height) + 20px); } }
-
-/* --- 13. FULLSCREEN OVERLAY --- */
-.fs-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
-.fs-overlay.on { display: flex; }
-.fs-overlay img { max-width: 92vw; max-height: 85vh; object-fit: contain; border: 1px solid rgba(212,175,55,0.3); border-radius: 4px; }
-.fs-caption { color: var(--gold); font-family: 'Cinzel'; font-size: 12px; letter-spacing: 3px; margin-top: 14px; text-align: center; }
-.fs-close { position: absolute; top: 20px; right: 25px; color: var(--gold); font-size: 32px; cursor: pointer; background: none; border: none; line-height: 1; transition: 0.2s; }
-.fs-close:hover { color: #fff; transform: rotate(90deg); }
-.fs-btns { display: flex; gap: 18px; margin-top: 18px; }
-.fs-btns button { background: rgba(212,175,55,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 9px 22px; cursor: pointer; font-family: 'Cinzel'; font-size: 12px; border-radius: 4px; transition: 0.3s; }
-.fs-btns button:hover { background: var(--gold); color: var(--dark); }
-
-.gold-divider { border: none; border-top: 1px solid rgba(212,175,55,0.35); margin: 28px 0; }
+/* --- 7. MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; }
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: calc(var(--nav-height) + 20px); }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+}
     
         .footer-title {
             font-family: 'Cinzel', serif;
@@ -291,10 +291,9 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
 </head>
 <body>
 
-<!-- NAVİGASYON -->
-<div class="nav-wrapper">
-    <nav class="nav">
-        <div class="logo-box">
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <div class="logo-box">
             <img src="../assets/logo1.png" alt="Logo 1" class="logo-img1">
             <img src="../assets/logo2.png" alt="Logo 2" class="logo-img2">
             <div class="logo-text-group">
@@ -302,9 +301,9 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
                 <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
             </div>
         </div>
-        <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
-        <div id="globalDropdown">
-            <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+            <div id="globalDropdown">
+               <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
             <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
             <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
             <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
@@ -324,9 +323,10 @@ tr:nth-child(even) td { background: rgba(244,231,200,0.4); }
             <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
             <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
             <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
-        </div>
-    </nav>
-</div>
+            </div>
+        </nav>
+    </div>
+
 
 <!-- BANNER -->
 <div class="banner-container">
