@@ -628,28 +628,132 @@ const TRANSLATIONS = {
     s10_body:'Nous aimerions entendre les impressions que ce voyage de 500 ans à travers notre Külliye a laissées en vous. Vos mots deviendront des pierres de ce pont.',
     s10_restart:'🏛️ RETOUR AU DÉBUT'
   },
-  ar:{
-    start:'ابدأ الرحلة',intro_title:'دعوة إلى العتبة',intro_sub:'رحلة عبر الزمن إلى مركز الشفاء…',
-    back:'→ عودة',menu_lang:'اللغة: العربية 🇸🇦',menu_map:'الخريطة والموقع',menu_defter:'جسر القلب',
-    loc_searching:'📍 جارٍ تحديد الموقع…',loc_outside:'📍 أنت خارج منطقة الكُلِّية.',
-    loc_error:'📍 تعذّر تحديد الموقع.',
-    gb_name:'اسمك',gb_city:'مدينتك',gb_msg:'اترك مشاعرك هنا…',
-    gb_submit:'أضع حجري على الجسر 🪨',gb_submitting:'جارٍ الحفظ…',
-    gb_conn_err:'خطأ في الاتصال.',gb_no_msg:'الرجاء ترك ملاحظة…',
-    confirm_text:'تم حفظ مشاعرك على جسر القلب…',confirm_close:'شفاءً وعافية 🌿',
-    latest_title:'📜 آخر الرسائل',archive_title:'🗂️ الأرشيف',no_msg:'لا توجد رسائل بعد. كن الأول! ✨',
-    s0_main:'🏛️ كُلِّية السلطان بايزيد الثاني',s0_sub:'متحف الصحة',s0_slogan:'✨ رحلة الشفاء — مدخل المتحف',
-    s1_main:'مدخل دار الشفاء',s1_sub:'🏛️ بوابة العدل والشفاء',s1_slogan:'⚖️ المحطة الأولى للشفاء',
-    s2_main:'الخروج من غرفة العرض',s2_sub:'🏛️ من المعرفة إلى التجربة',s2_slogan:'🏛️ الإدارة والنظام',
-    s3_main:'العنبر الكبير (القاعة الثمانية)',s3_sub:'🏛️ عتبة دار الشفاء',s3_slogan:'🌊 ذروة الشفاء',
-    s4_main:'مدرسة الطب',s4_sub:'🎓 مهد العلم',s4_slogan:'📚 نور المعرفة',
-    s5_main:'الفناء الكبير',s5_sub:'🌿 أشجار معمّرة',s5_slogan:'🌳 الزمن والسكينة',
-    s6_main:'الإيمارة (مطبخ الخير)',s6_sub:'🍲 الرحمة والوفرة',s6_slogan:'🍲 مطبخ يحيى بابا',
-    s7_main:'التحضير للجو الروحاني',s7_sub:'🕌 مدخل المسجد',s7_slogan:'✨ قبة واحدة، سلام لا نهاية له',
-    s8_main:'رحلة روحانية داخل المسجد',s8_sub:'🕌 فناء المسجد',s8_slogan:'🌌 الختام تحت القبة',
-    s9_main:'وقت الوداع',s9_sub:'🌊 دعوة إلى جسر القلب',s9_slogan:'✨ اترك أثرك في هذه القصة',
-    s10_main:'🖋️ جسر القلب',s10_slogan:'"شفاء الماضي يلتقي بكلمات الحاضر."'
-  },
+  ro:{
+    start:'ÎNCEPE CĂLĂTORIA',intro_title:'Invitație la Prag',intro_sub:'O călătorie dincolo de timp, spre centrul vindecării…',
+    back:'← ÎNAPOI',menu_lang:'Limba: Română 🇷🇴',menu_map:'Hartă și Locație',menu_defter:'Podul Inimii',
+    loc_searching:'📍 Se obține locația…',loc_outside:'📍 Sunteți în afara zonei Külliye.',
+    loc_error:'📍 Nu s-a putut obține locația. Vă rugăm să activați permisiunea de locație.',
+    gb_name:'Numele tău',gb_city:'Orașul tău',gb_msg:'Lasă-ți sentimentele aici…',
+    gb_submit:'ADAUG PIATRA MEA LA POD 🪨',gb_submitting:'Se sigilează…',
+    gb_conn_err:'Eroare de conexiune. Vă rugăm să încercați din nou.',gb_no_msg:'Vă rugăm să lăsați un mesaj…',
+    confirm_text:'Sentimentele tale au fost sigilate pe Podul Inimii. Urma semnificativă pe care ai lăsat-o îmbogățește moștenirea spirituală a complexului nostru Külliye…',
+    confirm_close:'SĂ FII VINDECAT 🌿',latest_title:'📜 Mesaje Recente',archive_title:'🗂️ Arhivă',
+    no_msg:'Niciun mesaj încă. Fii primul care adaugă o piatră! ✨',
+    s0_main:'🏛️ KÜLLIYE SULTAN BAYEZID II',s0_sub:'MUZEUL SĂNĂTĂȚII',s0_slogan:'✨ CĂLĂTORIA VINDECĂRII — INTRAREA ÎN MUZEU',
+    s1_main:'Intrarea în Darüşşifa',s1_sub:'🏛️ POARTA DREPTĂȚII ȘI A VINDECĂRII',s1_slogan:'⚖️ PRIMA OPRIRE A VINDECĂRII',
+    s2_main:'Ieșirea din Sala de Prezentare',s2_sub:'🏛️ DE LA CUNOAȘTERE LA EXPERIENȚĂ',s2_slogan:'🏛️ ADMINISTRARE ȘI ORDINE',
+    s3_main:'Marea Infirmerie (SALA OCTOGONALĂ)',s3_sub:'🏛️ PRAGUL DIN DARÜŞŞIFA',s3_slogan:'🌊 APOGEUL VINDECĂRII',
+    s4_main:'Școala de Medicină (Madrasa)',s4_sub:'🎓 LEAGĂNUL CUNOAȘTERII',s4_slogan:'📚 LUMINA ÎNVĂȚĂRII',
+    s5_main:'Marea Curte',s5_sub:'🌿 PLATANI SECULARI',s5_slogan:'🌳 TIMP ȘI TRANCHILITATE',
+    s6_main:'Imaret (Cantina Socială)',s6_sub:'🍲 COMPASIUNE ȘI ABUNDENȚĂ',s6_slogan:'🍲 BUCĂTĂRIA LUI YAHYA BABA',
+    s7_main:'Pregătirea pentru o Atmosferă Spirituală',s7_sub:'🕌 INTRAREA ÎN MOSCHEE',s7_slogan:'✨ O CUPOLĂ, PACE INFINITĂ',
+    s8_main:'Călătorie Spirituală în Interiorul Moscheii',s8_sub:'🕌 CURTEA MOSCHEII',s8_slogan:'🌌 FINAL SUB CUPOLĂ',
+    s9_main:'Timpul pentru Rămas Bun',s9_sub:'🌊 INVITAȚIE PE PODUL INIMII',s9_slogan:'✨ LASĂ-ȚI URMA ÎN ACEASTĂ POVESTE',
+    s10_main:'🖋️ Podul Inimii',s10_slogan:'"Vindecarea trecutului întâlnește cuvintele de astăzi."',
+    nav_back:'← ÎNAPOI',
+    s0_ct1:'👑 ISTORIE',s0_ct2:'🏗️ STRUCTURĂ',s0_ct3:'🎧 GHIDUL TĂU',s0_ct4:'📵 ATENȚIE',s0_ct5:'📍 LOCAȚIE',s0_ct6:'🏫 ORIENTARE',
+    s0_c1:'Vă aflați acum într-unul dintre cele mai fascinante situri istorice din Edirne — Muzeul Sănătății din cadrul Complexului Sultan Bayezid II. Bine ați venit în acest loc unde istoria și vindecarea se întâlnesc.',
+    s0_c2:'Construit de Sultanul Bayezid al II-lea, fiul lui Mehmed Cuceritorul și al 8-lea sultan otoman, sub conducerea arhitectului-șef Hayrettin, acest complex este cel mai bine conservat külliye dintre toate complexele otomane. În centru se află moscheea; la dreapta, spitalul și madrasa; la stânga, imaretul și cămara; atașate de laturile moscheii sunt casele de oaspeți, iar în spate, un pod peste râul Tunca — toate întruchipând modelul statului social otoman.',
+    s0_c3:'Vă voi ghida prin Külliye și prin muzeul nostru cu conținut scris, audio și vizual pentru a vă îmbogăți vizita.',
+    s0_c4:'Vă rugăm să vă mențineți atenția asupra telefonului mobil pe tot parcursul turului.',
+    s0_c5:'Ați trecut de casa de bilete și vă aflați acum în grădina din față. Vă rugăm să stați în fața fotografiei mari a complexului Külliye de pe peretele opus și să studiați locația acestor structuri în cadrul orașului Edirne.',
+    s0_c6:'Pe măsură ce mergeți spre acest punct, clădirea din dreapta dumneavoastră este Madrasa Medicală, iar clădirea direct în față este Darüşşifa — probabil inima complexului și centrul muzeului nostru.',
+    s0_callout:'👣 <strong>După ce examinați fotografia mare, intrați în grădina Darüşşifa prin ușa imediat din stânga dumneavoastră.</strong>',
+    s0_fwd:'ÎNCEPE CĂLĂTORIA ÎN TIMP →',
+    s1_ct1:'🏥 DARÜŞŞIFA — PRIMA CURTE',s1_ct2:'🌍 SEMNIFICAȚIE ISTORICĂ',s1_ct3:'🛏️ CAMERE DE SERVICIU',s1_ct4:'🩺 CAMERE PENTRU PACIENȚI EXTERNI',s1_ct5:'🧭 DIRECȚII',s1_ct6:'💧 FÂNTÂNA CU LAPTE',s1_ct7:'🌿 ARBORELE ȘI IEDERA',s1_ct8:'🎬 SALA DE PREZENTARE',
+    s1_c1:'Vă aflați acum în prima curte a Darüşşifa din Edirne, unul dintre cele mai importante centre de vindecare ale Imperiului Otoman. Vă rugăm să vă opriți aici pentru un moment și să observați împrejurimile.',
+    s1_c2:'În primul rând, trebuie să știți: această clădire este recunoscută ca unul dintre primele exemple de spital planificat centralizat și meticulos din istorie. Omologii occidentali au apărut abia aproximativ 200 de ani mai târziu — aici, zonele de tratament și servicii au fost realizate cu o viziune arhitecturală mult înaintea timpului său.',
+    s1_c3:'Pe măsură ce înaintați pe poteca din față, cele patru camere imediat la stânga intrării sunt unitățile de serviciu ale Darüşşifa: o cameră pentru personal, o spălătorie, o bucătărie dietetică și o cămară pentru depozitarea proviziilor.',
+    s1_c4:'În dreapta dumneavoastră, în spatele coloanelor, sunt șase camere pentru pacienți externi unde se efectuau consultații zilnice, îngrijiri și intervenții de urgență. În primii ani, una dintre aceste camere era rezervată medicilor oftalmologi cunoscuți sub numele de "kehhal".',
+    s1_c5:'Lăsați vizitarea detaliată a acestor camere — amenajate cu exponate și panouri informative — pentru întoarcere, și permiteți-mi să vă ghidez acum spre sala noastră de prezentare. Aceasta se află după prima curte, pe stânga. În timp ce mergeți acolo, vă rugăm să observați fântâna din stânga.',
+    s1_c6:'Această structură de piatră este numită "Fântâna cu Lapte", deoarece se credea că apa sa sporea producția de lapte a proaspetelor mame. Aproximativ 20 de metri mai departe, printre iarbă, veți vedea un copac cu iederă înfășurată în jurul lui.',
+    s1_c7:'Când ajungeți în acel loc, asigurați-vă că citiți poezia de dragoste melancolică scrisă de Ahmet Kutsi Tecer despre acest copac, afișată pe un panou în iarbă. Apoi priviți copacul și iedera încă o dată, cu acel sentiment în inimă.',
+    s1_c8:'Imediat după poezie, în stânga, se află sala noastră de prezentare. Aici puteți viziona un videoclip despre istoria și dezvoltarea Külliye și a Darüşşifa, obținând o înțelegere cuprinzătoare a importanței acestui loc în istoria medicinei și a arhitecturii.',
+    s1_callout:'🎬 <strong>Doriți să vizionați videoclipul de prezentare?</strong> Îl puteți viziona în sala de prezentare sau apăsați butonul de mai jos pentru a-l vedea pe telefon.',
+    s1_watch:'VEZI PREZENTAREA ▶',s1_fwd:'SPRE SALA DE PREZENTARE →',
+    s2_ct1:'🚪 INTRAREA ÎN A DOUA CURTE',s2_ct2:'🏛️ CAMERE ADMINISTRATIVE',s2_ct3:'🔒 SECȚIUNEA ADMINISTRATIVĂ',s2_ct4:'✨ INSCRIPȚIE ȘI INTRARE',
+    s2_c1:'Imediat ce ieșiți din sala de prezentare, treceți prin ușa mare din stânga în a doua curte, unde se află birourile administrative.',
+    s2_c2:'În această curte sunt 4 camere — câte două pe fiecare parte. Medicul-șef și ceilalți doctori foloseau aceste camere; toate operațiunile spitalului erau planificate și gestionate aici. În anii de fondare, această Darüşşifa avea 1 medic-șef, doi doctori, 2 chirurgi, 2 oftalmologi și 1 farmacist.',
+    s2_c3:'Această secțiune administrativă servea și ca o barieră de protecție între fluxul zilnic de pacienți din prima curte și secția de tratament pentru pacienți internați în care urmează să intrați.',
+    s2_c4:'Acum citiți inscripția scrisă deasupra ușii, apoi țineți-vă respirația…',
+    s2_callout:'🚶‍♂️ <strong>Pășiți în acest loc magic unde muzica și sunetul apei întâlnesc vindecarea.</strong>',
+    s2_fwd:'DESCOPERĂ MAREA INFIRMERIE →',
+    s3_ct1:'🏥 SECȚIA DE TRATAMENT INTERN',s3_ct2:'🌊 STRUCTURA SPITALULUI',s3_ct3:'🎵 MUZICOTERAPIE',s3_ct4:'💧 TERAPIE PRIN APĂ',s3_ct5:'🌿 AROMATERAPIE',s3_ct6:'🧺 TERAPIE OCUPAȚIONALĂ',s3_ct7:'🚶 IEȘIRE ȘI TUR',
+    s3_c1:'Vă aflați acum în inima muzeului nostru și în secția de tratament pentru pacienți internați a Darüşşifa din Edirne. Mergeți prin acest spațiu cu sentimentul celor care au găsit vindecarea aici acum 500 de ani.',
+    s3_c2:'Imaginați-vă un spital unde sunteți întâmpinați de o fântână care curge într-un ritm constant în centru și o scenă muzicală direct vizavi. Acest spital planificat central, acoperit de o cupolă largă, constă în 6 saloane de iarnă, 4 saloane de vară și o scenă muzicală. Lanterna din cupolă are și rol de ventilare a aerului. Podeaua înclinată și canalele de dedesubt facilitează spălarea și curățarea ușoară.',
+    s3_c3:'Ceea ce distingea acest spital de altele era utilizarea modurilor muzicale în tratament, alături de cunoștințele medicale contemporane. Un ansamblu muzical de 10 interpreți cânta diferite moduri pentru diferite boli, conform recomandărilor medicilor — crezându-se că acestea aduc beneficii în diverse afecțiuni.',
+    s3_c4:'Sunetul apei care curgea din fântâna aflată în centrul clădirii era o parte importantă a tratamentului, având scopul de a calma și liniști pacienții.',
+    s3_c5:'Pe lângă muzică și sunetele apei, în Darüşşifa se practica și aromaterapia. Parfumurile diverselor plante cultivate în curte și în împrejurimi erau o parte integrantă a procesului de vindecare.',
+    s3_c6:'Terapia ocupațională era de asemenea folosită ca metodă de tratament aici. Pacienții erau implicați în împletirea coșurilor, tricotat și diverse meșteșuguri pentru a le distrage atenția de la griji și gânduri.',
+    s3_c7:'După ce vizitați camerele care prezintă diferite aspecte ale medicinei otomane, puteți ieși din secția de internați. Părăsind acest loc de vindecare — care a servit continuu timp de 400 de ani — puteți vizita și celelalte camere din a doua și prima curte pentru a afla mai multe despre Darüşşifa și medicina otomană.',
+    s3_callout:'🏫 <strong>SPRE MADRASA MEDICALĂ:</strong> Ieșiți din Darüşşifa și mergeți spre Madrasa Medicală, situată în stânga grădinii de la intrare cu fotografia mare.',
+    s3_fwd:'MAI DEPARTE SPRE MADRASA →',
+    s4_ct1:'🏫 MADRASA MEDICALĂ',s4_ct2:'🌍 SEMNIFICAȚIE ISTORICĂ',s4_ct3:'📚 SISTEMUL DE EDUCAȚIE',s4_ct4:'🏛️ STRUCTURA ARHITECTURALĂ',s4_ct5:'📜 EVLIYA ÇELEBİ',s4_ct6:'👨‍🏫 PERSONALUL DIDACTIC',s4_ct7:'📖 MANUSCRISE',s4_ct8:'🏥 MUZEUL SĂNĂTĂȚII',
+    s4_c1:'Ați vizitat Darüşşifa și ați intrat acum într-o altă secțiune crucială a complexului — Madrasa Medicală Sultan Bayezid II. Înainte de a intra în camerele muzeului din dreapta și din partea opusă, opriți-vă și studiați acest spațiu unic.',
+    s4_c2:'Ceea ce vedeți acum ca o clădire dispusă în jurul unei curți pătrate a fost una dintre cele mai prestigioase instituții de învățământ care a format medici în Imperiul Otoman — un centru important de învățare care a produs mulți doctori proeminenți de-a lungul secolelor.',
+    s4_c3:'Clasată printre madrasale de cel mai înalt nivel "de grad 60 și peste" în sistemul de educație otoman, studenții de aici își puteau aplica pregătirea teoretică în Darüşşifa adiacentă, consolidându-și cunoștințele prin practică.',
+    s4_c4:'Madrasa — cu o fântână (care nu mai există) în centru și un puț în colț pentru alimentarea cu apă — este formată din 18 camere pentru studenți dispuse pe trei laturi și o sală de curs direct opusă.',
+    s4_c5:'Evliya Çelebi, care a vizitat Külliye în 1652, a scris despre această madrasa: "În Madrasa Medicală și în camerele sale se află studenți care vorbesc constant despre învățați precum Platon, Socrate, Aristotel, Galen și Pitagora — fiecare fiind medici maturi. Fiecare este dedicat unei ramuri a cunoașterii, bazându-se pe cărți valoroase în arta medicinei, străduindu-se să găsească remedii pentru suferințele omenirii."',
+    s4_c6:'Personalul didactic includea un profesor plătit cu 60 de akçe pe zi care preda celor 18 studenți, un profesor asistent, un bibliotecar și doi servitori. Toate nevoile studenților erau asigurate, aceștia primind și o bursă zilnică de doi akçe.',
+    s4_c7:'38 de manuscrise medicale scrise de mână studiate aici — multe purtând sigiliile sultanilor otomani — au supraviețuit până astăzi. Aceste lucrări prețioase sunt acum păstrate la Biblioteca de Manuscrise Selimiye.',
+    s4_c8:'Madrasa a fost deschisă de Universitatea Trakya în 2007 ca a doua secțiune a Muzeului Sănătății. Camerele sale narează educația medicală a epocii. Cea mai importantă secțiune este sala de curs, direct vizavi de intrare.',
+    s4_callout:'🚶 <strong>După ce vizitați camerele studenților, sălile de antrenament aplicat, camera profesorului, sala de curs și biblioteca — amenajate pentru a reflecta atmosfera secolului XV cu manechine — ieșiți din madrasa și treceți prin turnichetul de lângă ieșirea Darüşşifa spre curtea moscheii pentru a continua spre Imaret.</strong>',
+    s4_fwd:'SPRE GRANDOAREA MOSCHEII →',
+    s5_ct1:'🌳 ÎN GRĂDINĂ',s5_ct2:'💧 CÂNTARUL DE APĂ',s5_ct3:'🕌 POARTA PRINCIPALĂ A MOSCHEII',s5_ct4:'🏛️ CĂMARA ȘI IMARETUL',
+    s5_c1:'După ce ați vizitat Darüşşifa și Madrasa, ați intrat în grădina moscheii. Mergeți încet prin această grădină frumoasă cu platani seculari, îndreptându-vă spre secțiunea Imaret a muzeului, aflată direct înainte.',
+    s5_c2:'Pe măsură ce intrați în grădină dinspre Darüşşifa, primul lucru pe care îl veți observa în dreapta — la colțul moscheii — este o structură de piatră dreptunghiulară de aproximativ 4 metri înălțime. Acesta este cântarul de apă al complexului. Apa adusă prin conducte de pe dealurile înalte avea presiunea echilibrată în această structură înainte de a fi distribuită către celelalte unități ale complexului.',
+    s5_c3:'După ce treceți de cântarul de apă, veți fi întâmpinați de portalul magnific al intrării principale a moscheii, în dreapta. Să lăsăm explorarea curții moscheii prin acest portal pentru sfârșitul turului nostru și să ne continuăm plimbarea spre Imaret.',
+    s5_c4:'În față, două clădiri mari cu arhitectură similară stau una lângă alta. Cea din stânga conține cămara și secțiunea de brutărie, folosite acum pentru evenimentele științifice și culturale ale muzeului. Cea din dreapta este Imaretul spre care vă îndrum acum.',
+    s5_callout:'🍲 <strong>Sunteți gata să vedeți cultura imaretului otoman și să auziți legenda bucătarului Yahya Baba? Atunci arătați biletul la turnichet și intrați în această secțiune, apoi apăsați pe următoarea oprire pentru a continua.</strong>',
+    s5_fwd:'SPRE INIMA ABUNDENȚEI →',
+    s6_ct1:'🏛️ IMARETELE',s6_ct2:'🍲 IMARETUL SULTAN BAYEZID II',s6_ct3:'🔥 BUCĂTĂRIA ȘI SALA DE MESE',s6_ct4:'🎭 ACEASTĂ SECȚIUNE A MUZEULUI',s6_ct5:'🌿 MORMÂNTUL LUI YAHYA BABA',s6_ct6:'📖 LEGENDA LUI YAHYA BABA',s6_ct7:'⚖️ TESTUL PAZNICULUI CĂMĂRII',s6_ct8:'👑 MARTURIA SULTANULUI',s6_ct9:'🐟 MIRACOLUL PEȘTILOR',s6_ct10:'🤲 TRECEREA LUI YAHYA BABA',s6_ct11:'🪦 VIZITAREA MORMÂNTULUI',
+    s6_c1:'În Imperiul Otoman, imaretele erau printre cele mai importante instituții care întruchipau spiritul solidarității sociale și al carității. Servind drept cantine sociale care distribuiau mâncare gratuită săracilor, călătorilor, studenților și celor lipsiți de adăpost, aceste structuri nu erau simple bucătării — erau centre vitale care protejau membrii nevoiași ai societății și mențineau echilibrul social.',
+    s6_c2:'Și vă aflați acum chiar într-un astfel de loc. Imaretul Complexului Sultan Bayezid II, stabilit ca a treia secțiune a Muzeului Sănătății, a fost o instituție caritabilă importantă unde — conform actului de dotare — se găteau și se distribuiau trei mese pe zi celor săraci.',
+    s6_c3:'Spațiul larg pe care îl întâlniți la intrare este bucătăria unde se gătea în cazane mari. Sala mare pe care o vedeți prin ușa din dreapta este locul unde se mânca la mese de piatră așezate pe podea.',
+    s6_c4:'La fel ca și celelalte secțiuni ale Muzeului Sănătății, această parte este animată cu manechine adaptate spiritului locului, narrând cultura imaretului otoman și purtând vizitatorii într-o călătorie în timp. Vase originale din cupru, mojaruri și borcane de depozitare din acea epocă sunt de asemenea expuse aici.',
+    s6_c5:'Imediat în spatele imaretului se află mormântul lui Yahya Baba, o figură legendară. În timp ce explorați această clădire interesantă și spațioasă, permiteți-mi să vă spun legenda lui Yahya Baba care a supraviețuit până astăzi.',
+    s6_c6:'Conform poveștii, Yahya Baba, bucătarul-șef în timpul domniei fondatorului complexului, Sultanul Bayezid al II-lea, făcea un pilaf de orez excepțional de gustos. În timp ce amesteca pilaful, se ruga constant, iar când închidea capacul spunea "Dăruiește abundență, Doamne". Pilaful era atât de mult încât hrănea toți pacienții și chiar mai rămânea. Yahya Baba nu arunca niciodată pilaful rămas — îl ducea să hrănească peștii din râul Tunca.',
+    s6_c7:'Când paznicul cămării a observat că Yahya Baba hrănea peștii cu restul de pilaf, a început să reducă zilnic cantitatea de orez primită. Totuși, chiar și cu mai puțin orez, Yahya Baba gătea pilaful cu rugăciune, hrănind și pacienții și peștii. În cele din urmă, rația a fost redusă la un singur pumn de orez. Totuși, pilaful lui Yahya Baba a hrănit toți pacienții și tot a mai rămas o porție pentru pești.',
+    s6_c8:'Vestea a ajuns la urechile Sultanului. Decizând să fie martor direct, Sultanul a ajuns pe malul râului Tunca înainte de Yahya Baba și s-a ascuns. Când Yahya Baba se pregătea să plece după ce a hrănit peștii, Sultanul a ieșit din ascunzătoare și a tunat: "Tu, de acolo — verși proviziile pacienților în râu?"',
+    s6_c9:'Yahya Baba a înlemnit. Nu a putut spune nimic. A fost atât de copleșit de rușine încât s-a prosternat și a căutat refugiu la Dumnezeu. Dar peștii, scoțându-și capetele din apă, au vorbit: "Oare marele Sultan pizmuiește hrana peștilor?"',
+    s6_c10:'Sultanul, realizându-și greșeala cu uimire și durere, a așteptat ca Yahya Baba să-și ridice capul din prosternare — dar în zadar. Acest om binefăcător își dăduse deja sufletul…',
+    s6_c11:'Mormântul lui Yahya Baba, situat chiar în spatele imaretului, este vizitat ca un altar sfânt de către trecătorii care vin să se roage. Mai ales în zilele de vineri, acest mormânt este plin de vizitatori.',
+    s6_callout:'🪦 <strong>CASELE DE OASPEȚI:</strong> După ce ați auzit această legendă, este timpul să ieșiți din imaret și să vă odihniți la cafeneaua muzeului, în stânga. În cafeneaua situată în fosta casă de oaspeți a complexului, puteți savura un ceai și în special un șerbet otoman, puteți cumpăra cadouri și cărți, puteți vizita biblioteca muzeului și apoi să mergeți spre ultima oprire — curtea Moscheii. Facem o scurtă pauză la Casa de Oaspeți a Külliye?',
+    s6_fwd:'SPRE CAFENEAUA MUZEULUI →',
+    s7_ct1:'🏛️ CURTEA ȘI INTRAREA ÎN MOSCHEE',s7_ct2:'🚪 INTRARE ȘI ATMOSFERĂ',s7_ct3:'⛲ FÂNTÂNA ȘI SERENITATEA',s7_ct4:'🏛️ COLOANE DE MARMURĂ ȘI ARMONIE ARHITECTURALĂ',s7_ct5:'✨ PACE INTERIOARĂ ȘI TRANCHILITATE',s7_ct6:'👁️ MOMENTE DE OBSERVARE',s7_ct7:'🚪 INTRAREA ÎN MOSCHEE',s7_ct8:'🪵 MEȘTEȘUGUL KÜNDEKÂRI',
+    s7_c1:'Ați vizitat secțiunile Muzeului Sănătății și ați gustat șerbetul otoman răcoritor la cafenea. Acum este timpul să cunoașteți una dintre cele mai magnifice structuri ale complexului — moscheea.',
+    s7_c2:'Pe măsură ce pășiți prin ușa laterală elegantă care se deschide spre curte, sau prin portalul principal grandios, sunteți întâmpinați de măiestria prelucrării marmurei. Într-o clipă, lăsați în urmă agitația lumii exterioare și alunecați într-o atmosferă complet diferită.',
+    s7_c3:'Fântâna din centrul curții umple spațiul cu pace prin sunetul calm al apei. Acest sunet, combinat cu tăcerea pietrei, vă încetinește și vă face conștienți de momentul prezent.',
+    s7_c4:'Coloanele de marmură care vă înconjoară se ridică precum un inel protector. Alese în culori diferite, ele întruchipează eleganța și bogăția armonioasă a esteticii otomane.',
+    s7_c5:'Ceea ce simțiți aici nu este doar frumusețe arhitecturală — este o liniște, o pace interioară care a rămas neschimbată de secole.',
+    s7_c6:'Opriți-vă scurt la fântână și observați acest aranjament simplu, dar frapant al curții. Simțiți armonia pe care coloanele, arcadele și ornamentele fine o creează între ele.',
+    s7_c7:'Apoi întoarceți-vă spre portalul magnific care se ridică direct în fața voastră. Împingeți ușor cortina de piele care acoperă ușa și pășiți înăuntru. Veți simți imediat că ați intrat într-una dintre cele mai elegante moschei din țara noastră.',
+    s7_c8:'La intrare, nu uitați să acordați atenție lucrării originale în lemn kündekâri de deasupra ușii — și, dacă este posibil, simțiți textura acestui meșteșug rafinat.',
+    s7_callout:'🕌 <strong>Să intrăm în marea întindere și liniște din interiorul sanctuarului?</strong>',
+    s7_fwd:'ÎNAINTAȚI ÎN INTERIOR →',
+    s8_ct1:'🕌 ÎN INTERIORUL MOSCHEII — FINALUL',s8_ct2:'🚤 TRANSPORT ISTORIC ȘI TRADIȚIE REGALĂ',s8_ct3:'👑 IMAGINAREA GALERIEI REGALE',s8_ct4:'🏛️ GALERIA REGALĂ ȘI PREMIERELE EI',s8_ct5:'⚙️ MIHRAB-UL ȘI PIETRELE DE ECHILIBRU',s8_ct6:'🪵 MINBAR-UL ȘI MEȘTEȘUGUL RAFINAT',s8_ct7:'📐 SIMBOLURI ȘI SEMNIFICAȚII',s8_ct8:'💡 LUMINĂ ȘI ORDINE ACUSTICĂ',s8_ct9:'🌌 SPLENDOARE SUB CUPOLĂ',s8_ct10:'🏗️ UN PUNCT DE COTITURĂ ARHITECTURAL',s8_ct11:'✨ FINAL ȘI RĂMAS BUN',
+    s8_c1:'Vă aflați acum în interiorul moscheii din centrul complexului, și încheiem finalul turului nostru sub această cupolă magnifică.',
+    s8_c2:'Sultanul Bayezid al II-lea, fondatorul complexului, și sultanii care l-au urmat obișnuiau să vină la această moschee călătorind pe râu în bărci imperiale bogat ornamentate. Ei intrau prin ușa de pe malul râului și își făceau rugăciunile în galeria regală — hünkâr mahfili — care se ridică pe coloane în colțul din stânga al moscheii.',
+    s8_c3:'Închideți ochii pentru o clipă… Imaginați-vă Sultanul, la acea înălțime, rugându-se în aceeași pace alături de restul oamenilor.',
+    s8_c4:'Amintiți-vă că prima galerie regală construită vreodată în arhitectura turco-islamică se află aici; acum să mergem spre mihrab.',
+    s8_c5:'Când atingeți și rotiți ușor pietrele cilindrice de echilibru de pe ambele părți ale mihrab-ului, veți fi uimiți să descoperiți că fundamentul acestei mari structuri nu prezintă nici cea mai mică deplasare.',
+    s8_c6:'Pe măsură ce vă apropiați de minbar în dreapta, veți fi minunați de delicatețea și eleganța prelucrării marmurei.',
+    s8_c7:'Acum vă sugerez să vă întoarceți cu spatele la mihrab și să priviți deasupra ușii de la intrare. Motivul tăvii cu un pepene verde în centru, poziționat direct deasupra ușii, simbolizează faptul că în acest complex există un imaret și că cei care vin aici sunt invitați la masă.',
+    s8_c8:'Ferestrele din jurul cupolei și din rândurile de jos asigură distribuirea uniformă a luminii în întregul spațiu. Acest aranjament de iluminat, combinat cu acustica puternică a moscheii, conferă spațiului o profunzime atât vizuală, cât și auditivă.',
+    s8_c9:'Iar acum ridicați privirea… Priviți cu atenție această cupolă magnifică împodobită cu decorațiuni baroce. Cu o înălțime de aproximativ 31 de metri și un diametru de 22 de metri, această cupolă — care se sprijină pe patru pereți fără coloane intermediare — este un exemplu remarcabil din punct de vedere arhitectural.',
+    s8_c10:'Este considerată, de asemenea, un precursor important al tranziției către structurile cu o singură cupolă.',
+    s8_c11:'Sub grația și splendoarea acestei cupole fără egal, încheiem această călătorie unde ați conectat urmele trecutului cu liniștea de astăzi — nu uitați să purtați cu voi pacea și uimirea pe care acest loc le-a lăsat în inima voastră.',
+    s8_callout:'🙏 <strong>Să lăsăm un rămas bun tăcut în această călătorie spirituală?</strong>',
+    s8_fwd:'SPRE RĂMAS BUN →',
+    s9_c1:'🏛️ Am urmat pașii trecutului pas cu pas, respirând împreună această arhitectură magnifică. Acum este timpul să adaugi propria ta suflare acestui loc istoric.',
+    s9_c2:'💭 Ceea ce rezonează în tine… Un moment de pace, o admirație profundă sau acea notă liniștită care zăbovește în inima ta…',
+    s9_c3:'📖 Cartea de Onoare pe care am pregătit-o pentru tine este o arhivă spirituală a acestei experiențe. Fiecare frază pe care o lași aici va fi: o amintire neprețuită pentru noi și o lumină care dă sens acestei călătorii pentru ceilalți oaspeți ai noștri.',
+    s9_c4:'✨ Împărtășește cu noi ceea ce îți curge din inimă — și lasă-ți urma pentru totdeauna pe Podul Inimii…',
+    s9_callout:'✍️ <strong>Te invităm să-ți împărtășești sentimentele pe pagina Podul Inimii.</strong>',
+    s9_fwd:'SCRIE PE PODUL INIMII →',
+    s10_body:'Ne-ar plăcea să auzim impresiile pe care această călătorie de 500 de ani prin complexul nostru Külliye le-a lăsat asupra ta. Cuvintele tale vor deveni pietrele acestui pod.',
+    s10_restart:'🏛️ REÎNTOARCERE LA START'
+}
   bg:{
     start:'ЗАПОЧНИ ПЪТУВАНЕТО',intro_title:'Покана към Прага',intro_sub:'Пътуване отвъд времето, към центъра на изцелението…',
     back:'← НАЗАД',menu_lang:'Език: Български 🇧🇬',menu_map:'Карта & Местоположение',menu_defter:'Мост на Сърцето',
@@ -1201,7 +1305,8 @@ const STOP_NAMES_I18N = {
   de:['Museumseingang','Darüşşifa 1. Hof','Darüşşifa 2. Hof','Krankenstation','Medizinschule','Großer Hof','Imaret','Moscheehof','Moscheeinneres','Herzbrücke Einladung','Herzbrücke'],
   fr:['Entrée du Musée','Darüşşifa 1er Cour','Darüşşifa 2e Cour','Infirmerie','École de Médecine','Grande Cour','Imaret','Cour de la Mosquée','Intérieur de la Mosquée','Invitation au Pont du Cœur','Pont du Cœur'],
   ar:['مدخل المتحف','الفناء الأول','الفناء الثاني','عنبر المرضى','مدرسة الطب','الفناء الكبير','الإيمارة','فناء المسجد','داخل المسجد','دعوة جسر القلب','جسر القلب'],
-  bg:['Вход на Музея','Дарюшшифа 1. Двор','Дарюшшифа 2. Двор','Болнично Крило','Медицинско Медресе','Голям Двор','Имарет','Двор на Джамията','Вътре в Джамията','Покана към Моста','Мост на Сърцето'],
+  ro:['Intrarea în Muzeu', 'Darüşşifa - Prima Curte', 'Darüşşifa - A doua Curte', 'Infirmeria', 'Madrasa Medicală', 'Marea Curte', 'Imaret (Cantina)', 'Curtea Moscheii', 'Interiorul Moscheii', 'Invitație pe Podul Inimii', 'Podul Inimii']
+   bg:['Вход на Музея','Дарюшшифа 1. Двор','Дарюшшифа 2. Двор','Болнично Крило','Медицинско Медресе','Голям Двор','Имарет','Двор на Джамията','Вътре в Джамията','Покана към Моста','Мост на Сърцето'],
   el:['Είσοδος Μουσείου','Δαρύσσιφα 1η Αυλή','Δαρύσσιφα 2η Αυλή','Ιατρείο','Ιατρική Σχολή','Μεγάλη Αυλή','Ιμαρέτ','Αυλή Τζαμιού','Εντός Τζαμιού','Πρόσκληση Γέφυρας','Γέφυρα Καρδιάς'],
   zh:['博物馆入口','达鲁希法第一庭院','达鲁希法第二庭院','医疗病房','医学院','大庭院','伊马雷特','清真寺庭院','清真寺内部','心桥邀请','心桥'],
   fa:['ورودی موزه','دارالشفا حیاط اول','دارالشفا حیاط دوم','بخش بستری','مدرسه پزشکی','حیاط بزرگ','عمارت','حیاط مسجد','داخل مسجد','دعوت به پل دل','پل دل']
@@ -1213,7 +1318,8 @@ const MENU_SECTIONS_I18N = {
   de:['TOURSTATIONEN','EINSTELLUNGEN','SEITEN'],
   fr:['ARRÊTS DE VISITE','PARAMÈTRES','PAGES'],
   ar:['محطات الجولة','الإعدادات','الصفحات'],
-  bg:['СПИРКИ НА ОБИКОЛКАТА','НАСТРОЙКИ','СТРАНИЦИ'],
+  ro:['OPRIRI TUR', 'SETĂRI', 'PAGINI']
+   bg:['СПИРКИ НА ОБИКОЛКАТА','НАСТРОЙКИ','СТРАНИЦИ'],
   el:['ΣΤΑΣΕΙΣ ΠΕΡΙΗΓΗΣΗΣ','ΡΥΘΜΙΣΕΙΣ','ΣΕΛΙΔΕΣ'],
   zh:['游览站点','设置','页面'],
   fa:['ایستگاه‌های تور','تنظیمات','صفحات']
@@ -1221,12 +1327,13 @@ const MENU_SECTIONS_I18N = {
 
 const MENU_MAP_I18N = {
   tr:'Harita & Konum',en:'Map & Location',de:'Karte & Standort',fr:'Carte & Position',
-  ar:'الخريطة والموقع',bg:'Карта & Местоположение',el:'Χάρτης & Τοποθεσία',zh:'地图与位置',fa:'نقشه و مکان'
+  ar:'الخريطة والموقع',ro:'Hartă & Locație',bg:'Карта & Местоположение',el:'Χάρτης & Τοποθεσία',zh:'地图与位置',fa:'نقشه و مکان'
 };
 
 const MENU_DEFTER_I18N = {
   tr:'Gönül Köprüsü',en:'Heart Bridge',de:'Herzbrücke',fr:'Pont du Cœur',
-  ar:'جسر القلب',bg:'Мост на Сърцето',el:'Γέφυρα Καρδιάς',zh:'心桥',fa:'پل دل'
+  ar:'جسر القلب',bg:'Мост na Сърцето',el:'Γέφυρα Καρδιάς',zh:'心桥',fa:'پل دل',
+  ro:'Podul Inimii'
 };
 
 const MENU_NOTEBOOK_I18N = {
@@ -1238,11 +1345,13 @@ const MENU_NOTEBOOK_I18N = {
   bg:'Книга за гости',
   el:'Βιβλίο επισκεπτών',
   zh:'留言簿',
-  fa:'دفتر مهمانان'
+  fa:'دفتر مهمانان',
+  ro:'Cartea de Onoare'
 };
 
 const LANG_CLOSE_I18N = {
-  tr:'KAPAT',en:'CLOSE',de:'SCHLIEßEN',fr:'FERMER',ar:'إغلاق',bg:'ЗАТВОРИ',el:'ΚΛΕΙΣΤΟ',zh:'关闭',fa:'بستن'
+  tr:'KAPAT',en:'CLOSE',de:'SCHLIEßEN',fr:'FERMER',ar:'إغلاق',bg:'ЗАТВОРИ',el:'ΚΛΕΙΣΤΟ',zh:'关闭',fa:'بستن',
+  ro:'ÎNCHIDE'
 };
 
 function updateMenuStopNames(){
@@ -1530,6 +1639,23 @@ Kesinlikle tarih, isim, rakam, olay uydurmayacaksın. Belirsizse belirsiz söyle
 - Son yıllarını hayır ve din işlerine adadığı için "Veli" lakabını aldı.
 - Oğlu I. Selim'in baskısıyla 1512'de tahtı bıraktı; Dimetoka'ya giderken Havsa'nın Sazlıdere Köyü yakınında vefat etti. Mezarı İstanbul'daki kendi adını taşıyan caminin yanında.
 - Külliye kurma kararı: Kili ve Akkirman seferine hazırlanmak için Edirne'ye gelen Sultan'a halkın "şehrin bir hastaneye ihtiyacı var" demesiyle başladı.
+### YAHYA BABA (RİVAYET)
+Külliyenin imarethanesinde görevli olduğu anlatılan Yahya Baba, halk arasında bereketli pilav hikâyesiyle anılır.
+Rivayete göre pilavı karıştırırken dua eder, ardından yemeğin bereketli olduğu söylenirdi.
+Pişirdiği yemeğin tüm hastalara yettiği, hatta arttığı anlatılır.
+Artan yemekleri israf etmeyip Tunca Nehri’ndeki balıklara verdiği rivayet edilir.
+KİLERCİBAŞI VE AZALAN ERZAK (RİVAYET)
+Anlatıya göre kilercibaşı, verilen erzakın azaltılmasına rağmen yemeğin yetmeye devam ettiğini fark eder.
+Miktar azalsa da Yahya Baba’nın pişirdiği yemeğin herkese yettiği söylenir.
+PADİŞAH İLE KARŞILAŞMA (RİVAYET)
+Bu durumun II. Bayezid’a kadar ulaştığı anlatılır.
+Padişahın durumu görmek istediği ve Yahya Baba’yı takip ettiği rivayet edilir.
+MENKIBE VURGUSU
+Bu anlatılar tarihî bir kayıt değil, halk arasında aktarılan bir menkıbe olarak değerlendirilir.
+Külliyenin imarethanesinde verilen yemeğin bolluğu ve hayır anlayışı bu tür hikâyelerle sembolleştirilmiştir.
+YAHYA BABA TÜRBESİ
+Yahya Baba’ya atfedilen bir türbenin külliye çevresinde bulunduğu bilinir.
+Ziyaretçiler tarafından saygı gösterilen bir ziyaret noktasıdır.
 
 ### MÜZİKLE TEDAVİNİN TARİHİ ARKA PLANI
 - Müzikle tedavinin bilinen ilk kurumsal örneği: Şam Nureddin Zengi Şifahanesi (1154). Orada akıl hastaları için ayrı bölüm oluşturulmuş ve musiki ile tedavi yapılmıştır.
