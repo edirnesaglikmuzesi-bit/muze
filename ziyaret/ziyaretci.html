@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sultan II. Bayezid - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
-    
+    <title>Ziyaretçi İstatistikleri - Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <style>
-/* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-}
+/* --- TEMEL AYARLAR --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-            --nav-height: 100px; 
-    --gold: #d4af37; 
+            --nav-height: 100px;
+    --gold: #d4af37;
     --gold-bright: #f1d592;
-    --dark: #0f1a24; 
-    --parchment: #f4e7c8; 
-    --v-red: #8b0000; 
+    --dark: #0f1a24;
+    --parchment: #f4e7c8;
+    --v-red: #8b0000;
     --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --chart-1: #d4af37;
+    --chart-2: #8b4513;
+    --chart-3: #2e6b5e;
+    --chart-4: #5b2d8e;
+    --closed-bg: #3d0000;
+    --closed-text: #ff6b6b;
 }
 
 body {
@@ -32,7 +34,7 @@ body {
     color: #2b2b2b;
 }
 
-/* --- 2. NAVİGASYON --- */
+/* --- NAVİGASYON --- */
         .nav-wrapper {
             width: 100%;
             position: fixed;
@@ -299,7 +301,26 @@ body {
 .stat-number { font-family: 'Cinzel'; color: var(--gold); font-size: clamp(22px, 4vw, 36px); font-weight: 700; line-height: 1; }
 .stat-sub { font-family: 'Playfair Display'; font-style: italic; color: rgba(212,175,55,0.45); font-size: 11px; margin-top: 5px; }
 
+/* --- TAB SEKMELERI --- */
+.tab-section { padding: 40px 40px 0; position: relative; z-index: 2; }
+@media (max-width: 768px) {
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; } .tab-section { padding: 20px 20px 0; } }
 
+.tab-header { display: flex; gap: 0; margin-bottom: 30px; border: 1px solid rgba(212,175,55,0.4); border-radius: 8px; overflow: hidden; }
+.tab-btn {
+    flex: 1; padding: 14px 10px; background: transparent; border: none;
+    font-family: 'Cinzel'; font-size: 11px; letter-spacing: 2px;
+    color: rgba(43,43,43,0.5); cursor: pointer;
+    border-right: 1px solid rgba(212,175,55,0.3);
+    transition: all 0.3s ease;
+}
+.tab-btn:last-child { border-right: none; }
+.tab-btn.active { background: var(--dark); color: var(--gold); }
+.tab-btn:hover:not(.active) { background: rgba(212,175,55,0.08); color: var(--dark); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
 
 /* --- TARİH SEÇİCİ --- */
 .date-controls {
@@ -408,20 +429,20 @@ body {
 .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
 .site-footer { width: 100%; max-width: 1240px; background: var(--dark); border: 2px solid var(--gold); border-radius: 15px; padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px; }
 
-/* --- 7. MOBİL UYUMLULUK --- */
+/* --- MOBİL --- */
 @media (max-width: 768px) {
-            .logo-img1, .logo-img2 { height: 45px; }
-            .menu-btn { padding: 8px 15px; font-size: 12px; }
     .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
-    .banner-box { height: 250px; }
+    .banner-box { height: 260px; }
     .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
-    .content-area { padding: 30px 20px; font-size: 16px; }
-    .corner-frame { width: 45px; height: 45px; }
     body { padding-top: calc(var(--nav-height) + 20px); }
-    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+    .corner-frame { width: 45px; height: 45px; }
+    .tab-header { flex-wrap: wrap; }
+    .tab-btn { min-width: 45%; }
+    .counter-display { font-size: 56px; letter-spacing: 4px; }
 }
-    
-        .footer-title {
+
+.gold-divider { border: none; border-top: 1px solid rgba(212,175,55,0.3); margin: 0; }
+            .footer-title {
             font-family: 'Cinzel', serif;
             font-size: 13px;
             font-weight: 700;
@@ -439,9 +460,10 @@ body {
 </head>
 <body>
 
-    <div class="nav-wrapper">
-        <nav class="nav">
-            <div class="logo-box">
+<!-- NAVİGASYON -->
+<div class="nav-wrapper">
+    <nav class="nav">
+        <div class="logo-box">
             <img src="../assets/logo1.png" alt="Logo 1" class="logo-img1">
             <img src="../assets/logo2.png" alt="Logo 2" class="logo-img2">
             <div class="logo-text-group">
@@ -449,9 +471,9 @@ body {
                 <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
             </div>
         </div>
-            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
-            <div id="globalDropdown">
-               <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+        <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+        <div id="globalDropdown">
+            <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
             <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
             <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
             <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
@@ -471,9 +493,10 @@ body {
             <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
             <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
             <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
-            </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
+</div>
+
 <!-- BANNER -->
 <div class="banner-container">
     <div class="banner-box">
