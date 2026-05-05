@@ -17,18 +17,19 @@
 }
 
 :root {
-            --nav-height: 100px; 
+    --nav-height: 100px; 
     --gold: #d4af37; 
     --gold-bright: #f1d592;
     --dark: #0f1a24; 
     --parchment: #f4e7c8; 
     --v-red: #8b0000; 
+    --radius: 12px;
     --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 body {
     font-family: 'Playfair Display', serif;
-    background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
+    background: #fdf5e6 url("assets/background.jpg") fixed center/cover;
     padding-top: calc(var(--nav-height) + 20px);
     color: #2b2b2b;
 }
@@ -876,50 +877,51 @@ body {
 
         .sep-line { color: #ccc; }
 
-       /* =====================================================
-   14. RESPONSIVE
-===================================================== */
-@media (max-width: 1100px) {
-    .container {
-        grid-template-columns: 1fr;
-    }
-    .dynamic-cards-container {
-        grid-template-columns: 1fr;
-    }
-    body {
-        padding-top: 110px;
-    }
-}
+        /* =====================================================
+           14. RESPONSIVE
+        ===================================================== */
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .dynamic-cards-container {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding-top: 110px;
+            }
+        }
 
-@media (max-width: 768px) {
-    .logo-img1, .logo-img2 { height: 45px; }
-    .menu-btn { padding: 8px 15px; font-size: 12px; }
-    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
-    .banner-box { height: 250px; }
-    .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
-    .content-area { padding: 30px 20px; font-size: 16px; }
-    .corner-frame { width: 45px; height: 45px; }
-    body { padding-top: calc(var(--nav-height) + 20px); }
-    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
-}
+        @media (max-width: 768px) {
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; }
+            .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+            .banner { height: 250px; }
+            .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+            .content-area { padding: 30px 20px; font-size: 16px; }
+            .corner-frame { width: 45px; height: 45px; }
+            body { padding-top: calc(var(--nav-height) + 20px); }
+            .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+        }
 
-@media (max-width: 600px) {
-    .nav { padding: 8px 15px; }
-    .logo-img1, .logo-img2 { height: 45px; }
-    .menu-btn { padding: 8px 15px; font-size: 12px; }
-    .site-footer { padding: 25px 15px; font-size: 12px; }
+        @media (max-width: 600px) {
+            .nav { padding: 8px 15px; }
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; }
+            .site-footer { padding: 25px 15px; font-size: 12px; }
 
-    /* Splash */
-    .circle-wrapper { width: 320px; height: 320px; }
-    .intro-circle { width: 180px; height: 180px; }
-    .ring-1 { width: 200px; height: 200px; }
-    .ring-2,
-    .ring-2-container,
-    .sun-cloud-glow { width: 230px; height: 230px; }
-    .circular-loader { width: 215px; height: 215px; }
+            /* Splash */
+            .circle-wrapper { width: 320px; height: 320px; }
+            .intro-circle { width: 180px; height: 180px; }
+            .ring-1 { width: 200px; height: 200px; }
+            .ring-2,
+            .ring-2-container,
+            .sun-cloud-glow { width: 230px; height: 230px; }
+            .circular-loader { width: 215px; height: 215px; }
 
-    .d-box { width: 28px; height: 38px; font-size: 19px; }
-}
+            .d-box { width: 28px; height: 38px; font-size: 19px; }
+        }
+
         /* =====================================================
            EVLİYA ÇELEBİ CHAT — INDEX.HTML ENTEGRASYONU
         ===================================================== */
@@ -1957,14 +1959,9 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <!-- ================================================================
-     EVLİYA ÇELEBİ CHAT — JS (nav/script.js'den entegre)
+     EVLİYA ÇELEBİ CHAT — JS
 ================================================================ -->
 <script>
-/* Sistem promptu ve chat fonksiyonları nav/script.js'den alınmıştır.
-   Görsel yolu: nav/assets/img/evliya.gif
-   API: https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev (Cloudflare Worker - Groq proxy)
-*/
-
 const EVLIYA_SYSTEM_PROMPT = `Sen Evliya Çelebi'sin — 17. yüzyılın ünlü Osmanlı seyyahı, müzisyen ve tarihçisi. Sultan II. Bayezid Külliyesi Sağlık Müzesi'nin dijital rehberisin. Kullanıcıya külliye ve müze hakkında Evliya Çelebi karakteriyle, birinci şahıs ağzından, canlı ve akıcı biçimde bilgi veriyorsun. 
 
 ## TEMEL KARAKTERİSTİKLER
@@ -2117,7 +2114,6 @@ let evliyaChatHistory=[];let evliyaThinking=false;
 function openEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.add('open');
   document.getElementById('evliya-fab-wrap').classList.add('chat-open');
-  // (Ses yönetimi: rehber.html'e özgü, burada devre dışı)
   if(evliyaChatHistory.length===0){
     addEvliyaMsg('bot','Sultan II. Bayezid Külliyesi\'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652\'de burayı bizzat gezdim.\n\nDarüşşifa\'nın müzik tedavisinden bölüm ve odalarına kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️');
   }
@@ -2126,7 +2122,6 @@ function openEvliyaChat(){
 function closeEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.remove('open');
   document.getElementById('evliya-fab-wrap').classList.remove('chat-open');
-  // (Ses yönetimi: rehber.html'e özgü)
 }
 
 function evliyaQuick(text){document.getElementById('evliya-chat-input').value=text;sendEvliyaMsg();}
