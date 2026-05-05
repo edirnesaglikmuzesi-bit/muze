@@ -753,7 +753,7 @@ const TRANSLATIONS = {
     s9_fwd:'SCRIE PE PODUL INIMII →',
     s10_body:'Ne-ar plăcea să auzim impresiile pe care această călătorie de 500 de ani prin complexul nostru Külliye le-a lăsat asupra ta. Cuvintele tale vor deveni pietrele acestui pod.',
     s10_restart:'🏛️ REÎNTOARCERE LA START'
-}
+},
   bg:{
     start:'ЗАПОЧНИ ПЪТУВАНЕТО',intro_title:'Покана към Прага',intro_sub:'Пътуване отвъд времето, към центъра на изцелението…',
     back:'← НАЗАД',menu_lang:'Език: Български 🇧🇬',menu_map:'Карта & Местоположение',menu_defter:'Мост на Сърцето',
