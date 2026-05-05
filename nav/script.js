@@ -1305,7 +1305,7 @@ const STOP_NAMES_I18N = {
   de:['Museumseingang','Darüşşifa 1. Hof','Darüşşifa 2. Hof','Krankenstation','Medizinschule','Großer Hof','Imaret','Moscheehof','Moscheeinneres','Herzbrücke Einladung','Herzbrücke'],
   fr:['Entrée du Musée','Darüşşifa 1er Cour','Darüşşifa 2e Cour','Infirmerie','École de Médecine','Grande Cour','Imaret','Cour de la Mosquée','Intérieur de la Mosquée','Invitation au Pont du Cœur','Pont du Cœur'],
   ar:['مدخل المتحف','الفناء الأول','الفناء الثاني','عنبر المرضى','مدرسة الطب','الفناء الكبير','الإيمارة','فناء المسجد','داخل المسجد','دعوة جسر القلب','جسر القلب'],
-  ro:['Intrarea în Muzeu', 'Darüşşifa - Prima Curte', 'Darüşşifa - A doua Curte', 'Infirmeria', 'Madrasa Medicală', 'Marea Curte', 'Imaret (Cantina)', 'Curtea Moscheii', 'Interiorul Moscheii', 'Invitație pe Podul Inimii', 'Podul Inimii']
+  ro:['Intrarea în Muzeu', 'Darüşşifa - Prima Curte', 'Darüşşifa - A doua Curte', 'Infirmeria', 'Madrasa Medicală', 'Marea Curte', 'Imaret (Cantina)', 'Curtea Moscheii', 'Interiorul Moscheii', 'Invitație pe Podul Inimii', 'Podul Inimii'],
    bg:['Вход на Музея','Дарюшшифа 1. Двор','Дарюшшифа 2. Двор','Болнично Крило','Медицинско Медресе','Голям Двор','Имарет','Двор на Джамията','Вътре в Джамията','Покана към Моста','Мост на Сърцето'],
   el:['Είσοδος Μουσείου','Δαρύσσιφα 1η Αυλή','Δαρύσσιφα 2η Αυλή','Ιατρείο','Ιατρική Σχολή','Μεγάλη Αυλή','Ιμαρέτ','Αυλή Τζαμιού','Εντός Τζαμιού','Πρόσκληση Γέφυρας','Γέφυρα Καρδιάς'],
   zh:['博物馆入口','达鲁希法第一庭院','达鲁希法第二庭院','医疗病房','医学院','大庭院','伊马雷特','清真寺庭院','清真寺内部','心桥邀请','心桥'],
@@ -1318,7 +1318,7 @@ const MENU_SECTIONS_I18N = {
   de:['TOURSTATIONEN','EINSTELLUNGEN','SEITEN'],
   fr:['ARRÊTS DE VISITE','PARAMÈTRES','PAGES'],
   ar:['محطات الجولة','الإعدادات','الصفحات'],
-  ro:['OPRIRI TUR', 'SETĂRI', 'PAGINI']
+  ro:['OPRIRI TUR', 'SETĂRI', 'PAGINI'],
    bg:['СПИРКИ НА ОБИКОЛКАТА','НАСТРОЙКИ','СТРАНИЦИ'],
   el:['ΣΤΑΣΕΙΣ ΠΕΡΙΗΓΗΣΗΣ','ΡΥΘΜΙΣΕΙΣ','ΣΕΛΙΔΕΣ'],
   zh:['游览站点','设置','页面'],
@@ -1332,7 +1332,7 @@ const MENU_MAP_I18N = {
 
 const MENU_DEFTER_I18N = {
   tr:'Gönül Köprüsü',en:'Heart Bridge',de:'Herzbrücke',fr:'Pont du Cœur',
-  ar:'جسر القلب',bg:'Мост na Сърцето',el:'Γέφυρα Καρδιάς',zh:'心桥',fa:'پل دل',
+  ar:'جسر القلب',bg:'Мост на Сърцето',el:'Γέφυρα Καρδιάς',zh:'心桥',fa:'پل دل',
   ro:'Podul Inimii'
 };
 
