@@ -876,39 +876,50 @@ body {
 
         .sep-line { color: #ccc; }
 
-        /* =====================================================
-           14. RESPONSIVE
-        ===================================================== */
-        @media (max-width: 1100px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            .dynamic-cards-container {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding-top: 110px;
-            }
-        }
+       /* =====================================================
+   14. RESPONSIVE
+===================================================== */
+@media (max-width: 1100px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+    .dynamic-cards-container {
+        grid-template-columns: 1fr;
+    }
+    body {
+        padding-top: 110px;
+    }
+}
 
-        @media (max-width: 600px) {
-            .nav { padding: 8px 15px; }
-            .logo-img1, .logo-img2 { height: 45px; }
-            .menu-btn { padding: 8px 15px; font-size: 12px; }
-            .site-footer { padding: 25px 15px; font-size: 12px; }
+@media (max-width: 768px) {
+    .logo-img1, .logo-img2 { height: 45px; }
+    .menu-btn { padding: 8px 15px; font-size: 12px; }
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: calc(var(--nav-height) + 20px); }
+    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
+}
 
-            /* Splash */
-            .circle-wrapper { width: 320px; height: 320px; }
-            .intro-circle { width: 180px; height: 180px; }
-            .ring-1 { width: 200px; height: 200px; }
-            .ring-2,
-            .ring-2-container,
-            .sun-cloud-glow { width: 230px; height: 230px; }
-            .circular-loader { width: 215px; height: 215px; }
+@media (max-width: 600px) {
+    .nav { padding: 8px 15px; }
+    .logo-img1, .logo-img2 { height: 45px; }
+    .menu-btn { padding: 8px 15px; font-size: 12px; }
+    .site-footer { padding: 25px 15px; font-size: 12px; }
 
-            .d-box { width: 28px; height: 38px; font-size: 19px; }
-        }
+    /* Splash */
+    .circle-wrapper { width: 320px; height: 320px; }
+    .intro-circle { width: 180px; height: 180px; }
+    .ring-1 { width: 200px; height: 200px; }
+    .ring-2,
+    .ring-2-container,
+    .sun-cloud-glow { width: 230px; height: 230px; }
+    .circular-loader { width: 215px; height: 215px; }
 
+    .d-box { width: 28px; height: 38px; font-size: 19px; }
+}
         /* =====================================================
            EVLİYA ÇELEBİ CHAT — INDEX.HTML ENTEGRASYONU
         ===================================================== */
