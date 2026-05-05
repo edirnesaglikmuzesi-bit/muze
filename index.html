@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sultan II. Bayezid Külliyesi - Sağlık Müzesi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* =====================================================
+           1. DEĞİŞKENLER VE SIFIRLAMA
+        ===================================================== */
+        :root {
+            --gold: #d4af37;
+            --gold-dark: #b8860b;
+            --gold-soft: rgba(212,175,55,0.3);
+            --dark: #0f1a24;
+            --parchment: #f4e7c8;
+            --v-red: #8b0000;
+            --nav-height: 100px;
+            --radius: 12px;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background: #fdf5e6 url("assets/background.jpg") fixed center / cover;
+            color: #2b2b2b;
+            padding-top: calc(var(--nav-height) + 20px);
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           2. NAVİGASYON
+        ===================================================== */
+        .nav-wrapper {
+            width: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 2000;
+            padding: 0 15px;
+        }
+
+        .nav {
+            max-width: 1240px;
+            margin: 0 auto;
+            background-color: var(--dark);
+            border: 2px solid var(--gold);
+            border-top: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 25px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-height: var(--nav-height);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .logo-img1, .logo-img2 {
+            height: 65px;
+            width: auto;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+        .logo-img1:hover, .logo-img2:hover { transform: scale(1.05); }
+
+        .logo-text-group {
+            color: var(--gold);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .logo-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: clamp(10px, 2.5vw, 14px);
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        .logo-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(10px, 2.5vw, 14px);
+            font-weight: 300;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-family: 'Cinzel', serif;
+            border-radius: 4px;
+            transition: background 0.3s, color 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .menu-btn:hover { background: var(--gold); color: #fff; }
+
+        #globalDropdown {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 100%;
+            background: var(--dark);
+            border: 2px solid var(--gold);
+            min-width: 280px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            z-index: 3000;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+        #globalDropdown.active { display: block; animation: dropIn 0.2s ease; }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 12px 25px;
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+            transition: background 0.2s, padding-left 0.2s, color 0.2s;
+        }
+        .dropdown-link:hover {
+            background: rgba(212,175,55,0.15);
+            padding-left: 30px;
+            color: #fff;
+        }
+
+        .dropdown-link-highlight {
+            background: var(--gold);
+            color: var(--dark) !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .dropdown-link-highlight:hover {
+            background: var(--gold-bright, #f1d592);
+            color: var(--dark) !important;
+            padding-left: 30px;
+        }
+
+        /* =====================================================
+           3. ANA KONTEYNER
+        ===================================================== */
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 25px;
+            padding: 0 20px;
+        }
+
+        /* =====================================================
+           4. BANNER
+        ===================================================== */
+        .banner {
+            grid-column: 1 / -1;
+            position: relative;
+            width: 100%;
+            height: clamp(180px, 40vw, 400px);
+            border-radius: var(--radius);
+            border: 2px solid var(--gold);
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            margin-bottom: 10px;
+        }
+
+        .banner img.media {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* =====================================================
+           5. KARTLAR
+        ===================================================== */
+        .card {
+            background: var(--parchment);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius);
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.22);
+        }
+
+        .card h2, .card h3 {
+            background: linear-gradient(180deg, #1b2b3a, #0e1922);
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            letter-spacing: 0.5px;
+        }
+
+        .card-content {
+            padding: 15px;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .card ul { list-style: none; }
+        .card ul li {
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--gold-soft);
+        }
+        .card ul li:last-child { border-bottom: none; }
+        .card a { text-decoration: none; color: inherit; transition: color 0.2s; }
+        .card a:hover { color: var(--v-red); }
+
+        /* Köşe süsleri */
+        .c-f {
+            position: absolute;
+            width: 35px; height: 35px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .t-l { top: 5px; left: 5px;   background-image: url("assets/cornerleftup.png"); }
+        .t-r { top: 5px; right: 5px;  background-image: url("assets/cornerrightup.png"); }
+        .b-l { bottom: 5px; left: 5px;  background-image: url("assets/cornerleft.png"); }
+        .b-r { bottom: 5px; right: 5px; background-image: url("assets/cornerright.png"); }
+
+        /* Resimli kartlar */
+        .img-card-link {
+            display: block;
+            text-decoration: none;
+        }
+        .img-card-link img {
+            width: 100%;
+            display: block;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+        .img-card-link:hover img { transform: scale(1.03); }
+
+        /* =====================================================
+           6. VİDEO
+        ===================================================== */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 0;
+        }
+
+        /* =====================================================
+           7. DİNAMİK KARTLAR (DUYURU / HABER / BASIN)
+        ===================================================== */
+        .dynamic-cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .dynamic-feed {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            min-height: 80px;
+        }
+
+        .dynamic-feed li {
+            padding: 6px 0 !important;
+            border-bottom: 1px dashed var(--gold-soft) !important;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .dynamic-feed li:last-child { border-bottom: none !important; }
+
+        .ann-date-small {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            color: var(--v-red);
+            font-weight: bold;
+        }
+
+        .ann-text-small {
+            font-size: 11.5px;
+            line-height: 1.3;
+            color: #333;
+        }
+
+        .more-link-box {
+            margin-top: 10px;
+            text-align: center;
+            border-top: 1px solid rgba(212,175,55,0.15);
+            padding-top: 6px;
+        }
+        .more-link-box a {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--gold) !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+        .more-link-box a:hover { color: #fff !important; }
+
+        /* =====================================================
+           8. ZİYARETÇİ SAYACI
+        ===================================================== */
+        .counter-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .digit-sep {
+            color: var(--gold-dark);
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 700;
+            align-self: center;
+            opacity: 0.6;
+            margin: 0 1px;
+        }
+
+        .d-box {
+            background: linear-gradient(180deg, #1b2b3a 0%, #0e1922 50%, #1b2b3a 100%);
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 700;
+            width: 28px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--gold-dark);
+            border-radius: 5px;
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(212,175,55,0.25),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .d-box::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 1px;
+            background: rgba(212,175,55,0.2);
+        }
+
+        .d-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 40%;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .counter-label {
+            font-size: 10px;
+            font-family: 'Cinzel', serif;
+            opacity: 0.65;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+        }
+
+        .counter-since {
+            font-size: 9px;
+            font-style: italic;
+            opacity: 0.55;
+            margin-top: 3px;
+        }
+
+        /* Aktif ziyaretçi */
+        .active-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+            background: linear-gradient(135deg, #0e1922, #1b2b3a);
+            border: 1px solid var(--gold-soft);
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .active-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #2ecc71;
+            box-shadow: 0 0 8px #2ecc71;
+            animation: pulse-dot 1.6s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.75); }
+        }
+
+        .active-label {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            color: var(--gold);
+            opacity: 0.8;
+            letter-spacing: 0.4px;
+        }
+
+        .active-count {
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #2ecc71;
+            text-shadow: 0 0 10px rgba(46,204,113,0.5);
+            min-width: 20px;
+        }
+
+        /* =====================================================
+           HERO KARTLAR (Rehber & Ziyaretçi Defteri)
+        ===================================================== */
+        .hero-cards-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hero-card {
+            background: linear-gradient(160deg, #1b2b3a 0%, #0e1922 100%);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 14px 22px;
+            text-align: center;
+            min-height: 155px;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--gold);
+        }
+
+        .hero-card-icon {
+            font-size: 30px;
+            color: var(--gold);
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 8px rgba(212,175,55,0.45));
+            transition: transform 0.3s;
+        }
+
+        .hero-card:hover .hero-card-icon { transform: scale(1.15); }
+
+        .hero-card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--gold) !important;
+            letter-spacing: 0.8px;
+            line-height: 1.55;
+            margin-bottom: 12px;
+        }
+
+        .hero-card-btn {
+            display: inline-block;
+            padding: 5px 14px;
+            background: transparent;
+            border: 1px solid rgba(212,175,55,0.5);
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            color: rgba(212,175,55,0.8) !important;
+            letter-spacing: 1px;
+            transition: background 0.25s, color 0.25s, border-color 0.25s;
+        }
+
+        .hero-card:hover .hero-card-btn {
+            background: var(--gold);
+            color: var(--dark) !important;
+            border-color: var(--gold);
+        }
+
+        /* =====================================================
+           8b. FİZİKİ ZİYARETÇİ SAYACI (yeni)
+        ===================================================== */
+        .stats-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .stats-split-divider {
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--gold-dark), transparent);
+            align-self: stretch;
+        }
+
+        .stat-half {
+            padding: 8px 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .stat-half-icon {
+            font-size: 16px;
+            color: var(--gold-dark);
+            margin-bottom: 1px;
+        }
+
+        .stat-half-label {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 0.8px;
+            color: #2b2b2b;
+            opacity: 0.75;
+            text-transform: uppercase;
+        }
+
+        .stat-half-number {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2b2b2b;
+            line-height: 1;
+        }
+
+        .stat-half-sub {
+            font-size: 9px;
+            font-style: italic;
+            color: #2b2b2b;
+            opacity: 0.45;
+            margin-top: 1px;
+        }
+
+        .stats-footer-link {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            padding: 7px 10px;
+            background: linear-gradient(135deg, #0e1922, #1b2b3a);
+            border: 1px solid rgba(212,175,55,0.5);
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 0.6px;
+            color: var(--gold) !important;
+            text-decoration: none !important;
+            transition: background 0.25s, color 0.25s, border-color 0.25s;
+        }
+        .stats-footer-link:hover {
+            background: var(--gold) !important;
+            color: var(--dark) !important;
+            border-color: var(--gold);
+        }
+        .stats-footer-link i { margin-right: 5px; }
+
+        /* =====================================================
+           9. DETAILS / SUMMARY (Ziyaret Bilgileri, İletişim)
+        ===================================================== */
+        summary { list-style: none; outline: none; cursor: pointer; }
+        summary::-webkit-details-marker { display: none; }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .summary-arrow {
+            font-size: 11px;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        details[open] .summary-arrow { transform: rotate(180deg); }
+
+        details ul {
+            animation: fadeSlide 0.3s ease;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =====================================================
+           10. ÖDÜL KARTI
+        ===================================================== */
+        .odul-img {
+            width: 100%;
+            height: 290px;
+            display: block;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* =====================================================
+           11. SPLASH SCREEN
+        ===================================================== */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #03080c;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            overflow: hidden;
+        }
+
+        body.splash--skip #splash-screen {
+            display: none !important;
+        }
+
+        .water-wrapper {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #water-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .splash-container {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .circle-wrapper {
+            position: relative;
+            width: 500px; height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring-2-container {
+            position: absolute;
+            width: 310px; height: 310px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sun-cloud-glow {
+            position: absolute;
+            width: 310px; height: 310px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                transparent 50%,
+                rgba(212,175,55,0.4) 60%,
+                rgba(212,175,55,0.1) 80%,
+                transparent 100%
+            );
+            filter: blur(25px);
+            z-index: 1;
+            animation: cloudExpand 4s infinite ease-out;
+        }
+
+        .delay-glow { animation-delay: 2s; }
+
+        .intro-circle {
+            width: 260px; height: 260px;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 10;
+            border: 2px solid rgba(212,175,55,0.2);
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+        }
+
+        .splash-intro-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            opacity: 0.3;
+            z-index: 8;
+        }
+        .ring-1 { width: 280px; height: 280px; }
+        .ring-2 { width: 310px; height: 310px; border-width: 1.5px; opacity: 0.5; }
+
+        .circular-loader {
+            position: absolute;
+            width: 295px; height: 295px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--gold);
+            filter: drop-shadow(0 0 10px var(--gold));
+            animation: rotateLoader 2s linear infinite;
+            z-index: 9;
+        }
+
+        .splash-text {
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            margin-top: 50px;
+            letter-spacing: 4px;
+            font-size: 16px;
+            text-shadow: 0 0 15px rgba(212,175,55,0.6);
+            text-align: center;
+        }
+
+        .loading-bar-container {
+            width: 220px;
+            height: 1px;
+            background: rgba(212,175,55,0.1);
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-line {
+            position: absolute;
+            left: -100%;
+            width: 100%; height: 100%;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+            animation: loadingProgress 2s forwards linear;
+        }
+
+        @keyframes rotateLoader {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        @keyframes loadingProgress { to { left: 0; } }
+
+        @keyframes cloudExpand {
+            0%   { transform: scale(1); opacity: 0; }
+            40%  { opacity: 0.7; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        /* =====================================================
+           12. FOOTER
+        ===================================================== */
+        .site-footer-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .site-footer {
+            width: 100%;
+            max-width: 1240px;
+            background: var(--dark);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 40px;
+        }
+
+        .footer-title {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .footer-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 17px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        /* =====================================================
+           13. SOSYAL MEDYA İKONLARI
+        ===================================================== */
+        .social-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            list-style: none !important;
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+        }
+
+        .social-link {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            transition: opacity 0.2s;
+        }
+        .social-link:hover { opacity: 0.75; }
+
+        .sep-line { color: #ccc; }
+
+        /* =====================================================
+           14. RESPONSIVE
+        ===================================================== */
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .dynamic-cards-container {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding-top: 110px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav { padding: 8px 15px; }
+            .logo-img1, .logo-img2 { height: 45px; }
+            .menu-btn { padding: 8px 15px; font-size: 12px; }
+            .site-footer { padding: 25px 15px; font-size: 12px; }
+
+            /* Splash */
+            .circle-wrapper { width: 320px; height: 320px; }
+            .intro-circle { width: 180px; height: 180px; }
+            .ring-1 { width: 200px; height: 200px; }
+            .ring-2,
+            .ring-2-container,
+            .sun-cloud-glow { width: 230px; height: 230px; }
+            .circular-loader { width: 215px; height: 215px; }
+
+            .d-box { width: 28px; height: 38px; font-size: 19px; }
+        }
+
+        /* =====================================================
+           EVLİYA ÇELEBİ CHAT — INDEX.HTML ENTEGRASYONU
+        ===================================================== */
+        #evliya-chat-panel{
+            position:fixed;inset:0;z-index:9000;
+            background:rgba(0,0,0,0.82);
+            display:none;align-items:flex-end;justify-content:center;
+        }
+        #evliya-chat-panel.open{display:flex;}
+
+        .evliya-chat-sheet{
+            width:100%;max-width:680px;
+            height:85vh;
+            background:linear-gradient(180deg,#1a1005,#2e1c08);
+            border:2px solid #b8860b;border-bottom:none;
+            border-radius:20px 20px 0 0;
+            display:flex;flex-direction:column;overflow:hidden;
+        }
+
+        .evliya-chat-header{
+            display:flex;align-items:center;gap:14px;
+            padding:16px 16px 14px;
+            border-bottom:1px solid rgba(184,134,11,0.3);
+            background:linear-gradient(135deg,rgba(0,0,0,0.35),rgba(184,134,11,0.06));
+            flex-shrink:0;position:relative;overflow:hidden;
+        }
+        .evliya-chat-header::before{
+            content:'';position:absolute;inset:0;
+            background:radial-gradient(ellipse at left,rgba(184,134,11,0.07),transparent 70%);
+            pointer-events:none;
+        }
+        .evliya-chat-avatar{
+            width:58px;height:58px;border-radius:50%;
+            border:2px solid #b8860b;overflow:hidden;flex-shrink:0;
+            background:linear-gradient(135deg,#2e1c08,#4a3010);
+            display:flex;align-items:center;justify-content:center;
+            font-size:26px;
+            box-shadow:0 0 18px rgba(184,134,11,0.35);
+            position:relative;z-index:1;
+        }
+        .evliya-chat-avatar img{width:100%;height:100%;object-fit:cover;}
+        .evliya-chat-info{flex:1;min-width:0;position:relative;z-index:1;}
+        .evliya-chat-name{
+            font-family:'Cinzel',serif;font-size:15px;
+            color:#f0c040;letter-spacing:0.12em;
+            text-shadow:0 1px 8px rgba(184,134,11,0.4);
+        }
+        .evliya-chat-desc{font-size:11px;color:rgba(240,200,140,0.7);line-height:1.5;margin-top:3px;}
+        .evliya-chat-close{
+            background:transparent;border:none;
+            color:#9a8060;font-size:24px;cursor:pointer;
+            width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+            border-radius:8px;flex-shrink:0;
+        }
+
+        .evliya-chat-messages{
+            flex:1;overflow-y:auto;padding:16px 14px;
+            display:flex;flex-direction:column;gap:12px;
+            -webkit-overflow-scrolling:touch;
+        }
+
+        .chat-msg{display:flex;gap:8px;align-items:flex-end;animation:msgAppear 0.3s ease;}
+        @keyframes msgAppear{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+        .chat-msg.user{flex-direction:row-reverse;}
+
+        .chat-bubble{max-width:78%;padding:11px 14px;border-radius:14px;font-size:14px;line-height:1.7;}
+        .chat-msg.bot .chat-bubble{
+            background:rgba(184,134,11,0.12);
+            border:1px solid rgba(184,134,11,0.25);
+            color:rgba(240,220,180,0.92);
+            border-radius:14px 14px 14px 4px;
+        }
+        .chat-msg.user .chat-bubble{
+            background:linear-gradient(135deg,rgba(139,32,0,0.7),rgba(100,20,0,0.6));
+            border:1px solid rgba(139,80,0,0.4);
+            color:#fff;border-radius:14px 14px 4px 14px;
+        }
+        .chat-msg-avatar{
+            width:32px;height:32px;border-radius:50%;
+            border:1.5px solid #b8860b;overflow:hidden;flex-shrink:0;
+            background:linear-gradient(135deg,#2e1c08,#4a3010);
+            display:flex;align-items:center;justify-content:center;font-size:16px;
+        }
+        .chat-msg-avatar img{width:100%;height:100%;object-fit:cover;}
+
+        .chat-typing{display:flex;gap:4px;align-items:center;padding:4px 0;}
+        .chat-typing span{
+            width:7px;height:7px;border-radius:50%;
+            background:#d4a017;opacity:0.5;
+            animation:typingDot 1.2s ease-in-out infinite;
+        }
+        .chat-typing span:nth-child(2){animation-delay:0.2s;}
+        .chat-typing span:nth-child(3){animation-delay:0.4s;}
+        @keyframes typingDot{0%,60%,100%{opacity:0.3;transform:scale(0.8);}30%{opacity:1;transform:scale(1);}}
+
+        .evliya-chat-input-area{
+            padding:10px 14px 14px;
+            border-top:1px solid rgba(184,134,11,0.25);
+            background:rgba(0,0,0,0.15);flex-shrink:0;
+        }
+        .evliya-chat-quick{
+            display:grid;grid-template-columns:repeat(2,1fr);
+            gap:6px;margin-bottom:10px;
+            max-height:160px;overflow-y:auto;padding-right:2px;
+            scrollbar-width:thin;scrollbar-color:rgba(184,134,11,0.4) transparent;
+        }
+        .evliya-chat-quick::-webkit-scrollbar{width:4px;}
+        .evliya-chat-quick::-webkit-scrollbar-thumb{background:rgba(184,134,11,0.4);border-radius:4px;}
+        .quick-btn{
+            font-size:11px;font-family:'Cinzel',serif;
+            background:rgba(184,134,11,0.1);border:1px solid rgba(184,134,11,0.25);
+            color:#f0c040;border-radius:8px;padding:7px 10px;
+            cursor:pointer;letter-spacing:0.03em;transition:all 0.2s;
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;
+        }
+        .quick-btn:hover{background:rgba(184,134,11,0.2);border-color:rgba(184,134,11,0.5);}
+
+        .evliya-chat-row{display:flex;gap:8px;align-items:flex-end;}
+        #evliya-chat-input{
+            flex:1;background:rgba(240,220,180,0.08);
+            border:1px solid rgba(184,134,11,0.3);border-radius:10px;
+            padding:10px 14px;font-family:'Playfair Display',serif;font-size:14px;
+            color:rgba(240,220,180,0.92);outline:none;resize:none;
+            line-height:1.5;max-height:90px;min-height:42px;overflow-y:auto;
+        }
+        #evliya-chat-input:focus{border-color:#b8860b;}
+        #evliya-chat-input::placeholder{color:#9a8060;font-style:italic;}
+        #evliya-send-btn{
+            width:42px;height:42px;border-radius:10px;flex-shrink:0;
+            background:linear-gradient(135deg,#b8860b,#d4a017);
+            border:none;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;box-shadow:0 3px 12px rgba(184,134,11,0.3);
+            transition:all 0.2s;
+        }
+        #evliya-send-btn:active{transform:scale(0.94);}
+        #evliya-send-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+        /* EVLİYA FAB */
+        #evliya-fab-wrap{
+            position:fixed;bottom:24px;right:24px;
+            z-index:8000;
+            display:flex;flex-direction:column;align-items:center;gap:4px;
+            cursor:pointer;
+        }
+        #evliya-fab{
+            width:64px;height:64px;border-radius:50%;
+            background:linear-gradient(135deg,#2a1a06,#3e2a0a);
+            border:2px solid #b8860b;
+            box-shadow:0 4px 20px rgba(184,134,11,0.5),0 2px 8px rgba(0,0,0,0.5);
+            display:flex;align-items:center;justify-content:center;
+            overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;
+        }
+        #evliya-fab:hover{transform:scale(1.07);box-shadow:0 6px 28px rgba(184,134,11,0.65);}
+        #evliya-fab img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+        #evliya-fab .fab-fallback{font-size:28px;display:none;}
+        #evliya-fab-label{
+            font-family:'Cinzel',serif;
+            font-size:9px;letter-spacing:0.12em;
+            color:#f0c040;white-space:nowrap;font-weight:700;
+            background:linear-gradient(135deg,#3a1f05,#5a2e08);
+            border:1px solid #b8860b;border-radius:6px;
+            padding:4px 10px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.7),0 0 10px rgba(184,134,11,0.3);
+        }
+        #evliya-fab-wrap.chat-open{display:none !important;}
+    </style>
+
+    <script>
+        (function () {
+            var SPLASH_KEY = 'kulliye_splash_shown_v1';
+            if (sessionStorage.getItem(SPLASH_KEY)) {
+                document.documentElement.classList.add('splash--skip-root');
+            }
+        })();
+    </script>
+    <style>
+        html.splash--skip-root #splash-screen { display: none !important; }
+    </style>
+</head>
+
+<body>
+
+<!-- ================================================================
+     SPLASH SCREEN
+================================================================ -->
+<div id="splash-screen">
+    <div class="water-wrapper">
+        <canvas id="water-canvas"></canvas>
+        <div class="splash-container">
+            <div class="circle-wrapper">
+                <div class="orbit-ring ring-1"></div>
+                <div class="ring-2-container">
+                    <div class="orbit-ring ring-2"></div>
+                    <div class="sun-cloud-glow"></div>
+                    <div class="sun-cloud-glow delay-glow"></div>
+                </div>
+                <div class="circular-loader"></div>
+                <div class="intro-circle">
+                    <img src="assets/splash_intro.webp" alt="Giriş" class="splash-intro-img">
+                </div>
+            </div>
+            <p style="font-family:'Cinzel',serif; font-size:16px; font-weight:700; letter-spacing:2px; color:#d4af37; text-align:center;">
+                T.C. TRAKYA ÜNİVERSİTESİ
+            </p>
+            <p style="font-family:'Cinzel',serif; font-size:14px; font-weight:300; letter-spacing:1px; color:#d4af37; text-align:center; margin-top:6px;">
+                Sultan II. Bayezid Külliyesi Sağlık Müzesi
+            </p>
+            <div class="loading-bar-container">
+                <div class="loading-line"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     NAVİGASYON
+================================================================ -->
+<div class="nav-wrapper">
+    <nav class="nav">
+        <div class="logo-box">
+            <img src="assets/logo1.png" alt="Logo 1" class="logo-img1">
+            <img src="assets/logo2.png" alt="Logo 2" class="logo-img2">
+            <div class="logo-text-group">
+                <div class="logo-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+                <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+            </div>
+        </div>
+        <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+        <div id="globalDropdown">
+            <a href="index.html" class="dropdown-link">Ana Sayfa</a>
+            <a href="tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
+            <a href="bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
+            <a href="evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
+            <a href="hastane/hastane.html" class="dropdown-link">Darüşşifa</a>
+            <a href="medrese/medrese.html" class="dropdown-link">Tıp Medresesi</a>
+            <a href="imaret/imaret.html" class="dropdown-link">İmarethane</a>
+            <a href="music/music.html" class="dropdown-link">Müzikle Tedavi</a>
+            <a href="geziplani/geziplani.html" class="dropdown-link">Gezi Planı</a>
+            <a href="galeri/galeri.html" class="dropdown-link">Görsel Galeri</a>
+            <a href="nav/rehber.html" class="dropdown-link dropdown-link-highlight">İnteraktif Rehber</a>
+            <a href="nav/ziyaretci-defteri.html" class="dropdown-link">Ziyaretçi Defteri</a>
+            <a href="siir/siir.html" class="dropdown-link">Ağaçla Sarmaşık</a>
+            <a href="kazancigil/kazancigil.html" class="dropdown-link">Dr. Ratıp Kazancıgil</a>
+            <a href="oduller/oduller.html" class="dropdown-link">Ödüller</a>
+            <a href="personel/personel.html" class="dropdown-link">Personelimiz</a>
+            <a href="haberler/haberler.html" class="dropdown-link">Haberler</a>
+            <a href="duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
+            <a href="basin/basin.html" class="dropdown-link">Basında Biz</a>
+            <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
+        </div>
+    </nav>
+</div>
+
+<!-- ================================================================
+     ANA KONTEYNER
+================================================================ -->
+<div class="container">
+
+    <!-- BANNER -->
+    <div class="banner">
+        <img src="assets/banner.webp" class="media" alt="Külliye Görünümü">
+    </div>
+
+    <!-- ============================================================
+         SOL KOLON
+    ============================================================ -->
+    <div class="left">
+
+        <!-- Tarihçe -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>TARİHÇE</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="tarihce/tarihce.html" class="img-card-link">
+                    <img src="assets/tarihce.jpg" alt="Tarihçe">
+                </a>
+            </div>
+        </div>
+
+        <!-- Sultan II. Bayezid -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>SULTAN II. BAYEZİD</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="bayezid/bayezid.html" class="img-card-link">
+                    <img src="assets/bayezid.jpg" alt="Sultan II. Bayezid">
+                </a>
+            </div>
+        </div>
+
+        <!-- Evliya Çelebi -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>EVLİYA ÇELEBİ (Seyahatnâme)</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="evliya/evliya.html" class="img-card-link">
+                    <img src="assets/evliya.jpg" alt="Evliya Çelebi">
+                </a>
+            </div>
+        </div>
+
+        <!-- Müze Bölümleri -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>MÜZE BÖLÜMLERİ</h3>
+            <div class="card-content">
+                <ul>
+                    <li><a href="hastane/hastane.html" style="font-weight:bold;">DARÜŞŞİFA (Hastane)</a></li>
+                    <li><a href="medrese/medrese.html" style="font-weight:bold;">TIP MEDRESESİ</a></li>
+                    <li><a href="imaret/imaret.html" style="font-weight:bold;">İMARETHANE</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Müzikle Tedavi -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>MÜZİKLE TEDAVİ</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="music/music.html" class="img-card-link">
+                    <img src="assets/music.jpg" alt="Müzikle Tedavi">
+                </a>
+            </div>
+        </div>
+
+        <!-- Gezi Planı -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>MÜZE GEZİ PLANI</h3>
+            <div class="card-content">
+                <ul>
+                    <li><a href="geziplani/geziplani.html">Gezi Planı</a></li>
+                    <li><a href="galeri/galeri.html">Görsel Galeri</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- /left -->
+
+    <!-- ============================================================
+         ORTA KOLON
+    ============================================================ -->
+    <div class="center">
+
+        <!-- Video -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h2>KÜLLİYE TANITIM VİDEOSU</h2>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/YUw2S2MrHow?start=1" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Rehber & Ziyaretçi Defteri — 2 Yanyana Hero Kart -->
+        <div class="hero-cards-row">
+
+            <!-- Müze Rehberi -->
+            <a href="nav/rehber.html" class="hero-card">
+                <div class="hero-card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <div class="hero-card-title">Sultan II. Bayezid Külliyesi<br>İnteraktif Gezi Rehberi</div>
+                <span class="hero-card-btn">GEZİYE BAŞLA →</span>
+            </a>
+
+            <!-- Ziyaretçi Defteri -->
+            <a href="nav/ziyaretci-defteri.html" class="hero-card">
+                <div class="hero-card-icon"><i class="fas fa-book-open"></i></div>
+                <div class="hero-card-title">Ziyaretçi<br>Defteri</div>
+                <span class="hero-card-btn">DEFTERE YAZ →</span>
+            </a>
+
+        </div>
+
+        <!-- Dinamik Kartlar: Duyurular / Haberler / Basında Biz -->
+        <div class="dynamic-cards-container">
+
+            <div class="card">
+                <div class="c-f t-l"></div><div class="c-f t-r"></div>
+                <div class="c-f b-l"></div><div class="c-f b-r"></div>
+                <h3>DUYURULAR</h3>
+                <div class="card-content">
+                    <ul id="list-duyurular" class="dynamic-feed">
+                        <li><span class="ann-text-small">Yükleniyor…</span></li>
+                    </ul>
+                    <div class="more-link-box">
+                        <a href="duyurular/duyurular.html">TÜMÜ →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="c-f t-l"></div><div class="c-f t-r"></div>
+                <div class="c-f b-l"></div><div class="c-f b-r"></div>
+                <h3>HABERLER</h3>
+                <div class="card-content">
+                    <ul id="list-haberler" class="dynamic-feed">
+                        <li><span class="ann-text-small">Yükleniyor…</span></li>
+                    </ul>
+                    <div class="more-link-box">
+                        <a href="haberler/haberler.html">TÜMÜ →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="c-f t-l"></div><div class="c-f t-r"></div>
+                <div class="c-f b-l"></div><div class="c-f b-r"></div>
+                <h3>BASINDA BİZ</h3>
+                <div class="card-content">
+                    <ul id="list-basinda" class="dynamic-feed">
+                        <li><span class="ann-text-small">Yükleniyor…</span></li>
+                    </ul>
+                    <div class="more-link-box">
+                        <a href="basin/basin.html">TÜMÜ →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /dynamic-cards-container -->
+
+        <!-- Ödüller -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>🥇 🏆 ÖDÜLLERİMİZ 🏆 🥇</h3>
+            <div class="card-content" style="padding:0; overflow:hidden;">
+                <a href="oduller/oduller.html" class="img-card-link">
+                    <img src="assets/odul.webp" alt="Ödüller" class="odul-img">
+                </a>
+            </div>
+        </div>
+
+        <!-- Konum & İletişim -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>KONUM, ULAŞIM VE İLETİŞİM BİLGİLERİ</h3>
+            <div class="card-content">
+                <ul>
+                    <li>
+                        <details>
+                            <summary>
+                                <div class="summary-row">
+                                    <span>İletişim Bilgileri</span>
+                                    <span class="summary-arrow">▼</span>
+                                </div>
+                            </summary>
+                            <ul style="list-style:none; padding: 5px 0 0 0; line-height:1.9;">
+                                <li>
+                                    <a href="https://maps.app.goo.gl/bzReF3jYhArMYWi86" target="_blank">
+                                        📍 Haritada Görüntüle ve Yol Tarifi Al
+                                    </a>
+                                </li>
+                                <li>🏠 Sultan II. Bayezid Külliyesi Sağlık Müzesi, Yeniimaret / EDİRNE</li>
+                                <li>
+                                    📞 <a href="tel:02842240922">0 284 224 09 22</a>
+                                </li>
+                                <li>🚌 ETUS 3A hat numaralı şehir içi midibüsler ile müzemize ulaşabilirsiniz.</li>
+                                <li class="social-row" style="padding-top:10px;">
+                                    <a href="https://www.instagram.com/edirnesaglikmuzesi/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram" style="color:#E1306C;"></i> Instagram
+                                    </a>
+                                    <span class="sep-line">|</span>
+                                    <a href="https://www.facebook.com/people/Edirne-Saglik-Muzesi/100079601388695/" target="_blank" class="social-link">
+                                        <i class="fab fa-facebook" style="color:#1877F2;"></i> Facebook
+                                    </a>
+                                    <span class="sep-line">|</span>
+                                    <a href="https://x.com/saglikmuzesi" target="_blank" class="social-link">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M12.643 15C13.979 15 15 13.845 15 12.512V3.488C15 2.155 13.979 1 12.643 1H3.357C2.021 1 1 2.155 1 3.488V12.512C1 13.845 2.021 15 3.357 15H12.643ZM6.074 4.101H7.729L10.556 8.165L14.013 4.101H15.539L11.219 9.183L16 16H14.345L11.219 11.51L7.781 16H6.255L10.556 10.51L6.074 4.101Z" fill-rule="evenodd"/>
+                                        </svg>
+                                        @saglikmuzesi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mailto:saglikmuze@trakya.edu.tr" class="social-link">
+                                        ✉️ saglikmuze@trakya.edu.tr
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- /center -->
+
+    <!-- ============================================================
+         SAĞ KOLON
+    ============================================================ -->
+    <div class="right">
+
+        <!-- Ziyaret Bilgileri -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>ZİYARET BİLGİLERİ</h3>
+            <div class="card-content">
+                <ul>
+                    <li style="font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); margin-bottom:10px;">Gün ve Saatler</li>
+                    <li>Pazartesi <span style="float:right;">Kapalı</span></li>
+                    <li style="margin-bottom:15px;">Diğer Günler <span style="float:right;">09:30 – 18:00</span></li>
+
+                    <li style="font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); margin-bottom:10px;">Giriş Ücretleri</li>
+                    <li>Yerli Ziyaretçi <span style="float:right;">100 TL</span></li>
+                    <li>Yabancı Ziyaretçi <span style="float:right;">200 TL</span></li>
+                    <li style="font-style:italic; font-size:0.88em; opacity:0.7; margin-bottom:10px;">* Müze Kart geçerli değildir.</li>
+
+                    <li>
+                        <details>
+                            <summary>
+                                <div class="summary-row" style="border:none; margin:0; padding:0;">
+                                    <span>Ücretsiz Giriş Listesi</span>
+                                    <span class="summary-arrow">▼</span>
+                                </div>
+                            </summary>
+                            <ul style="list-style:none; padding: 10px 0 0 10px; font-size:0.93em; line-height:1.7;">
+                                <li>• 17 Yaş Altı</li>
+                                <li>• 65 Yaş Üzeri</li>
+                                <li>• Akademisyenler</li>
+                                <li>• Basın Kart Sahipleri</li>
+                                <li>• Gaziler, Gazi ve Şehit Yakınları</li>
+                                <li>• Er ve Erbaşlar</li>
+                                <li>• Engelliler ve Bir Refakatçisi</li>
+                                <li>• Kokart Sahibi Rehberler</li>
+                                <li>• Kültür Bakanlığı Personelleri</li>
+                                <li>• ICOM, ICOMOS ve UNESCO Kart Sahipleri</li>
+                                <li>• Trakya Üniversitesi Öğrenci, Personel ve Emeklileri</li>
+                                <li>• TÜ Genel Sekreterlik İzni Olanlar</li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ağaçla Sarmaşık -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>AĞAÇLA SARMAŞIK</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="siir/siir.html" class="img-card-link">
+                    <img src="assets/sarmasik.jpeg" alt="Ağaçla Sarmaşık">
+                </a>
+            </div>
+        </div>
+
+        <!-- Dr. Ratip Kazancıgil -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>EDİRNE'YE ADANMIŞ BİR ÖMÜR — DR. RATİP KAZANCIGİL</h3>
+            <div class="card-content" style="padding:0;">
+                <a href="kazancigil/kazancigil.html" class="img-card-link">
+                    <img src="assets/kazancigil.jpg" alt="Dr. Ratip Kazancıgil">
+                </a>
+            </div>
+        </div>
+
+        <!-- Müze Kadrosu -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>MÜZE KADROMUZ</h3>
+            <div class="card-content">
+                <ul>
+                    <li style="text-align:center; font-style:italic; opacity:0.85;">Müzeye Hayat Verenler</li>
+                    <li><a href="personel/personel.html">Personelimiz</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ZİYARETÇİ İSTATİSTİĞİ (2 bölüm) -->
+        <div class="card">
+            <div class="c-f t-l"></div><div class="c-f t-r"></div>
+            <div class="c-f b-l"></div><div class="c-f b-r"></div>
+            <h3>ZİYARETÇİ İSTATİSTİĞİ</h3>
+            <div class="card-content" style="padding: 10px 12px 12px;">
+
+                <!-- ÜST BÖLÜM: Web Ziyaretçisi -->
+                <div style="text-align:center; padding-bottom:10px; border-bottom: 1px solid rgba(212,175,55,0.2);">
+                    <div class="counter-label" style="font-size:9px; letter-spacing:1px; margin-bottom:4px;">
+                        <i class="fas fa-globe" style="margin-right:4px; color:var(--gold-dark);"></i>WEB ZİYARETÇİSİ
+                    </div>
+                    <div class="counter-wrap" id="counter-wrap" style="margin: 6px 0;"></div>
+                    <div class="counter-since" style="margin-top:2px;">Mayıs 2026 itibarıyla · toplam</div>
+                    <div class="active-wrap" style="margin-top:8px; padding:6px 10px;">
+                        <span class="active-dot"></span>
+                        <span class="active-label">Şu An Sitede:</span>
+                        <span class="active-count" id="active-count">—</span>
+                        <span class="active-label">kişi</span>
+                    </div>
+                </div>
+
+                <!-- ALT BÖLÜM: Fiziki Müze Ziyaretçisi -->
+                <div style="padding-top:10px;">
+                    <div style="text-align:center; font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px; color:var(--gold-dark); opacity:0.85; margin-bottom:6px;">
+                        <i class="fas fa-landmark" style="margin-right:4px;"></i>FİZİKİ MÜZE ZİYARETÇİSİ
+                    </div>
+                    <div class="stats-split">
+                        <!-- Toplam -->
+                        <div class="stat-half" style="border-right: 1px solid rgba(212,175,55,0.2);">
+                            <div class="stat-half-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-half-label">Toplam</div>
+                            <div class="stat-half-number" id="phys-total">—</div>
+                            <div class="stat-half-sub">1998'den beri</div>
+                        </div>
+                        <!-- Bu Ay -->
+                        <div class="stat-half">
+                            <div class="stat-half-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="stat-half-label">Bu Ay</div>
+                            <div class="stat-half-number" id="phys-month">—</div>
+                            <div class="stat-half-sub" id="phys-month-label">—</div>
+                        </div>
+                    </div>
+                    <!-- Detay linki -->
+                    <a href="ziyaret/ziyaretci.html" class="stats-footer-link">
+                        <i class="fas fa-chart-bar"></i>Detaylı İstatistikler &amp; Grafikler →
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- /right -->
+
+</div><!-- /container -->
+
+<!-- ================================================================
+     FOOTER
+================================================================ -->
+<div class="site-footer-wrapper">
+    <footer class="site-footer">
+        <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+        <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+        <p style="font-size:11px; margin-top:15px; opacity:0.65;">&copy; 2026 — Tüm Hakları Saklıdır</p>
+    </footer>
+</div>
+
+<!-- ================================================================
+     EVLİYA ÇELEBİ CHAT PANELİ
+================================================================ -->
+<div id="evliya-chat-panel">
+  <div class="evliya-chat-sheet">
+    <div class="evliya-chat-header">
+      <div class="evliya-chat-avatar">
+        <img src="nav/assets/img/evliya.gif" alt="Evliya Çelebi" onerror="this.style.display='none';this.parentElement.textContent='🎭'">
+      </div>
+      <div class="evliya-chat-info">
+        <div class="evliya-chat-name">REHBER EVLİYA</div>
+        <div class="evliya-chat-desc">Sultan II. Bayezid Külliyesi Dijital Rehberi</div>
+      </div>
+      <button class="evliya-chat-close" onclick="closeEvliyaChat()">×</button>
+    </div>
+    <div class="evliya-chat-messages" id="evliya-chat-messages"></div>
+    <div class="evliya-chat-input-area">
+      <div class="evliya-chat-quick" id="evliya-quick-btns">
+        <button class="quick-btn" onclick="evliyaQuick('Bu külliyeyi bana tanıt, neden önemli?')">🏛️ Külliye Nedir?</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifanın mimarisi ve bölümleri nasıldı?')">🏥 Darüşşifa</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada müzikle tedavi nasıl yapılırdı?')">🎵 Müzik Tedavisi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Makamların hastalıklar üzerindeki etkisini anlat')">🎼 Makam & Şifa</button>
+        <button class="quick-btn" onclick="evliyaQuick('Su sesi ve koku ile tedavi nasıl uygulanırdı?')">💧 Su & Koku Tedavisi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada kaç hekim ve hangi görevliler çalışırdı, maaşları neydi?')">🩺 Hekimler & Ücretler</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifada görev yapmış ünlü hekimlerin hikâyelerini anlat')">📋 Ünlü Hekimler</button>
+        <button class="quick-btn" onclick="evliyaQuick('Tıp medresesinde kimler okudu, nasıl bir eğitim vardı?')">📚 Tıp Medresesi</button>
+        <button class="quick-btn" onclick="evliyaQuick('İmarethanede ne pişirilir, kim yiyebilirdi? Personeli kimlerdi?')">🥘 İmarethane</button>
+        <button class="quick-btn" onclick="evliyaQuick('Tabhane neydi, kim kalabilirdi?')">🛖 Tabhane</button>
+        <button class="quick-btn" onclick="evliyaQuick('Sultan II. Bayezid kim, bu külliyeyi neden yaptırdı?')">👑 Sultan Kimdi?</button>
+        <button class="quick-btn" onclick="evliyaQuick('Mimar Hayreddin bu binayı nasıl tasarladı, akustiği nasıl sağladı?')">🏗️ Mimar Hayreddin</button>
+        <button class="quick-btn" onclick="evliyaQuick('Müzikle tedavinin tarihi nereye uzanır, Farabi ve İbn Sina ne söyledi?')">🧠 Müzik Tedavisinin Tarihi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Darüşşifanın şadırvanı ve su havuzu ne işe yarardı?')">⛲ Şadırvan & Havuz</button>
+        <button class="quick-btn" onclick="evliyaQuick('Külliyenin vakfiyesi neydi, gelirleri nereden gelirdi?')">📜 Vakıf & Gelirler</button>
+        <button class="quick-btn" onclick="evliyaQuick('1652 ziyaretinde darüşşifada neler gördün, ne hissettin?')">✍️ Seyahatnâme</button>
+        <button class="quick-btn" onclick="evliyaQuick('Külliye zamanla nasıl harap oldu, nasıl kurtarıldı?')">🏚️ Tarihin Karanlık Dönemi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Sağlık Müzesi hangi odalardan oluşuyor, ne görebilirim?')">🏆 Sağlık Müzesi</button>
+        <button class="quick-btn" onclick="evliyaQuick('Dünya hastane tarihinde bu yapının yeri nedir, neden öncü sayılır?')">🌍 Dünya Tarihindeki Yeri</button>
+        <button class="quick-btn" onclick="evliyaQuick('Dr. Mazhar Osman burada ne yaptı, 1915 olayını anlat')">⛓️ Zincirlerin Kırılması</button>
+      </div>
+      <div class="evliya-chat-row">
+        <textarea id="evliya-chat-input" placeholder="Evliya Çelebi'ye bir şey sor…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendEvliyaMsg();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
+        <button id="evliya-send-btn" onclick="sendEvliyaMsg()" title="Gönder">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVLİYA FAB BUTONU -->
+<div id="evliya-fab-wrap" onclick="openEvliyaChat()">
+  <div id="evliya-fab">
+    <img src="nav/assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span class="fab-fallback">🎭</span>
+  </div>
+  <div id="evliya-fab-label">BANA SOR</div>
+</div>
+
+<!-- ================================================================
+     PapaParse (Google Sheets CSV)
+================================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+<!-- ================================================================
+     JAVASCRIPT — ANA SİTE
+================================================================ -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* --------------------------------------------------
+       1. SPLASH — Sadece ilk ziyarette göster
+    -------------------------------------------------- */
+    (function initSplash() {
+        var SPLASH_KEY   = 'kulliye_splash_shown_v1';
+        var splashEl     = document.getElementById('splash-screen');
+
+        if (sessionStorage.getItem(SPLASH_KEY)) {
+            if (splashEl) splashEl.remove();
+            return;
+        }
+
+        sessionStorage.setItem(SPLASH_KEY, '1');
+
+        var canvas = document.getElementById('water-canvas');
+        var ctx    = canvas.getContext('2d');
+        var W = canvas.width  = window.innerWidth;
+        var H = canvas.height = window.innerHeight;
+
+        var buf1 = new Int32Array(W * H);
+        var buf2 = new Int32Array(W * H);
+
+        function drop(x, y) {
+            x = Math.floor(x); y = Math.floor(y);
+            if (x < 1 || x >= W-1 || y < 1 || y >= H-1) return;
+            buf1[x + y * W] = 512;
+        }
+
+        var rafId;
+        function step() {
+            var img  = ctx.createImageData(W, H);
+            var data = img.data;
+            for (var y = 1; y < H-1; y++) {
+                for (var x = 1; x < W-1; x++) {
+                    var i = x + y * W;
+                    buf2[i] = ((buf1[i-1] + buf1[i+1] + buf1[i-W] + buf1[i+W]) >> 1) - buf2[i];
+                    buf2[i] -= buf2[i] >> 5;
+                    var v = buf2[i];
+                    var p = i * 4;
+                    data[p]   = 10 + (v >> 3);
+                    data[p+1] = 18 + (v >> 2);
+                    data[p+2] = 28 + (v >> 1);
+                    data[p+3] = 255;
+                }
+            }
+            ctx.putImageData(img, 0, 0);
+            var tmp = buf1; buf1 = buf2; buf2 = tmp;
+            rafId = requestAnimationFrame(step);
+        }
+
+        step();
+
+        var dropInterval = setInterval(function () {
+            drop(Math.random() * W, Math.random() * H);
+        }, 450);
+
+        function onMouseMove(e) { drop(e.clientX, e.clientY); }
+        window.addEventListener('mousemove', onMouseMove);
+
+        setTimeout(function () {
+            if (!splashEl) return;
+            splashEl.style.opacity    = '0';
+            splashEl.style.visibility = 'hidden';
+            setTimeout(function () {
+                splashEl.remove();
+                cancelAnimationFrame(rafId);
+                clearInterval(dropInterval);
+                window.removeEventListener('mousemove', onMouseMove);
+            }, 1200);
+        }, 3000);
+    })();
+
+    /* --------------------------------------------------
+       2. MENÜ TOGGLE
+    -------------------------------------------------- */
+    var menuBtn  = document.getElementById('menuBtn');
+    var dropdown = document.getElementById('globalDropdown');
+
+    menuBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!dropdown.contains(e.target) && e.target !== menuBtn) {
+            dropdown.classList.remove('active');
+        }
+    });
+
+    /* --------------------------------------------------
+       3. GOOGLE SHEETS — Duyuru / Haber / Basın
+    -------------------------------------------------- */
+    var sheetSettings = [
+        {
+            id:  'list-duyurular',
+            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=0&single=true&output=csv'
+        },
+        {
+            id:  'list-haberler',
+            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=995325209&single=true&output=csv'
+        },
+        {
+            id:  'list-basinda',
+            url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQERf8SWNyArJj-5FUlJgcfaMWqNkiQpa0Zuzgx3gTxUb1afXeA9Lw45RUB1yN5uOfUdkMK44C12HM/pub?gid=1712536451&single=true&output=csv'
+        }
+    ];
+
+    sheetSettings.forEach(function (sheet) {
+        Papa.parse(sheet.url, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+                var el = document.getElementById(sheet.id);
+                if (!el) return;
+                el.innerHTML = '';
+                var rows = results.data.reverse().slice(0, 3);
+                if (!rows.length) {
+                    el.innerHTML = '<li><span class="ann-text-small">Kayıt bulunamadı.</span></li>';
+                    return;
+                }
+                rows.forEach(function (row) {
+                    var li = document.createElement('li');
+                    li.innerHTML =
+                        '<span class="ann-date-small">' + (row['TARİH'] || '') + '</span>' +
+                        '<span class="ann-text-small">'  + (row['DUYURU METNİ'] || '') + '</span>';
+                    el.appendChild(li);
+                });
+            },
+            error: function () {
+                var el = document.getElementById(sheet.id);
+                if (el) el.innerHTML = '<li><span class="ann-text-small">Yüklenemedi.</span></li>';
+            }
+        });
+    });
+
+    /* --------------------------------------------------
+       4. ZİYARETÇİ SAYACI
+    -------------------------------------------------- */
+    (function initCounter() {
+        var OFFSET      = 0;
+        var SESSION_KEY = 'kulliye_counted_v5';
+        var ACTIVE_KEY  = 'kulliye_active_pings';
+        var ACTIVE_TTL  = 90000;
+        var MY_ID       = Date.now() + '_' + Math.random().toString(36).slice(2);
+
+        var API_HIT = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci3/up';
+        var API_GET = 'https://api.counterapi.dev/v1/kulliye-saglik-muzesi/ziyaretci3';
+
+        function render(apiCount) {
+            var total = OFFSET + (apiCount || 0);
+            var wrap = document.getElementById('counter-wrap');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            var digits = String(total).padStart(6, '0').split('');
+            digits.forEach(function (ch, i) {
+                var box = document.createElement('div');
+                box.className = 'd-box';
+                box.textContent = ch;
+                box.style.opacity = '0';
+                box.style.transform = 'translateY(-12px)';
+                box.style.transition =
+                    'opacity 0.45s ease ' + (i * 0.06) + 's, ' +
+                    'transform 0.45s ease ' + (i * 0.06) + 's';
+                wrap.appendChild(box);
+                setTimeout(function () {
+                    box.style.opacity = '1';
+                    box.style.transform = 'translateY(0)';
+                }, 30);
+            });
+        }
+
+        function pingActive() {
+            try {
+                var raw = localStorage.getItem(ACTIVE_KEY);
+                var pings = raw ? JSON.parse(raw) : {};
+                var now = Date.now();
+                Object.keys(pings).forEach(function (id) {
+                    if (now - pings[id] > ACTIVE_TTL) delete pings[id];
+                });
+                pings[MY_ID] = now;
+                localStorage.setItem(ACTIVE_KEY, JSON.stringify(pings));
+                var el = document.getElementById('active-count');
+                if (el) el.textContent = Object.keys(pings).length;
+            } catch(e) {}
+        }
+
+        var isNew = !sessionStorage.getItem(SESSION_KEY);
+        fetch(isNew ? API_HIT : API_GET)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (isNew) sessionStorage.setItem(SESSION_KEY, '1');
+                render(data.count || 0);
+            })
+            .catch(function () { render(0); });
+
+        pingActive();
+        setInterval(pingActive, 30000);
+
+        window.addEventListener('beforeunload', function () {
+            try {
+                var raw = localStorage.getItem(ACTIVE_KEY);
+                var pings = raw ? JSON.parse(raw) : {};
+                delete pings[MY_ID];
+                localStorage.setItem(ACTIVE_KEY, JSON.stringify(pings));
+            } catch(e) {}
+        });
+    })();
+
+    /* --------------------------------------------------
+       5. FİZİKİ ZİYARETÇİ SAYACI (Google Sheets)
+    -------------------------------------------------- */
+    (function initPhysicalCounter() {
+        var SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSindpUqfzIMsteO46KZsSHxYgxnT_xAui-1bC1hcjlWbS6gzMAFsISf5sqLehELkPjJghO9clTIHyS/pub?gid=0&single=true&output=csv';
+
+        var MONTHS_TR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+        function fmt(n) {
+            return n.toLocaleString('tr-TR');
+        }
+
+        function parseDate(s) {
+            if (!s) return null;
+            s = s.trim();
+            var m;
+            if ((m = s.match(/^(\d{1,2})\.(\d{2})\.(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+            if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/))) return new Date(+m[1], +m[2]-1, +m[3]);
+            if ((m = s.match(/^(\d{1,2})\/(\d{2})\/(\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+            var TR_M = {'ocak':0,'şubat':1,'mart':2,'nisan':3,'mayıs':4,'haziran':5,'temmuz':6,'ağustos':7,'eylül':8,'ekim':9,'kasım':10,'aralık':11};
+            if ((m = s.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})/))) {
+                var mo = TR_M[m[2].toLowerCase()];
+                if (mo !== undefined) return new Date(+m[3], mo, +m[1]);
+            }
+            return null;
+        }
+
+        function splitCSVLine(line) {
+            var result = [], current = '', inQuotes = false;
+            for (var i = 0; i < line.length; i++) {
+                var ch = line[i];
+                if (ch === '"') { inQuotes = !inQuotes; continue; }
+                if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; continue; }
+                current += ch;
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        function parseCSV(text) {
+            var lines = text.trim().split('\n');
+            var result = [];
+            var firstCols = splitCSVLine(lines[0]);
+            var startLine = !parseDate(firstCols[0]) ? 1 : 0;
+            for (var i = startLine; i < lines.length; i++) {
+                var parts = splitCSVLine(lines[i]);
+                if (parts.length < 2) continue;
+                var rawCount = parts[1].replace(/\./g, '').replace(',', '.');
+                var d = parseDate(parts[0]);
+                var c = Math.round(parseFloat(rawCount));
+                if (d && !isNaN(c) && c >= 0) result.push({ date: d, count: c });
+            }
+            return result.sort(function(a, b) { return a.date - b.date; });
+        }
+
+        function animateNumber(el, target) {
+            var duration = 1200;
+            var start = Date.now();
+            function step() {
+                var elapsed = Date.now() - start;
+                var progress = Math.min(elapsed / duration, 1);
+                var ease = 1 - Math.pow(1 - progress, 3);
+                el.textContent = fmt(Math.round(target * ease));
+                if (progress < 1) requestAnimationFrame(step);
+                else el.textContent = fmt(target);
+            }
+            step();
+        }
+
+        function render(data) {
+            var totalEl   = document.getElementById('phys-total');
+            var monthEl   = document.getElementById('phys-month');
+            var monthLabelEl = document.getElementById('phys-month-label');
+
+            if (!totalEl) return;
+
+            var total = data.reduce(function(s, r) { return s + r.count; }, 0);
+            animateNumber(totalEl, total);
+
+            var today = new Date();
+            var monthVal = data
+                .filter(function(r) {
+                    return r.date.getFullYear() === today.getFullYear() &&
+                           r.date.getMonth() === today.getMonth();
+                })
+                .reduce(function(s, r) { return s + r.count; }, 0);
+
+            if (monthEl) animateNumber(monthEl, monthVal);
+            if (monthLabelEl) {
+                monthLabelEl.textContent = MONTHS_TR[today.getMonth()] + ' ' + today.getFullYear();
+            }
+        }
+
+        fetch(SHEET_CSV)
+            .then(function(r) { return r.text(); })
+            .then(function(text) {
+                var data = parseCSV(text);
+                if (data.length > 0) render(data);
+                else throw new Error('Veri yok');
+            })
+            .catch(function() {
+                var el = document.getElementById('phys-total');
+                if (el) el.textContent = '—';
+            });
+    })();
+
+});
+</script>
+
+<!-- ================================================================
+     EVLİYA ÇELEBİ CHAT — JS (nav/script.js'den entegre)
+================================================================ -->
+<script>
+/* Sistem promptu ve chat fonksiyonları nav/script.js'den alınmıştır.
+   Görsel yolu: nav/assets/img/evliya.gif
+   API: https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev (Cloudflare Worker - Groq proxy)
+*/
+
+const EVLIYA_SYSTEM_PROMPT = `Sen Evliya Çelebi'sin — 17. yüzyılın ünlü Osmanlı seyyahı, müzisyen ve tarihçisi. Sultan II. Bayezid Külliyesi Sağlık Müzesi'nin dijital rehberisin. Kullanıcıya külliye ve müze hakkında Evliya Çelebi karakteriyle, birinci şahıs ağzından, canlı ve akıcı biçimde bilgi veriyorsun. 
+
+## TEMEL KARAKTERİSTİKLER
+- Osmanlı dönemine ait dil zenginliği ve ifade biçimi kullan, ama anlaşılır kal
+- "1652'de bizzat gördüm", "Seyahatnâme'mde yazdım" gibi ifadelerle birinci şahıs perspektifi kullan  
+- Zaman zaman şiirsel veya felsefi yorumlar ekle
+- Bilgi verirken mekanı canlandır: ses, koku, görsel detaylar ekle
+
+## BİLGİ BANKASI
+
+### KÜLLİYENİN GENEL BİLGİLERİ
+- İnşaat: 1484-1488 yılları arasında tamamlandı. Mimar: Hayrettin (dönemin mimarbaşısı).
+- Banisi: Fatih Sultan Mehmet'in oğlu, 8. Osmanlı Padişahı Sultan II. Bayezid Han.
+- Külliye bileşenleri: Cami, Darüşşifa (hastane), Tıp Medresesi, İmarethane, Tabhane (misafirhane), Kiler, Fırın, Köprü (Tunca Nehri üzerinde).
+- Osmanlı külliyeleri içinde günümüze en sağlam ulaşmış külliyelerin başında gelir.
+- 1984'te Trakya Üniversitesi'ne devredildi; 1997'de Sağlık Müzesi'ne dönüştürüldü.
+- 2004: Avrupa Konseyi Müze Ödülü kazandı.
+
+### MÜZİKLE TEDAVİNİN TARİHİ ARKA PLANI
+- Müzikle tedavinin bilinen ilk kurumsal örneği: Şam Nureddin Zengi Şifahanesi (1154). Orada akıl hastaları için ayrı bölüm oluşturulmuş ve musiki ile tedavi yapılmıştır.
+- Müzikle tedavinin yapıldığı diğer Selçuklu ve Osmanlı darüşşifaları: Kayseri Gevher Nesibe (1206), Sivas Divriği (1228), Amasya (1309), İstanbul Fatih (1470), İstanbul Süleymaniye (1556), Edirne Sultan II. Bayezid (1488).
+- Farabi (870-950): Makamların insan ruhu üzerindeki etkilerini sistematik olarak inceleyen ilk İslam bilgini. Rast→neşe, Neva→ferahlık, Uşşak→gülme, Hüseyni→sakinlik, Hicaz→alçakgönüllülük, Buselik→kuvvet, Zirgüle→uyku, Saba→cesaret.
+- İbn Sina (980-1037): Müziği tıp eğitiminin bir parçası olarak ele aldı; makamların fizyolojik ve psikolojik etkilerini yazdı.
+- Osmanlı'da müzik tedavisi bireysel hekimlik uygulamasından başlayarak kurumsal hastane ortamına taşındı.
+
+### DARÜŞŞİFA MİMARİSİ
+- Dünyada merkezi planlı ilk hastane örneklerinden biri olarak kabul edilir; batıdaki benzerleri 200 yıl sonra yapılmıştır.
+- Üç ana bölümden oluşur:
+  1. Birinci avlu (dikdörtgen): Poliklinik ve hizmet odaları — 10 mermer sütun üzerine kubbeli revak; 6 oda sağda, 4 oda solda; ayrıca "süt kuyusu" adıyla bilinen bir su kuyusu vardır.
+  2. İkinci avlu: İdari odalar (4 oda) — hekimbaşı ve diğer görevlilerin odaları.
+  3. Yataklı tedavi (Şifahane) bölümü: Merkezi büyük kubbe + 12 küçük kubbe. Altıgen planlı. 6 kışlık oda (4,35x4,35 m), 4 yazlık oda (açık kemerli). Ortada 12 köşeli fıskiyeli havuz.
+- Müzik sahnesi: Giriş kapısının tam karşısında, dışa çıkık yarım kubbeli açık bölüm — müzisyenlerin burada oturduğu düşünülür.
+- Akustik: Mimar Hayreddin müzik tedavisini düşünerek binanın akustiğini bilinçli olarak planlamıştır.
+- Şadırvan: Merkez kubbenin tam altında, 12 köşeli, fıskiyeli.
+- Havalandırma: Kubbe üzerindeki fener + kışlık odalardaki bacalar ile çözülmüştür.
+
+### DARÜŞŞİFA — PERSONEL (KURULUŞ YILLARI, VAKFİYE'YE GÖRE)
+- 3 tabip (hekim): Biri baştabip (günlük 30 akçe), diğerleri 10'ar akçe
+- 2 kehhal (göz doktoru): 7'şer akçe
+- 2 cerrah
+- 1 kâtip: 4 akçe
+- 4 hizmetkar (hastabakıcı): 3'er akçe
+- 1 eczacı (şurup pişiren, ilaç döven): 6 akçe
+- 1 vekilharç: 4 akçe
+- 1 kilerdar: 4 akçe
+- 2 aşçı: 3'er akçe
+- 1 ferraş, 1 gassal, 1 bevvap, 1 hadim (buhurdancı): 3'er akçe
+- Toplam kuruluşta ~21 personel; günlük 126 akçe maaş + 200 akçe ilaç/erzak ödeneği
+- 1617 defterine göre personel 27'ye, maaş 142 akçeye yükselmiştir.
+- Kuruluşta 30 yataklıydı (vakfiyede: "30 döşek, 30 yorgan, 64 yastık").
+
+### DARÜŞŞİFA — MÜZİK TEDAVİSİ (EVLİYA ÇELEBİ'NİN GÖZLEM VE KAYITLARI, 1652)
+- Evliya'nın Seyahatnâme kaydı: Vakfiye şartına göre 10 kişilik hanende ve sazende grubu:
+  3 hanende, 1 neyzen, 1 kemancı, 1 musikarcı, 1 santurcu, 1 çengi, 1 çeng-santurcu, 1 udcu
+- Haftada 3 kez müzik faslı — hem akıl hastalarına hem diğer hastalara
+- Evliya'nın kendi ifadesiyle: "Doğrusu musiki ilminde neva, rast, dügah, segah, çargah, suzinak makamları onlara mahsustur. Ama zengule makamı ile buselik makamında rast karar kılsa insana hayat verir. Bütün saz ve makamlarda ruha gıda vardır."
+- Çalınan makamlar: neva, rast, dügâh, segâh, çargâh, suzinak, zengule, buselik
+- Farabi'ye göre makamların etkileri: Rast→neşe, Neva→ferahlık, Uşşak→gülme, Hüseyni→sakinlik, Hicaz→alçakgönüllülük, Buselik→kuvvet, Zirgüle→uyku, Saba→cesaret
+- Müzikle tedavi sadece akıl hastalarına değil, fiziksel hastalara da uygulanırdı.
+
+### KOKU VE DİĞER TEDAVİ YÖNTEMLERİ (EVLİYA'NIN KAYDI)
+- Evliya'nın yazdığı bahar mevsimi koku tedavisi çiçekleri: sim ve zerrin, deveboynu, müşkü rumi, yasemin, gülnesrin, şebboy, karanfil, reyhan, lale, sümbül
+- Mutfakta hekimin önerisiyle hastalığa göre yemek pişirilirdi.
+- Evliya'nın mutfak kaydı: "Gece ve gündüz üç kere... kekik, turaç, sülün, güvercin, üveyik, kaz, ördek ve bülbüle varıncaya kadar bütün kuşları avcılar mütevelliye getirip hekimlerin isteğine göre pişirerek hastalara verirler."
+- 1490 muhasebe kaydında şuruphane malzemeleri arasında: nebat şekeri, bal, gül suyu, raziyane suyu, kafur, hindistan cevizi, nar, limon suyu, defne yağı, badem yağı sayılır.
+
+### DARÜŞŞİFADA GÖREV YAPMIŞ HEKIMLER
+- Hekim Hasan bin Kasım: İlk hekimlerden; 1492'de birinci tabip.
+- Ahi Çelebi (Muhammed İbni Kemal): II. Bayezid ve I. Selim'in özel hekimi; burada da baştabiplik yaptı.
+- Şifai (asıl adı Abdülbaki): 1644'te baştabip oldu; 1665'te Edirne'de vefat etti.
+- Destari: Baştabipken 1624'te vefat etti.
+- Sinan Efendi: Buradan Fatih Darüşşifası'na atandı; sonra Yavuz'un özel hekimi oldu.
+- Atai (Hekim Sinanoğlu): II. Selim devrinde ikinci tabipken vefat etti.
+
+### TIB MEDRESESİ
+- Darüşşifanın hemen bitişiğinde; hem teorik hem pratik tıp eğitimi verilirdi.
+- Osmanlı eğitim sisteminde en üst düzey "60 üzeri" medreselerden sayılırdı.
+- Öğrenciler teorik eğitimlerini yanı başındaki darüşşifada pratiğe dökerdi.
+- Hekim-şairler yetiştirdi (Nasuhi, Atai, Fani, Cerrah Safari vb.).
+- Evliya'nın kaydı (1652): "Tıp medresesinde öğrenciler Eflatun, Sokrat, Aristo, Calinos ve Feylesof Fisagor'dan dem vururlar — olgunlaşmış hekimler, her biri kendi ilimine gönül vermiş."
+
+### KÜLLİYEDE DİĞER YAPILAR
+- Tabhane (misafirhane): Caminin iki yanında, dokuzar kubbeli iki blok. Uzak yoldan gelen yolcular ve hastane yakınları ücretsiz yatıp yiyebilirdi (en fazla 3 gün). 30 yatak kapasiteliydi.
+- İmaret (aşevi): Caminin solunda, iki büyük taş blok. Her gün iki öğün pişirilir; külliye personeli ve fakir fukara ücretsiz yerdi.
+- Hamam: Çifte hamam — günümüzde yıkılmış; yalnızca eski fotoğraflardan bilinir.
+- Mehterhane: Külliye imaret blokları arasında; I. Sultan Ahmet tarafından inşa ettirilmiştir.
+
+### KÜLLİYENİN CAMİSİ (DETAY)
+- 500 m² alan. Osmanlı mimarisinde "tabhaneli cami" tipinin ender örneklerinden.
+- Kündekâri ahşap işçiliği ile yapılmış hünkâr mahfili, ilk Türk-İslam örneklerinden sayılır.
+- Dışarıdan bakıldığında göze çarpan tek büyük kubbe ve iki zarif minare.
+- Oktay Aslanapa: "Tam bir klasik sükûnet hâkimdir."
+
+### DÜNYA HASTANECİLİK TARİHİNDEKİ YERİ
+- Rönesans dönemi hastane mimarisinde dönüm noktası sayılan Milano Ospidale Maggiore'den (1457) yalnızca 30 yıl sonra inşa edildi; ama pek çok açıdan onu geçti.
+- Terzioğlu: "Edirne Sultan II. Bayezid Hastanesi, Rönesans devrinde ve hatta hastane tarihinde bir eşi daha olmayan mimari bir abidedir."
+- Benzer merkezi planlama: Antwerpen Stuivenberg Hastanesi (1855), Philadelphia Presbyterian (1885), Baltimore Johns Hopkins (1876) — hepsi bu yapıdan 400 yıl sonra benzer sisteme ulaştı.
+
+### DARÜŞŞİFANIN AKUSTİĞİ VE SU SESİ
+- Terzioğlu, darüşşifanın akustik planını çizmiş; binanın müzik tedavisi gözetilerek bilinçli tasarlandığını kanıtlamıştır.
+- Orta şadırvandan fıskiyeler aracılığıyla yükselen su sesi, müzikle birlikte tedavi edici bir ortam oluşturuyordu.
+- 2007'de yapılan araştırma: 100 ziyaretçinin 92'si darüşşifada çalınan müziğin kendilerini olağanüstü rahatlattığını söyledi.
+
+### VAKFİYE VE GELİR KAYNAKLARI
+- Külliyenin masrafları bir vakıf sistemiyle karşılanırdı. Sultan II. Bayezid bu amaçla İstanbul ve Edirne'de çok sayıda dükkân, hamam, köy, arsa vakfetti.
+- 1493'te vakıf geliri: 782.930 akçe. 1574'e yükselince 1.552.131 akçeye çıktı.
+- Külliyenin inşaatı, Basarabya fethinden elde edilen ganimet ile finanse edildi.
+
+### TARİHSEL SÜREÇ
+- 1488: Hizmete açıldı. Tam teşekküllü hastane — akıl, göz, dahiliye, cerrahi.
+- Kuruluşundan 1877-78 Osmanlı-Rus Savaşı'na kadar 389 yıl aralıksız hizmet verdi.
+- 1877-78 savaşından sonra kötü şartlara düştü; hastalar zincirle bağlanmaya başlandı.
+- 1915: Dr. Mazhar Osman, hastaları zincirlerden çözdü.
+- 1950'ler: Harap halde; bir kısmı hayvan ağılı olarak kullanılıyordu.
+- 1984 (14 Eylül): Trakya Üniversitesi'ne devredildi.
+- 1997: Sağlık Müzesi'ne dönüştürüldü. O yıl yalnızca 3.200 ziyaretçi geldi.
+- 2004: Avrupa Konseyi Müze Ödülü. Ziyaretçi sayısı 94.672'ye fırladı.
+
+### SAĞLIK MÜZESİ'NİN BÖLÜM VE ODALARI
+- Müze iki ana bölümden oluşur: Darüşşifa (hastane) ve Tıp Medresesi.
+- Darüşşifa bölümündeki odalar: Psikiyatri Tarihi Bölümü, Hekimbaşı Odası, Dr. Rıfat Osman Bey Odası, Ord. Prof. Dr. Süheyl Ünver Odası, Hekimliğin Gelişim Tarihi Odası, Edirne Sarayı Sergisi, Cumhuriyet Öncesi Türk Tıbbı Odası, 15. yy Osmanlı Cerrahisi Odası, Eczacılık ve Şifalı Bitkiler Odası, Külliye Tanıtım Odası, Hastane Mutfağı.
+- Tıp Medresesi bölümü (2008'de açıldı): Bekçi Odası, Osmanlı'da Tıp Eğitimi Odası, Öğrenci Odaları, Müderris Odası, Türk Deneysel Tıbbı Odası, Dershane.
+
+### EVLİYA ÇELEBİ HAKKINDA
+- 1611 doğumlu, İstanbul'lu. Seyahatnâme'yi 10 ciltte yazdı; 40 yılı aşan gezi notlarıdır.
+- 1652'de Edirne'ye geldi; külliyeyi ve darüşşifayı ayrıntılı inceledi, Seyahatnâme'nin 6. cildine yazdı.
+- Kendisi de müzisyendi; dönemin müzik ustası Derviş Ömer Gülşeni'den musiki dersleri aldı.
+
+---
+
+## CEVAP STİLİ
+- 2-3 paragraf ideal
+- Doğrudan konuya gir, tanıtımla başlama
+- Her 2-3 cevaptan birinde ziyaretçiyi mekânı keşfe yönlendir
+- Bilgi bankanda olmayan bir şey sorulursa: "Bu konuda Seyahatnâme'mde kayıt bulamıyorum" de
+
+## !! YABANCI KELİME YASAĞI — KESİN KURAL !!
+Türkçe cevap verirken ASLA İngilizce veya başka yabancı dil kelime kullanma.
+Osmanlıca/Arapça kökenli kelimeler (darüşşifa, vakfiye, imaret vb.) kabul edilir — bunlar Türkçenin bir parçası.
+
+## !! MUTLAK DİL KURALI — HİÇBİR İSTİSNA YOK !!
+Kullanıcının mesajı hangi dilde yazılmışsa YALNIZCA o dilde cevap ver.
+Türkçe → sadece Türkçe, tek bir İngilizce kelime bile yasak
+English → sadece English
+Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE o dilde cevapla.
+İki dil ASLA karıştırılmaz. Evliya Çelebi karakterini koru ama dili değiştirme.`;
+
+let evliyaChatHistory=[];let evliyaThinking=false;
+
+function openEvliyaChat(){
+  document.getElementById('evliya-chat-panel').classList.add('open');
+  document.getElementById('evliya-fab-wrap').classList.add('chat-open');
+  // (Ses yönetimi: rehber.html'e özgü, burada devre dışı)
+  if(evliyaChatHistory.length===0){
+    addEvliyaMsg('bot','Sultan II. Bayezid Külliyesi\'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652\'de burayı bizzat gezdim.\n\nDarüşşifa\'nın müzik tedavisinden bölüm ve odalarına kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️');
+  }
+}
+
+function closeEvliyaChat(){
+  document.getElementById('evliya-chat-panel').classList.remove('open');
+  document.getElementById('evliya-fab-wrap').classList.remove('chat-open');
+  // (Ses yönetimi: rehber.html'e özgü)
+}
+
+function evliyaQuick(text){document.getElementById('evliya-chat-input').value=text;sendEvliyaMsg();}
+
+function addEvliyaMsg(role,text){
+  const container=document.getElementById('evliya-chat-messages');
+  const isBot=role==='bot';
+  const div=document.createElement('div');div.className='chat-msg '+(isBot?'bot':'user');
+  const avatarEl=isBot?`<div class="chat-msg-avatar"><img src="nav/assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.textContent='🎭'"></div>`:`<div class="chat-msg-avatar" style="background:linear-gradient(135deg,#6b1500,#a02010);">👤</div>`;
+  div.innerHTML=avatarEl+`<div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  container.appendChild(div);container.scrollTop=container.scrollHeight;return div;
+}
+
+function addTypingIndicator(){
+  const container=document.getElementById('evliya-chat-messages');
+  const div=document.createElement('div');div.className='chat-msg bot';div.id='evliya-typing';
+  div.innerHTML=`<div class="chat-msg-avatar"><img src="nav/assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.textContent='🎭'"></div><div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>`;
+  container.appendChild(div);container.scrollTop=container.scrollHeight;
+}
+function removeTypingIndicator(){const el=document.getElementById('evliya-typing');if(el)el.remove();}
+
+async function sendEvliyaMsg(){
+  if(evliyaThinking)return;
+  const input=document.getElementById('evliya-chat-input');
+  const text=input.value.trim();if(!text)return;
+  input.value='';input.style.height='auto';
+  addEvliyaMsg('user',text);
+  evliyaChatHistory.push({role:'user',content:text});
+  evliyaThinking=true;document.getElementById('evliya-send-btn').disabled=true;addTypingIndicator();
+  try{
+    const msgs=[{role:'system',content:EVLIYA_SYSTEM_PROMPT},...evliyaChatHistory.map(m=>({role:m.role==='assistant'?'assistant':m.role,content:m.content}))];
+    const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85})});
+    const data=await response.json();removeTypingIndicator();
+    if(data.error){addEvliyaMsg('bot','⚠️ Hata: '+(data.error.message||'Bilinmeyen hata'));}
+    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);}
+  }catch(e){removeTypingIndicator();addEvliyaMsg('bot','🕯️ Bağlantı kurulamadı. Lütfen tekrar deneyin.');console.error(e);}
+  evliyaThinking=false;document.getElementById('evliya-send-btn').disabled=false;
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  var ep=document.getElementById('evliya-chat-panel');
+  if(ep)ep.addEventListener('click',function(e){if(e.target===this)closeEvliyaChat();});
+});
+</script>
+
+</body>
+</html>
