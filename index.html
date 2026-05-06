@@ -2203,15 +2203,57 @@ Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE
 
 let evliyaChatHistory=[];let evliyaThinking=false;
 
-function speakEvliyaGreeting(){
+// Erkek sesini seçen yardımcı fonksiyon — kadın sesi KESİNLİKLE kullanılmaz
+function getMaleVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  // Bilinen erkek sesi anahtar kelimeleri (büyük/küçük harf duyarsız)
+  const maleKeywords=['male','erkek','man','guy','ahmet','ali','onur','mehmet','umut'];
+  // Bilinen kadın sesi anahtar kelimeleri — bunları dışla
+  const femaleKeywords=['female','kadın','woman','girl','ayşe','fatma','yelda','esin','filiz','seda','elif'];
+
+  // 1. Önce Türkçe + erkek ses bul
+  let voice=voices.find(v=>
+    v.lang.startsWith('tr') &&
+    maleKeywords.some(k=>v.name.toLowerCase().includes(k)) &&
+    !femaleKeywords.some(k=>v.name.toLowerCase().includes(k))
+  );
+  // 2. Türkçe ve kadın olmayan ilk ses
+  if(!voice) voice=voices.find(v=>
+    v.lang.startsWith('tr') &&
+    !femaleKeywords.some(k=>v.name.toLowerCase().includes(k))
+  );
+  // 3. Herhangi bir erkek ses
+  if(!voice) voice=voices.find(v=>
+    maleKeywords.some(k=>v.name.toLowerCase().includes(k)) &&
+    !femaleKeywords.some(k=>v.name.toLowerCase().includes(k))
+  );
+  // 4. Kadın olmayan ilk ses
+  if(!voice) voice=voices.find(v=>
+    !femaleKeywords.some(k=>v.name.toLowerCase().includes(k))
+  );
+  return voice||null;
+}
+
+function speakEvliya(text){
   if(!('speechSynthesis' in window))return;
   window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance('Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.');
-  u.lang='tr-TR';u.rate=0.88;u.pitch=0.95;
-  const voices=window.speechSynthesis.getVoices();
-  const match=voices.find(v=>v.lang.startsWith('tr'))||voices.find(v=>v.lang.startsWith('tr-'));
-  if(match)u.voice=match;
-  window.speechSynthesis.speak(u);
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='tr-TR';u.rate=0.88;u.pitch=0.85;
+  // Sesler yüklü değilse bekle
+  const trySpeak=()=>{
+    const v=getMaleVoice();
+    if(v)u.voice=v;
+    window.speechSynthesis.speak(u);
+  };
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;trySpeak();};
+  } else {
+    trySpeak();
+  }
+}
+
+function speakEvliyaGreeting(){
+  speakEvliya('Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.');
 }
 
 function openEvliyaChat(){
@@ -2261,7 +2303,7 @@ async function sendEvliyaMsg(){
     const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85})});
     const data=await response.json();removeTypingIndicator();
     if(data.error){addEvliyaMsg('bot','⚠️ Hata: '+(data.error.message||'Bilinmeyen hata'));}
-    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);}
+    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);speakEvliya(reply);}
   }catch(e){removeTypingIndicator();addEvliyaMsg('bot','🕯️ Bağlantı kurulamadı. Lütfen tekrar deneyin.');console.error(e);}
   evliyaThinking=false;document.getElementById('evliya-send-btn').disabled=false;
 }
