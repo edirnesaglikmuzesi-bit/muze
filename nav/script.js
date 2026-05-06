@@ -1886,6 +1886,19 @@ Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE
 
 let evliyaChatHistory=[];let evliyaThinking=false;
 
+const EVLIYA_GREETING='Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.';
+
+function speakEvliyaGreeting(){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(EVLIYA_GREETING);
+  u.lang='tr-TR';u.rate=0.88;u.pitch=0.95;
+  const voices=window.speechSynthesis.getVoices();
+  const match=voices.find(v=>v.lang.startsWith('tr'))||voices.find(v=>v.lang.startsWith('tr-'));
+  if(match)u.voice=match;
+  window.speechSynthesis.speak(u);
+}
+
 function openEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.add('open');
   document.getElementById('evliya-fab-wrap').classList.add('chat-open');
@@ -1894,6 +1907,8 @@ function openEvliyaChat(){
   if(introAudio&&!introAudio.paused){introAudio._wasPlaying=true;introAudio.pause();}
   if(evliyaChatHistory.length===0){
     addEvliyaMsg('bot','Sultan II. Bayezid Külliyesi\'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652\'de burayı bizzat gezdim.\n\nDarüşşifa\'nın müzik tedavisinden Bölüm\  ve odalarına kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️');
+    // Kısa gecikmeyle sesli selamlama — panel açılış animasyonu bitmesini bekle
+    setTimeout(speakEvliyaGreeting, 400);
   }
   // FAB balonu gizle
   const bubble=document.getElementById('fab-info-bubble');
@@ -1903,6 +1918,7 @@ function openEvliyaChat(){
 function closeEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.remove('open');
   document.getElementById('evliya-fab-wrap').classList.remove('chat-open');
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
   const stopAudio=document.getElementById('stop-audio');const introAudio=document.getElementById('intro-audio');
   if(stopAudio&&stopAudio._wasPlaying){stopAudio.play().catch(()=>{});stopAudio._wasPlaying=false;}
   if(introAudio&&introAudio._wasPlaying){introAudio.play().catch(()=>{});introAudio._wasPlaying=false;}
