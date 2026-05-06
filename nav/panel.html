@@ -416,9 +416,9 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
     <div id="stat-sub-app" style="display:none;">
       <div class="stat-grid">
         <div class="stat-card"><div class="stat-icon">📲</div><div class="stat-val" id="as-sessions">0</div><div class="stat-label">TOPLAM UYGULAMA OTURUMU</div></div>
-        <div class="stat-card green"><div class="stat-icon">📄</div><div class="stat-val" id="as-pageviews">0</div><div class="stat-label">TOPLAM SAYFA GÖRÜNTÜLEME</div></div>
-        <div class="stat-card"><div class="stat-icon">🔤</div><div class="stat-val" id="as-tts">0%</div><div class="stat-label">SES OKU (TTS) KULLANIM</div></div>
-        <div class="stat-card blue"><div class="stat-icon">❓</div><div class="stat-val" id="as-ai">0</div><div class="stat-label">AI SORU SORULDU</div></div>
+        <div class="stat-card green"><div class="stat-icon">📄</div><div class="stat-val" id="as-pageviews">0</div><div class="stat-label">TOPLAM DURAK GÖRÜNTÜLEME</div></div>
+        <div class="stat-card"><div class="stat-icon">📍</div><div class="stat-val" id="as-tts">0%</div><div class="stat-label">KONUM İZNİ ORANI</div></div>
+        <div class="stat-card blue"><div class="stat-icon">🏁</div><div class="stat-val" id="as-ai">0</div><div class="stat-label">TUR TAMAMLAYAN</div></div>
         <div class="stat-card red"><div class="stat-icon">🔴</div><div class="stat-val" id="as-crash">0</div><div class="stat-label">HATA / ÇÖKME</div></div>
       </div>
       <div class="chart-wrap">
@@ -427,20 +427,20 @@ html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch
       </div>
       <div class="two-col">
         <div class="chart-wrap">
-          <div class="section-hdr">⏭️ SAYFA GEÇİŞ ORANLARI</div>
+          <div class="section-hdr">📱 CİHAZ TÜRÜ DAĞILIMI</div>
           <div id="app-nav-chart"></div>
         </div>
         <div class="chart-wrap">
-          <div class="section-hdr">⚙️ ÖZELLİK KULLANIM ORANLARI</div>
+          <div class="section-hdr">🌐 DİL DAĞILIMI</div>
           <div id="app-feature-chart"></div>
         </div>
       </div>
       <div class="chart-wrap">
-        <div class="section-hdr">⏱️ SAYFA BAŞINA ORT. OKUMA SÜRESİ (SANİYE)</div>
+        <div class="section-hdr">🕐 SAATLIK ZİYARETÇİ DAĞILIMI</div>
         <div class="timeline-bar" id="app-readtime-chart" style="height:80px;"></div>
       </div>
       <div class="chart-wrap">
-        <div class="section-hdr">📈 GÜNLÜK UYGULAMA OTURUM TRENDİ</div>
+        <div class="section-hdr">📈 GÜNLÜK UYGULAMA OTURUM TRENDİ (Son 7 Gün)</div>
         <div class="timeline-bar" id="app-session-trend"></div>
       </div>
     </div>
@@ -720,19 +720,20 @@ const ZONE_MAP = [
   { id:'camii',       name:'Cami İçi',            icon:'🕌' },
 ];
 
+/* rehber.html'deki gerçek durak yapısı (content.js → HTML'e gömüldü)
+   TOTAL_STOPS = 11, stop 0-10 */
 const GUIDE_PAGES = [
-  { id:1, zone:'giris-avlu',  title:'Giriş & Tarihçe',       icon:'📜', stop:0 },
-  { id:2, zone:'darussifa-1', title:'Darüşşifa 1. Avlu',     icon:'⚖️', stop:1 },
-  { id:3, zone:'darussifa-2', title:'Darüşşifa 2. Avlu',     icon:'🚪', stop:2 },
-  { id:4, zone:'darussifa',   title:'Şifahane & Tedavi',     icon:'🌊', stop:3 },
-  { id:5, zone:'darussifa',   title:'Osmanlı Tıbbı',         icon:'🩺', stop:3 },
-  { id:6, zone:'medrese',     title:'Tıp Medresesi',         icon:'🎓', stop:4 },
-  { id:7, zone:'medrese',     title:'Müfredat & Hocalar',    icon:'📚', stop:4 },
-  { id:8, zone:'buyuk-avlu',  title:'Cami Bahçesi',          icon:'🌿', stop:5 },
-  { id:9, zone:'imarethane',  title:'İmarethane & Mutfak',   icon:'🍲', stop:6 },
-  { id:10,zone:'tabhane-sol', title:'Tabhane Odaları',       icon:'🏠', stop:7 },
-  { id:11,zone:'camii-avlu',  title:'Cami Avlusu & Şadırvan',icon:'⛲',stop:8 },
-  { id:12,zone:'camii',       title:'Cami İçi & Mihrap',     icon:'🕌', stop:9 },
+  { id:0,  zone:'giris-avlu',  title:'Müze Girişi & Tarihçe',        icon:'🏛️', stop:0  },
+  { id:1,  zone:'darussifa-1', title:'Darüşşifa Girişi & 1. Avlu',   icon:'⚖️', stop:1  },
+  { id:2,  zone:'darussifa-2', title:'Sunum Odasından Çıkış',         icon:'🚪', stop:2  },
+  { id:3,  zone:'darussifa',   title:'Büyük Şifahane (Sekizgen)',     icon:'🌊', stop:3  },
+  { id:4,  zone:'medrese',     title:'Tıp Medresesi',                 icon:'🎓', stop:4  },
+  { id:5,  zone:'buyuk-avlu',  title:'Cami Bahçesi & İmaret Yolu',   icon:'🌿', stop:5  },
+  { id:6,  zone:'imarethane',  title:'İmarethane & Yahya Baba',       icon:'🍲', stop:6  },
+  { id:7,  zone:'tabhane-sol', title:'Müze Kafe & Misafirhane',      icon:'☕', stop:7  },
+  { id:8,  zone:'camii-avlu',  title:'Cami Avlusu & Şadırvan',       icon:'⛲', stop:8  },
+  { id:9,  zone:'camii',       title:'Cami İçi & Mihrap',            icon:'🕌', stop:9  },
+  { id:10, zone:'camii',       title:'Gönül Köprüsü / Ziyaretçi Defteri', icon:'📖', stop:10 },
 ];
 
 const KULLIYE_CENTER = [41.6857, 26.5436];
@@ -1174,18 +1175,24 @@ async function renderZoneStats(){
   }
 }
 
-/* ══ App Stats ══ */
+/* ══ App Stats ══
+   Veri kaynağı: visitor_sessions koleksiyonu
+   (script.js app_stats yazmıyor — durak bilgisini session'dan türetiyoruz) */
 async function renderAppStats(){
   if(!db){
     document.getElementById('app-pages-chart').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
     return;
   }
   try {
-    const snap=await db.collection('app_stats').doc('summary').get();
-    if(!snap.exists){
+    // visitor_sessions'tan tüm veriyi çek
+    const snap=await db.collection('visitor_sessions').orderBy('startTime','desc').limit(500).get();
+    const sessions=[];
+    snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));
+
+    if(!sessions.length){
       ['as-sessions','as-pageviews','as-ai','as-crash'].forEach(id=>document.getElementById(id).textContent='0');
       document.getElementById('as-tts').textContent='0%';
-      document.getElementById('app-pages-chart').innerHTML=emptyState('📄','Uygulama istatistiği henüz yok.');
+      document.getElementById('app-pages-chart').innerHTML=emptyState('📄','Henüz oturum verisi yok.');
       document.getElementById('app-nav-chart').innerHTML='';
       document.getElementById('app-feature-chart').innerHTML='';
       document.getElementById('app-readtime-chart').innerHTML='';
@@ -1193,48 +1200,94 @@ async function renderAppStats(){
       return;
     }
 
-    const d=snap.data();
-    document.getElementById('as-sessions').textContent=(d.totalSessions||0).toLocaleString('tr');
-    document.getElementById('as-pageviews').textContent=(d.totalPageviews||0).toLocaleString('tr');
-    document.getElementById('as-tts').textContent='%'+(d.ttsUsagePct||0);
-    document.getElementById('as-ai').textContent=(d.totalAiQuestions||0).toLocaleString('tr');
-    document.getElementById('as-crash').textContent=(d.totalCrashes||0);
+    const totalSessions=sessions.length;
 
-    // Page views per page
-    if(d.pageViews&&Object.keys(d.pageViews).length){
-      const maxPV=Math.max(...Object.values(d.pageViews),1);
-      document.getElementById('app-pages-chart').innerHTML=GUIDE_PAGES.map(p=>{
-        const v=d.pageViews[String(p.id)]||0;
-        return `<div class="page-usage-row">
-          <div class="page-num">${p.stop+1}</div>
-          <div class="page-icon">${p.icon}</div>
-          <div class="page-info">
-            <div class="page-name">${p.title}</div>
-            <div class="page-stats">${v.toLocaleString('tr')} görüntüleme</div>
-          </div>
-          <div class="page-bar-wrap">
-            <div class="prog-bar"><div class="prog-fill" style="width:${v/maxPV*100}%"></div></div>
-          </div>
-        </div>`;}).join('');
-    } else {
-      document.getElementById('app-pages-chart').innerHTML=emptyState('📄','Sayfa görüntüleme verisi henüz yok.');
-    }
+    // Her oturum en az maxStop kadar durak/sayfa görüntülemiş sayılır
+    // Sayfa görüntüleme: her oturumda görüntülenen durak sayısı = maxStop+1
+    const totalPageviews=sessions.reduce((s,sess)=>s+(sess.maxStop>=0?sess.maxStop+1:1),0);
 
-    // Feature usage
-    if(d.featureUsage&&Object.keys(d.featureUsage).length){
-      const maxF=Math.max(...Object.values(d.featureUsage),1);
-      document.getElementById('app-feature-chart').innerHTML=Object.entries(d.featureUsage).map(([k,v])=>`
-        <div class="prog-row">
-          <div class="prog-label"><span>${k}</span><span>%${Math.round(v/maxF*100)}</span></div>
-          <div class="prog-bar"><div class="prog-fill" style="width:${v/maxF*100}%"></div></div>
-        </div>`).join('');
-    } else {
-      document.getElementById('app-feature-chart').innerHTML=emptyState('⚙️','Özellik kullanım verisi yok.');
-    }
+    // Dil kullanımı
+    const langCounts={};
+    sessions.forEach(s=>{const l=s.lang||'tr';langCounts[l]=(langCounts[l]||0)+1;});
 
-    document.getElementById('app-nav-chart').innerHTML=emptyState('⏭️','Sayfa geçiş verisi henüz işlenmedi.');
-    document.getElementById('app-readtime-chart').innerHTML='';
-    document.getElementById('app-session-trend').innerHTML='';
+    // Cihaz dağılımı (userAgent'tan çıkar)
+    const deviceCounts={mobile:0,tablet:0,desktop:0};
+    sessions.forEach(s=>{
+      const ua=(s.userAgent||'').toLowerCase();
+      if(/tablet|ipad/.test(ua)) deviceCounts.tablet++;
+      else if(/mobile|android|iphone/.test(ua)) deviceCounts.mobile++;
+      else deviceCounts.desktop++;
+    });
+
+    // Konum izni kullananlar
+    const withLocPct=Math.round(sessions.filter(s=>s.locationGranted).length/totalSessions*100);
+
+    // Tamamlama oranı (maxStop >= 10 = tüm turu tamamlamış)
+    const completedTours=sessions.filter(s=>(s.maxStop||0)>=10).length;
+
+    document.getElementById('as-sessions').textContent=totalSessions.toLocaleString('tr');
+    document.getElementById('as-pageviews').textContent=totalPageviews.toLocaleString('tr');
+    document.getElementById('as-tts').textContent='%'+withLocPct; // konum izni oranını göster
+    document.getElementById('as-ai').textContent=completedTours.toLocaleString('tr');
+    document.getElementById('as-crash').textContent='0';
+
+    // Durak bazlı "sayfa görüntüleme" — maxStop'tan türet:
+    // stop N'e ulaşan oturum sayısı = o stop'a kadar gelen ziyaretçi
+    const stopReach=GUIDE_PAGES.map(p=>sessions.filter(s=>(s.maxStop||0)>=p.stop).length);
+    const maxReach=Math.max(...stopReach,1);
+    document.getElementById('app-pages-chart').innerHTML=GUIDE_PAGES.map((p,i)=>{
+      const v=stopReach[i];
+      const pct=Math.round(v/sessions.length*100);
+      return `<div class="page-usage-row">
+        <div class="page-num">${p.stop+1}</div>
+        <div class="page-icon">${p.icon}</div>
+        <div class="page-info">
+          <div class="page-name">${p.title}</div>
+          <div class="page-stats">${v.toLocaleString('tr')} ziyaretçi ulaştı • %${pct}</div>
+        </div>
+        <div class="page-bar-wrap">
+          <div class="prog-bar"><div class="prog-fill ${pct<30?'red':pct<60?'':'green'}" style="width:${v/maxReach*100}%"></div></div>
+        </div>
+      </div>`;}).join('');
+
+    // Dil dağılımı (özellik kullanım yerine)
+    const langLabels={tr:'🇹🇷 Türkçe',en:'🇬🇧 İngilizce',de:'🇩🇪 Almanca',fr:'🇫🇷 Fransızca',ar:'🇸🇦 Arapça',bg:'🇧🇬 Bulgarca',el:'🇬🇷 Yunanca',zh:'🇨🇳 Çince',fa:'🇮🇷 Farsça'};
+    const maxLang=Math.max(...Object.values(langCounts),1);
+    document.getElementById('app-feature-chart').innerHTML=Object.entries(langCounts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+      <div class="prog-row">
+        <div class="prog-label"><span>${langLabels[k]||k}</span><span>${v} (%${Math.round(v/totalSessions*100)})</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${v/maxLang*100}%"></div></div>
+      </div>`).join('') || emptyState('🌐','Dil verisi yok.');
+
+    // Cihaz dağılımı (nav chart yerine)
+    const devTotal=Math.max(Object.values(deviceCounts).reduce((a,b)=>a+b,0),1);
+    const devIcons={mobile:'📱 Mobil',tablet:'💻 Tablet',desktop:'🖥️ Masaüstü'};
+    document.getElementById('app-nav-chart').innerHTML=Object.entries(deviceCounts).map(([k,v])=>`
+      <div class="prog-row">
+        <div class="prog-label"><span>${devIcons[k]}</span><span>${v} (%${Math.round(v/devTotal*100)})</span></div>
+        <div class="prog-bar"><div class="prog-fill blue" style="width:${v/devTotal*100}%"></div></div>
+      </div>`).join('');
+
+    // Günlük oturum trendi (son 7 gün)
+    const days7=[];
+    for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);d.setHours(0,0,0,0);days7.push(d);}
+    const trend7=days7.map(day=>{const next=new Date(day);next.setDate(next.getDate()+1);return sessions.filter(s=>{if(!s.startTime)return false;const t=s.startTime.toDate?s.startTime.toDate():new Date(s.startTime);return t>=day&&t<next;}).length;});
+    const maxT7=Math.max(...trend7,1);
+    document.getElementById('app-session-trend').innerHTML=trend7.map((v,i)=>`
+      <div class="tl-col">
+        <div class="tl-bar" style="height:${Math.max(4,v/maxT7*90)}px" data-tip="${days7[i].toLocaleDateString('tr-TR',{weekday:'short'})}: ${v}"></div>
+        <div class="tl-label">${days7[i].toLocaleDateString('tr-TR',{weekday:'short'})}</div>
+      </div>`).join('');
+
+    // Saatlik dağılım (readtime chart yerine)
+    const hourly=Array(24).fill(0);
+    sessions.forEach(s=>{if(s.startTime){const t=s.startTime.toDate?s.startTime.toDate():new Date(s.startTime);hourly[t.getHours()]++;}});
+    const maxH=Math.max(...hourly,1);
+    document.getElementById('app-readtime-chart').innerHTML=hourly.map((v,h)=>`
+      <div class="tl-col">
+        <div class="tl-bar" style="height:${Math.max(2,v/maxH*75)}px;background:linear-gradient(180deg,#c9a030,#7a6010);" data-tip="${h}:00 — ${v}"></div>
+        <div class="tl-label">${h%4===0?h+'h':''}</div>
+      </div>`).join('');
 
   } catch(e){
     console.error(e);
@@ -1478,6 +1531,9 @@ async function renderRouteMap(){
   }
 }
 
+/* renderPageRoutes — veri kaynağı: visitor_sessions (maxStop alanı)
+   script.js her oturumda maxStop'u güncelliyor.
+   stop N'e ulaşan = o sayfayı gören kişi sayısı. */
 async function renderPageRoutes(){
   document.getElementById('pr-pages').textContent=GUIDE_PAGES.length;
   document.getElementById('pr-most').textContent='—';
@@ -1490,40 +1546,90 @@ async function renderPageRoutes(){
   }
 
   try {
-    const snap=await db.collection('app_stats').doc('pageRoutes').get();
-    if(!snap.exists){
-      document.getElementById('page-usage-list').innerHTML=emptyState('📄','Sayfa güzergah verisi henüz yok.');
-      document.getElementById('page-flow-chart').innerHTML=emptyState('🔀','Geçiş verisi yok.');
-      document.getElementById('page-completion-chart').innerHTML=emptyState('📊','Tamamlama verisi yok.');
-      document.getElementById('page-route-flow').innerHTML=emptyState('🔭','Güzergah akışı yok.');
+    const snap=await db.collection('visitor_sessions').orderBy('startTime','desc').limit(500).get();
+    const sessions=[];
+    snap.forEach(doc=>sessions.push(doc.data()));
+
+    if(!sessions.length){
+      document.getElementById('page-usage-list').innerHTML=emptyState('📄','Henüz oturum verisi yok.');
+      document.getElementById('page-flow-chart').innerHTML='';
+      document.getElementById('page-completion-chart').innerHTML='';
+      document.getElementById('page-route-flow').innerHTML='';
       return;
     }
-    const d=snap.data();
-    document.getElementById('pr-most').textContent=d.mostReadPage||'—';
-    document.getElementById('pr-skip').textContent='%'+(d.skipRate||0);
-    document.getElementById('pr-lastpage').textContent=d.lastExitPage||'—';
 
-    if(d.pageViews&&Object.keys(d.pageViews).length){
-      const maxPV=Math.max(...Object.values(d.pageViews),1);
-      document.getElementById('page-usage-list').innerHTML=GUIDE_PAGES.map((p,i)=>{
-        const v=d.pageViews[String(p.id)]||0;
-        return `<div class="page-usage-row">
-          <div class="page-num">${i+1}</div>
-          <div class="page-icon">${p.icon}</div>
-          <div class="page-info">
-            <div class="page-name">${p.title}</div>
-            <div class="page-stats">${v.toLocaleString('tr')} görüntüleme • Bölge: ${ZONE_MAP.find(z=>z.id===p.zone)?.name||p.zone}</div>
-          </div>
-          <div class="page-bar-wrap">
-            <div class="prog-bar"><div class="prog-fill" style="width:${v/maxPV*100}%"></div></div>
-          </div>
-        </div>`;}).join('');
-    } else {
-      document.getElementById('page-usage-list').innerHTML=emptyState('📄','Sayfa kullanım verisi yok.');
+    const total=sessions.length;
+
+    // Her durak için o durağa ulaşan ziyaretçi sayısı
+    const stopReach=GUIDE_PAGES.map(p=>sessions.filter(s=>(s.maxStop||0)>=p.stop).length);
+    const maxReach=Math.max(...stopReach,1);
+
+    // En çok okunan durak
+    const mostIdx=stopReach.indexOf(Math.max(...stopReach));
+    document.getElementById('pr-most').textContent=GUIDE_PAGES[mostIdx]?.icon||'—';
+
+    // Son durak (en sık bırakma noktası = en çok düşüş olan geçiş)
+    let maxDrop=0,maxDropIdx=0;
+    for(let i=1;i<stopReach.length;i++){
+      const drop=stopReach[i-1]-stopReach[i];
+      if(drop>maxDrop){maxDrop=drop;maxDropIdx=i;}
     }
-    document.getElementById('page-flow-chart').innerHTML=emptyState('🔀','Geçiş akışı verisi henüz işlenmedi.');
-    document.getElementById('page-completion-chart').innerHTML=emptyState('📊','Tamamlama verisi henüz işlenmedi.');
-    document.getElementById('page-route-flow').innerHTML=emptyState('🔭','Güzergah akışı verisi henüz yok.');
+    document.getElementById('pr-lastpage').textContent=GUIDE_PAGES[maxDropIdx]?.icon||'—';
+
+    // Atlama oranı (stop 0'dan 10'a kadar kaç kişi gitmiyor)
+    const skipPct=total>0?Math.round((total-sessions.filter(s=>(s.maxStop||0)>=10).length)/total*100):0;
+    document.getElementById('pr-skip').textContent='%'+skipPct;
+
+    document.getElementById('page-usage-list').innerHTML=GUIDE_PAGES.map((p,i)=>{
+      const v=stopReach[i];
+      const pct=Math.round(v/total*100);
+      const zone=ZONE_MAP.find(z=>z.id===p.zone);
+      return `<div class="page-usage-row">
+        <div class="page-num">${i+1}</div>
+        <div class="page-icon">${p.icon}</div>
+        <div class="page-info">
+          <div class="page-name">${p.title}</div>
+          <div class="page-stats">${v.toLocaleString('tr')} ziyaretçi (%${pct}) • ${zone?.icon||''} ${zone?.name||p.zone}</div>
+        </div>
+        <div class="page-bar-wrap">
+          <div class="prog-bar"><div class="prog-fill ${pct<30?'red':pct>70?'green':''}" style="width:${v/maxReach*100}%"></div></div>
+        </div>
+      </div>`;}).join('');
+
+    // Tamamlama oranları
+    document.getElementById('page-completion-chart').innerHTML=GUIDE_PAGES.map((p,i)=>{
+      const pct=Math.round(stopReach[i]/total*100);
+      return `<div class="prog-row">
+        <div class="prog-label"><span>${p.icon} ${p.title}</span><span>%${pct}</span></div>
+        <div class="prog-bar"><div class="prog-fill ${pct<30?'red':pct>70?'green':''}" style="width:${pct}%"></div></div>
+      </div>`;}).join('');
+
+    // Güzergah akışı — durak geçişleri görsel
+    document.getElementById('page-route-flow').innerHTML=GUIDE_PAGES.map((p,i)=>{
+      const isLast=i===GUIDE_PAGES.length-1;
+      const v=stopReach[i];
+      const pct=v/total*100;
+      return `<div class="route-step">
+        <div class="route-line">
+          <div class="route-dot ${pct>60?'active':''}"></div>
+          ${!isLast?'<div class="route-connector"></div>':''}
+        </div>
+        <div class="route-content">
+          <div class="route-zone">${p.icon} ${p.title}</div>
+          <div class="route-meta">${v.toLocaleString('tr')} ziyaretçi • %${Math.round(pct)}</div>
+          <div class="route-bar"><div class="route-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+      </div>`;}).join('');
+
+    // Sayfa geçiş akışı (düşüş oranları)
+    document.getElementById('page-flow-chart').innerHTML=GUIDE_PAGES.slice(0,-1).map((p,i)=>{
+      const from=stopReach[i],to=stopReach[i+1];
+      const retentionPct=from>0?Math.round(to/from*100):0;
+      const dropPct=100-retentionPct;
+      return `<div class="prog-row">
+        <div class="prog-label"><span style="font-size:11px;">${p.icon}→${GUIDE_PAGES[i+1].icon}</span><span style="color:${dropPct>30?'#ff6b4a':'var(--stone)'};">-${from-to} kişi (%${dropPct} düşüş)</span></div>
+        <div class="prog-bar"><div class="prog-fill ${dropPct>30?'red':''}" style="width:${Math.min(dropPct*2,100)}%"></div></div>
+      </div>`;}).join('');
 
   } catch(e){
     console.error(e);
@@ -1777,34 +1883,42 @@ async function renderZoneAnalysis(){
   }
 }
 
-/* ══════════════════════════════════
-   FUNNEL TAB
-══════════════════════════════════ */
+/* renderFunnel — veri kaynağı: visitor_sessions + guestbook
+   (funnel_stats koleksiyonu script.js tarafından yazılmıyor) */
 async function renderFunnel(){
   if(!db){
     document.getElementById('funnel-chart').innerHTML=emptyState('⚠️','Firebase bağlantısı yok.');
     return;
   }
   try {
-    const snap=await db.collection('funnel_stats').doc('summary').get();
-    if(!snap.exists){
+    const [sessSnap,gbSnap]=await Promise.all([
+      db.collection('visitor_sessions').orderBy('startTime','desc').limit(500).get(),
+      db.collection('guestbook').limit(500).get()
+    ]);
+    const sessions=[];sessSnap.forEach(doc=>sessions.push(doc.data()));
+    const gbCount=gbSnap.size;
+
+    if(!sessions.length){
       ['fn-enter','fn-guide','fn-complete','fn-gb'].forEach(id=>document.getElementById(id).textContent='0');
-      document.getElementById('funnel-chart').innerHTML=emptyState('🔻','Dönüşüm verisi henüz yok.');
+      document.getElementById('funnel-chart').innerHTML=emptyState('🔻','Henüz oturum verisi yok.');
       document.getElementById('dropoff-chart').innerHTML=emptyState('📉','Terk verisi yok.');
       document.getElementById('success-chart').innerHTML=emptyState('⭐','Başarı verisi yok.');
       return;
     }
-    const d=snap.data();
+
+    const total=sessions.length;
+    // Funnel adımları — visitor_sessions.maxStop'tan türet
     const steps=[
-      {label:'Müzeye Giriş Yapan',     count:d.entered||0,     icon:'👋',color:'#2a6ab0'},
-      {label:'Rehber Uygulamasını Açan',count:d.guideStarted||0,icon:'📱',color:'#3d8a30'},
-      {label:'İlk Durağa Ulaşan',       count:d.firstStop||0,   icon:'🗺️',color:'#5daa45'},
-      {label:'5+ Durak Tamamlayan',     count:d.fiveStops||0,   icon:'🎯',color:'#c9a030'},
-      {label:'Tüm Turu Bitiren',        count:d.completed||0,   icon:'🏁',color:'#b8860b'},
-      {label:'Gönül Defterine Yazan',   count:d.guestbook||0,   icon:'📖',color:'#7a3ab0'},
+      {label:'Tur Başlatan (Stop 0)',   count:sessions.filter(s=>(s.maxStop||0)>=0).length,  icon:'👋', color:'#2a6ab0'},
+      {label:'1. Durağa Ulaşan',        count:sessions.filter(s=>(s.maxStop||0)>=1).length,  icon:'📱', color:'#3d8a30'},
+      {label:'3. Durağa Ulaşan',        count:sessions.filter(s=>(s.maxStop||0)>=3).length,  icon:'🗺️', color:'#5daa45'},
+      {label:'5+ Durak Tamamlayan',     count:sessions.filter(s=>(s.maxStop||0)>=5).length,  icon:'🎯', color:'#c9a030'},
+      {label:'Tüm Turu Bitiren (10)',   count:sessions.filter(s=>(s.maxStop||0)>=10).length, icon:'🏁', color:'#b8860b'},
+      {label:'Gönül Defterine Yazan',   count:gbCount,                                        icon:'📖', color:'#7a3ab0'},
     ];
+
     document.getElementById('fn-enter').textContent=steps[0].count;
-    document.getElementById('fn-guide').textContent=steps[2].count;
+    document.getElementById('fn-guide').textContent=steps[1].count;
     document.getElementById('fn-complete').textContent=steps[4].count;
     document.getElementById('fn-gb').textContent=steps[5].count;
 
@@ -1814,7 +1928,7 @@ async function renderFunnel(){
       const convRate=i>0&&steps[i-1].count>0?Math.round(s.count/steps[i-1].count*100):100;
       return `<div class="funnel-step">
         <div class="funnel-num">${s.icon} ${s.count}</div>
-        <div class="funnel-bar-outer"><div class="funnel-bar-inner" style="width:${pct}%;background:linear-gradient(90deg,${s.color}aa,${s.color});">${s.label}</div></div>
+        <div class="funnel-bar-outer"><div class="funnel-bar-inner" style="width:${Math.max(pct,8)}%;background:linear-gradient(90deg,${s.color}aa,${s.color});">${s.label}</div></div>
         <div class="funnel-pct" style="color:${convRate<70?'#ff6b4a':convRate<85?'#f0c040':'#3daa55'}">${i>0?'→ %'+convRate:'%100'}</div>
       </div>`;}).join('');
 
@@ -1824,17 +1938,17 @@ async function renderFunnel(){
       pct:steps[i].count>0?Math.round((steps[i].count-s.count)/steps[i].count*100):0
     }));
     document.getElementById('dropoff-chart').innerHTML=dropoffs.map(drop=>`
-      <div class="prog-row"><div class="prog-label"><span>${drop.label}</span><span style="color:#ff6b4a;">-${drop.dropped} kişi (%${drop.pct})</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${drop.pct*3}%"></div></div></div>`).join('');
+      <div class="prog-row"><div class="prog-label"><span>${drop.label}</span><span style="color:#ff6b4a;">-${drop.dropped} kişi (%${drop.pct})</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${Math.min(drop.pct*2,100)}%"></div></div></div>`).join('');
 
     const ent=Math.max(steps[0].count,1);
     const successMetrics=[
       {label:'Turu Tamamlama',    val:Math.round(steps[4].count/ent*100)},
-      {label:'Rehber Kullanımı',  val:Math.round(steps[1].count/ent*100)},
+      {label:'1. Durağa Geçiş',   val:Math.round(steps[1].count/ent*100)},
       {label:'5+ Durak Gezme',    val:Math.round(steps[3].count/ent*100)},
-      {label:'Gönül Defteri',     val:Math.round(steps[5].count/ent*100)},
+      {label:'Gönül Defteri',     val:total>0?Math.round(gbCount/total*100):0},
     ];
     document.getElementById('success-chart').innerHTML=successMetrics.map(m=>`
-      <div class="prog-row"><div class="prog-label"><span>${m.label}</span><span>%${m.val}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${m.val}%"></div></div></div>`).join('');
+      <div class="prog-row"><div class="prog-label"><span>${m.label}</span><span>%${m.val}</span></div><div class="prog-bar"><div class="prog-fill ${m.val<30?'red':m.val>60?'green':''}" style="width:${m.val}%"></div></div></div>`).join('');
 
   } catch(e){
     console.error(e);
