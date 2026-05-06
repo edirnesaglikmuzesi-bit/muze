@@ -1884,24 +1884,54 @@ Français → sadece Français
 Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE o dilde cevapla.
 İki dil ASLA karıştırılmaz. Evliya Çelebi karakterini koru ama dili değiştirme.`;
 
-let evliyaChatHistory=[];let evliyaThinking=false;
+let evliyaChatHistory=[];let evliyaThinking=false;let evliyaMuted=false;
 
 const EVLIYA_GREETING='Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.';
 
-function speakEvliyaGreeting(){
-  if(!('speechSynthesis' in window))return;
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(EVLIYA_GREETING);
-  u.lang='tr-TR';u.rate=0.88;u.pitch=0.95;
+// Erkek sesini seçen yardımcı fonksiyon — kadın sesi KESİNLİKLE kullanılmaz
+function getMaleVoice(){
   const voices=window.speechSynthesis.getVoices();
-  const match=voices.find(v=>v.lang.startsWith('tr'))||voices.find(v=>v.lang.startsWith('tr-'));
-  if(match)u.voice=match;
-  window.speechSynthesis.speak(u);
+  const maleKw=['male','erkek','man','guy','ahmet','ali','onur','mehmet','umut'];
+  const femaleKw=['female','kadın','woman','girl','ayşe','fatma','yelda','esin','filiz','seda','elif'];
+  return (
+    voices.find(v=>v.lang.startsWith('tr')&&maleKw.some(k=>v.name.toLowerCase().includes(k))&&!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
+    voices.find(v=>v.lang.startsWith('tr')&&!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
+    voices.find(v=>maleKw.some(k=>v.name.toLowerCase().includes(k))&&!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
+    voices.find(v=>!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
+    null
+  );
+}
+
+function speakEvliya(text){
+  if(!('speechSynthesis' in window)||evliyaMuted)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='tr-TR';u.rate=0.88;u.pitch=0.85;
+  const trySpeak=()=>{const v=getMaleVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);};
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;trySpeak();};
+  }else{trySpeak();}
+}
+
+function toggleEvliyaMute(){
+  evliyaMuted=!evliyaMuted;
+  const btn=document.getElementById('evliya-mute-btn');
+  if(btn){btn.textContent=evliyaMuted?'🔇':'🔊';btn.classList.toggle('muted',evliyaMuted);}
+  if(evliyaMuted&&'speechSynthesis' in window)window.speechSynthesis.cancel();
+}
+
+function speakEvliyaGreeting(){
+  speakEvliya(EVLIYA_GREETING);
 }
 
 function openEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.add('open');
   document.getElementById('evliya-fab-wrap').classList.add('chat-open');
+  // Mute butonu yoksa chat-row'a ekle
+  if(!document.getElementById('evliya-mute-btn')){
+    const row=document.querySelector('.evliya-chat-row');
+    if(row){const mb=document.createElement('button');mb.id='evliya-mute-btn';mb.title='Sesi Aç/Kapat';mb.textContent='🔊';mb.onclick=toggleEvliyaMute;row.prepend(mb);}
+  }
   const stopAudio=document.getElementById('stop-audio');const introAudio=document.getElementById('intro-audio');
   if(stopAudio&&!stopAudio.paused){stopAudio._wasPlaying=true;stopAudio.pause();}
   if(introAudio&&!introAudio.paused){introAudio._wasPlaying=true;introAudio.pause();}
@@ -1955,9 +1985,27 @@ async function sendEvliyaMsg(){
     const msgs=[{role:'system',content:EVLIYA_SYSTEM_PROMPT},...evliyaChatHistory.map(m=>({role:m.role==='assistant'?'assistant':m.role,content:m.content}))];
     const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85})});
     const data=await response.json();removeTypingIndicator();
-    if(data.error){addEvliyaMsg('bot','⚠️ Hata: '+(data.error.message||'Bilinmeyen hata'));}
-    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);}
-  }catch(e){removeTypingIndicator();addEvliyaMsg('bot','🕯️ Bağlantı kurulamadı. Lütfen tekrar deneyin.');console.error(e);}
+    if(data.error){
+      const errMsg=data.error.message||'';
+      let evliyaErr;
+      if(errMsg.toLowerCase().includes('rate limit')||errMsg.toLowerCase().includes('tpm')||errMsg.toLowerCase().includes('token')){
+        evliyaErr='🕯️ Zamanın kapıları aralanıyor… Birazdan yeni bir hikâye sizi bekliyor.';
+      }else if(errMsg.toLowerCase().includes('timeout')){
+        evliyaErr='⏳ Kervansaray yolları uzundur; sabır edin, az sonra yetişirim.';
+      }else{
+        evliyaErr='🕯️ Seyahatnâmeme bir an bakayım, lütfen bekleyiniz…';
+      }
+      addEvliyaMsg('bot',evliyaErr);
+      speakEvliya(evliyaErr.replace(/[🕯️⏳]/g,'').trim());
+    }
+    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);speakEvliya(reply);}
+  }catch(e){
+    removeTypingIndicator();
+    const connErr='🕯️ Kervan yolu şimdilik kapalı. Bir an sonra tekrar deneyiniz.';
+    addEvliyaMsg('bot',connErr);
+    speakEvliya(connErr.replace(/🕯️/g,'').trim());
+    console.error(e);
+  }
   evliyaThinking=false;document.getElementById('evliya-send-btn').disabled=false;
 }
 
