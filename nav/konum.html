@@ -34,6 +34,7 @@
   #app {
     display:flex; flex-direction:column;
     width:100%; height:100%; height:100dvh;
+    overflow:hidden;
   }
 
   /* ── HEADER ── */
@@ -810,13 +811,15 @@ function applyMapRotation(heading) {
   const w = container.clientWidth, h = container.clientHeight;
   container.style.transformOrigin = `${w/2}px ${h/2}px`;
   container.style.transition = 'transform 0.3s ease';
-  container.style.transform = `rotate(${-heading}deg)`;
+  // scale(1.45) ensures map tiles cover corners at any rotation angle (√2 ≈ 1.414)
+  container.style.transform = `rotate(${-heading}deg) scale(1.45)`;
 
-  // Counter-rotate controls so they stay upright
-  document.getElementById('tile-switcher').style.transform = `rotate(${heading}deg)`;
-  document.getElementById('map-controls').style.transform = `rotate(${heading}deg)`;
-  document.getElementById('heading-label').style.transform = `rotate(${heading}deg)`;
-  document.getElementById('legend-panel').style.transform = `rotate(${heading}deg)`;
+  // Counter-rotate controls so they stay upright (compensate rotation + scale)
+  const cr = `rotate(${heading}deg) scale(${1/1.45})`;
+  document.getElementById('tile-switcher').style.transform = cr;
+  document.getElementById('map-controls').style.transform = cr;
+  document.getElementById('heading-label').style.transform = cr;
+  document.getElementById('legend-panel').style.transform = cr;
 }
 
 function setHeading(deg) {
