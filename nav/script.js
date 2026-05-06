@@ -79,10 +79,14 @@ function goStop(n){
   applyTranslations();
   playStopAudio(n);
   showFabHint(n);
-  // Tracking
+  // Tracking: durak ve currentPage bilgisini güncelle
   if(TRACKING.active&&n>TRACKING.lastStop){
     TRACKING.lastStop=n;
     updateSessionField({maxStop:n,lang:currentLang||'tr'});
+  }
+  // Anlık konum güncellemesi için currentPage'i visitor_locations'a yaz
+  if(TRACKING.active&&TRACKING.currentZone){
+    refreshVisitorLocation(TRACKING.currentZone);
   }
 }
 
@@ -1548,8 +1552,8 @@ function onLocationUpdate(lat,lon){
 function createSession(){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).set({startTime:firebase.firestore.FieldValue.serverTimestamp(),lang:currentLang||'tr',maxStop:0,durationMin:0,locationGranted:false,active:true,userAgent:navigator.userAgent.slice(0,80)});}catch(e){}}
 function updateSessionField(data){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update(data);}catch(e){}}
 function finalizeSession(){if(!window.db||!TRACKING.sessionId||!TRACKING.active)return;TRACKING.active=false;const d=Math.round((Date.now()-TRACKING.startTime)/60000);try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update({endTime:firebase.firestore.FieldValue.serverTimestamp(),durationMin:d,active:false,maxStop:TRACKING.lastStop});if(TRACKING.currentZone)removeVisitorLocation();}catch(e){}}
-function upsertVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({zone:zoneId,stop:currentStop||0,lang:currentLang||'tr',visitorId:TRACKING.sessionId,lastSeen:firebase.firestore.FieldValue.serverTimestamp(),startTime:firebase.firestore.Timestamp.fromMillis(TRACKING.startTime)},{merge:true});}catch(e){}}
-function refreshVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).update({lastSeen:firebase.firestore.FieldValue.serverTimestamp(),stop:currentStop||0,zone:zoneId});}catch(e){}}
+function upsertVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({zone:zoneId,stop:currentStop||0,currentPage:currentStop||0,lang:currentLang||'tr',visitorId:TRACKING.sessionId,lastSeen:firebase.firestore.FieldValue.serverTimestamp(),startTime:firebase.firestore.Timestamp.fromMillis(TRACKING.startTime)},{merge:true});}catch(e){}}
+function refreshVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).update({lastSeen:firebase.firestore.FieldValue.serverTimestamp(),stop:currentStop||0,zone:zoneId,currentPage:currentStop||0,lang:currentLang||'tr'});}catch(e){}}
 function removeVisitorLocation(){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).delete();}catch(e){}}
 function recordZoneVisit(zoneId,dwellMin){if(!window.db||!zoneId)return;try{const ref=window.db.collection('zone_visits').doc(zoneId);window.db.runTransaction(async tx=>{const doc=await tx.get(ref);if(doc.exists){const d=doc.data();const total=(d.totalVisits||0)+1;const avgMin=((d.avgMinutes||0)*(d.totalVisits||0)+dwellMin)/total;tx.update(ref,{totalVisits:total,avgMinutes:Math.round(avgMin*10)/10,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});}else{tx.set(ref,{zoneId,totalVisits:1,avgMinutes:dwellMin,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});}});}catch(e){}}
 
