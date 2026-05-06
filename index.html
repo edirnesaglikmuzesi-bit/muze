@@ -2203,17 +2203,30 @@ Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE
 
 let evliyaChatHistory=[];let evliyaThinking=false;
 
+function speakEvliyaGreeting(){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance('Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.');
+  u.lang='tr-TR';u.rate=0.88;u.pitch=0.95;
+  const voices=window.speechSynthesis.getVoices();
+  const match=voices.find(v=>v.lang.startsWith('tr'))||voices.find(v=>v.lang.startsWith('tr-'));
+  if(match)u.voice=match;
+  window.speechSynthesis.speak(u);
+}
+
 function openEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.add('open');
   document.getElementById('evliya-fab-wrap').classList.add('chat-open');
   if(evliyaChatHistory.length===0){
     addEvliyaMsg('bot','Sultan II. Bayezid Külliyesi\'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652\'de burayı bizzat gezdim.\n\nDarüşşifa\'nın müzik tedavisinden bölüm ve odalarına kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️');
+    setTimeout(speakEvliyaGreeting, 400);
   }
 }
 
 function closeEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.remove('open');
   document.getElementById('evliya-fab-wrap').classList.remove('chat-open');
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
 }
 
 function evliyaQuick(text){document.getElementById('evliya-chat-input').value=text;sendEvliyaMsg();}
