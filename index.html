@@ -2302,9 +2302,27 @@ async function sendEvliyaMsg(){
     const msgs=[{role:'system',content:EVLIYA_SYSTEM_PROMPT},...evliyaChatHistory.map(m=>({role:m.role==='assistant'?'assistant':m.role,content:m.content}))];
     const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85})});
     const data=await response.json();removeTypingIndicator();
-    if(data.error){addEvliyaMsg('bot','⚠️ Hata: '+(data.error.message||'Bilinmeyen hata'));}
+    if(data.error){
+      const errMsg=data.error.message||'';
+      let evliyaErr;
+      if(errMsg.toLowerCase().includes('rate limit')||errMsg.toLowerCase().includes('tpm')||errMsg.toLowerCase().includes('token')){
+        evliyaErr='🕯️ Zamanın kapıları aralanıyor… Birazdan yeni bir hikâye sizi bekliyor.';
+      } else if(errMsg.toLowerCase().includes('timeout')){
+        evliyaErr='⏳ Kervans yolları uzundur; sabır edin, az sonra yetişirim.';
+      } else {
+        evliyaErr='🕯️ Seyahatnâmeme bir an bakayım, lütfen bekleyiniz…';
+      }
+      addEvliyaMsg('bot',evliyaErr);
+      speakEvliya(evliyaErr.replace(/[🕯️⏳]/g,'').trim());
+    }
     else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);speakEvliya(reply);}
-  }catch(e){removeTypingIndicator();addEvliyaMsg('bot','🕯️ Bağlantı kurulamadı. Lütfen tekrar deneyin.');console.error(e);}
+  }catch(e){
+    removeTypingIndicator();
+    const connErr='🕯️ Kervan yolu şimdilik kapalı. Bir an sonra tekrar deneyiniz.';
+    addEvliyaMsg('bot',connErr);
+    speakEvliya(connErr.replace(/🕯️/g,'').trim());
+    console.error(e);
+  }
   evliyaThinking=false;document.getElementById('evliya-send-btn').disabled=false;
 }
 
