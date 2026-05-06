@@ -2007,6 +2007,7 @@ async function renderAlerts(){
         document.getElementById('capacity-chart').innerHTML=emptyState('📊','Anlık doluluk verisi kayıt edilmemiş.');
       }
     }
+
     // Alert history
     const histSnap=await db.collection('alert_history').orderBy('createdAt','desc').limit(10).get();
     if(histSnap.empty){
