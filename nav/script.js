@@ -27,7 +27,7 @@ const FAB_STOP_HINTS=[
   '🪨 Bir taş da siz koyun — köprüde yeriniz hazır!'
 ];
 
-const LANG_AUDIO_FOLDERS={tr:'assets/audio/tr',en:'assets/audio/en',de:'assets/audio/de',fr:'assets/audio/fr',ar:'assets/audio/ar',bg:'assets/audio/bg',el:'assets/audio/gr',zh:'assets/audio/cn',fa:'assets/audio/fa'};
+const LANG_AUDIO_FOLDERS={tr:'assets/audio/tr',en:'assets/audio/en',de:'assets/audio/de',fr:'assets/audio/fr',ar:'assets/audio/ar',bg:'assets/audio/bg',el:'assets/audio/gr',zh:'assets/audio/cn',fa:'assets/audio/fa',ro:'assets/audio/ro',ja:'assets/audio/ja'};
 function getAudioFile(n,lang){const f=LANG_AUDIO_FOLDERS[lang]||LANG_AUDIO_FOLDERS['tr'];return f+'/'+(n+1)+'.mp3';}
 
 /* ────────────────────────────────────────
@@ -164,7 +164,7 @@ function closeMenu(){
 function openLang(){ document.getElementById('lang-modal').classList.add('open'); }
 function closeLang(){ document.getElementById('lang-modal').classList.remove('open'); }
 
-const LANG_NAMES = {tr:'Türkçe 🇹🇷',en:'English 🇬🇧',de:'Deutsch 🇩🇪',fr:'Français 🇫🇷',ar:'العربية 🇸🇦',bg:'Български 🇧🇬',el:'Ελληνικά 🇬🇷',zh:'中文 🇨🇳',fa:'فارسی 🇮🇷'};
+const LANG_NAMES = {tr:'Türkçe 🇹🇷',en:'English 🇬🇧',de:'Deutsch 🇩🇪',fr:'Français 🇫🇷',ar:'العربية 🇸🇦',bg:'Български 🇧🇬',el:'Ελληνικά 🇬🇷',zh:'中文 🇨🇳',fa:'فارسی 🇮🇷',ro:'Română 🇷🇴',ja:'日本語 🇯🇵'};
 
 function setLang(code){
   if(!TRANSLATIONS[code]) code = 'tr';
@@ -1255,6 +1255,131 @@ const TRANSLATIONS = {
     s9_fwd:'نوشتن در پل دل ←',
     s10_body:'خوشحال می‌شویم تأثیرات این سفر ۵۰۰ ساله از کُلیّه‌مان را بشنویم. کلمات شما سنگ‌های این پل خواهند شد.',
     s10_restart:'🏛️ بازگشت به آغاز'
+  },
+  ja:{
+    start:'旅を始める',intro_title:'敷居への招待',intro_sub:'時を超えて、癒しの中心への旅…',
+    back:'← 戻る',menu_lang:'言語：日本語 🇯🇵',menu_map:'地図と場所',menu_defter:'心の橋',
+    loc_searching:'📍 位置情報を取得中…',loc_outside:'📍 エリア外にいます。',
+    loc_error:'📍 位置情報を取得できませんでした。',
+    gb_name:'お名前',gb_city:'ご出身地',gb_msg:'ここに気持ちを残してください…',
+    gb_submit:'橋に石を置く 🪨',gb_submitting:'刻み込んでいます…',
+    gb_conn_err:'接続エラーが発生しました。もう一度お試しください。',gb_no_msg:'メッセージを残してください…',
+    confirm_text:'あなたの気持ちは心の橋に刻まれました…',confirm_close:'お元気で 🌿',
+    latest_title:'📜 最新メッセージ',archive_title:'🗂️ アーカイブ',no_msg:'まだメッセージはありません。最初に石を置いてください！ ✨',
+    s0_main:'🏛️ スルタン・バヤズィト2世複合施設',s0_sub:'健康博物館',s0_slogan:'✨ 癒しの旅 — 博物館入口',
+    s1_main:'ダールッシファ入口',s1_sub:'🏛️ 正義と癒しの門',s1_slogan:'⚖️ 癒しの最初の停留所',
+    s2_main:'プレゼンテーション室を出た後',s2_sub:'🏛️ 知識から体験へ',s2_slogan:'🏛️ 管理と秩序',
+    s3_main:'大病棟（八角形ホール）',s3_sub:'🏛️ ダールッシファの敷居',s3_slogan:'🌊 癒しの頂点',
+    s4_main:'医学神学校',s4_sub:'🎓 知識の揺りかご',s4_slogan:'📚 学びの光',
+    s5_main:'大中庭',s5_sub:'🌿 世紀を越えたプラタナスの木々',s5_slogan:'🌳 時と静寂',
+    s6_main:'イマーレット（社会食堂）',s6_sub:'🍲 慈悲と豊かさ',s6_slogan:'🍲 ヤフヤ・ババの厨房',
+    s7_main:'精神的な雰囲気への準備',s7_sub:'🕌 モスク入口',s7_slogan:'✨ 一つのドーム、無限の平和',
+    s8_main:'モスク内部の精神的な旅',s8_sub:'🕌 モスクの中庭',s8_slogan:'🌌 ドームの下でのフィナーレ',
+    s9_main:'別れの時',s9_sub:'🌊 心の橋への招待',s9_slogan:'✨ この物語にあなたの足跡を残して',
+    s10_main:'🖋️ 心の橋',s10_slogan:'"過去の癒しが今日の言葉と出会う。"',
+    nav_back:'← 戻る',
+    s0_ct1:'👑 歴史',s0_ct2:'🏗️ 建築',s0_ct3:'🎧 ガイド',s0_ct4:'📵 ご注意',s0_ct5:'📍 現在地',s0_ct6:'🏫 方向案内',
+    s0_c1:'あなたは今、エディルネで最も魅力的な歴史的地区の一つ、スルタン・バヤズィト2世複合施設健康博物館にいます。歴史と癒しが出会うこの場所へようこそ。',
+    s0_c2:'この建物群は、征服者メフメットの息子でオスマン帝国第8代スルタンであるバヤズィト2世が、当時の首席建築家ハイレッティンに命じて建てさせました。オスマン帝国の複合施設の中で最もよく保存されています。中央にモスク、右側に病院と神学校、左側に炊事場と倉庫、モスクの脇に旅館、背後にはトゥンジャ川に架かる橋があり、オスマン帝国の社会国家の理念を体現しています。',
+    s0_c3:'複合施設と博物館を充実した形でご見学いただけるよう、文字・音声・映像でご案内いたします。',
+    s0_c4:'見学中は携帯電話から目を離さないようにしてください。',
+    s0_c5:'チケット売り場を通過し、現在は前庭にいます。向かいの壁に掛かっている大きな複合施設の写真の前に立ち、建物群のエディルネ市内での位置をご確認ください。',
+    s0_c6:'この地点に向かって歩くとき、右側の建物が医学神学校、正面の建物がダールッシファです。',
+    s0_callout:'👣 <strong>大きな写真を見学した後、すぐ左の扉からダールッシファの庭へお入りください。</strong>',
+    s0_fwd:'時の旅を始める →',
+    s1_ct1:'🏥 ダールッシファ第1中庭',s1_ct2:'🌍 歴史的重要性',s1_ct3:'🛏️ 病院施設',s1_ct4:'🩺 外来診察室',s1_ct5:'🧭 道案内',s1_ct6:'💧 乳の井戸',s1_ct7:'🌿 木とツタ',s1_ct8:'🎬 プレゼンテーション室',
+    s1_c1:'あなたは今、エディルネ・ダールッシファの第1中庭にいます。少し立ち止まって周囲を観察してください。',
+    s1_c2:'まず知っておくべきことは、この建物は歴史上最も初期の中央計画型病院の一つとして認められています。西洋では約200年後にようやく同様の例が現れました。',
+    s1_c3:'前の道を進むと、入口すぐ左の4つの部屋がダールッシファのサービス施設です。職員室、洗濯室、食事療法厨房、食料庫が並んでいます。',
+    s1_c4:'右側の柱の後ろには6つの外来診察室があり、日常の診察、処置、緊急措置が行われていました。',
+    s1_c5:'各種展示と案内板で整備されたこれらの部屋の詳細な見学は帰りに残しておいて、今はプレゼンテーション室へご案内します。',
+    s1_c6:'この石造りの構造物は「乳の井戸」と呼ばれています。水を飲んだ産後の母親の母乳が増えると信じられていました。',
+    s1_c7:'その先にツタが絡みついた木があります。その木にまつわる哀愁漂う詩もお読みください。',
+    s1_c8:'詩のすぐ左がプレゼンテーション室です。複合施設とダールッシファの歴史を紹介する映像をご覧いただけます。',
+    s1_callout:'🎬 <strong>プレゼンテーション映像をご覧になりますか？室内またはお手持ちの携帯でご覧いただけます。</strong>',
+    s1_watch:'プレゼンテーションを見る ▶',s1_fwd:'プレゼンテーション室へ →',
+    s2_ct1:'🚪 第2中庭への入場',s2_ct2:'🏛️ 管理室',s2_ct3:'🔒 管理区画',s2_ct4:'✨ 碑文と入場',
+    s2_c1:'プレゼンテーション室を出たら、すぐ左の大きな扉から第2中庭へ進んでください。',
+    s2_c2:'この中庭には両側に2つずつ計4つの部屋があります。首席医師や他の医師がここで業務を行っていました。',
+    s2_c3:'この管理区画は、第1中庭の患者の流れと入院区画の間の保護的な境界としても機能していました。',
+    s2_c4:'扉の上に書かれた碑文を読んでから、息を整えて…',
+    s2_callout:'🚶‍♂️ <strong>音楽と水の音が癒しと出会う魔法のこの場所へ足を踏み入れてください。</strong>',
+    s2_fwd:'大病棟を発見する →',
+    s3_ct1:'🏥 入院治療区画',s3_ct2:'🌊 病院の構造',s3_ct3:'🎵 音楽療法',s3_ct4:'💧 水音療法',s3_ct5:'🌿 芳香療法',s3_ct6:'🧺 作業療法',s3_ct7:'🚶 退出とツアー',
+    s3_c1:'あなたは今、博物館の中心、エディルネ・ダールッシファの入院治療区画にいます。500年前にここで癒しを見つけた人々の気持ちで歩いてみてください。',
+    s3_c2:'中央に一定のリズムで流れる噴水と正面に音楽舞台がある病院を想像してください。大きなドームに覆われたこの病院は、6つの冬用病室、4つの夏用病室と音楽舞台で構成されています。',
+    s3_c3:'この病院を他と区別する最大の特徴は、治療に音楽のマカームを用いたことです。10人の音楽団が医師の勧めに従って各疾患に応じたマカームを演奏していました。',
+    s3_c4:'建物中央の噴水から流れる水の音は治療の重要な一部であり、患者を安らかにする目的がありました。',
+    s3_c5:'音楽と水音に加え、芳香療法も行われていました。中庭周辺で栽培された植物の香りも治療の重要な要素でした。',
+    s3_c6:'作業療法もここでは治療法として用いられていました。患者はかご編みや編み物など各種手工芸に従事していました。',
+    s3_c7:'オスマン医学のさまざまな側面を紹介する部屋を見学した後、入院区画を出ることができます。',
+    s3_callout:'🏫 <strong>医学神学校へ：ダールッシファを出て、入口庭園左側の医学神学校へ向かってください。</strong>',
+    s3_fwd:'神学校へ進む →',
+    s4_ct1:'🏫 医学神学校',s4_ct2:'🌍 歴史的重要性',s4_ct3:'📚 教育制度',s4_ct4:'🏛️ 建築構造',s4_ct5:'📜 エヴリヤ・チェレビ',s4_ct6:'👨‍🏫 教授陣',s4_ct7:'📖 写本',s4_ct8:'🏥 健康博物館',
+    s4_c1:'ダールッシファを見学し、複合施設のもう一つの重要な区画、スルタン・バヤズィト2世複合施設医学神学校に来ました。',
+    s4_c2:'今ご覧になっている四角い中庭を囲む建物は、オスマン帝国で医師を育てた最も権威ある教育機関の一つでした。',
+    s4_c3:'オスマン教育制度で最高ランクの神学校として、学生は理論教育を隣接するダールッシファで実践を通じて深めることができました。',
+    s4_c4:'この神学校は三方に18の学生室と正面に講義室で構成されています。',
+    s4_c5:'1652年にこの複合施設を訪れたエヴリヤ・チェレビはこう書いています：「医学神学校にはプラトン、ソクラテス、アリストテレス、ガレノスのような学者について常に語り合う学生たちがいる。」',
+    s4_c6:'教授陣は日当60アクチェで18人の学生を教える教授、助教授、司書、使用人2名で構成されていました。',
+    s4_c7:'ここで学ばれた手書きの医学写本38冊が今日まで残っており、現在セリミエ写本図書館に保管されています。',
+    s4_c8:'神学校は2007年にトラキア大学によって健康博物館の第2セクションとして開館しました。入口正面の講義室が最も重要な部分です。',
+    s4_callout:'🚶 <strong>各部屋を見学した後、神学校を出てターンスタイルを通り、モスクの中庭へ進んでください。</strong>',
+    s4_fwd:'モスクの壮大さへ →',
+    s5_ct1:'🌳 庭園にて',s5_ct2:'💧 水の秤',s5_ct3:'🕌 モスク正門',s5_ct4:'🏛️ 倉庫とイマーレット',
+    s5_c1:'ダールッシファと神学校を見学した後、モスクの庭園に入りました。世紀を越えたプラタナスの木々が並ぶこの美しい庭園をゆっくり歩き、正面のイマーレット区画へ向かってください。',
+    s5_c2:'ダールッシファ側から庭園に入ると、右側のモスクの角に約4メートルの高さの長方形の石造りの構造物が目に入ります。これは複合施設の水の秤です。',
+    s5_c3:'水の秤を過ぎると、右手にモスク正門の壮大なポータルが迎えてくれます。このポータルからの探索はツアーの最後に残しておきましょう。',
+    s5_c4:'正面には似た建築の2つの大きな建物が並んでいます。左が倉庫とパン焼き場、右が今からご案内するイマーレットです。',
+    s5_callout:'🍲 <strong>オスマン帝国のイマーレット文化とヤフヤ・ババの伝説を聞く準備はできましたか？</strong>',
+    s5_fwd:'豊かさの中心へ →',
+    s6_ct1:'🏛️ イマーレット',s6_ct2:'🍲 スルタン・バヤズィト2世のイマーレット',s6_ct3:'🔥 厨房と食堂',s6_ct4:'🎭 この博物館区画',s6_ct5:'🌿 ヤフヤ・ババの廟',s6_ct6:'📖 ヤフヤ・ババの伝説',s6_ct7:'⚖️ 倉庫番の試練',s6_ct8:'👑 スルタンの証言',s6_ct9:'🐟 魚の奇跡',s6_ct10:'🤲 ヤフヤ・ババの最期',s6_ct11:'🪦 廟の参拝',
+    s6_c1:'オスマン帝国では、イマーレットは社会的連帯と慈悲の精神を体現する最も重要な機関の一つでした。貧困者、旅人、学生に無料で食事を配給していました。',
+    s6_c2:'あなたはまさにそのような場所にいます。スルタン・バヤズィト2世複合施設イマーレットは健康博物館の第3セクションとして開設されています。',
+    s6_c3:'入口で目にする広い空間が厨房です。右の扉から見える大広間は、床に置かれた石のテーブルで食事をとる場所でした。',
+    s6_c4:'この部分もオスマン帝国のイマーレット文化を語る等身大の人形で演出されています。',
+    s6_c5:'イマーレットのすぐ後ろには伝説の人物ヤフヤ・ババの廟があります。今日まで語り継がれる伝説をお話しします。',
+    s6_c6:'伝説によると、ヤフヤ・ババはスルタン・バヤズィト2世の治世中の料理長で、飛び切り美味しいピラフを作っていました。余ったピラフをトゥンジャ川の魚に与えに行っていました。',
+    s6_c7:'倉庫番がこれを見て、毎日受け取る米の量を減らし始めました。それでもヤフヤ・ババは祈りながらピラフを炊き、患者も魚も養いました。',
+    s6_c8:'噂はスルタンの耳に届き、スルタンは直接目撃しようと川岸に隠れていました。「おい、患者の食料を川に捨てているのか！」と怒鳴りました。',
+    s6_c9:'ヤフヤ・ババが固まってひれ伏すと、魚たちが水から頭を持ち上げて語りました：「偉大なスルタンは魚の食べ物をねたむのか？」',
+    s6_c10:'スルタンは自分の誤りに気づき、ヤフヤ・ババが頭を上げるのを待ちましたが…この善良な人はすでに魂を旅立てていたのです。',
+    s6_c11:'ヤフヤ・ババの廟は、通りがかりの人々がお祈りのために訪れる神聖な場所として今も大切にされています。',
+    s6_callout:'🪦 <strong>この伝説を聞いた後、イマーレットを出て左の博物館カフェで休憩してください。</strong>',
+    s6_fwd:'博物館カフェへ →',
+    s7_ct1:'🏛️ モスク中庭と入口',s7_ct2:'🚪 入場と雰囲気',s7_ct3:'⛲ 噴水と静けさ',s7_ct4:'🏛️ 大理石の柱',s7_ct5:'✨ 内面の平和',s7_ct6:'👁️ 観察の時間',s7_ct7:'🚪 モスクへの入場',s7_ct8:'🪵 キュンデカリ工芸',
+    s7_c1:'健康博物館の各区画を見学し、カフェでシャーベットを召し上がりました。次は複合施設で最も壮麗な建造物、モスクとご対面です。',
+    s7_c2:'中庭に面した扉からお入りになると、大理石細工の技巧に迎えられます。外界の喧騒を後にして全く異なる雰囲気の中に入ります。',
+    s7_c3:'中庭中央の噴水が穏やかな水音で空間を満たし、平和をもたらします。',
+    s7_c4:'周囲を囲む大理石の柱が保護的な輪のように立ち上がっています。',
+    s7_c5:'ここで感じるのは建築の美しさだけではありません。何世紀にもわたって変わらない内なる平和です。',
+    s7_c6:'噴水のそばで少し立ち止まり、この中庭の調和をご覧ください。',
+    s7_c7:'それから正面の壮大なポータルに向き直り、扉を覆う革のカーテンをそっと押して中へお入りください。',
+    s7_c8:'入口では扉上部のオリジナルのキュンデカリ木工細工にご注目ください。',
+    s7_callout:'🕌 <strong>聖域の内部へ入りましょうか？</strong>',
+    s7_fwd:'内部へ進む →',
+    s8_ct1:'🕌 モスク内部 — フィナーレ',s8_ct2:'🚤 歴史的な交通と王室の伝統',s8_ct3:'👑 王室ギャラリーの想像',s8_ct4:'🏛️ 王室ギャラリー',s8_ct5:'⚙️ ミフラーブと均衡の石',s8_ct6:'🪵 ミンバルと工芸',s8_ct7:'📐 象徴と意味',s8_ct8:'💡 光と音響',s8_ct9:'🌌 ドームの下の壮麗さ',s8_ct10:'🏗️ 建築的転換点',s8_ct11:'✨ フィナーレとお別れ',
+    s8_c1:'あなたは今、複合施設の中心にあるモスクの内部にいます。この壮麗なドームの下でツアーのフィナーレを迎えましょう。',
+    s8_c2:'スルタン・バヤズィト2世と後継のスルタンたちは、御座船でトゥンジャ川を渡ってこのモスクへ来ていました。川岸の扉から入り、王室ギャラリーでお祈りをしていました。',
+    s8_c3:'目を閉じてください…スルタンがあの高さで他の人々と同じ平和の中でお祈りをしている姿を想像してみてください。',
+    s8_c4:'トルコ・イスラーム建築史上初めて作られた王室ギャラリーがここにあります。では祈壇へ向かいましょう。',
+    s8_c5:'ミフラーブ両側の均衡の石を触れて軽く回すと、この大きな建造物の基礎がわずかにも傾いていないことに驚かれるでしょう。',
+    s8_c6:'右手の説教台に近づくと、大理石細工の繊細さと優雅さに驚かれるでしょう。',
+    s8_c7:'ミフラーブに背を向けて入口扉の上をご覧ください。スイカの模様は、この複合施設にイマーレットがあり、訪れる人々が食事に招待されていることを象徴しています。',
+    s8_c8:'ドーム周囲の窓が空間全体に均一な光を確保しています。モスクの強力な音響と合わさって空間に深みを与えています。',
+    s8_c9:'そして視線を上げてください…高さ約31メートル、直径22メートルのこの壮麗なドームをじっくりご覧ください。中間の柱なしに4つの壁に支えられる建築的傑作です。',
+    s8_c10:'単一ドーム構造への移行における重要な先駆けとも見なされています。',
+    s8_c11:'この比類ないドームの下で、過去の足跡と今日の静けさを繋いだこの旅を締めくくります。この場所があなたの心に残した平和と驚きを持ち帰ってください。',
+    s8_callout:'🙏 <strong>この精神的な旅に静かなお別れを告げましょうか？</strong>',
+    s8_fwd:'お別れへ →',
+    s9_c1:'🏛️ 一歩ずつ過去の足跡を辿り、この壮麗な建築を共に息吹きました。今こそこの歴史的な場所にあなた自身の息吹を加える時です。',
+    s9_c2:'💭 あなたの心の中で響くもの…平和の瞬間、深い感嘆、あるいは心の中に残る静かな音符…',
+    s9_c3:'📖 あなたのために用意した芳名録は、この体験の精神的なアーカイブです。',
+    s9_c4:'✨ 心から溢れることを私たちと分かち合い、心の橋に永遠の足跡を残してください…',
+    s9_callout:'✍️ <strong>心の橋のページで気持ちをお書きいただくことをご招待します。</strong>',
+    s9_fwd:'心の橋に書く →',
+    s10_body:'この500年の旅が複合施設に残した印象をぜひお聞かせください。あなたの言葉がこの橋の石となります。',
+    s10_restart:'🏛️ スタートに戻る'
   }
 };
 
@@ -1327,7 +1452,9 @@ const STOP_NAMES_I18N = {
    bg:['Вход на Музея','Дарюшшифа 1. Двор','Дарюшшифа 2. Двор','Болнично Крило','Медицинско Медресе','Голям Двор','Имарет','Двор на Джамията','Вътре в Джамията','Покана към Моста','Мост на Сърцето'],
   el:['Είσοδος Μουσείου','Δαρύσσιφα 1η Αυλή','Δαρύσσιφα 2η Αυλή','Ιατρείο','Ιατρική Σχολή','Μεγάλη Αυλή','Ιμαρέτ','Αυλή Τζαμιού','Εντός Τζαμιού','Πρόσκληση Γέφυρας','Γέφυρα Καρδιάς'],
   zh:['博物馆入口','达鲁希法第一庭院','达鲁希法第二庭院','医疗病房','医学院','大庭院','伊马雷特','清真寺庭院','清真寺内部','心桥邀请','心桥'],
-  fa:['ورودی موزه','دارالشفا حیاط اول','دارالشفا حیاط دوم','بخش بستری','مدرسه پزشکی','حیاط بزرگ','عمارت','حیاط مسجد','داخل مسجد','دعوت به پل دل','پل دل']
+  fa:['ورودی موزه','دارالشفا حیاط اول','دارالشفا حیاط دوم','بخش بستری','مدرسه پزشکی','حیاط بزرگ','عمارت','حیاط مسجد','داخل مسجد','دعوت به پل دل','پل دل'],
+  ro:['Intrarea în Muzeu','Darüşşifa - Prima Curte','Darüşşifa - A doua Curte','Infirmeria','Madrasa Medicală','Marea Curte','Imaret (Cantina)','Curtea Moscheii','Interiorul Moscheii','Invitație pe Podul Inimii','Podul Inimii'],
+  ja:['博物館入口','ダールッシファ第1中庭','ダールッシファ第2中庭','大病棟','医学神学校','大中庭','イマーレット','モスク中庭','モスク内部','心の橋への招待','心の橋']
 };
 
 const MENU_SECTIONS_I18N = {
@@ -1340,18 +1467,20 @@ const MENU_SECTIONS_I18N = {
    bg:['СПИРКИ НА ОБИКОЛКАТА','НАСТРОЙКИ','СТРАНИЦИ'],
   el:['ΣΤΑΣΕΙΣ ΠΕΡΙΗΓΗΣΗΣ','ΡΥΘΜΙΣΕΙΣ','ΣΕΛΙΔΕΣ'],
   zh:['游览站点','设置','页面'],
-  fa:['ایستگاه‌های تور','تنظیمات','صفحات']
+  fa:['ایستگاه‌های تور','تنظیمات','صفحات'],
+  ro:['OPRIRI TUR','SETĂRI','PAGINI'],
+  ja:['ツアー停留所','設定','ページ']
 };
 
 const MENU_MAP_I18N = {
   tr:'Harita & Konum',en:'Map & Location',de:'Karte & Standort',fr:'Carte & Position',
-  ar:'الخريطة والموقع',ro:'Hartă & Locație',bg:'Карта & Местоположение',el:'Χάρτης & Τοποθεσία',zh:'地图与位置',fa:'نقشه و مکان'
+  ar:'الخريطة والموقع',ro:'Hartă & Locație',bg:'Карта & Местоположение',el:'Χάρτης & Τοποθεσία',zh:'地图与位置',fa:'نقشه و مکان',ja:'地図と場所'
 };
 
 const MENU_DEFTER_I18N = {
   tr:'Gönül Köprüsü',en:'Heart Bridge',de:'Herzbrücke',fr:'Pont du Cœur',
   ar:'جسر القلب',bg:'Мост на Сърцето',el:'Γέφυρα Καρδιάς',zh:'心桥',fa:'پل دل',
-  ro:'Podul Inimii'
+  ro:'Podul Inimii',ja:'心の橋'
 };
 
 const MENU_NOTEBOOK_I18N = {
@@ -1364,12 +1493,13 @@ const MENU_NOTEBOOK_I18N = {
   el:'Βιβλίο επισκεπτών',
   zh:'留言簿',
   fa:'دفتر مهمانان',
-  ro:'Cartea de Onoare'
+  ro:'Cartea de Onoare',
+  ja:'芳名録'
 };
 
 const LANG_CLOSE_I18N = {
   tr:'KAPAT',en:'CLOSE',de:'SCHLIEßEN',fr:'FERMER',ar:'إغلاق',bg:'ЗАТВОРИ',el:'ΚΛΕΙΣΤΟ',zh:'关闭',fa:'بستن',
-  ro:'ÎNCHIDE'
+  ro:'ÎNCHIDE',ja:'閉じる'
 };
 
 function updateMenuStopNames(){
@@ -1884,54 +2014,24 @@ Français → sadece Français
 Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE o dilde cevapla.
 İki dil ASLA karıştırılmaz. Evliya Çelebi karakterini koru ama dili değiştirme.`;
 
-let evliyaChatHistory=[];let evliyaThinking=false;let evliyaMuted=false;
+let evliyaChatHistory=[];let evliyaThinking=false;
 
 const EVLIYA_GREETING='Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.';
 
-// Erkek sesini seçen yardımcı fonksiyon — kadın sesi KESİNLİKLE kullanılmaz
-function getMaleVoice(){
-  const voices=window.speechSynthesis.getVoices();
-  const maleKw=['male','erkek','man','guy','ahmet','ali','onur','mehmet','umut'];
-  const femaleKw=['female','kadın','woman','girl','ayşe','fatma','yelda','esin','filiz','seda','elif'];
-  return (
-    voices.find(v=>v.lang.startsWith('tr')&&maleKw.some(k=>v.name.toLowerCase().includes(k))&&!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
-    voices.find(v=>v.lang.startsWith('tr')&&!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
-    voices.find(v=>maleKw.some(k=>v.name.toLowerCase().includes(k))&&!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
-    voices.find(v=>!femaleKw.some(k=>v.name.toLowerCase().includes(k)))||
-    null
-  );
-}
-
-function speakEvliya(text){
-  if(!('speechSynthesis' in window)||evliyaMuted)return;
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='tr-TR';u.rate=0.88;u.pitch=0.85;
-  const trySpeak=()=>{const v=getMaleVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);};
-  if(window.speechSynthesis.getVoices().length===0){
-    window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;trySpeak();};
-  }else{trySpeak();}
-}
-
-function toggleEvliyaMute(){
-  evliyaMuted=!evliyaMuted;
-  const btn=document.getElementById('evliya-mute-btn');
-  if(btn){btn.textContent=evliyaMuted?'🔇':'🔊';btn.classList.toggle('muted',evliyaMuted);}
-  if(evliyaMuted&&'speechSynthesis' in window)window.speechSynthesis.cancel();
-}
-
 function speakEvliyaGreeting(){
-  speakEvliya(EVLIYA_GREETING);
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(EVLIYA_GREETING);
+  u.lang='tr-TR';u.rate=0.88;u.pitch=0.95;
+  const voices=window.speechSynthesis.getVoices();
+  const match=voices.find(v=>v.lang.startsWith('tr'))||voices.find(v=>v.lang.startsWith('tr-'));
+  if(match)u.voice=match;
+  window.speechSynthesis.speak(u);
 }
 
 function openEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.add('open');
   document.getElementById('evliya-fab-wrap').classList.add('chat-open');
-  // Mute butonu yoksa chat-row'a ekle
-  if(!document.getElementById('evliya-mute-btn')){
-    const row=document.querySelector('.evliya-chat-row');
-    if(row){const mb=document.createElement('button');mb.id='evliya-mute-btn';mb.title='Sesi Aç/Kapat';mb.textContent='🔊';mb.onclick=toggleEvliyaMute;row.prepend(mb);}
-  }
   const stopAudio=document.getElementById('stop-audio');const introAudio=document.getElementById('intro-audio');
   if(stopAudio&&!stopAudio.paused){stopAudio._wasPlaying=true;stopAudio.pause();}
   if(introAudio&&!introAudio.paused){introAudio._wasPlaying=true;introAudio.pause();}
@@ -1985,27 +2085,9 @@ async function sendEvliyaMsg(){
     const msgs=[{role:'system',content:EVLIYA_SYSTEM_PROMPT},...evliyaChatHistory.map(m=>({role:m.role==='assistant'?'assistant':m.role,content:m.content}))];
     const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85})});
     const data=await response.json();removeTypingIndicator();
-    if(data.error){
-      const errMsg=data.error.message||'';
-      let evliyaErr;
-      if(errMsg.toLowerCase().includes('rate limit')||errMsg.toLowerCase().includes('tpm')||errMsg.toLowerCase().includes('token')){
-        evliyaErr='🕯️ Zamanın kapıları aralanıyor… Birazdan yeni bir hikâye sizi bekliyor.';
-      }else if(errMsg.toLowerCase().includes('timeout')){
-        evliyaErr='⏳ Kervansaray yolları uzundur; sabır edin, az sonra yetişirim.';
-      }else{
-        evliyaErr='🕯️ Seyahatnâmeme bir an bakayım, lütfen bekleyiniz…';
-      }
-      addEvliyaMsg('bot',evliyaErr);
-      speakEvliya(evliyaErr.replace(/[🕯️⏳]/g,'').trim());
-    }
-    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);speakEvliya(reply);}
-  }catch(e){
-    removeTypingIndicator();
-    const connErr='🕯️ Kervan yolu şimdilik kapalı. Bir an sonra tekrar deneyiniz.';
-    addEvliyaMsg('bot',connErr);
-    speakEvliya(connErr.replace(/🕯️/g,'').trim());
-    console.error(e);
-  }
+    if(data.error){addEvliyaMsg('bot','⚠️ Hata: '+(data.error.message||'Bilinmeyen hata'));}
+    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);}
+  }catch(e){removeTypingIndicator();addEvliyaMsg('bot','🕯️ Bağlantı kurulamadı. Lütfen tekrar deneyin.');console.error(e);}
   evliyaThinking=false;document.getElementById('evliya-send-btn').disabled=false;
 }
 
