@@ -1060,6 +1060,23 @@ body {
         #evliya-send-btn:active{transform:scale(0.94);}
         #evliya-send-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
+        #evliya-mute-btn{
+          width:42px;height:42px;border-radius:10px;flex-shrink:0;
+          background:rgba(212,175,55,0.12);
+          border:1px solid rgba(212,175,55,0.35);
+          cursor:pointer;
+          display:flex;align-items:center;justify-content:center;
+          font-size:18px;
+          transition:all 0.2s;
+          color:#f1d592;
+        }
+        #evliya-mute-btn:active{transform:scale(0.94);}
+        #evliya-mute-btn.muted{
+          background:rgba(139,0,0,0.25);
+          border-color:rgba(192,48,32,0.5);
+          color:#e08070;
+        }
+
         /* EVLİYA FAB */
         #evliya-fab-wrap{
             position:fixed;bottom:24px;right:24px;
@@ -2201,7 +2218,7 @@ English → sadece English
 Sistem promptu Türkçe olsa bile — kullanıcı farklı dilde yazdıysa SADECE o dilde cevapla.
 İki dil ASLA karıştırılmaz. Evliya Çelebi karakterini koru ama dili değiştirme.`;
 
-let evliyaChatHistory=[];let evliyaThinking=false;
+let evliyaChatHistory=[];let evliyaThinking=false;let evliyaMuted=false;
 
 // Erkek sesini seçen yardımcı fonksiyon — kadın sesi KESİNLİKLE kullanılmaz
 function getMaleVoice(){
@@ -2235,7 +2252,7 @@ function getMaleVoice(){
 }
 
 function speakEvliya(text){
-  if(!('speechSynthesis' in window))return;
+  if(!('speechSynthesis' in window)||evliyaMuted)return;
   window.speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
   u.lang='tr-TR';u.rate=0.88;u.pitch=0.85;
@@ -2252,6 +2269,13 @@ function speakEvliya(text){
   }
 }
 
+function toggleEvliyaMute(){
+  evliyaMuted=!evliyaMuted;
+  const btn=document.getElementById('evliya-mute-btn');
+  if(btn){btn.textContent=evliyaMuted?'🔇':'🔊';btn.classList.toggle('muted',evliyaMuted);}
+  if(evliyaMuted&&'speechSynthesis' in window)window.speechSynthesis.cancel();
+}
+
 function speakEvliyaGreeting(){
   speakEvliya('Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.');
 }
@@ -2259,6 +2283,10 @@ function speakEvliyaGreeting(){
 function openEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.add('open');
   document.getElementById('evliya-fab-wrap').classList.add('chat-open');
+  if(!document.getElementById('evliya-mute-btn')){
+    const row=document.querySelector('.evliya-chat-row');
+    if(row){const mb=document.createElement('button');mb.id='evliya-mute-btn';mb.title='Sesi Aç/Kapat';mb.textContent='🔊';mb.onclick=toggleEvliyaMute;row.prepend(mb);}
+  }
   if(evliyaChatHistory.length===0){
     addEvliyaMsg('bot','Sultan II. Bayezid Külliyesi\'ne hoş geldiniz! 🌿\n\nBen Evliya Çelebi — bu kadim şifa yurdunun koridorlarında sizinle yürümek için buradayım. 1652\'de burayı bizzat gezdim.\n\nDarüşşifa\'nın müzik tedavisinden bölüm ve odalarına kadar — aklınıza takılan her şeyi sorabilirsiniz. 🏛️');
     setTimeout(speakEvliyaGreeting, 400);
@@ -2308,7 +2336,7 @@ async function sendEvliyaMsg(){
       if(errMsg.toLowerCase().includes('rate limit')||errMsg.toLowerCase().includes('tpm')||errMsg.toLowerCase().includes('token')){
         evliyaErr='🕯️ Zamanın kapıları aralanıyor… Birazdan yeni bir hikâye sizi bekliyor.';
       } else if(errMsg.toLowerCase().includes('timeout')){
-        evliyaErr='⏳ Kervans yolları uzundur; sabır edin, az sonra yetişirim.';
+        evliyaErr='⏳ Kervansaray yolları uzundur; sabır edin, az sonra yetişirim.';
       } else {
         evliyaErr='🕯️ Seyahatnâmeme bir an bakayım, lütfen bekleyiniz…';
       }
