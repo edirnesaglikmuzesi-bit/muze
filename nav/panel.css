@@ -10,7 +10,24 @@
   --green:#2a7a3a;--green2:#3daa55;
   --blue:#1a4a7a;--blue2:#2a6ab0;
 }
-html,body{width:100%;min-height:100%;background:var(--bg-dark);color:var(--parch);font-family:var(--font-body);}
+/* ── style.css override: rehbere özgü overflow:hidden + position:fixed sıfırla ── */
+html,body{
+  width:100%;
+  min-height:100%;
+  height:auto !important;
+  overflow-x:hidden;
+  overflow-y:auto !important;
+  background:var(--bg-dark);
+  color:var(--parch);
+  font-family:var(--font-body);
+}
+
+/* style.css .screen{position:fixed;overflow:hidden} panel'i etkiliyor — sıfırla */
+.screen{
+  position:static !important;
+  overflow:visible !important;
+  height:auto !important;
+}
 
 /* LOGIN */
 #login-screen{position:fixed;inset:0;z-index:1000;background:linear-gradient(160deg,#0e0a04,#1e1208);display:flex;align-items:center;justify-content:center;padding:24px;}
