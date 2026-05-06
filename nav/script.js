@@ -141,8 +141,22 @@ function toggleSpeaker(){
 /* ────────────────────────────────────────
    MENU
 ──────────────────────────────────────── */
-function openMenu(){document.getElementById('menu-overlay').classList.add('open');document.getElementById('menu-panel').classList.add('open');}
-function closeMenu(){document.getElementById('menu-overlay').classList.remove('open');document.getElementById('menu-panel').classList.remove('open');}
+function openMenu(){
+  const stopAudio=document.getElementById('stop-audio');
+  const introAudio=document.getElementById('intro-audio');
+  if(stopAudio&&!stopAudio.paused){stopAudio._menuWasPlaying=true;stopAudio.pause();}
+  if(introAudio&&!introAudio.paused){introAudio._menuWasPlaying=true;introAudio.pause();}
+  document.getElementById('menu-overlay').classList.add('open');
+  document.getElementById('menu-panel').classList.add('open');
+}
+function closeMenu(){
+  document.getElementById('menu-overlay').classList.remove('open');
+  document.getElementById('menu-panel').classList.remove('open');
+  const stopAudio=document.getElementById('stop-audio');
+  const introAudio=document.getElementById('intro-audio');
+  if(stopAudio&&stopAudio._menuWasPlaying){stopAudio.play().catch(()=>{});stopAudio._menuWasPlaying=false;}
+  if(introAudio&&introAudio._menuWasPlaying){introAudio.play().catch(()=>{});introAudio._menuWasPlaying=false;}
+}
 
 /* ────────────────────────────────────────
    LANGUAGE
@@ -1450,7 +1464,14 @@ function showLocToast(msg){
 /* ────────────────────────────────────────
    YOUTUBE / IMAGE / CONFIRM
 ──────────────────────────────────────── */
-function openYT(){document.getElementById('yt-iframe').src='https://www.youtube.com/embed/YUw2S2MrHow?autoplay=1';document.getElementById('yt-popup').classList.add('open');}
+function openYT(){
+  const stopAudio=document.getElementById('stop-audio');
+  const introAudio=document.getElementById('intro-audio');
+  if(stopAudio&&!stopAudio.paused){stopAudio._ytWasPlaying=true;stopAudio.pause();}
+  if(introAudio&&!introAudio.paused){introAudio._ytWasPlaying=true;introAudio.pause();}
+  document.getElementById('yt-iframe').src='https://www.youtube.com/embed/YUw2S2MrHow?autoplay=1';
+  document.getElementById('yt-popup').classList.add('open');
+}
 function closeYT(){document.getElementById('yt-iframe').src='';document.getElementById('yt-popup').classList.remove('open');goStop(2);}
 function openImg(src){document.getElementById('img-popup-img').src=src;document.getElementById('img-popup').classList.add('open');}
 function closeImg(){document.getElementById('img-popup').classList.remove('open');}
@@ -1572,8 +1593,13 @@ window.addEventListener('DOMContentLoaded',()=>{
   introAudio.volume=0.45;
   let introStarted=false;
   function tryPlayIntro(){if(introStarted)return;if(!document.getElementById('screen-intro').classList.contains('active'))return;introStarted=true;introAudio.play().catch(()=>{introStarted=false;});}
-  setTimeout(tryPlayIntro,300);
-  ['touchstart','mousedown','pointerdown'].forEach(ev=>{document.addEventListener(ev,tryPlayIntro,{once:false,passive:true});});
+  // Hemen çalmayı dene (tarayıcı izin verirse)
+  introAudio.play().then(()=>{introStarted=true;}).catch(()=>{
+    // Autoplay engellendiyse ilk kullanıcı etkileşiminde başlat
+    ['touchstart','click','mousedown','pointerdown','keydown'].forEach(ev=>{
+      document.addEventListener(ev,tryPlayIntro,{once:false,passive:true});
+    });
+  });
   const muteStored=localStorage.getItem('rehber-speaker-muted');
   if(muteStored==='1'){speakerMuted=true;document.getElementById('btn-speaker').textContent='🔇';}
   document.querySelectorAll('[data-i18n]').forEach(el=>{if(!el.hasAttribute('data-tr')){el.setAttribute('data-tr',el.classList.contains('stop-callout')||el.classList.contains('stop-slogan')?el.innerHTML:el.textContent);}});
