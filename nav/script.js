@@ -160,6 +160,13 @@ function toggleSpeaker(){
    MENU
 ──────────────────────────────────────── */
 function openMenu(){
+  document.getElementById('menu-modal').classList.add('open');
+}
+
+function closeMenu(){
+  document.getElementById('menu-modal').classList.remove('open');
+}
+
 function openLang(){
   const onIntro = document.getElementById('screen-intro').classList.contains('active');
   const introAudio = document.getElementById('intro-audio');
@@ -175,6 +182,7 @@ function openLang(){
       stopAudio._langWasPlaying = true;
       stopAudio.pause();
     }
+
     if(introAudio && !introAudio.paused){
       introAudio._langWasPlaying = true;
       introAudio.pause();
@@ -201,11 +209,11 @@ function closeLang(){
       stopAudio.play().catch(()=>{});
       stopAudio._langWasPlaying = false;
     }
-    if(introAudio) introAudio._langWasPlaying = false;
-  }
-}
 
-  document.getElementById('lang-modal').classList.add('open');
+    if(introAudio){
+      introAudio._langWasPlaying = false;
+    }
+  }
 }
 
 function closeLang(){
