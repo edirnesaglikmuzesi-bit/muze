@@ -159,83 +159,53 @@ function toggleSpeaker(){
 /* ────────────────────────────────────────
    MENU
 ──────────────────────────────────────── */
-function openMenu(){
-  document.getElementById('menu-modal').classList.add('open');
+function openMenu() {
+    document.getElementById('menu-modal').classList.add('open');
 }
 
-function closeMenu(){
-  document.getElementById('menu-modal').classList.remove('open');
+function closeMenu() {
+    document.getElementById('menu-modal').classList.remove('open');
 }
 
-function openLang(){
-  const onIntro = document.getElementById('screen-intro').classList.contains('active');
-  const introAudio = document.getElementById('intro-audio');
-  const stopAudio  = document.getElementById('stop-audio');
+function openLang() {
+    const onIntro = document.getElementById('screen-intro').classList.contains('active');
+    const introAudio = document.getElementById('intro-audio');
+    const stopAudio = document.getElementById('stop-audio');
 
-  if(onIntro){
-    if(introAudio && !introAudio.paused){
-      introAudio._langWasPlaying = true;
-      introAudio.pause();
-    }
-  } else {
-    if(stopAudio && !stopAudio.paused){
-      stopAudio._langWasPlaying = true;
-      stopAudio.pause();
-    }
+    // Ses durdurma mantığı: Hangi ekranda olursak olalım çalan sesi işaretle ve durdur
+    [introAudio, stopAudio].forEach(audio => {
+        if (audio && !audio.paused) {
+            audio._langWasPlaying = true;
+            audio.pause();
+        }
+    });
 
-    if(introAudio && !introAudio.paused){
-      introAudio._langWasPlaying = true;
-      introAudio.pause();
-    }
-  }
-
-  document.getElementById('lang-modal').classList.add('open');
+    document.getElementById('lang-modal').classList.add('open');
 }
 
-function closeLang(){
-  document.getElementById('lang-modal').classList.remove('open');
+function closeLang() {
+    document.getElementById('lang-modal').classList.remove('open');
 
-  const onIntro = document.getElementById('screen-intro').classList.contains('active');
-  const introAudio = document.getElementById('intro-audio');
-  const stopAudio  = document.getElementById('stop-audio');
+    const onIntro = document.getElementById('screen-intro').classList.contains('active');
+    const introAudio = document.getElementById('intro-audio');
+    const stopAudio = document.getElementById('stop-audio');
 
-  if(onIntro){
-    if(introAudio && introAudio._langWasPlaying){
-      introAudio.play().catch(()=>{});
-      introAudio._langWasPlaying = false;
+    if (onIntro) {
+        // Intro ekranındaysak sadece intro sesini geri başlat
+        if (introAudio && introAudio._langWasPlaying) {
+            introAudio.play().catch(() => {});
+            introAudio._langWasPlaying = false;
+        }
+    } else {
+        // Durak ekranlarındaysak durak sesini geri başlat (mute değilse)
+        if (stopAudio && stopAudio._langWasPlaying && !window.speakerMuted) {
+            stopAudio.play().catch(() => {});
+            stopAudio._langWasPlaying = false;
+        }
+        // Intro sesi flag'ini temizle (başka ekranda intro çalmasın)
+        if (introAudio) introAudio._langWasPlaying = false;
     }
-  } else {
-    if(stopAudio && stopAudio._langWasPlaying && !speakerMuted){
-      stopAudio.play().catch(()=>{});
-      stopAudio._langWasPlaying = false;
-    }
-
-    if(introAudio){
-      introAudio._langWasPlaying = false;
-    }
-  }
 }
-
-function closeLang(){
-  document.getElementById('lang-modal').classList.remove('open');
-
-  const onIntro = document.getElementById('screen-intro').classList.contains('active');
-  const introAudio = document.getElementById('intro-audio');
-  const stopAudio  = document.getElementById('stop-audio');
-
-  if(onIntro){
-    if(introAudio && introAudio._langWasPlaying){
-      introAudio.play().catch(()=>{});
-      introAudio._langWasPlaying = false;
-    }
-  } else {
-    if(stopAudio && stopAudio._langWasPlaying && !speakerMuted){
-      stopAudio.play().catch(()=>{});
-      stopAudio._langWasPlaying = false;
-    }
-    if(introAudio) introAudio._langWasPlaying = false;
-  }
-
 const LANG_NAMES = {
   tr:'Türkçe 🇹🇷',
   en:'English 🇬🇧',
