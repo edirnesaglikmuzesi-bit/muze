@@ -105,6 +105,7 @@ function goStop(n){
   // Anlık konum güncellemesi için currentPage'i visitor_locations'a yaz
   if(TRACKING.active&&TRACKING.currentZone){
     refreshVisitorLocation(TRACKING.currentZone);
+     if(n > 0) history.pushState({stop: n}, '', window.location.href);
   }
 }
 
@@ -166,7 +167,9 @@ function openMenu(){
   if(introAudio&&!introAudio.paused){introAudio._menuWasPlaying=true;introAudio.pause();}
   document.getElementById('menu-overlay').classList.add('open');
   document.getElementById('menu-panel').classList.add('open');
-}
+   const fabWrap = document.getElementById('evliya-fab-wrap');
+  if(fabWrap) fabWrap.style.display = 'none';
+}}
 function closeMenu(){
   document.getElementById('menu-overlay').classList.remove('open');
   document.getElementById('menu-panel').classList.remove('open');
@@ -174,6 +177,11 @@ function closeMenu(){
   const introAudio=document.getElementById('intro-audio');
   if(stopAudio&&stopAudio._menuWasPlaying){stopAudio.play().catch(()=>{});stopAudio._menuWasPlaying=false;}
   if(introAudio&&introAudio._menuWasPlaying){introAudio.play().catch(()=>{});introAudio._menuWasPlaying=false;}
+   const introScreen = document.getElementById('screen-intro');
+  const fabWrap = document.getElementById('evliya-fab-wrap');
+  if(fabWrap && !(introScreen && introScreen.classList.contains('active'))){
+    fabWrap.style.display = 'flex';
+  }
 }
 
 /* ────────────────────────────────────────
