@@ -169,7 +169,7 @@ function openMenu(){
   document.getElementById('menu-panel').classList.add('open');
    const fabWrap = document.getElementById('evliya-fab-wrap');
   if(fabWrap) fabWrap.style.display = 'none';
-}}
+}
 function closeMenu(){
   document.getElementById('menu-overlay').classList.remove('open');
   document.getElementById('menu-panel').classList.remove('open');
