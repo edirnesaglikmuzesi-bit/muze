@@ -5,7 +5,6 @@
   const cfg={apiKey:"AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",authDomain:"edirnesaglikmuze.firebaseapp.com",projectId:"edirnesaglikmuze",storageBucket:"edirnesaglikmuze.firebasestorage.app",messagingSenderId:"707402210781",appId:"1:707402210781:web:fb65c71ca2557575e4aa34"};
   try{if(typeof firebase!=='undefined'){if(!firebase.apps.length){firebase.initializeApp(cfg);}window.db=firebase.firestore();}}catch(e){console.warn('Firebase:',e);window.db=null;}
 })();
-
 /* ────────────────────────────────────────
    CONSTANTS
 ──────────────────────────────────────── */
