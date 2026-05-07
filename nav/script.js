@@ -43,7 +43,6 @@ const LANG_AUDIO_FOLDERS = {
   ro:'assets/audio/ro',
   ja:'assets/audio/ja'
 };
-
 function getAudioFile(n, lang) {
   const folder = LANG_AUDIO_FOLDERS[lang] || LANG_AUDIO_FOLDERS.tr;
   return `${folder}/${n + 1}.mp3`;
