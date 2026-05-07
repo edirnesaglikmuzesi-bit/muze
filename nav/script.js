@@ -37,8 +37,8 @@ const LANG_AUDIO_FOLDERS = {
   ru:'assets/audio/ru',
   ar:'assets/audio/ar',
   bg:'assets/audio/bg',
-  el:'assets/audio/el',
-  zh:'assets/audio/zh',
+  el:'assets/audio/gr',
+  zh:'assets/audio/cn',
   fa:'assets/audio/fa',
   ro:'assets/audio/ro',
   ja:'assets/audio/ja'
