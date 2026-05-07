@@ -160,32 +160,6 @@ function toggleSpeaker(){
    MENU
 ──────────────────────────────────────── */
 function openMenu(){
-  const stopAudio=document.getElementById('stop-audio');
-  const introAudio=document.getElementById('intro-audio');
-  if(stopAudio&&!stopAudio.paused){stopAudio._menuWasPlaying=true;stopAudio.pause();}
-  if(introAudio&&!introAudio.paused){introAudio._menuWasPlaying=true;introAudio.pause();}
-  document.getElementById('menu-overlay').classList.add('open');
-  document.getElementById('menu-panel').classList.add('open');
-   const fabWrap = document.getElementById('evliya-fab-wrap');
-  if(fabWrap) fabWrap.style.display = 'none';
-}
-function closeMenu(){
-  document.getElementById('menu-overlay').classList.remove('open');
-  document.getElementById('menu-panel').classList.remove('open');
-  const stopAudio=document.getElementById('stop-audio');
-  const introAudio=document.getElementById('intro-audio');
-  if(stopAudio&&stopAudio._menuWasPlaying){stopAudio.play().catch(()=>{});stopAudio._menuWasPlaying=false;}
-  if(introAudio&&introAudio._menuWasPlaying){introAudio.play().catch(()=>{});introAudio._menuWasPlaying=false;}
-   const introScreen = document.getElementById('screen-intro');
-  const fabWrap = document.getElementById('evliya-fab-wrap');
-  if(fabWrap && !(introScreen && introScreen.classList.contains('active'))){
-    fabWrap.style.display = 'flex';
-  }
-}
-
-/* ────────────────────────────────────────
-   LANGUAGE
-──────────────────────────────────────── */
 function openLang(){
   const onIntro = document.getElementById('screen-intro').classList.contains('active');
   const introAudio = document.getElementById('intro-audio');
@@ -206,6 +180,30 @@ function openLang(){
       introAudio.pause();
     }
   }
+
+  document.getElementById('lang-modal').classList.add('open');
+}
+
+function closeLang(){
+  document.getElementById('lang-modal').classList.remove('open');
+
+  const onIntro = document.getElementById('screen-intro').classList.contains('active');
+  const introAudio = document.getElementById('intro-audio');
+  const stopAudio  = document.getElementById('stop-audio');
+
+  if(onIntro){
+    if(introAudio && introAudio._langWasPlaying){
+      introAudio.play().catch(()=>{});
+      introAudio._langWasPlaying = false;
+    }
+  } else {
+    if(stopAudio && stopAudio._langWasPlaying && !speakerMuted){
+      stopAudio.play().catch(()=>{});
+      stopAudio._langWasPlaying = false;
+    }
+    if(introAudio) introAudio._langWasPlaying = false;
+  }
+}
 
   document.getElementById('lang-modal').classList.add('open');
 }
