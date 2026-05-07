@@ -992,7 +992,7 @@ body::before {
 
 <!-- SES BUTONU -->
 <audio id="bg-audio" loop preload="auto">
-    <source src="../assets/audio/tr/11.mp3" type="audio/mpeg">
+    <source src="./assets/audio/tr/11.mp3" type="audio/mpeg">
 </audio>
 <button id="audio-toggle" title="Sesi Kapat / Aç">🔊</button>
 
@@ -1026,35 +1026,61 @@ window.addEventListener('click', function() {
 (function () {
     const audio = document.getElementById('bg-audio');
     const btn   = document.getElementById('audio-toggle');
-    audio.volume = 0.35;
 
-    function tryPlay() {
-        audio.play().catch(() => {
-            document.addEventListener('click', function once() {
-                audio.play();
-                btn.textContent = '🔊';
-                btn.dataset.muted = 'false';
-                document.removeEventListener('click', once);
-            });
-        });
+    audio.volume  = 0.35;
+    audio.preload = 'auto';
+
+    /* Buton durumunu güncelle */
+    function setBtn(playing) {
+        btn.textContent      = playing ? '🔊' : '🔇';
+        btn.dataset.muted    = playing ? 'false' : 'true';
+        btn.title            = playing ? 'Sesi Kapat' : 'Sesi Aç';
     }
 
-    document.addEventListener('DOMContentLoaded', tryPlay);
+    /* Çalmayı dene */
+    function tryPlay() {
+        const p = audio.play();
+        if (p !== undefined) {
+            p.then(() => { setBtn(true); })
+             .catch(() => {
+                 /* Tarayıcı engelledi — buton üzerinde "tıkla" ipucu göster */
+                 setBtn(false);
+                 btn.title = 'Müziği Başlatmak İçin Tıklayın';
+                 btn.style.animation = 'pulse-btn 1.5s ease-in-out 3';
+             });
+        }
+    }
 
+    /* Sayfa tamamen yüklenince dene */
+    window.addEventListener('load', tryPlay);
+
+    /* Ses butonu */
     btn.addEventListener('click', function (e) {
         e.stopPropagation();
         if (audio.paused) {
-            audio.play();
-            btn.textContent = '🔊';
-            btn.dataset.muted = 'false';
+            audio.play().then(() => setBtn(true)).catch(() => setBtn(false));
         } else {
             audio.pause();
-            btn.textContent = '🔇';
-            btn.dataset.muted = 'true';
+            setBtn(false);
         }
+        btn.style.animation = 'none';
+    });
+
+    /* Dosya yüklenemezse konsola yaz */
+    audio.addEventListener('error', function () {
+        console.warn('[Müzik] Dosya yüklenemedi:', audio.currentSrc);
+        btn.title = 'Müzik dosyası bulunamadı';
+        btn.style.opacity = '0.4';
     });
 })();
 </script>
+
+<style>
+@keyframes pulse-btn {
+    0%,100% { box-shadow: 0 6px 24px rgba(0,0,0,0.5), 0 0 0 0 rgba(212,175,55,0.5); }
+    50%      { box-shadow: 0 6px 24px rgba(0,0,0,0.5), 0 0 0 10px rgba(212,175,55,0); }
+}
+</style>
 
 <!-- ZİYARETÇİ DEFTERİ MANTIĞI -->
 <script>
