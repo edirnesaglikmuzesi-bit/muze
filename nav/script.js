@@ -27,8 +27,27 @@ const FAB_STOP_HINTS=[
   '🪨 Bir taş da siz koyun — köprüde yeriniz hazır!'
 ];
 
-const LANG_AUDIO_FOLDERS={tr:'assets/audio/tr',en:'assets/audio/en',de:'assets/audio/de',fr:'assets/audio/fr',ar:'assets/audio/ar',bg:'assets/audio/bg',el:'assets/audio/gr',zh:'assets/audio/cn',fa:'assets/audio/fa',ro:'assets/audio/ro',ja:'assets/audio/ja'};
-function getAudioFile(n,lang){const f=LANG_AUDIO_FOLDERS[lang]||LANG_AUDIO_FOLDERS['tr'];return f+'/'+(n+1)+'.mp3';}
+const LANG_AUDIO_FOLDERS = {
+  tr:'assets/audio/tr',
+  en:'assets/audio/en',
+  de:'assets/audio/de',
+  fr:'assets/audio/fr',
+  it:'assets/audio/it',
+  es:'assets/audio/es',
+  ru:'assets/audio/ru',
+  ar:'assets/audio/ar',
+  bg:'assets/audio/bg',
+  el:'assets/audio/el',
+  zh:'assets/audio/zh',
+  fa:'assets/audio/fa',
+  ro:'assets/audio/ro',
+  ja:'assets/audio/ja'
+};
+
+function getAudioFile(n, lang) {
+  const folder = LANG_AUDIO_FOLDERS[lang] || LANG_AUDIO_FOLDERS.tr;
+  return `${folder}/${n + 1}.mp3`;
+}
 
 /* ────────────────────────────────────────
    STATE
