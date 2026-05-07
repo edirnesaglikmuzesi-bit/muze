@@ -187,8 +187,49 @@ function closeMenu(){
 /* ────────────────────────────────────────
    LANGUAGE
 ──────────────────────────────────────── */
-function openLang(){ document.getElementById('lang-modal').classList.add('open'); }
-function closeLang(){ document.getElementById('lang-modal').classList.remove('open'); }
+function openLang(){
+  const onIntro = document.getElementById('screen-intro').classList.contains('active');
+  const introAudio = document.getElementById('intro-audio');
+  const stopAudio  = document.getElementById('stop-audio');
+
+  if(onIntro){
+    if(introAudio && !introAudio.paused){
+      introAudio._langWasPlaying = true;
+      introAudio.pause();
+    }
+  } else {
+    if(stopAudio && !stopAudio.paused){
+      stopAudio._langWasPlaying = true;
+      stopAudio.pause();
+    }
+    if(introAudio && !introAudio.paused){
+      introAudio._langWasPlaying = true;
+      introAudio.pause();
+    }
+  }
+
+  document.getElementById('lang-modal').classList.add('open');
+}
+
+function closeLang(){
+  document.getElementById('lang-modal').classList.remove('open');
+
+  const onIntro = document.getElementById('screen-intro').classList.contains('active');
+  const introAudio = document.getElementById('intro-audio');
+  const stopAudio  = document.getElementById('stop-audio');
+
+  if(onIntro){
+    if(introAudio && introAudio._langWasPlaying){
+      introAudio.play().catch(()=>{});
+      introAudio._langWasPlaying = false;
+    }
+  } else {
+    if(stopAudio && stopAudio._langWasPlaying && !speakerMuted){
+      stopAudio.play().catch(()=>{});
+      stopAudio._langWasPlaying = false;
+    }
+    if(introAudio) introAudio._langWasPlaying = false;
+  }
 
 const LANG_NAMES = {
   tr:'Türkçe 🇹🇷',
