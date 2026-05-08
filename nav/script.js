@@ -59,6 +59,26 @@ let fabBubbleTimer=null;
    SCREEN
 ──────────────────────────────────────── */
 function showScreen(name){
+  // Hangi ekrandan çıkıyoruz?
+  const prevScreen=document.querySelector('.screen.active');
+  const prevName=prevScreen?prevScreen.id.replace('screen-',''):'';
+
+  // Harita/konum ekranına geçerken arka plan sesini durdur
+  if(name==='map'){
+    const stopAudio=document.getElementById('stop-audio');
+    const introAudio=document.getElementById('intro-audio');
+    if(stopAudio&&!stopAudio.paused){stopAudio._mapWasPlaying=true;stopAudio.pause();}
+    if(introAudio&&!introAudio.paused){introAudio._mapWasPlaying=true;introAudio.pause();}
+  }
+
+  // Tur ekranına dönünce sesi geri başlat
+  if(name==='tour'&&prevName==='map'){
+    const stopAudio=document.getElementById('stop-audio');
+    const introAudio=document.getElementById('intro-audio');
+    if(stopAudio&&stopAudio._mapWasPlaying&&!speakerMuted){stopAudio.play().catch(()=>{});stopAudio._mapWasPlaying=false;}
+    if(introAudio&&introAudio._mapWasPlaying){introAudio.play().catch(()=>{});introAudio._mapWasPlaying=false;}
+  }
+
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   const locBtn=document.getElementById('btn-loc-fixed');
@@ -253,7 +273,7 @@ function setLang(code){
   document.documentElement.lang = code;
 
   const isRTL = code==='ar'||code==='fa';
-  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  document.documentElement.classList.toggle('rtl-lang', isRTL);
 
   document.querySelectorAll('.lang-btn').forEach(b=>{
     b.classList.toggle('active', b.getAttribute('onclick').includes("'"+code+"'"));
@@ -2134,7 +2154,7 @@ function t(key){
 function applyTranslations(){
   const L = currentLang;
   const isRTL = L==='ar'||L==='fa';
-  document.documentElement.dir = isRTL?'rtl':'ltr';
+  document.documentElement.classList.toggle('rtl-lang', isRTL);
 
   const introTitle = document.querySelector('.intro-title');
   const introSub   = document.querySelector('.intro-sub');
@@ -2498,6 +2518,30 @@ window.addEventListener('load',()=>showKVKKBanner());
    INIT
 ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded',()=>{
+  // RTL dilleri için sadece metin yönü değişsin, layout etkilenmesin
+  const rtlStyle=document.createElement('style');
+  rtlStyle.textContent=`
+    html.rtl-lang .stop-callout,
+    html.rtl-lang .stop-slogan,
+    html.rtl-lang .stop-content p,
+    html.rtl-lang .stop-content li,
+    html.rtl-lang .stop-section,
+    html.rtl-lang .stop-section-title,
+    html.rtl-lang [data-i18n],
+    html.rtl-lang .chat-bubble,
+    html.rtl-lang .intro-title,
+    html.rtl-lang .intro-sub,
+    html.rtl-lang .menu-item .mi-name,
+    html.rtl-lang .fab-info-bubble,
+    html.rtl-lang .pb-label,
+    html.rtl-lang .gb-input,
+    html.rtl-lang .msg-body,
+    html.rtl-lang .msg-author,
+    html.rtl-lang input,
+    html.rtl-lang textarea { direction: rtl; text-align: right; }
+  `;
+  document.head.appendChild(rtlStyle);
+
   const introAudio=document.getElementById('intro-audio');
   introAudio.volume=0.45;
   let introStarted=false;
