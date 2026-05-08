@@ -672,7 +672,7 @@
     <div class="menu-section">SAYFALAR</div>
     <div class="menu-item" onclick="openMapScreen()"><span class="mi-icon">🗺️</span><span class="mi-name">Harita &amp; Konum</span></div>
     <div class="menu-item" onclick="menuGoStop(10);closeMenu()"><span class="mi-icon">🖋️</span><span class="mi-name">Gönül Köprüsü</span></div>
-    <div class="menu-item" onclick="openEvliyaChat();closeMenu()" style="background:linear-gradient(90deg,rgba(184,134,11,0.08),transparent);border-left:3px solid var(--gold);">
+    <div class="menu-item" onclick="closeMenu(true);openEvliyaChat()" style="background:linear-gradient(90deg,rgba(184,134,11,0.08),transparent);border-left:3px solid var(--gold);">
       <span class="mi-icon" style="width:28px;height:28px;border-radius:50%;overflow:hidden;border:1.5px solid var(--gold);flex-shrink:0;display:flex;align-items:center;justify-content:center;">
         <img src="assets/img/evliya.gif" alt="Evliya" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='🎭'">
       </span>
@@ -821,6 +821,7 @@
         <button class="quick-btn" onclick="evliyaQuick('Külliyede kaç kişi çalışırdı, nasıl bir organizasyon vardı?')">👥 Personel Yapısı</button>
       </div>
       <div class="evliya-chat-row">
+        <button class="evliya-voice-toggle" id="evliya-voice-btn" onclick="toggleEvliyaVoice()" title="Sesi kapat">🔊</button>
         <textarea id="evliya-chat-input" placeholder="Evliya Çelebi'ye bir şey sor…" rows="1"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendEvliyaMsg();}"
           oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
