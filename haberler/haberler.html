@@ -314,9 +314,11 @@ body {
         inset 0 1px 2px rgba(255,255,255,0.5);
 }
 
-/* Slider Navigasyon */
+/* Slider Navigasyon — sl-container içinde absolute, tam orta */
 .sl-nav { 
-    position: absolute; top: 50%; transform: translateY(-50%); 
+    position: absolute; 
+    top: 50%; 
+    transform: translateY(-50%); 
     background: rgba(15,26,36,0.82); color: var(--gold); 
     border: 1px solid rgba(212,175,55,0.7); 
     width: 38px; height: 38px; border-radius: 50%; 
@@ -324,6 +326,7 @@ body {
     display: flex; align-items: center; justify-content: center; 
     font-size: 16px;
     transition: background 0.2s, box-shadow 0.2s;
+    /* tam ekran butonuyla çakışmaması için: sağ ok sağa, sol ok sola */
 }
 .sl-nav:hover { background: rgba(212,175,55,0.9); color: var(--dark); box-shadow: 0 0 12px rgba(212,175,55,0.6); }
 
@@ -777,8 +780,13 @@ body {
 
                 let navsTags = images.length > 1 ? `
                     <button class="sl-nav" style="left:10px" onclick="runSlider(${bId}, -1, ${images.length})">❮</button>
-                    <button class="sl-nav" style="right:55px" onclick="runSlider(${bId}, 1, ${images.length})">❯</button>
+                    <button class="sl-nav" style="right:10px" onclick="runSlider(${bId}, 1, ${images.length})">❯</button>
                 ` : '';
+
+                // Görsellere tıklama ile tam ekran
+                let imgTagsClickable = images.map((src, i) =>
+                    `<img src="${src}" loading="lazy" referrerpolicy="no-referrer" alt="Haber Görseli" style="cursor:zoom-in" onclick="openFs(${bId})">`
+                ).join('');
 
                 sliderHtml = `
                     <div class="sl-padder">
@@ -786,7 +794,7 @@ body {
                             <div class="sl-container">
                                 ${navsTags}
                                 <button class="sl-fullscreen-btn" onclick="openFs(${bId})" title="Tam Ekran">⛶</button>
-                                <div class="sl-wrapper">${imgTags}</div>
+                                <div class="sl-wrapper">${imgTagsClickable}</div>
                                 <div class="sl-dots">${dotsTags}</div>
                             </div>
                         </div>
