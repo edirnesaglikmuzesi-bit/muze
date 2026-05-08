@@ -2858,21 +2858,20 @@ function _syncEvliyaVoiceBtn(){
 function toggleEvliyaVoice(){
   evliyaVoiceMuted=!evliyaVoiceMuted;
   _syncEvliyaVoiceBtn();
-  if(evliyaVoiceMuted&&'speechSynthesis' in window)window.speechSynthesis.cancel();
+  if(evliyaVoiceMuted){
+    const intro=document.getElementById('evliya-intro-audio');
+    if(intro){intro.pause();intro.currentTime=0;}
+  }
 }
 
 const EVLIYA_GREETING='Merhaba! Ben rehberiniz Evliya Çelebi. Bana Sultan İkinci Bayezid Külliyesi hakkında öğrenmek istediklerinizi sorabilirsiniz.';
 
 function speakEvliyaGreeting(){
-  if(!('speechSynthesis' in window))return;
   if(evliyaVoiceMuted)return;
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(EVLIYA_GREETING);
-  u.lang='tr-TR';u.rate=0.88;u.pitch=0.95;
-  const voices=window.speechSynthesis.getVoices();
-  const match=voices.find(v=>v.lang.startsWith('tr'))||voices.find(v=>v.lang.startsWith('tr-'));
-  if(match)u.voice=match;
-  window.speechSynthesis.speak(u);
+  const intro=document.getElementById('evliya-intro-audio');
+  if(!intro)return;
+  intro.currentTime=0;
+  intro.play().catch(()=>{});
 }
 
 function openEvliyaChat(){
@@ -2898,6 +2897,8 @@ function closeEvliyaChat(){
   document.getElementById('evliya-chat-panel').classList.remove('open');
   document.getElementById('evliya-fab-wrap').classList.remove('chat-open');
   if('speechSynthesis' in window)window.speechSynthesis.cancel();
+  const introMp3=document.getElementById('evliya-intro-audio');
+  if(introMp3){introMp3.pause();introMp3.currentTime=0;}
   const stopAudio=document.getElementById('stop-audio');const introAudio=document.getElementById('intro-audio');
   if(stopAudio&&stopAudio._wasPlaying){stopAudio.play().catch(()=>{});stopAudio._wasPlaying=false;}
   if(introAudio&&introAudio._wasPlaying){introAudio.play().catch(()=>{});introAudio._wasPlaying=false;}
