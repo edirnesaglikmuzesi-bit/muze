@@ -2858,9 +2858,16 @@ function _syncEvliyaVoiceBtn(){
 function toggleEvliyaVoice(){
   evliyaVoiceMuted=!evliyaVoiceMuted;
   _syncEvliyaVoiceBtn();
+  const intro=document.getElementById('evliya-intro-audio');
+  if(!intro)return;
   if(evliyaVoiceMuted){
-    const intro=document.getElementById('evliya-intro-audio');
-    if(intro){intro.pause();intro.currentTime=0;}
+    // Sadece duraklat, konumu sıfırlama
+    if(!intro.paused)intro.pause();
+  } else {
+    // Ses hâlâ yüklü ve bitmemişse kaldığı yerden devam et
+    if(intro.currentTime>0&&intro.currentTime<intro.duration&&intro.paused){
+      intro.play().catch(()=>{});
+    }
   }
 }
 
