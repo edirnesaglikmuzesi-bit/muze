@@ -8,263 +8,543 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- 1. TEMEL AYARLAR --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --nav-height: 100px; --gold: #d4af37; --dark: #0f1a24; --parchment: #f4e7c8; --v-red: #8b0000; }
+/* --- 1. TEMEL AYARLAR VE DEĞİŞKENLER --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
 
-        body {
-            font-family: 'Playfair Display', serif;
-            background: #fdf5e6;
-            background-image: url("../assets/background.jpg");
-            background-attachment: fixed;
-            background-size: cover;
-            padding-top: calc(var(--nav-height) + 20px);
-        }
+:root {
+    --nav-height: 100px; 
+    --gold: #d4af37; 
+    --gold-bright: #f1d592;
+    --dark: #0f1a24; 
+    --parchment: #f4e7c8; 
+    --v-red: #8b0000; 
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
 
-        /* --- 2. NAVİGASYON --- */
-        .nav-wrapper {
-            width: 100%;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 2000;
-            padding: 0 15px;
-        }
+body {
+    font-family: 'Playfair Display', serif;
+    background: #fdf5e6 url("../assets/background.jpg") fixed center/cover;
+    padding-top: calc(var(--nav-height) + 20px);
+    color: #2b2b2b;
+}
 
-        .nav {
-            max-width: 1240px;
-            margin: 0 auto;
-            background-color: var(--dark);
-            border: 2px solid var(--gold);
-            border-top: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 25px;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            min-height: var(--nav-height);
-        }
+/* --- 2. NAVİGASYON --- */
+.nav-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 2000;
+    padding: 0 15px;
+}
 
-        .logo-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-            min-width: 0;
-        }
+.nav {
+    max-width: 1240px;
+    margin: 0 auto;
+    background-color: var(--dark);
+    border: 2px solid var(--gold);
+    border-top: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 25px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    min-height: var(--nav-height);
+}
 
-        .logo-img1, .logo-img2 {
-            height: 65px;
-            width: auto;
-            transition: transform 0.3s;
-            flex-shrink: 0;
-        }
-        .logo-img1:hover, .logo-img2:hover { transform: scale(1.05); }
+.logo-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    min-width: 0;
+}
 
-        .logo-text-group {
-            color: var(--gold);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+.logo-img1, .logo-img2 {
+    height: 65px;
+    width: auto;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+}
+.logo-img1:hover, .logo-img2:hover { transform: scale(1.05); }
 
-        .logo-title {
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: clamp(10px, 2.5vw, 14px);
-            letter-spacing: 2px;
-            white-space: nowrap;
-        }
+.logo-text-group {
+    color: var(--gold);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
 
-        .logo-subtitle {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(10px, 2.5vw, 14px);
-            font-weight: 300;
-        }
+.logo-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(10px, 2.5vw, 14px);
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
 
-        .menu-btn {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            cursor: pointer;
-            padding: 10px 20px;
-            font-family: 'Cinzel', serif;
-            border-radius: 4px;
-            transition: background 0.3s, color 0.3s;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .menu-btn:hover { background: var(--gold); color: #fff; }
+.logo-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(10px, 2.5vw, 14px);
+    font-weight: 300;
+}
 
-        #globalDropdown {
-            display: none;
-            position: absolute;
-            right: 20px;
-            top: 100%;
-            background: var(--dark);
-            border: 2px solid var(--gold);
-            min-width: 280px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border-radius: 8px;
-            z-index: 3000;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-        }
-        #globalDropdown.active { display: block; animation: dropIn 0.2s ease; }
+.menu-btn {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    cursor: pointer;
+    padding: 10px 20px;
+    font-family: 'Cinzel', serif;
+    border-radius: 4px;
+    transition: background 0.3s, color 0.3s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.menu-btn:hover { background: var(--gold); color: #fff; }
 
-        @keyframes dropIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+#globalDropdown {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 100%;
+    background: var(--dark);
+    border: 2px solid var(--gold);
+    min-width: 280px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    z-index: 3000;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
+#globalDropdown.active { display: block; animation: dropIn 0.2s ease; }
 
-        .dropdown-link {
-            display: block;
-            padding: 12px 25px;
-            color: var(--gold);
-            text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-size: 13px;
-            border-bottom: 1px solid rgba(212,175,55,0.1);
-            transition: background 0.2s, padding-left 0.2s, color 0.2s;
-        }
-        .dropdown-link:hover {
-            background: rgba(212,175,55,0.15);
-            padding-left: 30px;
-            color: #fff;
-        }
+@keyframes dropIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 
-        .dropdown-link-highlight {
-            background: var(--gold);
-            color: var(--dark) !important;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .dropdown-link-highlight:hover {
-            background: var(--gold-bright, #f1d592);
-            color: var(--dark) !important;
-            padding-left: 30px;
-        }
-        /* DROPDOWN (14 MADDELİK TAM LİSTE) */
-        #globalDropdown {
-            display: none; position: absolute; right: 30px; top: calc(100% + 10px);
-            background: var(--dark); border: 2px solid var(--gold);
-            min-width: 280px; max-height: 75vh; overflow-y: auto; 
-            border-radius: 8px; z-index: 3000; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-        }
-        #globalDropdown.active { display: block; }
-        .dropdown-link { display: block; padding: 12px 25px; color: var(--gold) !important; text-decoration: none; font-family: 'Cinzel'; font-size: 13px; border-bottom: 1px solid rgba(212,175,55,0.1); transition: 0.3s; }
-        .dropdown-link:hover { background: rgba(212, 175, 55, 0.15); padding-left: 30px; }
+.dropdown-link {
+    display: block;
+    padding: 12px 25px;
+    color: var(--gold);
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(212,175,55,0.1);
+    transition: background 0.2s, padding-left 0.2s, color 0.2s;
+}
+.dropdown-link:hover {
+    background: rgba(212,175,55,0.15);
+    padding-left: 30px;
+    color: #fff;
+}
 
-        /* --- 3. BANNER ALANI --- */
-        .banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
-        .banner-box { 
-            position: relative; width: 100%; height: 400px; 
-            border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .banner-box img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
-        .banner-overlay { 
-            position: absolute; inset: 0; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; text-align: center; color: #fff;
-        }
-        .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
-        .banner-overlay p { font-family: 'Cinzel'; font-size: 18px; color: var(--gold); margin-top: 15px; letter-spacing: 4px; }
-.banner-overlay .slogan { font-family: 'Playfair Display'; font-style: italic; font-size: 15px; color: rgba(255,255,255,0.8); margin-top: 8px; letter-spacing: 2px; }
+.dropdown-link-highlight {
+    background: var(--gold);
+    color: var(--dark) !important;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.dropdown-link-highlight:hover {
+    background: var(--gold-bright, #f1d592);
+    color: var(--dark) !important;
+    padding-left: 30px;
+}
 
-        /* --- 4. İÇERİK KARTI VE KÖŞE FRAME --- */
-        .container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
-        .full-card {
-            background: var(--parchment); border: 2px solid var(--gold);
-            border-radius: 12px; position: relative; margin-bottom: 40px; overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-        }
+/* --- 3. BANNER --- */
+.banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.banner-box { 
+    position: relative; width: 100%; height: 400px; 
+    border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; 
+}
+.banner-box img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
+.banner-overlay { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    z-index: 5; text-align: center; color: #fff; padding: 20px;
+}
+.banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
+.banner-overlay p { font-family: 'Cinzel'; font-size: 18px; color: var(--gold); margin-top: 15px; letter-spacing: 4px; }
 
-        /* Köşe Süslemeleri */
-        .corner-frame { position: absolute; width: 75px; height: 75px; z-index: 10; pointer-events: none; }
-        .t-l { top: 0; left: 0; }
-        .t-r { top: 0; right: 0; }
-        .b-l { bottom: 0; left: 0; }
-        .b-r { bottom: 0; right: 0; }
+/* --- 4. İÇERİK KARTI VE KÖŞE SÜSLEMELERİ --- */
+.container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
+.full-card {
+    background: var(--parchment); border: 2px solid var(--gold);
+    border-radius: 12px; position: relative; margin-bottom: 40px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
 
-        .main-title { padding: 45px 20px; text-align: center; font-family: 'Cinzel'; background: var(--dark); color: var(--gold); border-bottom: 2px solid var(--gold); position: relative; z-index: 2; }
+.corner-frame { position: absolute; width: 75px; height: 75px; z-index: 10; pointer-events: none; }
+.t-l { top: 0; left: 0; }
+.t-r { top: 0; right: 0; }
+.b-l { bottom: 0; left: 0; }
+.b-r { bottom: 0; right: 0; }
+
+.main-title { padding: 45px 20px; text-align: center; font-family: 'Cinzel'; background: var(--dark); color: var(--gold); border-bottom: 2px solid var(--gold); position: relative; z-index: 2; }
 .main-title h2 { font-size: clamp(16px,3vw,26px); letter-spacing: 4px; }
-.main-title p { font-size: 14px; margin-top: 8px; font-family: 'Playfair Display'; font-style: italic; color: rgba(212,175,55,0.7); }
+.content-area { padding: 30px 20px; line-height: 1.8; font-size: 18px; color: #2b2b2b; position: relative; z-index: 2; }
+@media (min-width: 768px) { .content-area { padding: 50px 100px; } }
 
-        .content-area { padding: 30px 20px; line-height: 1.8; font-size: 18px; color: #2b2b2b; position: relative; z-index: 2; }
-        @media (min-width: 768px) { .content-area { padding: 50px 100px; } }
+.card-footer { 
+    padding: 40px; background: var(--dark); color: var(--gold); 
+    text-align: center; font-family: 'Cinzel'; border-top: 2px solid var(--gold); 
+    position: relative; z-index: 2;
+}
 
-        .content-area h3 { font-family: 'Cinzel'; color: var(--dark); margin: 40px 0 15px; border-bottom: 2px solid var(--gold); display: inline-block; font-weight: 700; }
-        .red-line { color: var(--v-red); font-weight: bold; border-left: 5px solid var(--v-red); padding-left: 20px; margin: 35px 0; font-style: italic; background: rgba(139,0,0,0.03); padding: 25px; border-radius: 4px; }
+.site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
+.site-footer { 
+    width: 100%; max-width: 1240px; background: var(--dark); 
+    border: 2px solid var(--gold); border-radius: 15px; 
+    padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
+}
 
-        .small-img-wrapper { padding: 30px 15px; text-align: center; }
-        .small-img-wrapper img { width: 100%; max-width: 600px; max-height: 400px; height: auto; border-radius: 8px; border: 1px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.footer-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
 
-        .table-wrap { overflow-x: auto; margin: 35px 0; border: 1px solid var(--gold); border-radius: 8px; background: #fff; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { background: var(--dark); color: var(--gold); padding: 18px; text-align: left; font-family: 'Cinzel'; }
-        td { padding: 15px; border-bottom: 1px solid #eee; }
+.footer-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 17px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    margin-top: 8px;
+}
 
-        .card-footer { padding: 40px; background: var(--dark); color: var(--gold); text-align: center; font-family: 'Cinzel'; border-top: 2px solid var(--gold); }
+/* --- MOBİL --- */
+@media (max-width: 768px) {
+    .logo-img1, .logo-img2 { height: 45px; }
+    .menu-btn { padding: 8px 15px; font-size: 12px; }
+    .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
+    .banner-box { height: 250px; }
+    .content-area { padding: 30px 20px; font-size: 16px; }
+    .corner-frame { width: 45px; height: 45px; }
+    body { padding-top: calc(var(--nav-height) + 20px); }
+}
 
-        /* --- 5. FOOTER --- */
-        .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
-        .site-footer { 
-            width: 100%; max-width: 1240px; background: var(--dark); 
-            border: 2px solid var(--gold); border-radius: 15px; 
-            padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
-        }
-  /* --- 5. FOOTER --- */
-        .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
-        .site-footer { 
-            width: 100%; max-width: 1240px; background: var(--dark); 
-            border: 2px solid var(--gold); border-radius: 15px; 
-            padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
-        }
+/* ========================================
+   DUYURU KARTI & SLIDER
+   ======================================== */
 
-        /* BURAYA EKLE: MOBİL UYUMLULUK AYARLARI */
-        @media (max-width: 768px) {
-            .logo-img1, .logo-img2 { height: 45px; }
-            .menu-btn { padding: 8px 15px; font-size: 12px; }
-            .nav { padding: 10px 20px; flex-direction: column; gap: 10px; }
-            .logo { text-align: center; }
-            #globalDropdown { width: 90%; right: 5%; left: 5%; }
-            .banner-box { height: 250px; }
-            .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
-            .content-area { padding: 30px 20px; font-size: 16px; }
-            .main-title { padding: 45px 20px; text-align: center; font-family: 'Cinzel'; background: var(--dark); color: var(--gold); border-bottom: 2px solid var(--gold); position: relative; z-index: 2; }
-            .corner-frame { width: 45px; height: 45px; }
-            .table-wrap { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            table { min-width: 500px; }
-            body { padding-top: calc(var(--nav-height) + 20px); }
-        }
+/* Sayfalandırma Butonları */
+.page-btn { 
+    background: var(--dark); color: var(--gold); border: 1px solid var(--gold); 
+    padding: 8px 15px; font-family: 'Cinzel'; cursor: pointer; border-radius: 4px; 
+    transition: 0.3s; font-size: 13px; 
+}
+.page-btn:hover:not(:disabled) { background: var(--gold); color: var(--dark); box-shadow: 0 0 10px var(--gold); }
+.page-btn.active { background: var(--gold); color: var(--dark); font-weight: bold; }
+.page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        /* Görselleri her zaman esnek tutar */
-        .small-img-wrapper img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+/* Duyuru Kartı */
+.announcement-item { 
+    background: rgba(255,255,255,0.45); 
+    border: 1px solid rgba(212,175,55,0.4); 
+    border-radius: 10px; 
+    margin-bottom: 50px; 
+    overflow: hidden; 
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    transition: box-shadow 0.4s, transform 0.4s;
+}
+.announcement-item:hover {
+    box-shadow: 0 16px 50px rgba(212,175,55,0.25);
+    transform: translateY(-3px);
+}
 
-            .footer-title {
-            font-family: 'Cinzel', serif;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
+/* ---- SLIDER ÇERÇEVE YAPISI ---- */
+.sl-outer {
+    position: relative;
+    width: 100%;
+    /* 3:4 dikey format için daha dar max-width */
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 8px;
+    background: linear-gradient(135deg, #d4af37 0%, #f1d592 40%, #b8942a 60%, #d4af37 100%);
+    border-radius: 10px;
+    box-shadow: 
+        0 0 0 1px rgba(212,175,55,0.3),
+        0 8px 32px rgba(0,0,0,0.35),
+        inset 0 1px 2px rgba(255,255,255,0.4);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
 
-        .footer-subtitle {
-            font-family: 'Cinzel', serif;
-            font-size: 17px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            margin-top: 8px;
-        }
-    </style> ```
+/* *** 3:4 DİKEY ASPECT RATIO *** */
+.sl-container { 
+    width: 100%; 
+    position: relative; 
+    overflow: hidden; 
+    background-color: #000; 
+    border-radius: 4px;
+    aspect-ratio: 3 / 4;
+}
+
+.sl-wrapper { 
+    display: flex; 
+    width: 100%; 
+    height: 100%; 
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+.sl-wrapper img { 
+    min-width: 100%; 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    display: block; 
+}
+
+/* Hover efekti */
+.sl-outer:hover {
+    transform: translateY(-6px) scale(1.012);
+    box-shadow: 
+        0 0 0 2px rgba(241,213,146,0.8),
+        0 20px 60px rgba(0,0,0,0.45),
+        0 0 40px rgba(212,175,55,0.35),
+        inset 0 1px 2px rgba(255,255,255,0.5);
+}
+
+/* Slider Navigasyon */
+.sl-nav { 
+    position: absolute; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    background: rgba(15,26,36,0.82); color: var(--gold); 
+    border: 1px solid rgba(212,175,55,0.7); 
+    width: 36px; height: 36px; border-radius: 50%; 
+    cursor: pointer; z-index: 20; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 15px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.sl-nav:hover { background: rgba(212,175,55,0.9); color: var(--dark); box-shadow: 0 0 12px rgba(212,175,55,0.6); }
+
+.sl-dots { 
+    position: absolute; bottom: 10px; width: 100%; 
+    display: flex; justify-content: center; gap: 6px; z-index: 20; 
+}
+.sl-dot { 
+    width: 8px; height: 8px; 
+    background: rgba(212,175,55,0.35); 
+    border: 1px solid var(--gold); 
+    border-radius: 50%; cursor: pointer; 
+    transition: background 0.3s, transform 0.3s;
+}
+.sl-dot.active { background: var(--gold); transform: scale(1.4); }
+
+/* TAM EKRAN BUTONU */
+.sl-fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 25;
+    background: rgba(15,26,36,0.82);
+    border: 1px solid rgba(212,175,55,0.7);
+    color: var(--gold);
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: background 0.2s, box-shadow 0.2s;
+    backdrop-filter: blur(4px);
+}
+.sl-fullscreen-btn:hover { 
+    background: rgba(212,175,55,0.9); 
+    color: var(--dark); 
+    box-shadow: 0 0 12px rgba(212,175,55,0.6); 
+}
+
+/* ---- TAM EKRAN MODAL — 3:4 ---- */
+.fullscreen-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(5, 10, 16, 0.97);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.fullscreen-modal.active { display: flex; animation: fadeInModal 0.25s ease; }
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.fs-close-btn {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    background: rgba(212,175,55,0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 22px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    transition: background 0.2s;
+}
+.fs-close-btn:hover { background: var(--gold); color: var(--dark); }
+
+.fs-counter {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: rgba(212,175,55,0.7);
+    letter-spacing: 3px;
+    z-index: 10001;
+}
+
+/* Tam ekran slider — 3:4 dikey */
+.fs-slider-wrap {
+    position: relative;
+    /* Dikey görseller: yüksekliği viewport'a göre kısıtla, genişliği orandan hesapla */
+    height: 88vh;
+    width: calc(88vh * 3 / 4);
+    max-width: 95vw;
+    border: 2px solid rgba(212,175,55,0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 80px rgba(212,175,55,0.15);
+}
+
+.fs-slide-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.fs-slide-wrapper img {
+    min-width: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #000;
+}
+
+.fs-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(15,26,36,0.85); color: var(--gold);
+    border: 1px solid rgba(212,175,55,0.6);
+    width: 44px; height: 44px; border-radius: 50%;
+    cursor: pointer; z-index: 30;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: background 0.2s;
+}
+.fs-nav:hover { background: rgba(212,175,55,0.85); color: var(--dark); }
+
+.fs-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+.fs-dot {
+    width: 9px; height: 9px;
+    background: rgba(212,175,55,0.3);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+.fs-dot.active { background: var(--gold); transform: scale(1.4); }
+
+/* ---- METİN ALANI ---- */
+.ann-body { 
+    padding: 22px 32px 28px; 
+    background: rgba(244,231,200,0.15); 
+    text-align: left; 
+}
+.ann-date { 
+    font-family: 'Cinzel'; color: var(--v-red); font-weight: bold; 
+    font-size: 11px; display: block; margin-bottom: 8px; letter-spacing: 2px;
+    text-align: center;
+}
+.ann-title { 
+    font-family: 'Cinzel'; color: var(--dark); font-size: 17px; 
+    font-weight: 800; margin-bottom: 14px; line-height: 1.5; 
+    border-bottom: 1px solid rgba(212,175,55,0.25); padding-bottom: 10px;
+    text-align: center;
+}
+/* İki yana yaslı paragraf yapısı */
+.ann-text { 
+    font-family: 'Playfair Display'; color: #444; 
+    font-size: 15px; line-height: 1.85; font-style: italic;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    word-break: break-word;
+}
+.ann-text p {
+    margin-bottom: 1em;
+    text-align: justify;
+    text-justify: inter-word;
+}
+.ann-text p:last-child { margin-bottom: 0; }
+
+/* DUYURUNUN BAĞLANTISI BUTONU */
+.ann-link-btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 9px 22px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--dark);
+    background: linear-gradient(135deg, #d4af37, #f1d592, #b8942a);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 3px 12px rgba(212,175,55,0.35);
+}
+.ann-link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212,175,55,0.55);
+    filter: brightness(1.1);
+}
+.ann-link-btn::before { content: "🔗 "; }
+
+/* Slider padding */
+.sl-padder { padding: 20px 20px 16px; }
+
+@media (max-width: 600px) { 
+    .sl-outer { max-width: 100%; padding: 5px; }
+    .fs-slider-wrap { 
+        height: auto;
+        width: 95vw;
+        aspect-ratio: 3 / 4;
+    }
+}
     </style>
 </head>
 <body>
 
-    <div class="nav-wrapper">
-        <nav class="nav">
-            <div class="logo-box">
+<div class="nav-wrapper">
+    <nav class="nav">
+        <div class="logo-box">
             <img src="../assets/logo1.png" alt="Logo 1" class="logo-img1">
             <img src="../assets/logo2.png" alt="Logo 2" class="logo-img2">
             <div class="logo-text-group">
@@ -272,9 +552,9 @@
                 <div class="logo-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
             </div>
         </div>
-            <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
-            <div id="globalDropdown">
-               <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
+        <button class="menu-btn" id="menuBtn">MENÜ ☰</button>
+        <div id="globalDropdown">
+            <a href="../index.html" class="dropdown-link">Ana Sayfa</a>
             <a href="../tarihce/tarihce.html" class="dropdown-link">Tarihçe</a>
             <a href="../bayezid/bayezid.html" class="dropdown-link">Sultan II. Bayezid</a>
             <a href="../evliya/evliya.html" class="dropdown-link">Evliya Çelebi</a>
@@ -294,21 +574,21 @@
             <a href="../duyurular/duyurular.html" class="dropdown-link">Duyurular</a>
             <a href="../basin/basin.html" class="dropdown-link">Basında Biz</a>
             <a href="https://www.trakya.edu.tr/" target="_blank" class="dropdown-link">Trakya Üniversitesi</a>
-            </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
+</div>
 
-    <div class="banner-container">
-        <div class="banner-box">
-            <img src="../assets/banner.webp" alt="Külliye Manzarası">
-            <div class="banner-overlay">
-                <h1>MÜZE-İ HÜMAYUN GÜNDEMİ</h1>
-                <p>“Asırların Şifası, Günün Duyurusuyla Buluşuyor.”</p>
-            </div>
+<div class="banner-container">
+    <div class="banner-box">
+        <img src="../assets/banner.webp" alt="Külliye Manzarası">
+        <div class="banner-overlay">
+            <h1>MÜZE-İ HÜMAYUN GÜNDEMİ</h1>
+            <p>"Asırların Şifası, Günün Duyurusuyla Buluşuyor."</p>
         </div>
     </div>
+</div>
 
- <div class="container" style="margin-top: 50px;">
+<div class="container" style="margin-top: 50px;">
     <div class="full-card">
         <img src="../assets/cornerleftup.png" class="corner-frame t-l" alt="Frame">
         <img src="../assets/cornerrightup.png" class="corner-frame t-r" alt="Frame">
@@ -316,14 +596,14 @@
         <img src="../assets/cornerright.png" class="corner-frame b-r" alt="Frame">
 
         <div class="main-title">
-        <h2>GÜNCEL DUYURULAR</h2>
-    </div>
+            <h2>GÜNCEL DUYURULAR</h2>
+        </div>
 
         <div class="content-area" style="padding: 20px 30px;">
             <div id="announcement-feed">
                 <p style="text-align:center; font-family: 'Cinzel'; color: var(--v-red);">Duyurular yükleniyor...</p>
             </div>
-            <div id="pagination-nav" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px;"></div>
+            <div id="pagination-nav" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap;"></div>
         </div>
 
         <div class="card-footer">
@@ -332,40 +612,95 @@
     </div>
 </div>
 
-<style>
-    .page-btn { background: var(--dark); color: var(--gold); border: 1px solid var(--gold); padding: 8px 15px; font-family: 'Cinzel'; cursor: pointer; border-radius: 4px; transition: 0.3s; font-size: 13px; }
-    .page-btn:hover:not(:disabled) { background: var(--gold); color: var(--dark); box-shadow: 0 0 10px var(--gold); }
-    .page-btn.active { background: var(--gold); color: var(--dark); font-weight: bold; }
-    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+<!-- TAM EKRAN MODAL -->
+<div class="fullscreen-modal" id="fsModal">
+    <button class="fs-close-btn" id="fsCloseBtn" title="Kapat">✕</button>
+    <div class="fs-slider-wrap" id="fsSliderWrap">
+        <div class="fs-slide-wrapper" id="fsSlideWrapper"></div>
+        <button class="fs-nav" style="left:10px" id="fsPrev">❮</button>
+        <button class="fs-nav" style="right:10px" id="fsNext">❯</button>
+    </div>
+    <div class="fs-dots" id="fsDots"></div>
+    <div class="fs-counter" id="fsCounter"></div>
+</div>
 
-    .announcement-item { background: rgba(255, 255, 255, 0.4); border: 1px solid var(--gold); border-radius: 8px; margin-bottom: 40px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-    .sl-container { width: 100%; max-width: 450px; position: relative; overflow: hidden; background-color: #000; margin: 0 auto; border-bottom: 1px solid var(--gold); aspect-ratio: 4 / 5; }
-    .sl-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-    .sl-wrapper img { min-width: 100%; width: 100%; height: 100%; object-fit: cover; display: block; }
-    
-    .sl-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(15, 26, 36, 0.8); color: var(--gold); border: 1px solid var(--gold); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 20; display: flex; align-items: center; justify-content: center; }
-    .sl-dots { position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 6px; z-index: 20; }
-    .sl-dot { width: 8px; height: 8px; background: rgba(212, 175, 55, 0.4); border: 1px solid var(--gold); border-radius: 50%; cursor: pointer; }
-    .sl-dot.active { background: var(--gold); transform: scale(1.3); }
-
-    .ann-body { padding: 20px 25px; background: rgba(244, 231, 200, 0.2); text-align: center; }
-    .ann-date { font-family: 'Cinzel'; color: var(--v-red); font-weight: bold; font-size: 11px; display: block; margin-bottom: 5px; }
-    .ann-title { font-family: 'Cinzel'; color: var(--dark); font-size: 17px; font-weight: 800; margin-bottom: 10px; line-height: 1.4; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 5px; }
-    .ann-text { font-family: 'Playfair Display'; color: #444; font-size: 14px; line-height: 1.6; font-style: italic; }
-
-    @media (max-width: 600px) { .sl-container { max-width: 100%; } }
-</style>
+<div class="site-footer-wrapper">
+    <footer class="site-footer">
+        <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
+        <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+        <p style="font-size:11px; margin-top:15px; opacity:0.65;">&copy; 2026 — Tüm Hakları Saklıdır</p>
+    </footer>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script>
+    // ── Duyurular sayfasına ait CSV (gid=0) ──
     const csvSourceUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSK4ZrgBAtrvd2_p-mBl1X7glrAZ6Aktr2WYD5aZca-6JMPD-4HlltJzu5TUiQ1dPDPGVWjVsvFb4XK/pub?gid=0&single=true&output=csv';
     
-    let allData = []; 
+    let allData    = []; 
     let currentPage = 1;
     const itemsPerPage = 10;
     const sliderStates = {};
 
-    // GÜNCELLENMİŞ GÖRSEL ÇEKME FONKSİYONU
+    /* === TAM EKRAN DURUM === */
+    let fsImages = [];
+    let fsIndex  = 0;
+
+    const fsModal      = document.getElementById('fsModal');
+    const fsSlideWrap  = document.getElementById('fsSlideWrapper');
+    const fsDotsEl     = document.getElementById('fsDots');
+    const fsCounter    = document.getElementById('fsCounter');
+    const fsCloseBtn   = document.getElementById('fsCloseBtn');
+    const fsPrev       = document.getElementById('fsPrev');
+    const fsNext       = document.getElementById('fsNext');
+
+    function openFullscreen(images, startIndex) {
+        fsImages = images;
+        fsIndex  = startIndex;
+        fsSlideWrap.innerHTML = images.map(src => 
+            `<img src="${src}" loading="lazy" referrerpolicy="no-referrer" alt="Duyuru Görseli">`
+        ).join('');
+        renderFsDots();
+        updateFs();
+        fsModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeFullscreen() {
+        fsModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function updateFs() {
+        fsSlideWrap.style.transform = `translateX(-${fsIndex * 100}%)`;
+        fsCounter.textContent = `${fsIndex + 1} / ${fsImages.length}`;
+        document.querySelectorAll('.fs-dot').forEach((d, i) => d.classList.toggle('active', i === fsIndex));
+    }
+
+    function renderFsDots() {
+        if (fsImages.length <= 1) { fsDotsEl.innerHTML = ''; return; }
+        fsDotsEl.innerHTML = fsImages.map((_, i) => 
+            `<div class="fs-dot ${i === 0 ? 'active' : ''}" data-i="${i}"></div>`
+        ).join('');
+        fsDotsEl.querySelectorAll('.fs-dot').forEach(dot => {
+            dot.addEventListener('click', () => { fsIndex = +dot.dataset.i; updateFs(); });
+        });
+    }
+
+    fsPrev.addEventListener('click', () => { fsIndex = (fsIndex - 1 + fsImages.length) % fsImages.length; updateFs(); });
+    fsNext.addEventListener('click', () => { fsIndex = (fsIndex + 1) % fsImages.length; updateFs(); });
+    fsCloseBtn.addEventListener('click', closeFullscreen);
+
+    document.addEventListener('keydown', e => {
+        if (!fsModal.classList.contains('active')) return;
+        if (e.key === 'Escape')     closeFullscreen();
+        if (e.key === 'ArrowLeft')  { fsIndex = (fsIndex - 1 + fsImages.length) % fsImages.length; updateFs(); }
+        if (e.key === 'ArrowRight') { fsIndex = (fsIndex + 1) % fsImages.length; updateFs(); }
+    });
+
+    fsModal.addEventListener('click', e => { if (e.target === fsModal) closeFullscreen(); });
+
+    /* === NORMAL SLIDER === */
     function parseDriveImage(url) {
         if (!url || !url.includes('drive.google.com')) return null;
         try {
@@ -375,7 +710,6 @@
             } else {
                 id = url.split('/d/')[1].split('/')[0];
             }
-            // En güvenilir doğrudan indirme linki yapısı
             return `https://lh3.googleusercontent.com/u/0/d/${id}`;
         } catch (e) { return null; }
     }
@@ -387,47 +721,94 @@
         if (newIndex < 0) newIndex = total - 1;
         sliderStates[id] = newIndex;
         const wrapper = document.querySelector(`#block-${id} .sl-wrapper`);
-        const dots = document.querySelectorAll(`#block-${id} .sl-dot`);
+        const dots    = document.querySelectorAll(`#block-${id} .sl-dot`);
         if (wrapper) wrapper.style.transform = `translateX(-${newIndex * 100}%)`;
         dots.forEach((dot, i) => dot.classList.toggle('active', i === newIndex));
     }
 
-    window.jumpToImg = function(id, index, total) {
+    window.jumpToImg = function(id, index) {
         sliderStates[id] = index;
         const wrapper = document.querySelector(`#block-${id} .sl-wrapper`);
-        const dots = document.querySelectorAll(`#block-${id} .sl-dot`);
+        const dots    = document.querySelectorAll(`#block-${id} .sl-dot`);
         if (wrapper) wrapper.style.transform = `translateX(-${index * 100}%)`;
         dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
     }
 
+    window.openFs = function(bId) {
+        const curIdx = sliderStates[bId] || 0;
+        const imgs   = window._blockImages[bId] || [];
+        if (imgs.length) openFullscreen(imgs, curIdx);
+    }
+
+    window._blockImages = {};
+
     function renderPage(page) {
+        document.querySelector('.full-card').scrollIntoView({ behavior: 'smooth' });
+
         const feed = document.getElementById('announcement-feed');
         const info = document.getElementById('page-info');
         feed.innerHTML = '';
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
+        const start     = (page - 1) * itemsPerPage;
+        const end       = start + itemsPerPage;
         const pageItems = allData.slice(start, end);
 
         pageItems.forEach((row, index) => {
             const bId = start + index; 
             let images = [];
-            for (let i = 1; i <= 10; i++) {
+            for (let i = 1; i <= 20; i++) {
                 let img = parseDriveImage(row['GÖRSEL ' + i]);
                 if (img) images.push(img);
             }
 
+            window._blockImages[bId] = images;
             sliderStates[bId] = 0;
+
             let sliderHtml = '';
             if (images.length > 0) {
-                // referrerpolicy="no-referrer" Google Drive erişim sorunlarını aşmaya yardımcı olur
-                let imgTags = images.map(src => `<img src="${src}" loading="lazy" referrerpolicy="no-referrer" alt="Haber Görseli">`).join('');
-                let dotsTags = images.length > 1 ? images.map((_, i) => `<div class="sl-dot ${i===0?'active':''}" onclick="jumpToImg(${bId}, ${i}, ${images.length})"></div>`).join('') : '';
+                let dotsTags = images.length > 1 
+                    ? images.map((_, i) => `<div class="sl-dot ${i===0?'active':''}" onclick="jumpToImg(${bId}, ${i})"></div>`).join('') 
+                    : '';
+
                 let navsTags = images.length > 1 ? `
-                    <button class="sl-nav sl-prev" style="left:10px" onclick="runSlider(${bId}, -1, ${images.length})">❮</button>
-                    <button class="sl-nav sl-next" style="right:10px" onclick="runSlider(${bId}, 1, ${images.length})">❯</button>
+                    <button class="sl-nav" style="left:8px"  onclick="runSlider(${bId}, -1, ${images.length})">❮</button>
+                    <button class="sl-nav" style="right:8px" onclick="runSlider(${bId},  1, ${images.length})">❯</button>
                 ` : '';
-                sliderHtml = `<div class="sl-container">${navsTags}<div class="sl-wrapper">${imgTags}</div><div class="sl-dots">${dotsTags}</div></div>`;
+
+                let imgTagsClickable = images.map(src =>
+                    `<img src="${src}" loading="lazy" referrerpolicy="no-referrer" alt="Duyuru Görseli" style="cursor:zoom-in" onclick="openFs(${bId})">`
+                ).join('');
+
+                sliderHtml = `
+                    <div class="sl-padder">
+                        <div class="sl-outer">
+                            <div class="sl-container">
+                                ${navsTags}
+                                <button class="sl-fullscreen-btn" onclick="openFs(${bId})" title="Tam Ekran">⛶</button>
+                                <div class="sl-wrapper">${imgTagsClickable}</div>
+                                <div class="sl-dots">${dotsTags}</div>
+                            </div>
+                        </div>
+                    </div>`;
             }
+
+            /* LİNK kontrolü */
+            let linkHtml = '';
+            const rawLink = (row['LİNK'] || '').trim();
+            if (rawLink) {
+                let href = rawLink;
+                const hrefMatch = rawLink.match(/href=["']([^"']+)["']/i);
+                if (hrefMatch) href = hrefMatch[1];
+                if (href && (href.startsWith('http') || href.startsWith('www'))) {
+                    if (href.startsWith('www')) href = 'https://' + href;
+                    linkHtml = `<a class="ann-link-btn" href="${href}" target="_blank" rel="noopener">Duyurunun Bağlantısı İçin Tıklayınız</a>`;
+                }
+            }
+
+            /* DETAYLAR — satır sonlarını paragraflara çevir */
+            const detayRaw  = (row['DETAYLAR'] || '').trim();
+            const detayHtml = detayRaw
+                ? detayRaw.split(/\n+/).map(p => p.trim()).filter(p => p).map(p => `<p>${p}</p>`).join('')
+                : '';
 
             feed.innerHTML += `
                 <div class="announcement-item" id="block-${bId}">
@@ -435,40 +816,42 @@
                     <div class="ann-body">
                         <span class="ann-date">${row['TARİH'] || ''}</span>
                         <div class="ann-title">${row['DUYURU METNİ'] || ''}</div>
-                        <div class="ann-text">${row['DETAYLAR'] || ''}</div>
+                        <div class="ann-text">${detayHtml}</div>
+                        ${linkHtml ? `<div style="text-align:center;margin-top:16px;">${linkHtml}</div>` : ''}
                     </div>
                 </div>`;
         });
+
         renderPagination();
-        info.innerText = `Toplam ${allData.length} haberden ${start + 1}-${Math.min(end, allData.length)} arası gösteriliyor.`;
+        info.innerText = `Toplam ${allData.length} duyurudan ${start + 1}–${Math.min(end, allData.length)} arası gösteriliyor.`;
     }
 
     function renderPagination() {
-        const nav = document.getElementById('pagination-nav');
-        nav.innerHTML = '';
+        const nav        = document.getElementById('pagination-nav');
+        nav.innerHTML    = '';
         const totalPages = Math.ceil(allData.length / itemsPerPage);
-        if(totalPages <= 1) return;
+        if (totalPages <= 1) return;
         
         let prevBtn = document.createElement('button');
         prevBtn.innerText = 'Önceki';
         prevBtn.className = 'page-btn';
-        prevBtn.disabled = currentPage === 1;
-        prevBtn.onclick = () => { currentPage--; renderPage(currentPage); };
+        prevBtn.disabled  = currentPage === 1;
+        prevBtn.onclick   = () => { currentPage--; renderPage(currentPage); };
         nav.appendChild(prevBtn);
 
         for (let i = 1; i <= totalPages; i++) {
-            let btn = document.createElement('button');
+            let btn       = document.createElement('button');
             btn.innerText = i;
             btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-            btn.onclick = () => { currentPage = i; renderPage(i); };
+            btn.onclick   = () => { currentPage = i; renderPage(i); };
             nav.appendChild(btn);
         }
 
         let nextBtn = document.createElement('button');
         nextBtn.innerText = 'Sonraki';
         nextBtn.className = 'page-btn';
-        nextBtn.disabled = currentPage === totalPages;
-        nextBtn.onclick = () => { currentPage++; renderPage(currentPage); };
+        nextBtn.disabled  = currentPage === totalPages;
+        nextBtn.onclick   = () => { currentPage++; renderPage(currentPage); };
         nav.appendChild(nextBtn);
     }
 
@@ -481,29 +864,19 @@
             renderPage(1);
         }
     });
+
+    /* === NAVİGASYON === */
+    const menuBtn  = document.getElementById('menuBtn');
+    const dropdown = document.getElementById('globalDropdown');
+    menuBtn.onclick = function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+    };
+    window.onclick = function(e) {
+        if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    };
 </script>
-    <div class="site-footer-wrapper">
-        <footer class="site-footer">
-        <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
-        <div class="footer-subtitle">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
-        <p style="font-size:11px; margin-top:15px; opacity:0.65;">&copy; 2026 — Tüm Hakları Saklıdır</p>
-        </footer>
-    </div>
-
-    <script>
-        const menuBtn = document.getElementById('menuBtn');
-        const dropdown = document.getElementById('globalDropdown');
-
-        menuBtn.onclick = function(e) {
-            e.stopPropagation();
-            dropdown.classList.toggle('active');
-        };
-
-        window.onclick = function(e) {
-            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        };
-    </script>
 </body>
 </html>
