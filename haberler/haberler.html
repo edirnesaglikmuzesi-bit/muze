@@ -417,7 +417,7 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
         pageItems.forEach((row, index) => {
             const bId = start + index; 
             let images = [];
-            for (let i = 1; i <= 10; i++) {
+            for (let i = 1; i <= 20; i++) {
                 let img = parseDriveImage(row['GÖRSEL ' + i]);
                 if (img) images.push(img);
             }
@@ -441,6 +441,7 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
                         <span class="ann-date">${row['TARİH'] || ''}</span>
                         <div class="ann-title">${row['DUYURU METNİ'] || ''}</div>
                         <div class="ann-text">${row['DETAYLAR'] || ''}</div>
+                        <div class="ann-text">${row['LİNK'] || ''}</div>
                     </div>
                 </div>`;
         });
