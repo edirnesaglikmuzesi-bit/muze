@@ -160,19 +160,43 @@ function toggleSpeaker(){
    MENU
 ──────────────────────────────────────── */
 function openMenu() {
-    document.getElementById('menu-modal').classList.add('open');
-}
+    document.getElementById('menu-overlay').classList.add('open');
+    document.getElementById('menu-panel').classList.add('open');
 
+    const stopAudio = document.getElementById('stop-audio');
+    const introAudio = document.getElementById('intro-audio');
+    [stopAudio, introAudio].forEach(audio => {
+        if (audio && !audio.paused) {
+            audio._menuWasPlaying = true;
+            audio.pause();
+        }
+    });
+}
 function closeMenu() {
-    document.getElementById('menu-modal').classList.remove('open');
-}
+    document.getElementById('menu-overlay').classList.remove('open');
+    document.getElementById('menu-panel').classList.remove('open');
 
-function openLang() {
     const onIntro = document.getElementById('screen-intro').classList.contains('active');
+    const stopAudio = document.getElementById('stop-audio');
+    const introAudio = document.getElementById('intro-audio');
+
+    if (onIntro) {
+        if (introAudio && introAudio._menuWasPlaying) {
+            introAudio.play().catch(() => {});
+            introAudio._menuWasPlaying = false;
+        }
+    } else {
+        if (stopAudio && stopAudio._menuWasPlaying && !speakerMuted) {
+            stopAudio.play().catch(() => {});
+            stopAudio._menuWasPlaying = false;
+        }
+        if (introAudio) introAudio._menuWasPlaying = false;
+    }
+}
+function openLang() {
     const introAudio = document.getElementById('intro-audio');
     const stopAudio = document.getElementById('stop-audio');
 
-    // Ses durdurma mantığı: Hangi ekranda olursak olalım çalan sesi işaretle ve durdur
     [introAudio, stopAudio].forEach(audio => {
         if (audio && !audio.paused) {
             audio._langWasPlaying = true;
@@ -238,9 +262,14 @@ function setLang(code){
   localStorage.setItem('rehber-lang', code);
 
   // Modalları hemen kapat
-  closeLang();
-  closeMenu();
+closeLang();
+closeMenu();
+
+// Sadece tur ekranındaysak sesi çal
+const onIntro = document.getElementById('screen-intro').classList.contains('active');
+if (!onIntro) {
   playStopAudio(currentStop);
+}
   // DOM'u senkron olarak güncelle — anında dil değişimi
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key = el.getAttribute('data-i18n');
