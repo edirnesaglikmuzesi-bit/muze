@@ -473,23 +473,38 @@ body {
 
 /* ---- HABER METİN ALANI ---- */
 .ann-body { 
-    padding: 22px 28px 26px; 
+    padding: 22px 32px 28px; 
     background: rgba(244,231,200,0.15); 
-    text-align: center; 
+    text-align: left; 
 }
 .ann-date { 
     font-family: 'Cinzel'; color: var(--v-red); font-weight: bold; 
-    font-size: 11px; display: block; margin-bottom: 6px; letter-spacing: 2px;
+    font-size: 11px; display: block; margin-bottom: 8px; letter-spacing: 2px;
+    text-align: center;
 }
 .ann-title { 
     font-family: 'Cinzel'; color: var(--dark); font-size: 17px; 
-    font-weight: 800; margin-bottom: 12px; line-height: 1.45; 
-    border-bottom: 1px solid rgba(212,175,55,0.25); padding-bottom: 8px; 
+    font-weight: 800; margin-bottom: 14px; line-height: 1.5; 
+    border-bottom: 1px solid rgba(212,175,55,0.25); padding-bottom: 10px;
+    text-align: center;
 }
+/* Paragraf kuralı: her paragraf kendi bloğu, iki yana yaslı */
 .ann-text { 
     font-family: 'Playfair Display'; color: #444; 
-    font-size: 14px; line-height: 1.65; font-style: italic; 
+    font-size: 15px; line-height: 1.85; font-style: italic;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    word-break: break-word;
 }
+/* Çok paragraflı metinlerde aralarına nefes ver */
+.ann-text p {
+    margin-bottom: 1em;
+    text-align: justify;
+    text-justify: inter-word;
+}
+.ann-text p:last-child { margin-bottom: 0; }
 
 /* HABERİN BAĞLANTISI BUTONU */
 .ann-link-btn {
@@ -793,14 +808,20 @@ body {
                 }
             }
 
+            // DETAYLAR — satır sonlarını paragraflara çevir
+            const detayRaw = (row['DETAYLAR'] || '').trim();
+            const detayHtml = detayRaw
+                ? detayRaw.split(/\n+/).map(p => p.trim()).filter(p => p).map(p => `<p>${p}</p>`).join('')
+                : '';
+
             feed.innerHTML += `
                 <div class="announcement-item" id="block-${bId}">
                     ${sliderHtml}
                     <div class="ann-body">
                         <span class="ann-date">${row['TARİH'] || ''}</span>
                         <div class="ann-title">${row['DUYURU METNİ'] || ''}</div>
-                        <div class="ann-text">${row['DETAYLAR'] || ''}</div>
-                        ${linkHtml}
+                        <div class="ann-text">${detayHtml}</div>
+                        ${linkHtml ? `<div style="text-align:center;margin-top:16px;">${linkHtml}</div>` : ''}
                     </div>
                 </div>`;
         });
