@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sultan II. Bayezid Külliyesi Sağlık Müzesi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Serif:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C8960C;
+  --gold-light: #E8B84B;
+  --gold-pale: #F5D98A;
+  --deep-brown: #1A0E05;
+  --dark-bg: #0D0805;
+  --parchment: #F2E4C4;
+  --parchment-dark: #D4B896;
+  --red-ottoman: #8B1A1A;
+  --red-light: #C0392B;
+  --teal-ottoman: #1A5C5C;
+  --teal-light: #2E8B8B;
+  --copper: #B87333;
+  --ink: #1C1008;
+  --cream: #FDF6E3;
+  --shadow-gold: rgba(200, 150, 12, 0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--dark-bg);
+  font-family: 'Noto Serif', serif;
+  cursor: default;
+  user-select: none;
+}
+
+/* ── BACKGROUND ── */
+#app {
+  width: 100vw; height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(139,26,26,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(26,92,92,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(200,150,12,0.05) 0%, transparent 70%),
+    linear-gradient(160deg, #110A02 0%, #1A0E05 40%, #0D0805 100%);
+}
+
+/* Ornamental grid overlay */
+#app::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(200,150,12,0.04) 60px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(200,150,12,0.04) 60px);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── SCREENS ── */
+.screen {
+  position: absolute; inset: 0;
+  display: none; flex-direction: column;
+  opacity: 0; transition: opacity 0.6s ease;
+  z-index: 1;
+}
+.screen.active { display: flex; }
+.screen.visible { opacity: 1; }
+
+/* ── TOP BAR ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 28px;
+  background: linear-gradient(90deg, rgba(26,14,5,0.98) 0%, rgba(30,18,8,0.95) 50%, rgba(26,14,5,0.98) 100%);
+  border-bottom: 2px solid var(--gold);
+  box-shadow: 0 4px 30px rgba(200,150,12,0.3);
+  position: relative; z-index: 10;
+  flex-shrink: 0;
+}
+
+.topbar::after {
+  content: '';
+  position: absolute; bottom: -6px; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
+}
+
+.logo-area {
+  display: flex; align-items: center; gap: 16px;
+}
+
+.logo-emblem {
+  width: 56px; height: 56px;
+  background: radial-gradient(circle, var(--gold-light) 0%, var(--gold) 60%, #8B6C10 100%);
+  border-radius: 50%;
+  border: 3px solid var(--gold-pale);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 0 20px var(--shadow-gold), inset 0 0 10px rgba(255,255,255,0.1);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px var(--shadow-gold); }
+  50% { box-shadow: 0 0 40px rgba(200,150,12,0.7), 0 0 60px rgba(200,150,12,0.3); }
+}
+
+.logo-text { line-height: 1.2; }
+.logo-text .name {
+  font-family: 'Cinzel', serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+}
+.logo-text .sub {
+  font-size: 11px; color: var(--parchment-dark);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+
+.topbar-title {
+  text-align: center;
+}
+.topbar-title .main {
+  font-family: 'Cinzel', serif;
+  font-size: 22px; font-weight: 900;
+  background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 50%, var(--gold-light) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+}
+.topbar-title .sub {
+  font-family: 'Amiri', serif;
+  font-size: 14px; color: var(--parchment-dark);
+  font-style: italic;
+}
+
+.topbar-right {
+  display: flex; align-items: center; gap: 20px;
+}
+
+.datetime {
+  text-align: right;
+  background: rgba(200,150,12,0.1);
+  border: 1px solid rgba(200,150,12,0.3);
+  border-radius: 8px; padding: 6px 14px;
+}
+.datetime .time { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold-light); font-weight: 700; }
+.datetime .date { font-size: 10px; color: var(--parchment-dark); }
+.datetime .weather { font-size: 10px; color: var(--gold-pale); }
+
+.lang-btns { display: flex; gap: 6px; }
+.lang-btn {
+  padding: 6px 12px; font-size: 12px; font-weight: 600;
+  background: rgba(200,150,12,0.1);
+  border: 1px solid rgba(200,150,12,0.4);
+  border-radius: 6px; color: var(--gold-pale);
+  cursor: pointer; transition: all 0.2s;
+  font-family: 'Cinzel', serif;
+}
+.lang-btn:hover, .lang-btn.active {
+  background: var(--gold); color: var(--dark-bg);
+  box-shadow: 0 0 12px var(--shadow-gold);
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 28px;
+  background: linear-gradient(90deg, rgba(26,14,5,0.98) 0%, rgba(30,18,8,0.95) 50%, rgba(26,14,5,0.98) 100%);
+  border-top: 2px solid var(--gold);
+  box-shadow: 0 -4px 30px rgba(200,150,12,0.3);
+  position: relative; z-index: 10;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, rgba(200,150,12,0.15) 0%, rgba(200,150,12,0.05) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 40px; color: var(--gold-light);
+  cursor: pointer; font-family: 'Cinzel', serif;
+  font-size: 14px; font-weight: 600;
+  transition: all 0.3s; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.nav-btn:hover {
+  background: var(--gold); color: var(--dark-bg);
+  box-shadow: 0 0 25px var(--shadow-gold);
+  transform: scale(1.03);
+}
+.nav-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
+
+.ai-guide-center {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.ai-portrait {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 20px var(--shadow-gold);
+  background: radial-gradient(circle, #4A3010, #2A1A08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  cursor: pointer; transition: all 0.3s;
+  position: relative;
+  animation: portrait-breathe 4s ease-in-out infinite;
+}
+@keyframes portrait-breathe {
+  0%,100% { box-shadow: 0 0 20px var(--shadow-gold); }
+  50% { box-shadow: 0 0 40px rgba(200,150,12,0.8), 0 0 70px rgba(200,150,12,0.4); }
+}
+.ai-portrait:hover { transform: scale(1.1); }
+
+.ai-pulse {
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(200,150,12,0.5);
+  animation: ripple 2s ease-out infinite;
+}
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.ai-label { font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold-light); letter-spacing: 2px; }
+.ai-sub { font-size: 9px; color: var(--parchment-dark); }
+
+/* ── PAGE INDICATOR ── */
+.page-dots { display: flex; gap: 8px; align-items: center; }
+.dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(200,150,12,0.3);
+  border: 1px solid rgba(200,150,12,0.5);
+  transition: all 0.3s; cursor: pointer;
+}
+.dot.active { background: var(--gold); box-shadow: 0 0 10px var(--shadow-gold); transform: scale(1.3); }
+
+/* ── CONTENT AREA ── */
+.content { flex: 1; overflow: hidden; position: relative; }
+
+/* ════════════════════════════════════
+   SCREEN 0: ANA SAYFA / HOME
+════════════════════════════════════ */
+#screen-home .content {
+  display: grid;
+  grid-template-columns: 340px 1fr 300px;
+  grid-template-rows: 1fr;
+  gap: 0;
+  padding: 20px;
+  gap: 16px;
+}
+
+/* Evliya Çelebi Panel */
+.celebi-panel {
+  background: linear-gradient(160deg, rgba(26,14,5,0.9) 0%, rgba(15,8,3,0.95) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex; flex-direction: column;
+  gap: 16px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 40px rgba(200,150,12,0.2);
+}
+.celebi-panel::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.celebi-avatar {
+  width: 100%; height: 220px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #3A2510, #1A0E05);
+  border: 2px solid rgba(200,150,12,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 100px;
+  position: relative; overflow: hidden;
+}
+.celebi-avatar::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(200,150,12,0.15) 0%, transparent 70%);
+}
+
+.celebi-name {
+  font-family: 'Cinzel', serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--gold-light);
+  text-align: center; letter-spacing: 1px;
+}
+
+.celebi-quote {
+  font-family: 'Amiri', serif;
+  font-size: 13px; color: var(--parchment);
+  line-height: 1.7; font-style: italic;
+  text-align: center;
+  padding: 12px;
+  background: rgba(200,150,12,0.05);
+  border: 1px solid rgba(200,150,12,0.2);
+  border-radius: 8px;
+  position: relative;
+}
+.celebi-quote::before { content: '"'; font-size: 40px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 8px; }
+
+.audio-btns { display: flex; flex-direction: column; gap: 8px; }
+.audio-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px; cursor: pointer;
+  font-family: 'Cinzel', serif; font-size: 12px;
+  letter-spacing: 1px; transition: all 0.3s;
+  border: 2px solid;
+}
+.audio-btn.primary {
+  background: linear-gradient(135deg, var(--gold) 0%, #8B6C10 100%);
+  border-color: var(--gold-pale); color: var(--dark-bg); font-weight: 700;
+}
+.audio-btn.secondary {
+  background: rgba(200,150,12,0.08);
+  border-color: rgba(200,150,12,0.4); color: var(--gold-pale);
+}
+.audio-btn:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--shadow-gold); }
+
+/* Center panel - Menu Grid */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.menu-card {
+  background: linear-gradient(160deg, rgba(26,14,5,0.9) 0%, rgba(15,8,3,0.95) 100%);
+  border: 2px solid rgba(200,150,12,0.4);
+  border-radius: 14px;
+  cursor: pointer; overflow: hidden;
+  position: relative; transition: all 0.35s;
+  display: flex; flex-direction: column;
+}
+.menu-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(200,150,12,0.4), inset 0 0 20px rgba(200,150,12,0.05);
+  transform: translateY(-4px);
+}
+.menu-card:active { transform: translateY(-1px) scale(0.98); }
+
+.card-img {
+  flex: 1; min-height: 100px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 50px;
+  background: linear-gradient(160deg, rgba(30,15,5,0.8), rgba(10,5,2,0.9));
+  position: relative;
+}
+.card-img .emoji-bg {
+  position: absolute; font-size: 100px; opacity: 0.06;
+}
+.card-img .card-icon { position: relative; z-index: 1; }
+
+.card-info {
+  padding: 12px 14px;
+  background: linear-gradient(0deg, rgba(200,150,12,0.15) 0%, transparent 100%);
+  border-top: 1px solid rgba(200,150,12,0.3);
+}
+.card-info .card-title {
+  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 2px;
+}
+.card-info .card-desc { font-size: 10px; color: var(--parchment-dark); line-height: 1.4; }
+
+.card-badge {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--red-ottoman); color: white;
+  font-size: 9px; padding: 2px 8px; border-radius: 20px;
+  font-family: 'Cinzel', serif; letter-spacing: 1px;
+}
+
+/* News panel */
+.news-panel {
+  background: linear-gradient(160deg, rgba(26,14,5,0.9) 0%, rgba(15,8,3,0.95) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 0 40px rgba(200,150,12,0.2);
+}
+
+.news-header {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(200,150,12,0.2) 0%, rgba(200,150,12,0.08) 100%);
+  border-bottom: 1px solid rgba(200,150,12,0.3);
+  display: flex; align-items: center; gap: 8px;
+}
+.news-header span {
+  font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 2px;
+}
+
+.news-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.news-list::-webkit-scrollbar { width: 4px; }
+.news-list::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+.news-item {
+  padding: 12px;
+  background: rgba(200,150,12,0.05);
+  border: 1px solid rgba(200,150,12,0.2);
+  border-radius: 10px; cursor: pointer;
+  transition: all 0.25s;
+  border-left: 3px solid var(--gold);
+}
+.news-item:hover { background: rgba(200,150,12,0.12); transform: translateX(4px); }
+.news-item .n-img { font-size: 24px; margin-bottom: 6px; }
+.news-item .n-title { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700; color: var(--gold-light); margin-bottom: 4px; }
+.news-item .n-text { font-size: 10px; color: var(--parchment-dark); line-height: 1.5; }
+.news-item .n-tag {
+  display: inline-block; margin-top: 6px; padding: 2px 8px;
+  background: rgba(200,150,12,0.2); border-radius: 20px;
+  font-size: 9px; color: var(--gold-pale); font-family: 'Cinzel', serif;
+}
+
+/* ════════════════════════════════════
+   SCREEN 1: MÜZE BÖLÜMLERİ
+════════════════════════════════════ */
+#screen-bolumler .content {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 16px;
+}
+#screen-bolumler .content::-webkit-scrollbar { width: 6px; }
+#screen-bolumler .content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 24px; font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 3px; text-align: center;
+  padding: 10px;
+  position: relative;
+}
+.section-title::after {
+  content: '';
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 200px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.bolum-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.bolum-card {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid rgba(200,150,12,0.4);
+  border-radius: 16px; overflow: hidden;
+  cursor: pointer; transition: all 0.3s;
+  display: flex; flex-direction: column;
+}
+.bolum-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 8px 40px rgba(200,150,12,0.35);
+  transform: translateY(-6px);
+}
+
+.bolum-header {
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(200,150,12,0.15) 0%, rgba(200,150,12,0.05) 100%);
+  border-bottom: 1px solid rgba(200,150,12,0.2);
+  display: flex; align-items: center; gap: 14px;
+}
+.bolum-icon { font-size: 40px; }
+.bolum-name {
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 1px;
+}
+.bolum-floor { font-size: 10px; color: var(--parchment-dark); margin-top: 2px; }
+
+.bolum-img {
+  width: 100%; height: 130px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 70px;
+  background: linear-gradient(160deg, rgba(30,15,5,0.6), rgba(10,5,2,0.8));
+  border-bottom: 1px solid rgba(200,150,12,0.15);
+  position: relative; overflow: hidden;
+}
+.bolum-img .bg-blur { position: absolute; font-size: 120px; opacity: 0.08; }
+
+.bolum-body { padding: 14px 16px; flex: 1; }
+.bolum-body p { font-size: 11px; color: var(--parchment-dark); line-height: 1.7; margin-bottom: 8px; }
+.bolum-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.bolum-tag {
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(200,150,12,0.1);
+  border: 1px solid rgba(200,150,12,0.3);
+  font-size: 9px; color: var(--gold-pale);
+  font-family: 'Cinzel', serif;
+}
+
+.bolum-footer {
+  padding: 10px 16px;
+  border-top: 1px solid rgba(200,150,12,0.15);
+  background: rgba(200,150,12,0.05);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.bolum-footer .visit-btn {
+  padding: 6px 16px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--gold), #8B6C10);
+  color: var(--dark-bg); font-family: 'Cinzel', serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; border: none; transition: all 0.2s;
+}
+.bolum-footer .visit-btn:hover { box-shadow: 0 0 15px var(--shadow-gold); transform: scale(1.05); }
+.bolum-footer .time { font-size: 9px; color: var(--parchment-dark); }
+
+/* ════════════════════════════════════
+   SCREEN 2: EVLİYA ÇELEBİ ANLATIYOR
+════════════════════════════════════ */
+#screen-celebi .content {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 20px; padding: 20px;
+}
+
+.celebi-big-panel {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 16px; padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 0 50px rgba(200,150,12,0.25);
+}
+
+.celebi-portrait-big {
+  width: 100%; height: 260px; border-radius: 12px;
+  background: linear-gradient(160deg, #3A2010, #1A0A04);
+  border: 2px solid rgba(200,150,12,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 120px; position: relative; overflow: hidden;
+}
+.celebi-portrait-big::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+  background: linear-gradient(0deg, rgba(26,14,5,0.8), transparent);
+}
+
+.wave-container {
+  display: flex; align-items: center; justify-content: center;
+  gap: 3px; height: 40px;
+}
+.wave-bar {
+  width: 4px; border-radius: 2px;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  animation: wave 1.2s ease-in-out infinite;
+}
+.wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { animation-delay: 0.4s; }
+.wave-bar:nth-child(6) { animation-delay: 0.3s; }
+.wave-bar:nth-child(7) { animation-delay: 0.2s; }
+.wave-bar:nth-child(8) { animation-delay: 0.1s; }
+.wave-bar:nth-child(9) { animation-delay: 0s; }
+
+@keyframes wave {
+  0%, 100% { height: 8px; }
+  50% { height: 32px; }
+}
+.wave-bar.paused { animation-play-state: paused; height: 8px; }
+
+.topic-list { display: flex; flex-direction: column; gap: 8px; }
+.topic-item {
+  padding: 10px 14px;
+  background: rgba(200,150,12,0.07);
+  border: 1px solid rgba(200,150,12,0.25);
+  border-left: 3px solid var(--gold);
+  border-radius: 8px; cursor: pointer;
+  transition: all 0.25s;
+  display: flex; align-items: center; gap: 10px;
+}
+.topic-item:hover, .topic-item.active {
+  background: rgba(200,150,12,0.18);
+  border-color: var(--gold);
+}
+.topic-item .t-icon { font-size: 18px; }
+.topic-item .t-name { font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold-light); font-weight: 600; }
+
+/* Reading panel */
+.reading-panel {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid rgba(200,150,12,0.4);
+  border-radius: 16px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.reading-header {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(200,150,12,0.2) 0%, rgba(200,150,12,0.08) 100%);
+  border-bottom: 1px solid rgba(200,150,12,0.3);
+}
+.reading-header h2 {
+  font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 2px;
+}
+.reading-header p { font-size: 11px; color: var(--parchment-dark); margin-top: 4px; font-style: italic; }
+
+.reading-body {
+  flex: 1; overflow-y: auto; padding: 24px;
+}
+.reading-body::-webkit-scrollbar { width: 4px; }
+.reading-body::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+.parchment-text {
+  font-family: 'Amiri', serif; font-size: 16px; line-height: 2;
+  color: var(--parchment); text-align: justify;
+}
+.parchment-text .drop-cap {
+  float: left; font-size: 60px; line-height: 0.7;
+  padding: 0 8px 4px 0; color: var(--gold);
+  font-family: 'Cinzel', serif; font-weight: 900;
+}
+.parchment-text .highlight { color: var(--gold-light); font-style: italic; }
+
+.font-controls { display: flex; gap: 8px; align-items: center; }
+.fc-btn {
+  padding: 6px 14px; border-radius: 8px;
+  background: rgba(200,150,12,0.1);
+  border: 1px solid rgba(200,150,12,0.3);
+  color: var(--gold-pale); cursor: pointer;
+  font-size: 16px; transition: all 0.2s;
+}
+.fc-btn:hover { background: rgba(200,150,12,0.25); }
+
+/* ════════════════════════════════════
+   SCREEN 3: OSMANLI'DA SAĞLIK
+════════════════════════════════════ */
+#screen-saglik .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px; padding: 20px;
+}
+
+.saglik-card {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid rgba(200,150,12,0.4);
+  border-radius: 16px; overflow: hidden;
+  cursor: pointer; transition: all 0.3s;
+  display: flex;
+}
+.saglik-card:hover { border-color: var(--gold); box-shadow: 0 0 30px rgba(200,150,12,0.3); }
+.saglik-card.wide { grid-column: span 2; }
+
+.saglik-img {
+  min-width: 140px; width: 140px;
+  background: linear-gradient(160deg, rgba(30,15,5,0.8), rgba(10,5,2,0.9));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 60px; border-right: 1px solid rgba(200,150,12,0.2);
+  flex-shrink: 0;
+}
+.saglik-body { padding: 18px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.saglik-body h3 {
+  font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 1px;
+}
+.saglik-body p { font-size: 11px; color: var(--parchment-dark); line-height: 1.7; }
+.saglik-items { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.saglik-item {
+  padding: 4px 12px; border-radius: 20px;
+  background: rgba(139,26,26,0.15);
+  border: 1px solid rgba(139,26,26,0.4);
+  font-size: 9px; color: #E87878;
+  font-family: 'Cinzel', serif;
+}
+
+/* ════════════════════════════════════
+   SCREEN 4: ETKİNLİKLER
+════════════════════════════════════ */
+#screen-etkinlik .content {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px; padding: 20px;
+}
+
+.etkinlik-list { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.etkinlik-list::-webkit-scrollbar { width: 4px; }
+.etkinlik-list::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+.etkinlik-card {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid rgba(200,150,12,0.35);
+  border-radius: 14px; padding: 18px;
+  display: flex; gap: 16px;
+  cursor: pointer; transition: all 0.3s;
+}
+.etkinlik-card:hover { border-color: var(--gold); transform: translateX(6px); box-shadow: -4px 0 20px rgba(200,150,12,0.2); }
+
+.etkinlik-date {
+  min-width: 60px; text-align: center;
+  background: linear-gradient(160deg, rgba(200,150,12,0.2), rgba(200,150,12,0.08));
+  border: 1px solid rgba(200,150,12,0.3);
+  border-radius: 10px; padding: 10px 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.etkinlik-date .day { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 900; color: var(--gold); line-height: 1; }
+.etkinlik-date .month { font-size: 9px; color: var(--parchment-dark); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+.etkinlik-info { flex: 1; }
+.etkinlik-info h3 { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; }
+.etkinlik-info p { font-size: 11px; color: var(--parchment-dark); line-height: 1.6; }
+.etkinlik-meta { display: flex; gap: 10px; margin-top: 8px; }
+.etkinlik-meta span { font-size: 10px; color: var(--gold-pale); display: flex; align-items: center; gap: 4px; }
+
+.calendar-mini {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 16px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.cal-header {
+  padding: 16px; text-align: center;
+  background: linear-gradient(135deg, rgba(200,150,12,0.2), rgba(200,150,12,0.08));
+  border-bottom: 1px solid rgba(200,150,12,0.3);
+}
+.cal-header h3 { font-family: 'Cinzel', serif; font-size: 14px; color: var(--gold-light); }
+.cal-grid { padding: 12px; }
+.cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+.cal-day-name { font-size: 9px; color: var(--gold-pale); padding: 4px 0; font-family: 'Cinzel', serif; }
+.cal-day {
+  padding: 6px 2px; font-size: 11px; color: var(--parchment-dark);
+  border-radius: 6px; cursor: pointer; transition: all 0.2s;
+  text-align: center;
+}
+.cal-day:hover { background: rgba(200,150,12,0.15); }
+.cal-day.today { background: var(--gold); color: var(--dark-bg); font-weight: 700; border-radius: 6px; }
+.cal-day.event { color: var(--red-light); font-weight: 700; }
+.cal-day.event::after { content: '•'; display: block; font-size: 8px; margin-top: -4px; }
+
+/* ════════════════════════════════════
+   SCREEN 5: SANAL TUR
+════════════════════════════════════ */
+#screen-tur .content {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px; padding: 20px;
+}
+
+.tur-main {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 16px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.tur-view {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 120px;
+  background: linear-gradient(160deg, #2A1505, #0D0805);
+  position: relative; overflow: hidden;
+}
+.tur-view .room-label {
+  position: absolute; bottom: 16px; left: 0; right: 0;
+  text-align: center;
+  font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 2px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+.tur-view .room-sub {
+  position: absolute; bottom: -4px; left: 0; right: 0;
+  text-align: center; font-size: 11px; color: var(--parchment-dark);
+  bottom: -2px;
+}
+
+.tur-controls {
+  padding: 14px 16px;
+  border-top: 1px solid rgba(200,150,12,0.3);
+  display: flex; gap: 10px; align-items: center;
+  background: rgba(200,150,12,0.05);
+}
+.tur-btn {
+  flex: 1; padding: 10px;
+  background: rgba(200,150,12,0.1);
+  border: 1px solid rgba(200,150,12,0.3);
+  border-radius: 10px; color: var(--gold-pale);
+  cursor: pointer; font-family: 'Cinzel', serif; font-size: 11px;
+  text-align: center; transition: all 0.2s;
+}
+.tur-btn:hover { background: rgba(200,150,12,0.25); border-color: var(--gold); }
+
+.tur-sidebar { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.tur-sidebar::-webkit-scrollbar { width: 0; }
+
+.room-thumb {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid rgba(200,150,12,0.35);
+  border-radius: 12px; overflow: hidden;
+  cursor: pointer; transition: all 0.3s;
+}
+.room-thumb:hover, .room-thumb.active { border-color: var(--gold); }
+.room-thumb-img {
+  width: 100%; height: 70px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  background: linear-gradient(160deg, rgba(30,15,5,0.7), rgba(10,5,2,0.8));
+}
+.room-thumb-name { padding: 8px 10px; font-family: 'Cinzel', serif; font-size: 10px; color: var(--gold-pale); }
+
+/* ════════════════════════════════════
+   SCREEN 6: AI REHBER
+════════════════════════════════════ */
+#screen-ai .content {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px; padding: 20px;
+}
+
+.chat-panel {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 16px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+.chat-msg {
+  display: flex; gap: 10px; align-items: flex-start;
+  animation: fadeInUp 0.4s ease;
+}
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.chat-msg.user { flex-direction: row-reverse; }
+.chat-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  border: 2px solid rgba(200,150,12,0.4);
+}
+.chat-avatar.celebi { background: radial-gradient(circle, #3A2010, #1A0A04); }
+.chat-avatar.user-av { background: rgba(26,92,92,0.3); border-color: rgba(46,139,139,0.5); }
+
+.msg-bubble {
+  max-width: 75%; padding: 12px 16px; border-radius: 14px;
+  font-size: 13px; line-height: 1.7;
+}
+.celebi-bubble {
+  background: rgba(200,150,12,0.08);
+  border: 1px solid rgba(200,150,12,0.3);
+  color: var(--parchment);
+  border-radius: 2px 14px 14px 14px;
+  font-family: 'Amiri', serif; font-style: italic;
+}
+.user-bubble {
+  background: rgba(26,92,92,0.2);
+  border: 1px solid rgba(46,139,139,0.3);
+  color: var(--parchment);
+  border-radius: 14px 2px 14px 14px;
+  text-align: right;
+}
+
+.chat-input-area {
+  padding: 14px 16px;
+  border-top: 1px solid rgba(200,150,12,0.3);
+  background: rgba(200,150,12,0.05);
+  display: flex; gap: 10px;
+}
+.chat-input {
+  flex: 1; padding: 12px 16px;
+  background: rgba(200,150,12,0.08);
+  border: 2px solid rgba(200,150,12,0.3);
+  border-radius: 25px; color: var(--parchment);
+  font-family: 'Amiri', serif; font-size: 14px;
+  outline: none; transition: border-color 0.2s;
+}
+.chat-input:focus { border-color: var(--gold); }
+.chat-input::placeholder { color: rgba(212,184,150,0.5); }
+.send-btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--gold), #8B6C10);
+  border: none; border-radius: 25px;
+  color: var(--dark-bg); font-family: 'Cinzel', serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: all 0.25s; letter-spacing: 1px;
+}
+.send-btn:hover { box-shadow: 0 0 20px var(--shadow-gold); transform: scale(1.05); }
+
+.quick-questions {
+  background: linear-gradient(160deg, rgba(26,14,5,0.95) 0%, rgba(15,8,3,0.98) 100%);
+  border: 2px solid rgba(200,150,12,0.4);
+  border-radius: 16px; padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.qq-title {
+  font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 2px; margin-bottom: 4px;
+}
+.qq-btn {
+  padding: 10px 14px;
+  background: rgba(200,150,12,0.07);
+  border: 1px solid rgba(200,150,12,0.25);
+  border-left: 3px solid var(--gold);
+  border-radius: 8px; color: var(--parchment-dark);
+  cursor: pointer; font-size: 12px;
+  transition: all 0.25s; text-align: left;
+  font-family: 'Amiri', serif;
+}
+.qq-btn:hover { background: rgba(200,150,12,0.18); color: var(--parchment); transform: translateX(4px); }
+
+/* ── DECORATIVE CORNERS ── */
+.corner-decor {
+  position: absolute; width: 60px; height: 60px;
+  pointer-events: none; opacity: 0.5;
+}
+.corner-decor.tl { top: 8px; left: 8px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); border-radius: 6px 0 0 0; }
+.corner-decor.tr { top: 8px; right: 8px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); border-radius: 0 6px 0 0; }
+.corner-decor.bl { bottom: 8px; left: 8px; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); border-radius: 0 0 0 6px; }
+.corner-decor.br { bottom: 8px; right: 8px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); border-radius: 0 0 6px 0; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.85);
+  display: none; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: linear-gradient(160deg, #1A0E05, #0D0805);
+  border: 2px solid var(--gold);
+  border-radius: 20px; padding: 30px;
+  max-width: 600px; width: 90%;
+  box-shadow: 0 0 80px rgba(200,150,12,0.4);
+  position: relative; animation: modalIn 0.4s ease;
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+.modal-close {
+  position: absolute; top: 14px; right: 16px;
+  font-size: 24px; color: var(--gold-pale); cursor: pointer;
+  background: none; border: none; transition: color 0.2s;
+}
+.modal-close:hover { color: var(--gold); }
+.modal-icon { font-size: 50px; text-align: center; margin-bottom: 12px; }
+.modal-title { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); text-align: center; margin-bottom: 16px; }
+.modal-body { font-family: 'Amiri', serif; font-size: 15px; color: var(--parchment); line-height: 1.8; text-align: justify; }
+
+/* ── SCROLLBAR GLOBAL ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(200,150,12,0.9), rgba(139,108,16,0.9));
+  color: var(--dark-bg); padding: 12px 28px; border-radius: 30px;
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+  z-index: 200; display: none;
+  animation: toastIn 0.3s ease;
+  box-shadow: 0 4px 20px rgba(200,150,12,0.6);
+}
+@keyframes toastIn { from { opacity: 0; bottom: 80px; } to { opacity: 1; bottom: 100px; } }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ SCREEN 0: HOME ═══ -->
+  <div class="screen active" id="screen-home">
+    <div class="corner-decor tl"></div>
+    <div class="corner-decor tr"></div>
+    <div class="corner-decor bl"></div>
+    <div class="corner-decor br"></div>
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-emblem">🕌</div>
+        <div class="logo-text">
+          <div class="name">Sultan II. Bayezid Külliyesi</div>
+          <div class="sub">Sağlık Müzesi • Edirne</div>
+        </div>
+      </div>
+      <div class="topbar-title">
+        <div class="main">Evliya Çelebi ile Zamanda Yolculuk</div>
+        <div class="sub">Keşfet · Öğren · İlham Al</div>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-btns">
+          <div class="lang-btn active" onclick="setLang('TR')">TR</div>
+          <div class="lang-btn" onclick="setLang('EN')">EN</div>
+          <div class="lang-btn" style="font-family:'Amiri',serif;font-size:14px" onclick="setLang('AR')">عربي</div>
+        </div>
+        <div class="datetime">
+          <div class="time" id="clock">11:30</div>
+          <div class="date" id="dateDisplay">24 Mayıs 2024 • Cuma</div>
+          <div class="weather">☀️ 21°C • Edirne</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <!-- Evliya Çelebi Panel -->
+      <div class="celebi-panel">
+        <div class="celebi-avatar">🧔🏽</div>
+        <div class="celebi-name">✦ Evliya Çelebi ✦</div>
+        <div class="celebi-quote">
+          Bu mübarek külliyede geçmişin izlerini sürdüm, gördüklerimi yazdım. Şimdi seni de bu yolculuğa davet ediyorum. Haydi, birlikte keşfedelim...
+        </div>
+        <div class="audio-btns">
+          <div class="audio-btn primary" onclick="playAudio()">🔊 Sesli Anlatımı Dinle</div>
+          <div class="audio-btn secondary" onclick="goToScreen('celebi')">📜 Yazılı Anlatımı Oku</div>
+          <div class="audio-btn secondary" onclick="goToScreen('ai')">🤖 AI Rehber'e Sor</div>
+        </div>
+      </div>
+
+      <!-- Menu Grid -->
+      <div class="menu-grid">
+        <div class="menu-card" onclick="goToScreen('bolumler')">
+          <div class="card-img">
+            <div class="emoji-bg">🏛</div>
+            <div class="card-icon">🏛️</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Müze Bölümleri</div>
+            <div class="card-desc">Tüm sergi alanları ve koleksiyonlar</div>
+          </div>
+        </div>
+        <div class="menu-card" onclick="showModal('koleksiyon')">
+          <div class="card-img">
+            <div class="emoji-bg">⚕</div>
+            <div class="card-icon">⚗️</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Koleksiyon & Eserler</div>
+            <div class="card-desc">Tarihi tıp aletleri ve belgeler</div>
+          </div>
+          <div class="card-badge">YENİ</div>
+        </div>
+        <div class="menu-card" onclick="goToScreen('tur')">
+          <div class="card-img">
+            <div class="emoji-bg">🗺</div>
+            <div class="card-icon">🗺️</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Sanal Tur</div>
+            <div class="card-desc">360° interaktif müze gezisi</div>
+          </div>
+        </div>
+        <div class="menu-card" onclick="goToScreen('celebi')">
+          <div class="card-img">
+            <div class="emoji-bg">📖</div>
+            <div class="card-icon">📖</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Evliya Çelebi Anlatıyor</div>
+            <div class="card-desc">Seyahatnâme'den seçme anlatılar</div>
+          </div>
+        </div>
+        <div class="menu-card" onclick="goToScreen('saglik')">
+          <div class="card-img">
+            <div class="emoji-bg">🌿</div>
+            <div class="card-icon">🌿</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Osmanlı'da Sağlık</div>
+            <div class="card-desc">Hekimlik, şifahane ve tedaviler</div>
+          </div>
+        </div>
+        <div class="menu-card" onclick="goToScreen('etkinlik')">
+          <div class="card-img">
+            <div class="emoji-bg">📅</div>
+            <div class="card-icon">📅</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Etkinlikler & Duyurular</div>
+            <div class="card-desc">Konferanslar, atölyeler ve sergiler</div>
+          </div>
+          <div class="card-badge">3 YENİ</div>
+        </div>
+      </div>
+
+      <!-- News Panel -->
+      <div class="news-panel">
+        <div class="news-header">
+          <span>📣</span><span>GÜNDEM & HABERLER</span>
+        </div>
+        <div class="news-list">
+          <div class="news-item" onclick="showModal('haber1')">
+            <div class="n-img">🖼️</div>
+            <div class="n-title">Yeni Sergi: Şifanın İzinde</div>
+            <div class="n-text">Osmanlı'da sağlık, hekimler ve şifahaneler temalı özel sergimiz açıldı.</div>
+            <span class="n-tag">SERGİ</span>
+          </div>
+          <div class="news-item" onclick="showModal('konferans')">
+            <div class="n-img">🎓</div>
+            <div class="n-title">Özel Konferans</div>
+            <div class="n-text">25 Mayıs'ta Prof. Dr. Ahmet Uğur'un katılımıyla söyleşi düzenlenecek.</div>
+            <span class="n-tag">KONFERANS</span>
+          </div>
+          <div class="news-item" onclick="showModal('atolye')">
+            <div class="n-img">🎨</div>
+            <div class="n-title">Müze Çocuk Atölyeleri</div>
+            <div class="n-text">Her hafta sonu çocuklara özel eğitici atölyelerimiz devam ediyor.</div>
+            <span class="n-tag">ETKİNLİK</span>
+          </div>
+          <div class="news-item" onclick="showModal('magaza')">
+            <div class="n-img">🛍️</div>
+            <div class="n-title">Müze Mağazası</div>
+            <div class="n-text">Osmanlı sağlık tarihine dair özel yayınlar ve replikalar mağazamızda.</div>
+            <span class="n-tag">MAĞAZA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+      <button class="nav-btn" disabled>← Geri</button>
+      <div style="display:flex;gap:20px;align-items:center">
+        <button class="nav-btn" onclick="goToScreen('ai')">♿ Erişilebilirlik</button>
+        <div class="ai-guide-center">
+          <div class="ai-portrait" onclick="goToScreen('ai')">
+            🧔🏽
+            <div class="ai-pulse"></div>
+          </div>
+          <div class="ai-label">AI REHBER</div>
+          <div class="ai-sub">Bana Sorun</div>
+        </div>
+        <button class="nav-btn" onclick="goToScreen('bolumler')">Kullanım Kılavuzu</button>
+      </div>
+      <button class="nav-btn" onclick="goToScreen('bolumler')">İleri →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 1: MÜZE BÖLÜMLERİ ═══ -->
+  <div class="screen" id="screen-bolumler">
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-emblem">🕌</div>
+        <div class="logo-text">
+          <div class="name">Sultan II. Bayezid Külliyesi</div>
+          <div class="sub">Sağlık Müzesi</div>
+        </div>
+      </div>
+      <div class="topbar-title">
+        <div class="main">Müze Bölümleri</div>
+        <div class="sub">Keşfetmek istediğiniz bölümü seçin</div>
+      </div>
+      <div class="topbar-right">
+        <div class="datetime">
+          <div class="time" id="clock2">11:30</div>
+          <div class="weather">☀️ 21°C</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="section-title">✦ Sergi Alanları & Bölümler ✦</div>
+      <div class="bolum-grid">
+        <div class="bolum-card" onclick="showBolumModal('darussifa')">
+          <div class="bolum-header">
+            <div class="bolum-icon">🏥</div>
+            <div>
+              <div class="bolum-name">Darüşşifâ Bölümü</div>
+              <div class="bolum-floor">Zemin Kat • Giriş Kanadı</div>
+            </div>
+          </div>
+          <div class="bolum-img">
+            <div class="bg-blur">🏥</div>
+            🏛️
+          </div>
+          <div class="bolum-body">
+            <p>Osmanlı'nın en gelişmiş şifahanelerinden biri olan Darüşşifâ'nın mimarisi, işleyişi ve hastaların tedavi süreçleri anlatılmaktadır.</p>
+            <div class="bolum-tags">
+              <span class="bolum-tag">Mimari</span>
+              <span class="bolum-tag">Tedavi</span>
+              <span class="bolum-tag">Tarih</span>
+            </div>
+          </div>
+          <div class="bolum-footer">
+            <span class="time">🕐 15-20 dk</span>
+            <button class="visit-btn">Keşfet</button>
+          </div>
+        </div>
+
+        <div class="bolum-card" onclick="showBolumModal('tip')">
+          <div class="bolum-header">
+            <div class="bolum-icon">⚕️</div>
+            <div>
+              <div class="bolum-name">Osmanlı Tıp Tarihi</div>
+              <div class="bolum-floor">Birinci Kat • Sol Kanat</div>
+            </div>
+          </div>
+          <div class="bolum-img">
+            <div class="bg-blur">📜</div>
+            ⚗️
+          </div>
+          <div class="bolum-body">
+            <p>İbn-i Sina'dan Osmanlı hekimlerine uzanan bilim geleneği. El yazması tıp kitapları, tedavi yöntemleri ve eczacılık tarihi sergilenmektedir.</p>
+            <div class="bolum-tags">
+              <span class="bolum-tag">El Yazmaları</span>
+              <span class="bolum-tag">Hekimler</span>
+              <span class="bolum-tag">Eczane</span>
+            </div>
+          </div>
+          <div class="bolum-footer">
+            <span class="time">🕐 20-25 dk</span>
+            <button class="visit-btn">Keşfet</button>
+          </div>
+        </div>
+
+        <div class="bolum-card" onclick="showBolumModal('aletler')">
+          <div class="bolum-header">
+            <div class="bolum-icon">🔬</div>
+            <div>
+              <div class="bolum-name">Tarihi Tıp Aletleri</div>
+              <div class="bolum-floor">Birinci Kat • Sağ Kanat</div>
+            </div>
+          </div>
+          <div class="bolum-img">
+            <div class="bg-blur">🗡️</div>
+            🔬
+          </div>
+          <div class="bolum-body">
+            <p>Orta Çağ'dan Osmanlı dönemine ait cerrahi aletler, tanı araçları ve ilaç hazırlama kapları ile otantik koleksiyon sunulmaktadır.</p>
+            <div class="bolum-tags">
+              <span class="bolum-tag">Cerrahi</span>
+              <span class="bolum-tag">Koleksiyon</span>
+              <span class="bolum-tag">Objeler</span>
+            </div>
+          </div>
+          <div class="bolum-footer">
+            <span class="time">🕐 20-30 dk</span>
+            <button class="visit-btn">Keşfet</button>
+          </div>
+        </div>
+
+        <div class="bolum-card" onclick="showBolumModal('muzik')">
+          <div class="bolum-header">
+            <div class="bolum-icon">🎵</div>
+            <div>
+              <div class="bolum-name">Müzik ile Tedavi</div>
+              <div class="bolum-floor">İkinci Kat • Merkez</div>
+            </div>
+          </div>
+          <div class="bolum-img">
+            <div class="bg-blur">🎶</div>
+            🎵
+          </div>
+          <div class="bolum-body">
+            <p>Osmanlı'da müzik terapisi (musikî ile tedavi) uygulamaları. Hasta odalarında çalınan makamlar ve psikolojik tedavi yöntemleri.</p>
+            <div class="bolum-tags">
+              <span class="bolum-tag">Müzik Terapi</span>
+              <span class="bolum-tag">Makam</span>
+              <span class="bolum-tag">Psikoloji</span>
+            </div>
+          </div>
+          <div class="bolum-footer">
+            <span class="time">🕐 15-20 dk</span>
+            <button class="visit-btn">Keşfet</button>
+          </div>
+        </div>
+
+        <div class="bolum-card" onclick="showBolumModal('bitkisel')">
+          <div class="bolum-header">
+            <div class="bolum-icon">🌿</div>
+            <div>
+              <div class="bolum-name">Bitkisel & Doğal Tedaviler</div>
+              <div class="bolum-floor">İkinci Kat • Doğu Kanadı</div>
+            </div>
+          </div>
+          <div class="bolum-img">
+            <div class="bg-blur">🌱</div>
+            🌿
+          </div>
+          <div class="bolum-body">
+            <p>Osmanlı eczaneciliği, şifalı bitkiler, aktarlık geleneği. Dönemin ilaç kitapları (Ağrâbâdîn) ve bitki koleksiyonları.</p>
+            <div class="bolum-tags">
+              <span class="bolum-tag">Şifalı Bitkiler</span>
+              <span class="bolum-tag">Aktarlık</span>
+              <span class="bolum-tag">Botanik</span>
+            </div>
+          </div>
+          <div class="bolum-footer">
+            <span class="time">🕐 15-20 dk</span>
+            <button class="visit-btn">Keşfet</button>
+          </div>
+        </div>
+
+        <div class="bolum-card" onclick="showBolumModal('bayezid')">
+          <div class="bolum-header">
+            <div class="bolum-icon">👑</div>
+            <div>
+              <div class="bolum-name">II. Bayezid Odası</div>
+              <div class="bolum-floor">İkinci Kat • Köşk</div>
+            </div>
+          </div>
+          <div class="bolum-img">
+            <div class="bg-blur">👑</div>
+            🕌
+          </div>
+          <div class="bolum-body">
+            <p>Sultan II. Bayezid'in külliyeyi inşa ettirme süreci, hayırseverlik geleneği ve dönemin siyasi-sosyal tarihi canlandırmalarla aktarılmaktadır.</p>
+            <div class="bolum-tags">
+              <span class="bolum-tag">Sultan</span>
+              <span class="bolum-tag">Tarih</span>
+              <span class="bolum-tag">Vakıf</span>
+            </div>
+          </div>
+          <div class="bolum-footer">
+            <span class="time">🕐 10-15 dk</span>
+            <button class="visit-btn">Keşfet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goToScreen('home')">← Ana Sayfa</button>
+      <div class="ai-guide-center">
+        <div class="ai-portrait" onclick="goToScreen('ai')">🧔🏽<div class="ai-pulse"></div></div>
+        <div class="ai-label">AI REHBER</div>
+        <div class="ai-sub">Bana Sorun</div>
+      </div>
+      <button class="nav-btn" onclick="goToScreen('saglik')">Osmanlı'da Sağlık →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 2: EVLİYA ÇELEBİ ═══ -->
+  <div class="screen" id="screen-celebi">
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-emblem">📖</div>
+        <div class="logo-text">
+          <div class="name">Evliya Çelebi Anlatıyor</div>
+          <div class="sub">Seyahatnâme'den Seçmeler</div>
+        </div>
+      </div>
+      <div class="topbar-title">
+        <div class="main">Sesli & Yazılı Anlatım</div>
+        <div class="sub">Tarihî anlatıları keşfedin</div>
+      </div>
+      <div class="topbar-right">
+        <div class="datetime"><div class="time" id="clock3">11:30</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <!-- Left panel -->
+      <div class="celebi-big-panel">
+        <div class="celebi-portrait-big">🧔🏽</div>
+        <div class="celebi-name" style="text-align:center">✦ Evliya Çelebi ✦</div>
+        <div class="wave-container" id="waveAnim">
+          <div class="wave-bar paused" style="height:20px"></div>
+          <div class="wave-bar paused" style="height:28px"></div>
+          <div class="wave-bar paused" style="height:16px"></div>
+          <div class="wave-bar paused" style="height:32px"></div>
+          <div class="wave-bar paused" style="height:24px"></div>
+          <div class="wave-bar paused" style="height:28px"></div>
+          <div class="wave-bar paused" style="height:20px"></div>
+          <div class="wave-bar paused" style="height:14px"></div>
+          <div class="wave-bar paused" style="height:26px"></div>
+        </div>
+        <div class="audio-btn primary" onclick="togglePlayback()" id="playBtn">▶ Anlatımı Başlat</div>
+        <div class="topic-list">
+          <div class="topic-item active" onclick="selectTopic(0, this)"><span class="t-icon">🏛️</span><span class="t-name">Darüşşifâ'yı Gezerken</span></div>
+          <div class="topic-item" onclick="selectTopic(1, this)"><span class="t-icon">⚗️</span><span class="t-name">Hekim ve Tabiplerin Halleri</span></div>
+          <div class="topic-item" onclick="selectTopic(2, this)"><span class="t-icon">🎵</span><span class="t-name">Musikî ile Şifa</span></div>
+          <div class="topic-item" onclick="selectTopic(3, this)"><span class="t-icon">🌿</span><span class="t-name">Şifalı Sular ve Bitkiler</span></div>
+          <div class="topic-item" onclick="selectTopic(4, this)"><span class="t-icon">👑</span><span class="t-name">Sultan'ın Hayır Eserleri</span></div>
+        </div>
+      </div>
+
+      <!-- Reading panel -->
+      <div class="reading-panel">
+        <div class="reading-header">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h2 id="topicTitle">Darüşşifâ'yı Gezerken</h2>
+              <p>Evliya Çelebi • Seyahatnâme, Cilt III</p>
+            </div>
+            <div class="font-controls">
+              <button class="fc-btn" onclick="changeFontSize(-1)">A-</button>
+              <button class="fc-btn" onclick="changeFontSize(1)">A+</button>
+            </div>
+          </div>
+        </div>
+        <div class="reading-body">
+          <div class="parchment-text" id="topicText">
+            <span class="drop-cap">B</span>u mübarek şehir Edirne'de, Sultan Bayezid Hân hazretlerinin yaptırdığı darüşşifâyı iki gün boyunca gezdim. <span class="highlight">Ne büyük bir hayır eseridir ki, o günden bu yana asırlar geçmiş, yine de şifâ arayanların sığınağı olmaya devam etmiştir.</span>
+            <br><br>
+            Biri dışardan baksa, sade taşlardan örülmüş bir bina zanneder. Ama içine girdiğinde, insan aklının güzelliğini fark eder; çünkü her oda, her avlu, her pencere bir hikmet üzerine kurulmuştur. Hastalar güneşi görsün diye avlular açık bırakılmış; serin hava aksın diye kemerlerin yönü hesaplanmış.
+            <br><br>
+            <span class="highlight">Tabiplerin çoğu Müslüman idi, kimi Yahudi'ydi; hepsi aynı usul ile hastaları muayene eder, nabzı tutar, idrar rengine bakardı.</span> Kimse kimsenin dinine sormaz; ağrısına, yarasına bakardı. Ben de orada anladım ki, şifânın dini olmaz.
+            <br><br>
+            Müzisyenler haftanın üç günü gelir, hasta odalarına seslerini taşırdı. Neyden çıkan sadâ, ney gibi içi boş kalplere dolardı. Dervişler bile bu müziğe hayran olurdu. Ben de dinledim, bir ağrım vardı, geçti!
+            <br><br>
+            <span class="highlight">Seyahatnâmemi okuyanlar bilir: Yüzlerce şehir gezdim, pek çok hastane gördüm; ama bu Edirne darüşşifâsına benzer yerle pek az karşılaştım.</span> Allah bu hayır eserini yapandan razı olsun; ve bu topraklarda yaşayanlar onu layıkıyla korusun.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goToScreen('home')">← Ana Sayfa</button>
+      <div class="ai-guide-center">
+        <div class="ai-portrait" onclick="goToScreen('ai')">🧔🏽<div class="ai-pulse"></div></div>
+        <div class="ai-label">AI REHBER</div>
+        <div class="ai-sub">Bana Sorun</div>
+      </div>
+      <button class="nav-btn" onclick="goToScreen('saglik')">Osmanlı Sağlığı →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 3: OSMANLI'DA SAĞLIK ═══ -->
+  <div class="screen" id="screen-saglik">
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-emblem">🌿</div>
+        <div class="logo-text">
+          <div class="name">Osmanlı'da Sağlık</div>
+          <div class="sub">Tıp Tarihi & Şifâ Geleneği</div>
+        </div>
+      </div>
+      <div class="topbar-title">
+        <div class="main">Osmanlı Tıp Medeniyeti</div>
+        <div class="sub">Hekimlik · Şifâhane · Tedavi</div>
+      </div>
+      <div class="topbar-right">
+        <div class="datetime"><div class="time" id="clock4">11:30</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="saglik-card" onclick="showModal('darussifa2')">
+        <div class="saglik-img">🏥</div>
+        <div class="saglik-body">
+          <h3>🏥 Darüşşifâlar – Osmanlı Hastaneleri</h3>
+          <p>Osmanlı'da sağlık hizmetleri vakıf sistemiyle yürütülürdü. Darüşşifâlar sadece hastaları tedavi etmekle kalmaz; aynı zamanda tıp eğitimi de verirdi. Sultan II. Bayezid Darüşşifâsı bu geleneğin en nadide örneklerinden biridir.</p>
+          <div class="saglik-items">
+            <span class="saglik-item">Vakıf Sistemi</span>
+            <span class="saglik-item">Tıp Eğitimi</span>
+            <span class="saglik-item">Ücretsiz Tedavi</span>
+            <span class="saglik-item">Yataklı Servis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="saglik-card" onclick="showModal('hekimler')">
+        <div class="saglik-img">👨‍⚕️</div>
+        <div class="saglik-body">
+          <h3>👨‍⚕️ Osmanlı Hekimleri & Tabip Ocağı</h3>
+          <p>Osmanlı hekimleri İbn-i Sina'nın el-Kânûn fi't-Tıbb eserini temel alırdı. Saray hekimbaşısından çarşı tabipliğine uzanan geniş bir hiyerarşi mevcuttu. Hekimler, cerrahlar ve eczacılar (aktarlar) ayrı loncalarda örgütlenirdi.</p>
+          <div class="saglik-items">
+            <span class="saglik-item">İbn-i Sina Geleneği</span>
+            <span class="saglik-item">Hekimbaşılık</span>
+            <span class="saglik-item">Lonca Sistemi</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="saglik-card" onclick="showModal('muzikterapi')">
+        <div class="saglik-img">🎵</div>
+        <div class="saglik-body">
+          <h3>🎵 Musikî ile Tedavi – Ses Terapisi</h3>
+          <p>Osmanlı darüşşifâlarında uygulanan en özgün yöntemlerden biri müzik terapisidir. Belirli makamlar belirli hastalıklara iyi geldiğine inanılır; haftanın belirli günlerinde hastalar için özel konserler düzenlenirdi.</p>
+          <div class="saglik-items">
+            <span class="saglik-item">Makam Terapi</span>
+            <span class="saglik-item">Ruhsal Şifâ</span>
+            <span class="saglik-item">Haftalık Konser</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="saglik-card" onclick="showModal('bitkisel2')">
+        <div class="saglik-img">🌿</div>
+        <div class="saglik-body">
+          <h3>🌿 Bitkisel Tedavi & Eczâhâneler</h3>
+          <p>Osmanlı eczacılığı (attârlık) son derece gelişmişti. Yüzlerce şifalı bitki ile hazırlanan macun, şurup ve lapalar reçete edilirdi. Edirne çarşısındaki aktarlar kendi başlıcalarıyla öne çıkardı.</p>
+          <div class="saglik-items">
+            <span class="saglik-item">Attârlık</span>
+            <span class="saglik-item">Macunlar</span>
+            <span class="saglik-item">Şifalı Bitkiler</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goToScreen('bolumler')">← Bölümler</button>
+      <div class="ai-guide-center">
+        <div class="ai-portrait" onclick="goToScreen('ai')">🧔🏽<div class="ai-pulse"></div></div>
+        <div class="ai-label">AI REHBER</div>
+        <div class="ai-sub">Bana Sorun</div>
+      </div>
+      <button class="nav-btn" onclick="goToScreen('etkinlik')">Etkinlikler →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 4: ETKİNLİKLER ═══ -->
+  <div class="screen" id="screen-etkinlik">
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-emblem">📅</div>
+        <div class="logo-text">
+          <div class="name">Etkinlikler & Duyurular</div>
+          <div class="sub">Mayıs 2024</div>
+        </div>
+      </div>
+      <div class="topbar-title">
+        <div class="main">Yaklaşan Etkinlikler</div>
+        <div class="sub">Konferanslar · Atölyeler · Sergiler</div>
+      </div>
+      <div class="topbar-right">
+        <div class="datetime"><div class="time" id="clock5">11:30</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="etkinlik-list">
+        <div class="etkinlik-card" onclick="showModal('etk1')">
+          <div class="etkinlik-date"><div class="day">25</div><div class="month">Mayıs</div></div>
+          <div class="etkinlik-info">
+            <h3>🎓 Osmanlı Tıbbı Konferansı</h3>
+            <p>Prof. Dr. Ahmet Uğur'un sunumuyla "Seyahatnâme'de Sağlık ve Tıp" konulu söyleşi. Salona giriş ücretsizdir, kayıt zorunludur.</p>
+            <div class="etkinlik-meta">
+              <span>🕑 14:00 – 16:00</span>
+              <span>📍 Ana Konferans Salonu</span>
+              <span>👥 Ücretsiz</span>
+            </div>
+          </div>
+        </div>
+        <div class="etkinlik-card" onclick="showModal('etk2')">
+          <div class="etkinlik-date"><div class="day">26</div><div class="month">Mayıs</div></div>
+          <div class="etkinlik-info">
+            <h3>🎨 Çocuk Atölyesi: Osmanlı Eczanesi</h3>
+            <p>8–14 yaş arası çocuklara özel bitkisel ilaç yapımı atölyesi. Doğal malzemelerle kendi macunlarını hazırlayacaklar.</p>
+            <div class="etkinlik-meta">
+              <span>🕑 10:00 – 12:00</span>
+              <span>📍 Atölye Salonu</span>
+              <span>👥 20 Kişi Sınırlı</span>
+            </div>
+          </div>
+        </div>
+        <div class="etkinlik-card" onclick="showModal('etk3')">
+          <div class="etkinlik-date"><div class="day">01</div><div class="month">Haz.</div></div>
+          <div class="etkinlik-info">
+            <h3>🎵 Müzik ile Şifâ Konseri</h3>
+            <p>Osmanlı makamlarından oluşan terapi konseri. Neyzen ve kanun sanatçılarının katılımıyla ozantik bir akşam.</p>
+            <div class="etkinlik-meta">
+              <span>🕑 19:00 – 21:00</span>
+              <span>📍 Avlu Sahnesi</span>
+              <span>👥 Biletli</span>
+            </div>
+          </div>
+        </div>
+        <div class="etkinlik-card" onclick="showModal('etk4')">
+          <div class="etkinlik-date"><div class="day">08</div><div class="month">Haz.</div></div>
+          <div class="etkinlik-info">
+            <h3>🖼️ Sergi Açılışı: Şifânın İzinde</h3>
+            <p>Osmanlı sağlık nesneleri ve belgeleri üzerine özel sergi. Restorasyon sürecindeki nadide eserler ilk kez görücüye çıkacak.</p>
+            <div class="etkinlik-meta">
+              <span>🕑 11:00</span>
+              <span>📍 Sergi Galerisi</span>
+              <span>👥 Davetli + Halk</span>
+            </div>
+          </div>
+        </div>
+        <div class="etkinlik-card" onclick="showModal('etk5')">
+          <div class="etkinlik-date"><div class="day">15</div><div class="month">Haz.</div></div>
+          <div class="etkinlik-info">
+            <h3>📚 El Yazması Okuma Atölyesi</h3>
+            <p>Osmanlıca tıp el yazmalarını okuma ve yorumlama atölyesi. Uzman rehberliğinde tarihi belgelere dokunma fırsatı.</p>
+            <div class="etkinlik-meta">
+              <span>🕑 09:00 – 13:00</span>
+              <span>📍 Kütüphane Salonu</span>
+              <span>👥 15 Kişi Sınırlı</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <div class="calendar-mini">
+        <div class="cal-header">
+          <h3>📅 Mayıs 2024</h3>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-days">
+            <div class="cal-day-name">Pt</div><div class="cal-day-name">Sa</div><div class="cal-day-name">Ça</div><div class="cal-day-name">Pe</div><div class="cal-day-name">Cu</div><div class="cal-day-name">Ct</div><div class="cal-day-name">Pa</div>
+            <div class="cal-day"></div><div class="cal-day"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div>
+            <div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div>
+            <div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div>
+            <div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day today">24</div><div class="cal-day event">25</div><div class="cal-day event">26</div>
+            <div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+          </div>
+        </div>
+        <div style="padding:12px;border-top:1px solid rgba(200,150,12,0.2)">
+          <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--gold-pale);margin-bottom:8px">YAKLAŞAN</div>
+          <div style="font-size:11px;color:var(--parchment-dark);line-height:1.8">
+            <div>🔴 25 Mayıs – Konferans</div>
+            <div>🔴 26 Mayıs – Çocuk Atölyesi</div>
+            <div>🔵 1 Haziran – Konser</div>
+            <div>🔵 8 Haziran – Sergi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goToScreen('saglik')">← Osmanlı Sağlığı</button>
+      <div class="ai-guide-center">
+        <div class="ai-portrait" onclick="goToScreen('ai')">🧔🏽<div class="ai-pulse"></div></div>
+        <div class="ai-label">AI REHBER</div>
+        <div class="ai-sub">Bana Sorun</div>
+      </div>
+      <button class="nav-btn" onclick="goToScreen('tur')">Sanal Tur →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 5: SANAL TUR ═══ -->
+  <div class="screen" id="screen-tur">
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-emblem">🗺️</div>
+        <div class="logo-text">
+          <div class="name">Sanal Tur</div>
+          <div class="sub">360° İnteraktif Gezinti</div>
+        </div>
+      </div>
+      <div class="topbar-title">
+        <div class="main">Müzeyi Keşfedin</div>
+        <div class="sub">Her odayı interaktif olarak gezin</div>
+      </div>
+      <div class="topbar-right">
+        <div class="datetime"><div class="time" id="clock6">11:30</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="tur-main">
+        <div class="tur-view" id="turView">
+          <span id="turEmoji" style="font-size:120px;animation:float 3s ease-in-out infinite">🏛️</span>
+          <div class="room-label" id="roomLabel">Darüşşifâ Ana Giriş</div>
+          <div class="room-sub" id="roomSub" style="position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:11px;color:var(--parchment-dark)">Külliyenin ana kapısından içeri giriniz</div>
+        </div>
+        <div class="tur-controls">
+          <div class="tur-btn" onclick="turNav(-1)">◀ Önceki Oda</div>
+          <div class="tur-btn" onclick="showToast('360° tur yakında eklenecek!')">🔄 360° Görünüm</div>
+          <div class="tur-btn" onclick="showToast('Bilgi paneli açıldı!')">ℹ️ Bilgi</div>
+          <div class="tur-btn" onclick="turNav(1)">Sonraki Oda ▶</div>
+        </div>
+      </div>
+      <div class="tur-sidebar">
+        <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--gold-pale);letter-spacing:2px;padding:4px 0">ODA HARİTASI</div>
+        <div class="room-thumb active" id="room-0" onclick="goToRoom(0)">
+          <div class="room-thumb-img">🏛️</div>
+          <div class="room-thumb-name">Ana Giriş</div>
+        </div>
+        <div class="room-thumb" id="room-1" onclick="goToRoom(1)">
+          <div class="room-thumb-img">⚗️</div>
+          <div class="room-thumb-name">Tıp Tarihi Salonu</div>
+        </div>
+        <div class="room-thumb" id="room-2" onclick="goToRoom(2)">
+          <div class="room-thumb-img">🔬</div>
+          <div class="room-thumb-name">Alet Galeris</div>
+        </div>
+        <div class="room-thumb" id="room-3" onclick="goToRoom(3)">
+          <div class="room-thumb-img">🎵</div>
+          <div class="room-thumb-name">Müzik Odası</div>
+        </div>
+        <div class="room-thumb" id="room-4" onclick="goToRoom(4)">
+          <div class="room-thumb-img">🌿</div>
+          <div class="room-thumb-name">Bitki & Eczane</div>
+        </div>
+        <div class="room-thumb" id="room-5" onclick="goToRoom(5)">
+          <div class="room-thumb-img">👑</div>
+          <div class="room-thumb-name">Sultan Odası</div>
+        </div>
+        <div class="room-thumb" id="room-6" onclick="goToRoom(6)">
+          <div class="room-thumb-img">🌅</div>
+          <div class="room-thumb-name">Avlu</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goToScreen('etkinlik')">← Etkinlikler</button>
+      <div class="ai-guide-center">
+        <div class="ai-portrait" onclick="goToScreen('ai')">🧔🏽<div class="ai-pulse"></div></div>
+        <div class="ai-label">AI REHBER</div>
+        <div class="ai-sub">Bana Sorun</div>
+      </div>
+      <button class="nav-btn" onclick="goToScreen('ai')">AI Rehber →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 6: AI REHBER ═══ -->
+  <div class="screen" id="screen-ai">
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-emblem" style="font-size:30px">🤖</div>
+        <div class="logo-text">
+          <div class="name">AI Rehber – Evliya Çelebi</div>
+          <div class="sub">Yapay Zekâ ile Sohbet</div>
+        </div>
+      </div>
+      <div class="topbar-title">
+        <div class="main">Bana Her Şeyi Sorun</div>
+        <div class="sub">Müze, tarih, sağlık ve daha fazlası</div>
+      </div>
+      <div class="topbar-right">
+        <div class="datetime"><div class="time" id="clock7">11:30</div></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="chat-panel">
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-msg">
+            <div class="chat-avatar celebi">🧔🏽</div>
+            <div class="msg-bubble celebi-bubble">
+              Hoş geldiniz, aziz misafir. Ben Evliya Çelebi'nin dijital ruhuyum. Bu mübarek külliye ve Osmanlı tıbbı hakkında merak ettiğiniz her şeyi sorabilirsiniz. Yolculuğunuz hayırlı olsun!
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar celebi">🧔🏽</div>
+            <div class="msg-bubble celebi-bubble">
+              Müze saatleri, bölümler, etkinlikler veya Osmanlı sağlık tarihi hakkında bilgi vermekten memnuniyet duyarım.
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chatInput" placeholder="Sorunuzu yazın... (Örn: Müze saat kaçta kapanıyor?)" onkeypress="if(event.key==='Enter')sendChat()">
+          <button class="send-btn" onclick="sendChat()">Gönder ✦</button>
+        </div>
+      </div>
+
+      <div class="quick-questions">
+        <div class="qq-title">✦ SIK SORULAN SORULAR</div>
+        <div class="qq-btn" onclick="askQuestion('Müze kaç saatte gezilir?')">🕐 Müze kaç saatte gezilir?</div>
+        <div class="qq-btn" onclick="askQuestion('Giriş ücreti nedir?')">💰 Giriş ücreti nedir?</div>
+        <div class="qq-btn" onclick="askQuestion('Evliya Çelebi kimdir?')">📖 Evliya Çelebi kimdir?</div>
+        <div class="qq-btn" onclick="askQuestion('Darüşşifâ ne demektir?')">🏥 Darüşşifâ ne demektir?</div>
+        <div class="qq-btn" onclick="askQuestion('Müzik terapisi nasıl uygulanırdı?')">🎵 Müzik terapisi nasıl uygulanırdı?</div>
+        <div class="qq-btn" onclick="askQuestion('Osmanlı hekimleri hangi kitapları kullanırdı?')">📚 Osmanlı hekimleri hangi kitapları kullanırdı?</div>
+        <div class="qq-btn" onclick="askQuestion('Çocuk atölyeleri ne zaman?')">🎨 Çocuk atölyeleri ne zaman?</div>
+        <div class="qq-btn" onclick="askQuestion('En yakın restoran nerede?')">🍽️ En yakın restoran nerede?</div>
+        <div class="qq-btn" onclick="askQuestion('Müze mağazasında ne var?')">🛍️ Müze mağazasında ne var?</div>
+        <div style="margin-top:8px;padding:12px;background:rgba(200,150,12,0.05);border:1px solid rgba(200,150,12,0.2);border-radius:10px">
+          <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--gold-pale);margin-bottom:6px">ERİŞİLEBİLİRLİK</div>
+          <div style="font-size:11px;color:var(--parchment-dark);line-height:1.7">
+            ♿ Tekerlekli sandalye erişimi mevcut<br>
+            🔊 Sesli rehber sistemi<br>
+            👁️ Görme engelli dokunmatik rehber<br>
+            🌐 TR · EN · AR dil desteği
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="goToScreen('tur')">← Sanal Tur</button>
+      <div class="ai-guide-center">
+        <div class="ai-portrait">🧔🏽<div class="ai-pulse"></div></div>
+        <div class="ai-label">AI REHBER</div>
+        <div class="ai-sub">Aktif</div>
+      </div>
+      <button class="nav-btn" onclick="goToScreen('home')">Ana Sayfa →</button>
+    </div>
+  </div>
+
+  <!-- ═══ MODAL ═══ -->
+  <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-icon" id="modalIcon">🏛️</div>
+      <div class="modal-title" id="modalTitle">Başlık</div>
+      <div class="modal-body" id="modalBody">İçerik yükleniyor...</div>
+    </div>
+  </div>
+
+  <!-- ═══ TOAST ═══ -->
+  <div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+// ── SCREEN MANAGEMENT ──
+const screens = {
+  home: 'screen-home',
+  bolumler: 'screen-bolumler',
+  celebi: 'screen-celebi',
+  saglik: 'screen-saglik',
+  etkinlik: 'screen-etkinlik',
+  tur: 'screen-tur',
+  ai: 'screen-ai'
+};
+
+function goToScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active', 'visible');
+  });
+  const el = document.getElementById(screens[name]);
+  if (el) {
+    el.classList.add('active');
+    setTimeout(() => el.classList.add('visible'), 30);
+  }
+}
+
+// Init home screen
+setTimeout(() => document.getElementById('screen-home').classList.add('visible'), 100);
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  const t = now.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+  document.querySelectorAll('[id^="clock"]').forEach(el => el.textContent = t);
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ── LANG ──
+function setLang(l) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  showToast('Dil: ' + l);
+}
+
+// ── AUDIO ──
+let isPlaying = false;
+function playAudio() { showToast('🔊 Sesli anlatım başlatılıyor...'); }
+function togglePlayback() {
+  isPlaying = !isPlaying;
+  const btn = document.getElementById('playBtn');
+  const bars = document.querySelectorAll('.wave-bar');
+  if (isPlaying) {
+    btn.textContent = '⏸ Duraklat';
+    bars.forEach(b => b.classList.remove('paused'));
+    showToast('🔊 Anlatım oynatılıyor...');
+  } else {
+    btn.textContent = '▶ Anlatımı Başlat';
+    bars.forEach(b => b.classList.add('paused'));
+  }
+}
+
+// ── TOPIC SELECTION ──
+const topics = [
+  {
+    title: "Darüşşifâ'yı Gezerken",
+    text: `<span class="drop-cap">B</span>u mübarek şehir Edirne'de, Sultan Bayezid Hân hazretlerinin yaptırdığı darüşşifâyı iki gün boyunca gezdim. <span class="highlight">Ne büyük bir hayır eseridir ki, o günden bu yana asırlar geçmiş, yine de şifâ arayanların sığınağı olmaya devam etmiştir.</span><br><br>Biri dışardan baksa, sade taşlardan örülmüş bir bina zanneder. Ama içine girdiğinde, insan aklının güzelliğini fark eder; çünkü her oda, her avlu, her pencere bir hikmet üzerine kurulmuştur. Hastalar güneşi görsün diye avlular açık bırakılmış; serin hava aksın diye kemerlerin yönü hesaplanmış.<br><br><span class="highlight">Tabiplerin çoğu Müslüman idi, kimi Yahudi'ydi; hepsi aynı usul ile hastaları muayene eder, nabzı tutar, idrar rengine bakardı.</span> Kimse kimsenin dinine sormaz; ağrısına, yarasına bakardı. Ben de orada anladım ki, şifânın dini olmaz.`
+  },
+  {
+    title: "Hekim ve Tabiplerin Halleri",
+    text: `<span class="drop-cap">E</span>dirne'nin tabipleri arasında öyle üstadlar gördüm ki, İbn-i Sina'nın ruhunu anımsar oldum. <span class="highlight">Her biri Kânûn'u ezberden bilir, nabız ilminde maharetli, uriner tanıda usta kimselerdi.</span><br><br>Saray hekimbaşısı haftada iki kez darüşşifâyı denetler, her yatağı bizzat dolaşırdı. Gördüğü her hastaya dua eder, ardından tabipler ile müzakere eylerdi.<br><br>Cerrahlar ise ayrı bir oda tutarlardı; yaraya su ile tuz dökerler, iplik ve iğne ile dikerler, <span class="highlight">yarayı sarıp sardıktan sonra hastayı beşe sayarak uyuturlar, sabah baktıklarında iyileşmenin başladığını görürlerdi.</span>`
+  },
+  {
+    title: "Musikî ile Şifa",
+    text: `<span class="drop-cap">H</span>aftanın Salı ve Perşembe günleri, darüşşifânın büyük avlusuna müzisyenler gelirdi. <span class="highlight">Neyzen, udî ve kanunî ile üç-dört müzisyen, saatlerce makam çalarlardı; Rast makamı neşe verir, Uşşak kalbi yumuşatır, Hicaz hüznü dindirirdi.</span><br><br>Bir keresinde ağır melankoli ile yatan bir genç vakalandı. Hiçbir ilaca cevap vermemişti. Hekimbaşı: "Bugün Hicaz, yarın Rast çalın" dedi. Üç hafta sonra genç ayağa kalktı.<br><br>Bu gözlemimi Seyahatnâme'me şöyle yazdım: <span class="highlight">"Ses, ruhun ilacıdır; iyi bir makam, en kuvvetli ilaçtan daha derin işler."</span>`
+  },
+  {
+    title: "Şifalı Sular ve Bitkiler",
+    text: `<span class="drop-cap">E</span>dirne'nin aktarları, benim gördüğüm en zengin dükkanları tutarlardı. <span class="highlight">Yüzlerce çeşit şifalı bitki, Mısır'dan gelme baharat, Hindistan'dan gelen çeşit çeşit ot ve reçine ile dolu çekmeceler...</span><br><br>Eczanelerde hazırlanan macunların çoğu, İbn-i Sina'nın Kânûn'undaki tariflere dayanırdı. Balgam için kekik, ateş için söğüt kabuğu, baş ağrısı için nane ve lavanta yaygın kullanılırdı.<br><br>Şifalı sular meselesine gelince: <span class="highlight">Yakınlardaki kaplıcalar, romatizmalı hastaların vazgeçilmezi idi; kadınlar için ayrı, erkekler için ayrı havuzlar, tabibin reçetesiyle kullanılırdı.</span>`
+  },
+  {
+    title: "Sultan'ın Hayır Eserleri",
+    text: `<span class="drop-cap">S</span>ultan II. Bayezid Hân, tahta geçer geçmez bu külliyeyi yaptırmaya karar vermiş. <span class="highlight">Mimarı Hayreddin ustadır; camii, medrese, imaret, darüşşifâ ve mektep; hepsini tek bir külliye hâlinde tasarlamış, Edirne'ye asırlık bir şahit bırakmıştır.</span><br><br>Vakfiyesinde açıkça yazmış: "Bu darüşşifâya gelen hastadan hiçbir akçe alınmayacak; yedirilecek, içirilecek, tedavi görecek; iyileşince giydirilip uğurlanacak."<br><br><span class="highlight">Ben Evliya olarak şunu söyleyeyim: Bu dünyada böyle bir vakıf kurmak, taşa adını yazmaktan çok daha büyük bir şeydir; çünkü taş yıkılır, dua bitmez.</span>`
+  }
+];
+
+function selectTopic(idx, el) {
+  document.querySelectorAll('.topic-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('topicTitle').textContent = topics[idx].title;
+  document.getElementById('topicText').innerHTML = topics[idx].text;
+  if (isPlaying) showToast('🔊 Yeni anlatım başlatılıyor...');
+}
+
+let fontSize = 16;
+function changeFontSize(d) {
+  fontSize = Math.max(12, Math.min(22, fontSize + d));
+  document.getElementById('topicText').style.fontSize = fontSize + 'px';
+}
+
+// ── SANAL TUR ──
+const rooms = [
+  { emoji: "🏛️", label: "Darüşşifâ Ana Giriş", sub: "Külliyenin ana kapısından içeri giriniz" },
+  { emoji: "⚗️", label: "Tıp Tarihi Salonu", sub: "El yazmaları ve tıp belgeleri sergisi" },
+  { emoji: "🔬", label: "Tarihi Alet Galerisi", sub: "Osmanlı cerrahi aletleri koleksiyonu" },
+  { emoji: "🎵", label: "Musikî ile Şifâ Odası", sub: "Müzik terapi deneyimi yaşayın" },
+  { emoji: "🌿", label: "Bitki ve Eczane Bölümü", sub: "Osmanlı şifalı bitkileri ve eczacılık tarihi" },
+  { emoji: "👑", label: "Sultan II. Bayezid Odası", sub: "Külliyenin banisine adanmış özel oda" },
+  { emoji: "🌅", label: "Tarihi Avlu", sub: "Külliyenin açık hava mekânı ve bahçesi" }
+];
+let currentRoom = 0;
+
+function goToRoom(idx) {
+  currentRoom = idx;
+  document.querySelectorAll('.room-thumb').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  const r = rooms[idx];
+  document.getElementById('turEmoji').textContent = r.emoji;
+  document.getElementById('roomLabel').textContent = r.label;
+  document.getElementById('roomSub').textContent = r.sub;
+}
+
+function turNav(dir) {
+  currentRoom = (currentRoom + dir + rooms.length) % rooms.length;
+  goToRoom(currentRoom);
+}
+
+// ── MODAL ──
+const modals = {
+  haber1: { icon:"🖼️", title:"Yeni Sergi: Şifanın İzinde", body:"Osmanlının sağlık ve tıp geleneğini yansıtan bu özel sergi, nadide belgeler, hekim portreleri ve tıp aletleri içermektedir. Sergi Pazartesi hariç her gün 09:00–18:00 saatleri arasında açıktır. Giriş ücretsizdir." },
+  konferans: { icon:"🎓", title:"Özel Konferans: Seyahatname Söyleşisi", body:"Prof. Dr. Ahmet Uğur, 25 Mayıs 2024 tarihinde saat 14:00de Ana Konferans Salonunda Seyahatnamede Sağlık ve Tıp başlıklı söyleşisini gerçekleştirecektir. Kayıt için resepsiyona başvurunuz." },
+  atolye: { icon:"🎨", title:"Müze Çocuk Atölyeleri", body:"Her Cumartesi ve Pazar 10:00–12:00 saatleri arasında gerçekleştirilen çocuk atölyelerimizde; Osmanlı eczanesi, el yazması süsleme sanatı ve tarihi oyuncak yapımı gibi konular işlenmektedir. 8–14 yaş, ücretsiz." },
+  magaza: { icon:"🛍️", title:"Müze Mağazası", body:"Osmanlı sağlık tarihine dair kitaplar, replikalar, hatıra eşyaları ve el yapımı ürünler mağazamızda sizleri bekliyor. Müze çıkışındaki mağazamız 09:00–19:00 saatlerinde açıktır." },
+  koleksiyon: { icon:"⚗️", title:"Koleksiyon ve Eserler", body:"Müzemiz, 500 aşkın özgün Osmanlı tıp aletini, 120 el yazmasını ve nadide belgeleri bünyesinde barındırmaktadır. Özel koleksiyonların bir bölümü vitrinlerde, bir bölümü ise dijital arşivde sunulmaktadır." },
+  darussifa2: { icon:"🏥", title:"Darüşşifâlar – Osmanlı Hastaneleri", body:"Osmanlı İmparatorluğunda darüşşifâlar (şifahaneler) yalnızca tedavi kurumları değil; aynı zamanda tıp okulu, huzurevi ve barınak işlevi de gören çok amaçlı sosyal yapılardı. Hizmetlerin tamamı vakıf gelirleriyle karşılanır, hastalardan ücret alınmazdı. Sultan II. Bayezid Darüşşifâsı, 1488 yılında inşa edilmiş olup Türkiyenin en iyi korunmuş Osmanlı şifahanelerinden biridir." },
+  hekimler: { icon:"👨‍⚕️", title:"Osmanlı Hekimleri", body:"Osmanlı hekimleri eğitimlerini medreselerde alır, ardından usta-çırak yöntemiyle pratiğe dökürdü. İbn-i Sinanın el-Kanun fit-Tibbi temel ders kitabı olarak yüzyıllarca kullanıldı. Saray hekimbaşılığı en prestijli mesleki makam kabul edilirdi." },
+  muzikterapi: { icon:"🎵", title:"Musikî ile Tedavi", body:"Osmanlı darüşşifâlarındaki müzik terapi uygulamaları günümüz araştırmacılarının dikkatini çekmektedir. Rast, Uşşak, Hicaz gibi makamların ruhsal ve fiziksel tedavide kullanımı belgelenmiştir. Bu yöntem, bugünün müzik terapisi anlayışıyla örtüşen erken bir uygulama olarak değerlendirilmektedir." },
+  bitkisel2: { icon:"🌿", title:"Bitkisel Tedavi", body:"Osmanlı eczacılığında 400 aşkın şifalı bitki kullanımı belgelenmiştir. Aktarlar (eczacılar) hem teşhis hem ilaç hazırlama konusunda uzmanlaşmıştı. Gülab suyu, çörekotu yağı, kekik ve zencefilden hazırlanan karışımlar en yaygın reçeteler arasındaydı." },
+  etk1: { icon:"🎓", title:"Osmanlı Tıbbı Konferansı", body:"25 Mayıs 2024 - Saat 14:00\nAna Konferans Salonu\n\nProf. Dr. Ahmet Uğur, kendi araştırmaları ışığında Evliya Çelebinin Seyahatnamesi'ndeki tıp ve sağlık gözlemlerini aktaracak. Giriş ücretsizdir." },
+  etk2: { icon:"🎨", title:"Çocuk Atölyesi", body:"26 Mayıs 2024 - Saat 10:00–12:00\nAtölye Salonu\n\n8–14 yaş arası çocuklar için bitkisel ilaç yapımı atölyesi. Katılımcılar doğal malzemelerle kendi macunlarını hazırlayacak. Yer sayısı sınırlıdır." },
+  etk3: { icon:"🎵", title:"Müzik ile Şifâ Konseri", body:"1 Haziran 2024 - Saat 19:00\nAvlu Sahnesi\n\nOsmanlı makamlarından oluşan terapi konseri. Neyzen ve kanun sanatçılarının katılımıyla eşsiz bir akşam. Bilet fiyatları resepsiyonda öğrenilebilir." },
+  etk4: { icon:"🖼️", title:"Sergi Açılışı", body:"8 Haziran 2024 - Saat 11:00\nSergi Galerisi\n\nŞifanın İzinde özel sergisinin resmi açılışı. Restorasyon sürecindeki nadide eserler ilk kez görücüye çıkacak. Davetlilere ve genel ziyaretçilere açık." },
+  etk5: { icon:"📚", title:"El Yazması Okuma Atölyesi", body:"15 Haziran 2024 - Saat 09:00–13:00\nKütüphane Salonu\n\nOsmanlıca tıp el yazmalarını okuma ve yorumlama atölyesi. Uzman rehberliğinde tarihi belgelere dokunma fırsatı. 15 kişi ile sınırlıdır." }
+};
+
+const bolumModals = {
+  darussifa: { icon:"🏥", title:"Darüşşifâ Bölümü", body:"Külliyenin kalbini oluşturan Darüşşifâ; 15. yüzyıldan bu yana pek çok hastaya kapılarını açmıştır. Bu bölümde Osmanlı hastane mimarisi, hasta koşulları, tedavi protokolleri ve sağlık personeli hiyerarşisi detaylı olarak anlatılmaktadır. Özgün taş sütunlar ve kemerlerin restore edilmiş halleriyle görsel anlatım güçlendirilmiştir." },
+  tip: { icon:"⚗️", title:"Osmanlı Tıp Tarihi", body:"Bu bölümde İbn-i Sinadan 19. yüzyıl Osmanlı hekimliğine uzanan bilim zinciri sergilenmektedir. El yazmalarından tıp belgelerine, hekim portresinden ders notlarına kadar geniş bir koleksiyon sunulmaktadır. Ziyaretçiler dokunmatik ekranlar aracılığıyla dönemin tıp kitaplarını inceleyebilir." },
+  aletler: { icon:"🔬", title:"Tarihi Tıp Aletleri", body:"Osmanlı cerrahisinde kullanılan lancetler, makatlar, iğneler ve müdahale aletleri bu galeride vitrinlerde sergilenmektedir. Her aletin yanında kullanım alanı ve dönem bilgisi yer alır. Koleksiyonun bir bölümü İstanbul ve Kahire müzelerinden ödünç alınan eserlerden oluşmaktadır." },
+  muzik: { icon:"🎵", title:"Müzik ile Tedavi", body:"Osmanlı tıbbında ses terapisinin özel bir yeri vardır. Bu bölümde makam terapisi, kullanılan çalgılar ve tedavi sürecine ilişkin belgeler sunulmaktadır. Ziyaretçiler kulaklıklar aracılığıyla özgün Osmanlı müziği dinleyebilir ve makamların etkilerini interaktif panellerle keşfedebilir." },
+  bitkisel: { icon:"🌿", title:"Bitkisel Tedaviler", body:"Bu bölümde Osmanlı eczacılığının (attârlık) zengin dünyası anlatılmaktadır. Dönemin ilaç kitapları (Ağrâbâdîn), şifalı bitki koleksiyonları ve ilaç hazırlama aletleri sergilenmektedir. Kuru bitkiler ve aromatik ürünler görsel ve kokuyla deneyimlenebilmektedir." },
+  bayezid: { icon:"👑", title:"II. Bayezid Odası", body:"Sultan II. Bayezidin hayatına, saltanatına ve külliyeyi inşa ettirme sürecine adanmış bu özel odada; portreleri, fermanları ve kişisel eşyalarının replikaları sergilenmektedir. Tarihsel canlandırma videoları ile Sultanın vakıf anlayışı ve dönemin sosyal yapısı aktarılmaktadır." }
+};
+
+function showModal(key) {
+  const m = modals[key];
+  if (!m) return;
+  document.getElementById('modalIcon').textContent = m.icon;
+  document.getElementById('modalTitle').textContent = m.title;
+  document.getElementById('modalBody').textContent = m.body;
+  document.getElementById('modal').classList.add('open');
+}
+
+function showBolumModal(key) {
+  const m = bolumModals[key];
+  if (!m) return;
+  document.getElementById('modalIcon').textContent = m.icon;
+  document.getElementById('modalTitle').textContent = m.title;
+  document.getElementById('modalBody').textContent = m.body;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.style.display = 'none', 2500);
+}
+
+// ── AI CHAT ──
+const aiResponses = {
+  "müze kaç saatte gezilir": "Bu müzeyi tam anlamıyla gezmek için 2-3 saat ayırmanızı tavsiye ederim. Sadece ana bölümleri gezecekseniz 1,5 saat yeterli olacaktır.",
+  "giriş ücreti": "Yetişkin: 50 TL – Öğrenci/65+: 25 TL – 12 yaş altı ücretsiz – Müze Kartı geçerlidir. Özel sergi girişi dahildir.",
+  "evliya çelebi kimdir": "Evliya Çelebi (1611-1682), 17. yüzyılda yaşamış Osmanlı seyyahı ve yazardır. 40 yılı aşkın seyahatleri sırasında 50 aşkın ülkeyi gezmiş, gözlemlerini 10 ciltlik Seyahatname'sinde toplamıştır. Bu müzede dijital rehber olarak karşınızdayım!",
+  "darüşşifâ ne demektir": "Darüşşifâ, Arapça sifa evi anlamına gelir. Osmanlı döneminde devlet ve vakıflar tarafından kurulan, hastalara ücretsiz tedavi, yemek ve konaklama sağlayan hastanelerdir.",
+  "müzik terapisi": "Osmanlı darüşşifâlarında haftanın belirli günleri müzisyenler gelir, hasta odalarında makam çalarlardı. Rast makamı neşe için, Uşşak kalp rahatsızlıkları için, Hicaz ruhsal denge için kullanılırdı.",
+  "osmanlı hekimleri": "Osmanlı hekimleri temel eğitimlerini medreselerde alır, İbn-i Sinanın el-Kanun fit-Tibbını temel kitap olarak okurdu. Saray hekimbaşısı, tabip, cerrah ve eczacı ayrı mesleki gruplardı.",
+  "çocuk atölyeleri": "Çocuk atölyeleri her Cumartesi ve Pazar 10:00-12:00 arasında gerçekleşiyor. 8-14 yaş için ücretsiz. Özel atölye tarihleri için resepsiyona başvurun.",
+  "restoran": "Müze bahçesindeki Darüşşifâ Kahvesi 09:00-18:00 arası açık. En yakın restoranlar müzeden 5 dakika yürüme mesafesinde Edirne Çarşısında.",
+  "müze mağazası": "Müze mağazamızda Osmanlı tıp tarihi kitapları, replikalar, el yapımı takılar ve hediyelik eşyalar bulunmaktadır. Çıkış katında, 09:00-19:00 arası açık."
+};
+
+function askQuestion(q) {
+  document.getElementById('chatInput').value = q;
+  sendChat();
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const messages = document.getElementById('chatMessages');
+
+  // User message
+  messages.innerHTML += `
+    <div class="chat-msg user">
+      <div class="chat-avatar user-av">👤</div>
+      <div class="msg-bubble user-bubble">${text}</div>
+    </div>`;
+
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+
+  // Find response
+  setTimeout(() => {
+    let response = 'Bu konuda yardımcı olmak isterim. Müze saatleri (09:00–18:00), giriş ücretleri, bölümler veya Osmanlı tıbbı tarihi hakkında daha spesifik bir soru sorabilirsiniz.';
+    const lower = text.toLowerCase();
+    for (const [key, val] of Object.entries(aiResponses)) {
+      if (lower.includes(key.split(' ')[0]) || lower.includes(key)) {
+        response = val; break;
+      }
+    }
+    messages.innerHTML += `
+      <div class="chat-msg">
+        <div class="chat-avatar celebi">🧔🏽</div>
+        <div class="msg-bubble celebi-bubble">${response}</div>
+      </div>`;
+    messages.scrollTop = messages.scrollHeight;
+  }, 700);
+}
+
+// ── FLOAT ANIMATION ──
+const style = document.createElement('style');
+style.textContent = `@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }`;
+document.head.appendChild(style);
+
+// ── IDLE SCREEN SAVER (optional screensaver after 2 min) ──
+// Disabled for demo; can be enabled by uncommenting
+// let idleTimer;
+// function resetIdle() { clearTimeout(idleTimer); idleTimer = setTimeout(() => goToScreen('home'), 120000); }
+// document.addEventListener('touchstart', resetIdle);
+// document.addEventListener('click', resetIdle);
+// resetIdle();
+</script>
+</body>
+</html>
