@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sultan II. Bayezid Külliyesi — Dijital Rehber</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- iOS / Safari için -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sağlık Müzesi">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+
+<!-- Tema rengi -->
+<meta name="theme-color" content="#2e1c08">
+<meta name="msapplication-TileColor" content="#2e1c08">
+<meta name="msapplication-TileImage" content="assets/icons/icon-144.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -889,5 +903,50 @@
 </div>
 
   <script src="script.js"></script>
+
+<script>
+  // ── Service Worker Kaydı ──
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('[PWA] Service Worker kayıtlı:', reg.scope))
+        .catch(err => console.warn('[PWA] Service Worker hatası:', err));
+    });
+  }
+
+  // ── "Ana Ekrana Ekle" Butonu ──
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const btn = document.createElement('button');
+    btn.textContent = '📲 Uygulamayı Ana Ekrana Ekle';
+    btn.style.cssText = `
+      position: fixed; bottom: 80px; right: 16px;
+      background: #8b5e1a; color: #f5e6c8;
+      border: 1px solid #c49a3c; border-radius: 20px;
+      padding: 10px 18px; font-size: 13px;
+      cursor: pointer; z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      font-family: 'Cinzel', serif;
+    `;
+    document.body.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      btn.remove();
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        console.log('[PWA] Kurulum:', choice.outcome);
+        deferredPrompt = null;
+      });
+    });
+  });
+
+  window.addEventListener('appinstalled', () => {
+    console.log('[PWA] Uygulama kuruldu!');
+    deferredPrompt = null;
+  });
+</script>
 </body>
 </html>
