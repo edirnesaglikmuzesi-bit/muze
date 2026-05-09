@@ -876,79 +876,54 @@
   </div>
 </div>
 
-<!-- ══ SAFARİ PWA KURULUM POPUP ══ -->
-<div id="safari-pwa-modal" style="display:none; position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.75); align-items:flex-end; justify-content:center;">
+<!-- ══ AKILLI PWA KURULUM POPUP ══ -->
+<div id="pwa-install-modal" style="display:none; position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.78); align-items:flex-end; justify-content:center;">
   <div style="
     background: linear-gradient(160deg, #2a1800, #1a0f00);
     border: 1px solid #c49a3c;
     border-bottom: none;
     border-radius: 20px 20px 0 0;
-    padding: 28px 24px 36px;
+    padding: 28px 24px 40px;
     width: 100%;
     max-width: 480px;
     box-shadow: 0 -8px 40px rgba(0,0,0,0.8);
     font-family: 'Lora', serif;
     color: #f5e6c8;
     position: relative;
+    animation: pwaSlideUp 0.35s cubic-bezier(.22,.68,0,1.2);
   ">
-    <!-- Kapatma -->
-    <button onclick="closeSafariPWA()" style="
+    <style>
+      @keyframes pwaSlideUp {
+        from { transform: translateY(100%); opacity:0; }
+        to   { transform: translateY(0);    opacity:1; }
+      }
+      .pwa-step {
+        display:flex; align-items:center; gap:14px;
+        background:rgba(196,154,60,0.07);
+        border:1px solid rgba(196,154,60,0.18);
+        border-radius:12px; padding:11px 14px; margin-bottom:10px;
+      }
+      .pwa-step-icon { font-size:22px; flex-shrink:0; width:30px; text-align:center; }
+      .pwa-step-title { font-size:13px; color:#f5e6c8; font-weight:600; }
+      .pwa-step-sub   { font-size:11px; color:#a08060; margin-top:2px; }
+    </style>
+
+    <button onclick="closePWAModal()" style="
       position:absolute; top:14px; right:16px;
       background:none; border:none; color:#c49a3c;
-      font-size:22px; cursor:pointer; line-height:1;
+      font-size:24px; cursor:pointer; line-height:1; padding:4px;
     ">×</button>
 
-    <!-- Başlık -->
     <div style="text-align:center; margin-bottom:20px;">
-      <div style="font-size:32px; margin-bottom:8px;">🕌</div>
-      <div style="font-family:'Cinzel',serif; font-size:15px; color:#c49a3c; letter-spacing:1px;">
-        UYGULAMAYI TELEFONA EKLE
-      </div>
-      <div style="font-size:12px; color:#a08060; margin-top:6px;">
-        Ana ekrana ekleyerek uygulama gibi kullan
-      </div>
+      <div style="font-size:34px; margin-bottom:8px;">🕌</div>
+      <div style="font-family:'Cinzel',serif; font-size:14px; color:#c49a3c; letter-spacing:1.5px;">UYGULAMAYI TELEFONA EKLE</div>
+      <div id="pwa-browser-label" style="font-size:11px; color:#7a6040; margin-top:5px;"></div>
     </div>
 
-    <!-- Adımlar -->
-    <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
-      <div style="display:flex; align-items:center; gap:14px; background:rgba(196,154,60,0.08); border:1px solid rgba(196,154,60,0.2); border-radius:12px; padding:12px 14px;">
-        <div style="font-size:26px; flex-shrink:0;">
-          <!-- Safari paylaş ikonu SVG -->
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L12 15" stroke="#c49a3c" stroke-width="2" stroke-linecap="round"/>
-            <path d="M8 6L12 2L16 6" stroke="#c49a3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M4 12V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V12" stroke="#c49a3c" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div>
-          <div style="font-size:13px; color:#f5e6c8; font-weight:600;">1. Paylaş butonuna bas</div>
-          <div style="font-size:11px; color:#a08060; margin-top:2px;">Ekranın altındaki ortadaki ikon</div>
-        </div>
-      </div>
+    <div id="pwa-steps-container"></div>
+    <div id="pwa-arrow-hint" style="text-align:center; margin:12px 0 16px; color:#c49a3c; font-size:12px; letter-spacing:1px;"></div>
 
-      <div style="display:flex; align-items:center; gap:14px; background:rgba(196,154,60,0.08); border:1px solid rgba(196,154,60,0.2); border-radius:12px; padding:12px 14px;">
-        <div style="font-size:26px; flex-shrink:0;">➕</div>
-        <div>
-          <div style="font-size:13px; color:#f5e6c8; font-weight:600;">2. "Ana Ekrana Ekle" seç</div>
-          <div style="font-size:11px; color:#a08060; margin-top:2px;">Listede aşağı kaydırarak bul</div>
-        </div>
-      </div>
-
-      <div style="display:flex; align-items:center; gap:14px; background:rgba(196,154,60,0.08); border:1px solid rgba(196,154,60,0.2); border-radius:12px; padding:12px 14px;">
-        <div style="font-size:26px; flex-shrink:0;">✅</div>
-        <div>
-          <div style="font-size:13px; color:#f5e6c8; font-weight:600;">3. "Ekle" ye dokun</div>
-          <div style="font-size:11px; color:#a08060; margin-top:2px;">İkon ana ekrana eklenir</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ok işareti (Safari paylaş butonu konumunu gösterir) -->
-    <div style="text-align:center; margin-bottom:20px;">
-      <div style="color:#c49a3c; font-size:12px; letter-spacing:1px;">▼ EKRANIN ALTINDA</div>
-    </div>
-
-    <button onclick="closeSafariPWA()" style="
+    <button onclick="closePWAModal()" style="
       width:100%; padding:14px;
       background: linear-gradient(135deg, #8b5e1a, #c49a3c);
       color: #1a0f00; border: none; border-radius: 12px;
@@ -996,28 +971,109 @@
     });
   }
 
-  // ── Safari iOS Kurulum Popup ──
-  function isSafariIOS() {
-    const ua = window.navigator.userAgent;
-    const isIOS = /iphone|ipad|ipod/i.test(ua);
-    const isSafari = /safari/i.test(ua) && !/crios|fxios|opios|mercury/i.test(ua);
-    const isStandalone = window.navigator.standalone === true;
-    return isIOS && isSafari && !isStandalone;
+  // ══ AKILLI PWA KURULUM SİSTEMİ ══
+  // Tarayıcı & cihaz tespiti
+  const PWA = {
+    ua: navigator.userAgent,
+    isStandalone: window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches,
+
+    isIOS()     { return /iphone|ipad|ipod/i.test(this.ua); },
+    isSafari()  { return /safari/i.test(this.ua) && !/crios|fxios|opios|mercury|miui/i.test(this.ua); },
+    isMiBrowser(){ return /miuibrowser|xiopmbrowser/i.test(this.ua); },
+    isHuawei()  { return /huaweibrowser|hmscore/i.test(this.ua); },
+    isSamsung() { return /samsungbrowser/i.test(this.ua); },
+    isFirefox() { return /firefox|fxios/i.test(this.ua); },
+    isChrome()  { return /chrome/i.test(this.ua) && !/edge|opr|samsung/i.test(this.ua); },
+
+    // Her tarayıcıya özel adımlar
+    getSteps() {
+      if (this.isIOS() && this.isSafari()) return {
+        label: 'Safari — iPhone / iPad',
+        arrow: '▼ EKRANIN ALTINDA',
+        steps: [
+          { icon: '⬆️', title: 'Paylaş butonuna bas', sub: 'Ekranın alt ortasındaki ok ikonu' },
+          { icon: '➕', title: '"Ana Ekrana Ekle" seç', sub: 'Listede aşağı kaydırarak bul' },
+          { icon: '✅', title: '"Ekle" ye dokun', sub: 'İkon ana ekrana eklenir' },
+        ]
+      };
+      if (this.isMiBrowser()) return {
+        label: 'Xiaomi Mi Browser',
+        arrow: '▼ SAĞ ALTTA ··· MENÜSÜ',
+        steps: [
+          { icon: '⋯',  title: 'Sağ alttaki ··· menüye bas', sub: 'Üç nokta simgesi' },
+          { icon: '➕', title: '"Ana sayfaya ekle" seç', sub: 'Veya "Masaüstüne ekle"' },
+          { icon: '✅', title: '"Ekle" ye dokun', sub: 'İkon ana ekrana eklenir' },
+        ]
+      };
+      if (this.isHuawei()) return {
+        label: 'Huawei Browser',
+        arrow: '▼ SAĞ ÜSTTE ··· MENÜSÜ',
+        steps: [
+          { icon: '⋯',  title: 'Sağ üstteki ··· menüye bas', sub: 'Üç nokta simgesi' },
+          { icon: '➕', title: '"Ana ekrana ekle" seç', sub: 'Listede aşağı kaydır' },
+          { icon: '✅', title: '"Ekle" ye onayla', sub: 'İkon ana ekrana eklenir' },
+        ]
+      };
+      if (this.isSamsung()) return {
+        label: 'Samsung Internet',
+        arrow: '▼ ALTTA MENÜ ÇUBUĞU',
+        steps: [
+          { icon: '☰',  title: 'Alt menüdeki ☰ simgesine bas', sub: 'Ekranın sağ alt köşesi' },
+          { icon: '➕', title: '"Sayfayı ekle → Ana ekran" seç', sub: '' },
+          { icon: '✅', title: '"Ekle" ye onayla', sub: 'İkon ana ekrana eklenir' },
+        ]
+      };
+      if (this.isFirefox()) return {
+        label: 'Firefox',
+        arrow: '▼ SAĞ ÜSTTE ··· MENÜSÜ',
+        steps: [
+          { icon: '⋯',  title: 'Sağ üstteki ··· menüye bas', sub: 'Üç nokta simgesi' },
+          { icon: '➕', title: '"Ana ekrana yükle" seç', sub: '' },
+          { icon: '✅', title: '"Ekle" ye onayla', sub: 'İkon ana ekrana eklenir' },
+        ]
+      };
+      return null; // Chrome'da otomatik banner var, popup gerekmez
+    },
+
+    shouldShow() {
+      if (this.isStandalone) return false;          // Zaten kurulu
+      if (localStorage.getItem('pwa-install-shown')) return false; // Daha önce gösterildi
+      const steps = this.getSteps();
+      return steps !== null;
+    },
+
+    renderAndShow() {
+      const info = this.getSteps();
+      if (!info) return;
+
+      document.getElementById('pwa-browser-label').textContent = info.label;
+      document.getElementById('pwa-arrow-hint').textContent = info.arrow || '';
+
+      const container = document.getElementById('pwa-steps-container');
+      container.innerHTML = info.steps.map((s, i) => `
+        <div class="pwa-step">
+          <div class="pwa-step-icon">${s.icon}</div>
+          <div>
+            <div class="pwa-step-title">${i+1}. ${s.title}</div>
+            ${s.sub ? `<div class="pwa-step-sub">${s.sub}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      const modal = document.getElementById('pwa-install-modal');
+      modal.style.display = 'flex';
+    }
+  };
+
+  function closePWAModal() {
+    document.getElementById('pwa-install-modal').style.display = 'none';
+    localStorage.setItem('pwa-install-shown', '1');
   }
 
-  function closeSafariPWA() {
-    const modal = document.getElementById('safari-pwa-modal');
-    modal.style.display = 'none';
-    localStorage.setItem('safari-pwa-shown', '1');
-  }
-
-  // Intro ekranı açıldıktan 3 saniye sonra göster (sadece 1 kez)
+  // 3 saniye sonra göster
   window.addEventListener('load', () => {
-    if (isSafariIOS() && !localStorage.getItem('safari-pwa-shown')) {
-      setTimeout(() => {
-        const modal = document.getElementById('safari-pwa-modal');
-        modal.style.display = 'flex';
-      }, 3000);
+    if (PWA.shouldShow()) {
+      setTimeout(() => PWA.renderAndShow(), 800);
     }
   });
 
