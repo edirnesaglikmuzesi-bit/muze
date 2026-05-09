@@ -1,10 +1,14 @@
 // ═══════════════════════════════════════════════════
 //  Sultan II. Bayezid Külliyesi Sağlık Müzesi
 //  Service Worker — PWA Offline Desteği
-//  Versiyon: 1.0.0
+//  Versiyon: 2.0.0
+//
+//  ⚠️  GÜNCELLEME YAPTIĞINIZDA SADECE ŞU SATIRI DEĞİŞTİRİN:
+//      CACHE_NAME sayısını bir artırın → v2, v3, v4 ...
+//      Geri kalanı otomatik — kullanıcı banner görür, yeniler.
 // ═══════════════════════════════════════════════════
 
-const CACHE_NAME = 'saglik-muzesi-v1';
+const CACHE_NAME = 'saglik-muzesi-v2';
 
 // Önbelleğe alınacak dosyalar
 const STATIC_ASSETS = [
@@ -20,23 +24,24 @@ const STATIC_ASSETS = [
 
 // ── Kurulum: statik dosyaları önbelleğe al ──
 self.addEventListener('install', event => {
-  console.log('[SW] Kurulum başladı');
+  console.log('[SW] Kurulum başladı — versiyon:', CACHE_NAME);
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       console.log('[SW] Dosyalar önbelleğe alınıyor');
-      // Tek tek dene — biri başarısız olursa diğerleri durmasın
       return Promise.allSettled(
         STATIC_ASSETS.map(url =>
           cache.add(url).catch(err => console.warn('[SW] Önbellek hatası:', url, err))
         )
       );
-    }).then(() => self.skipWaiting())
+    })
+    // skipWaiting YOK — yeni SW beklemeye geçer,
+    // kullanıcı "YENİLE" butonuna basınca devreye girer
   );
 });
 
 // ── Aktivasyon: eski önbellekleri temizle ──
 self.addEventListener('activate', event => {
-  console.log('[SW] Aktif');
+  console.log('[SW] Aktif — yeni versiyon devreye girdi:', CACHE_NAME);
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
@@ -48,6 +53,8 @@ self.addEventListener('activate', event => {
           })
       )
     ).then(() => self.clients.claim())
+    // clients.claim() → açık sekmeleri yeni SW'ye bağlar
+    // Böylece controllerchange eventi tetiklenir → sayfa yenilenir
   );
 });
 
@@ -116,4 +123,12 @@ self.addEventListener('push', event => {
     icon: './assets/icons/icon-192.png',
     badge: './assets/icons/icon-72.png'
   });
+});
+
+// ── Güncelleme mesajı: yeni SW devreye girince tüm sekmelere haber ver ──
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    // Kullanıcı "YENİLE" butonuna bastı → yeni SW'yi hemen devreye al
+    self.skipWaiting();
+  }
 });
