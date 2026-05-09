@@ -163,33 +163,38 @@ function updateProgressBar(){
    AUDIO
 ──────────────────────────────────────── */
 function playStopAudio(n){
-  if(speakerMuted)return;
   const audio=document.getElementById('stop-audio');
   const newSrc=getAudioFile(n,currentLang);
-  // Aynı ses dosyası zaten yüklüyse sadece play() — başa dönme
   if(audio._loadedSrc===newSrc){
-    audio.play().catch(()=>{});
+    // Aynı ses dosyası: kullanıcı elle durdurmuşsa dokunma
+    if(!speakerMuted) audio.play().catch(()=>{});
   } else {
+    // Farklı durak veya dil: yeni ses — speakerMuted'ı sıfırla, ses başlasın
+    speakerMuted=false;
+    document.getElementById('btn-speaker').textContent='🔊';
+    localStorage.setItem('rehber-speaker-muted','0');
     audio._loadedSrc=newSrc;
     audio.src=newSrc;
     audio.play().catch(()=>{});
   }
 }
 function toggleSpeaker(){
-  speakerMuted=!speakerMuted;
-  document.getElementById('btn-speaker').textContent=speakerMuted?'🔇':'🔊';
   const audio=document.getElementById('stop-audio');
-  if(speakerMuted){
+  if(!speakerMuted){
+    speakerMuted=true;
+    document.getElementById('btn-speaker').textContent='🔇';
     audio.pause();
+    localStorage.setItem('rehber-speaker-muted','1');
   } else {
-    // Ses dosyası zaten yüklüyse kaldığı yerden devam et, yoksa yeniden yükle
-    if(audio.src){
-      audio.play().catch(()=>{ playStopAudio(currentStop); });
+    speakerMuted=false;
+    document.getElementById('btn-speaker').textContent='🔊';
+    localStorage.setItem('rehber-speaker-muted','0');
+    if(audio._loadedSrc){
+      audio.play().catch(()=>{ audio._loadedSrc=null; playStopAudio(currentStop); });
     } else {
       playStopAudio(currentStop);
     }
   }
-  localStorage.setItem('rehber-speaker-muted',speakerMuted?'1':'0');
 }
 
 /* ────────────────────────────────────────
