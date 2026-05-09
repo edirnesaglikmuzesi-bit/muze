@@ -42,6 +42,19 @@
   <div class="intro-sub">Zamanın ötesine, şifanın merkezine bir yolculuk…</div>
   <button class="btn-start" onclick="startTour()">YOLCULUĞA BAŞLA</button>
   <button class="btn-intro-lang" onclick="openLang()">🌐 DİL SEÇ / LANGUAGE</button>
+  <button id="btn-pwa-install" onclick="triggerPWAInstall()" style="display:inline-block;
+    margin-top:10px;
+    background: transparent;
+    color: #c49a3c;
+    border: 1px solid rgba(196,154,60,0.5);
+    border-radius: 20px;
+    padding: 9px 22px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    width: 220px;
+  ">📲 REHBERİ ANA EKRANA EKLE</button>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -914,14 +927,17 @@
       font-size:24px; cursor:pointer; line-height:1; padding:4px;
     ">×</button>
 
-    <div style="text-align:center; margin-bottom:20px;">
-      <div style="font-size:34px; margin-bottom:8px;">🕌</div>
-      <div style="font-family:'Cinzel',serif; font-size:14px; color:#c49a3c; letter-spacing:1.5px;">UYGULAMAYI TELEFONA EKLE</div>
-      <div id="pwa-browser-label" style="font-size:11px; color:#7a6040; margin-top:5px;"></div>
+    <div style="text-align:center; margin-bottom:18px;">
+      <div style="font-size:30px; margin-bottom:10px;">📲</div>
+      <div style="font-family:'Cinzel',serif; font-size:13px; color:#c49a3c; letter-spacing:1.5px; margin-bottom:10px;">UYGULAMAYI TELEFONA EKLE</div>
+      <div style="font-size:13px; color:#d4b87a; line-height:1.7; margin-bottom:6px;">
+        Tam ekran rehber deneyimi için<br>uygulamayı ana ekrana ekleyin.
+      </div>
+      <div id="pwa-browser-label" style="font-size:11px; color:#7a6040; margin-top:4px;"></div>
     </div>
 
     <div id="pwa-steps-container"></div>
-    <div id="pwa-arrow-hint" style="text-align:center; margin:12px 0 16px; color:#c49a3c; font-size:12px; letter-spacing:1px;"></div>
+    <div id="pwa-arrow-hint" style="text-align:center; margin:10px 0 16px; color:#c49a3c; font-size:12px; letter-spacing:1px;"></div>
 
     <button onclick="closePWAModal()" style="
       width:100%; padding:14px;
@@ -989,11 +1005,9 @@
     getSteps() {
       if (this.isIOS() && this.isSafari()) return {
         label: 'Safari — iPhone / iPad',
-        arrow: '▼ EKRANIN ALTINDA',
+        arrow: '▼ EKRANIN ALTINDAKİ [ ⬆️ ] SİMGESİNE BAS',
         steps: [
-          { icon: '⬆️', title: 'Paylaş butonuna bas', sub: 'Ekranın alt ortasındaki ok ikonu' },
-          { icon: '➕', title: '"Ana Ekrana Ekle" seç', sub: 'Listede aşağı kaydırarak bul' },
-          { icon: '✅', title: '"Ekle" ye dokun', sub: 'İkon ana ekrana eklenir' },
+          { icon: '➕', title: '"Ana Ekrana Ekle" yi seç', sub: 'Listede aşağı kaydır, sonra "Ekle" ye dokun' },
         ]
       };
       if (this.isMiBrowser()) return {
@@ -1050,11 +1064,12 @@
       document.getElementById('pwa-arrow-hint').textContent = info.arrow || '';
 
       const container = document.getElementById('pwa-steps-container');
+      const numbered = info.steps.length > 1;
       container.innerHTML = info.steps.map((s, i) => `
         <div class="pwa-step">
           <div class="pwa-step-icon">${s.icon}</div>
           <div>
-            <div class="pwa-step-title">${i+1}. ${s.title}</div>
+            <div class="pwa-step-title">${numbered ? (i+1)+'. ' : ''}${s.title}</div>
             ${s.sub ? `<div class="pwa-step-sub">${s.sub}</div>` : ''}
           </div>
         </div>
@@ -1070,45 +1085,48 @@
     localStorage.setItem('pwa-install-shown', '1');
   }
 
-  // 3 saniye sonra göster
+  // Kuruluysa butonu gizle
   window.addEventListener('load', () => {
-    if (PWA.shouldShow()) {
-      setTimeout(() => PWA.renderAndShow(), 800);
+    if (PWA.isStandalone) {
+      const btn = document.getElementById('btn-pwa-install');
+      if (btn) btn.style.display = 'none';
     }
   });
 
-  // ── "Ana Ekrana Ekle" Butonu ──
+  // ── Chrome: Intro ekranında "Uygulamayı Yükle" butonu ──
   let deferredPrompt;
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     deferredPrompt = e;
+  });
 
-    const btn = document.createElement('button');
-    btn.textContent = '📲 Uygulamayı Yükle';
-    btn.style.cssText = `
-      position: fixed; bottom: 80px; right: 16px;
-      background: #8b5e1a; color: #f5e6c8;
-      border: 1px solid #c49a3c; border-radius: 20px;
-      padding: 10px 18px; font-size: 13px;
-      cursor: pointer; z-index: 9999;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      font-family: 'Cinzel', serif;
-    `;
-    document.body.appendChild(btn);
+  function triggerPWAInstall() {
+    // Zaten kuruluysa hiçbir şey yapma
+    if (PWA.isStandalone) return;
 
-    btn.addEventListener('click', () => {
-      btn.remove();
+    // Chrome / Android — direkt kurulum diyaloğu
+    if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(choice => {
         console.log('[PWA] Kurulum:', choice.outcome);
         deferredPrompt = null;
+        if (choice.outcome === 'accepted') {
+          const btn = document.getElementById('btn-pwa-install');
+          if (btn) btn.style.display = 'none';
+        }
       });
-    });
-  });
+      return;
+    }
+
+    // Safari / Mi Browser / Huawei / Samsung / Firefox — popup göster
+    PWA.renderAndShow();
+  }
 
   window.addEventListener('appinstalled', () => {
     console.log('[PWA] Uygulama kuruldu!');
     deferredPrompt = null;
+    const btn = document.getElementById('btn-pwa-install');
+    if (btn) btn.style.display = 'none';
   });
 </script>
 </body>
