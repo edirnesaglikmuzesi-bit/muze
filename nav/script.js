@@ -87,6 +87,62 @@ function showScreen(name){
   if(fab)fab.style.display=(name==='intro')?'none':'flex';
 }
 
+/* ────────────────────────────────────────
+   INTRO BUTON GERİ SAYIM
+   Türkçe'de 20 sn bekle, diğer dillerde anında aktif
+──────────────────────────────────────── */
+let _introCountdownTimer=null;
+let _introCountdownRemaining=0;
+
+function _activateStartBtn(){
+  clearInterval(_introCountdownTimer);
+  _introCountdownTimer=null;
+  const btn=document.querySelector('.btn-start');
+  if(!btn)return;
+  btn.disabled=false;
+  // Orijinal metni geri yükle
+  const timerSpan=btn.querySelector('.btn-start-timer');
+  if(timerSpan)timerSpan.remove();
+  // Mevcut dile göre doğru başlık
+  const label=(TRANSLATIONS[currentLang]&&TRANSLATIONS[currentLang].start)||'YOLCULUĞA BAŞLA';
+  btn.textContent=label;
+}
+
+function startIntroCountdown(seconds){
+  clearInterval(_introCountdownTimer);
+  const btn=document.querySelector('.btn-start');
+  if(!btn)return;
+
+  // Türkçe değilse veya saniye 0 ise anında aktif et
+  if(currentLang!=='tr'||seconds<=0){
+    _activateStartBtn();
+    return;
+  }
+
+  btn.disabled=true;
+  _introCountdownRemaining=seconds;
+
+  function _update(){
+    if(!btn)return;
+    const label=(TRANSLATIONS[currentLang]&&TRANSLATIONS[currentLang].start)||'YOLCULUĞA BAŞLA';
+    btn.textContent=label+' ';
+    const span=document.createElement('span');
+    span.className='btn-start-timer';
+    span.textContent=_introCountdownRemaining;
+    btn.appendChild(span);
+  }
+  _update();
+
+  _introCountdownTimer=setInterval(()=>{
+    _introCountdownRemaining--;
+    if(_introCountdownRemaining<=0){
+      _activateStartBtn();
+    } else {
+      _update();
+    }
+  },1000);
+}
+
 function startTour(){
   const introAudio=document.getElementById('intro-audio');
   introAudio.pause();introAudio.currentTime=0;
@@ -328,6 +384,19 @@ const onIntro = document.getElementById('screen-intro').classList.contains('acti
 if (!onIntro) {
   // Tur ekranındaysak durak sesini çal
   playStopAudio(currentStop);
+}
+
+// Intro ekranında dil değiştiğinde buton durumunu güncelle
+if (onIntro) {
+  if (code === 'tr') {
+    // Türkçe seçildi: intro sesi var — sayaç zaten bitmişse aktif bırak, devam ediyorsa dokunma
+    if(_introCountdownRemaining <= 0 && !_introCountdownTimer){
+      _activateStartBtn();
+    }
+  } else {
+    // Başka dil seçildi: intro sesi yok, hemen aktif et
+    _activateStartBtn();
+  }
 }
   // DOM'u senkron olarak güncelle — anında dil değişimi
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -2460,9 +2529,26 @@ window.addEventListener('DOMContentLoaded',()=>{
   introAudio.volume=0.45;
   window._introStarted=false;
   window._introUnlocked=false;
-  // Hemen çalmayı dene (tarayıcı izin verirse)
-  introAudio.play().then(()=>{window._introStarted=true;window._introUnlocked=true;}).catch(()=>{
-    // Autoplay engellendiyse ilk kullanıcı etkileşiminde hemen başlat
+
+  // Intro butonu başlangıçta disabled — sayaç hemen başlar (ses olsa da olmasa da)
+  (function(){
+    const btn=document.querySelector('.btn-start');
+    if(btn){btn.disabled=true;}
+  })();
+
+  // Türkçe'de sayaç HEMEN başlar — ses durumu fark etmez
+  if(currentLang==='tr'){
+    startIntroCountdown(20);
+  } else {
+    _activateStartBtn();
+  }
+
+  // Ses çalmayı dene (autoplay başarılı olursa güzel, engellenirse sayaç yine de işler)
+  introAudio.play().then(()=>{
+    window._introStarted=true;
+    window._introUnlocked=true;
+  }).catch(()=>{
+    // Autoplay engellendi — sayaç zaten çalışıyor, ses için ilk dokunuşu bekle
     const _iEvents=['touchstart','click','mousedown','pointerdown','keydown'];
     function _onFirstTouch(){
       if(window._introUnlocked)return;
@@ -2471,7 +2557,7 @@ window.addEventListener('DOMContentLoaded',()=>{
       if(!document.getElementById('screen-intro').classList.contains('active'))return;
       if(window._introStarted)return;
       window._introStarted=true;
-      introAudio.play().catch(()=>{window._introStarted=false;window._introUnlocked=false;});
+      introAudio.play().catch(()=>{});
     }
     _iEvents.forEach(ev=>document.addEventListener(ev,_onFirstTouch,{passive:true}));
   });
