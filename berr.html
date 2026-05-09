@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Berr Arsa | Mimarlık & İnşaat</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+/* ===== COASTAL PRESTIGE DESIGN SYSTEM ===== */
+:root {
+  --aqua: #00c4d4;
+  --aqua-glow: #4ddde9;
+  --aqua-dark: #0097a7;
+  --aqua-dim: rgba(0,196,212,0.12);
+  --deep: #01303d;
+  --navy: #011c26;
+  --night: #010d14;
+  --sand: #f4ede0;
+  --sand2: #e6d9c8;
+  --pearl: #fafbfc;
+  --sage: #2d7a6a;
+  --sage-light: #3d9b87;
+  --coral: #e07b54;
+  --white: #f0f9fb;
+  --glass: rgba(1,48,61,0.55);
+  --glass-border: rgba(0,196,212,0.22);
+  --text-light: #e8f7fa;
+  --text-muted: rgba(232,247,250,0.55);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--navy);color:var(--text-light);overflow-x:hidden;cursor:none;}
+
+/* ===== CUSTOM CURSOR ===== */
+.cursor{position:fixed;width:8px;height:8px;background:var(--aqua);border-radius:50%;pointer-events:none;z-index:99999;transition:transform 0.08s;mix-blend-mode:screen;}
+.cursor-ring{position:fixed;width:32px;height:32px;border:1.5px solid var(--aqua);border-radius:50%;pointer-events:none;z-index:99998;transition:transform 0.28s,width 0.28s,height 0.28s;opacity:0.7;}
+
+/* ===== INTRO ===== */
+#intro{position:fixed;inset:0;background:var(--night);z-index:9000;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
+.intro-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 60%,rgba(0,196,212,0.1) 0%,transparent 60%),radial-gradient(ellipse at 80% 40%,rgba(45,122,106,0.07) 0%,transparent 60%);}
+.intro-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,196,212,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,196,212,0.05) 1px,transparent 1px);background-size:50px 50px;animation:gridDrift 10s linear infinite;}
+@keyframes gridDrift{from{transform:translate(0,0)}to{transform:translate(50px,50px)}}
+.intro-wave{position:absolute;bottom:0;left:0;right:0;height:120px;opacity:0.15;}
+.intro-content{position:relative;z-index:2;text-align:center;}
+.intro-eyebrow{font-size:10px;letter-spacing:8px;color:var(--aqua);text-transform:uppercase;opacity:0;transform:translateY(20px);animation:fadeUp 0.8s forwards 0.3s;}
+.intro-logo{font-family:'DM Serif Display',serif;font-size:clamp(64px,11vw,130px);font-weight:400;line-height:1;color:transparent;-webkit-text-stroke:1px var(--aqua);opacity:0;animation:logoReveal 1.2s forwards 0.8s;letter-spacing:4px;}
+.intro-logo span{color:var(--aqua);-webkit-text-stroke:0;}
+@keyframes logoReveal{0%{opacity:0;transform:scale(0.85) translateY(24px);letter-spacing:18px;}100%{opacity:1;transform:scale(1) translateY(0);letter-spacing:4px;}}
+.intro-sub{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--aqua-glow);opacity:0;letter-spacing:3px;animation:fadeUp 0.8s forwards 1.6s;}
+.intro-line{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--aqua),transparent);margin:22px auto;animation:lineGrow 1s forwards 1.4s;}
+@keyframes lineGrow{to{width:280px;}}
+.intro-loading{margin-top:50px;opacity:0;animation:fadeUp 0.5s forwards 2s;}
+.loading-bar-wrap{width:260px;height:1px;background:rgba(0,196,212,0.2);position:relative;overflow:hidden;}
+.loading-bar{height:100%;background:linear-gradient(90deg,var(--aqua-dark),var(--aqua),var(--aqua-glow));width:0%;animation:loadProgress 2.5s ease-out forwards 2.2s;box-shadow:0 0 12px var(--aqua);}
+@keyframes loadProgress{to{width:100%;}}
+.loading-pct{font-size:10px;letter-spacing:3px;color:var(--aqua);margin-top:10px;text-align:right;animation:countUp 2.5s ease-out forwards 2.2s;}
+.intro-flash{position:absolute;inset:0;background:var(--aqua);opacity:0;pointer-events:none;}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+/* ===== PARTICLES ===== */
+.intro-particles{position:absolute;inset:0;}
+.particle{position:absolute;width:2px;height:2px;background:var(--aqua);border-radius:50%;animation:pFloat linear infinite;opacity:0;}
+@keyframes pFloat{0%{transform:translateY(100vh) translateX(0);opacity:0;}10%{opacity:0.7;}90%{opacity:0.3;}100%{transform:translateY(-10vh) translateX(var(--drift));opacity:0;}}
+
+/* ===== NAVBAR ===== */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 60px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s;background:linear-gradient(180deg,rgba(1,13,20,0.92) 0%,transparent 100%);}
+#navbar.scrolled{background:rgba(1,13,20,0.97);padding:12px 60px;border-bottom:1px solid var(--glass-border);backdrop-filter:blur(20px);}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:26px;color:var(--aqua);letter-spacing:3px;text-decoration:none;}
+.nav-logo span{color:var(--white);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{color:var(--text-light);text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:color 0.3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--aqua);transition:width 0.3s;}
+.nav-links a:hover{color:var(--aqua);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{background:transparent;border:1.5px solid var(--aqua);color:var(--aqua);padding:9px 22px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:all 0.3s;}
+.nav-cta:hover{background:var(--aqua);color:var(--navy);}
+
+/* ===== LIVE SUPPORT ===== */
+.live-support{position:fixed;bottom:30px;right:30px;z-index:5000;}
+.support-bubble{width:52px;height:52px;background:var(--aqua);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:none;box-shadow:0 0 24px rgba(0,196,212,0.5);transition:all 0.3s;}
+.support-bubble:hover{transform:scale(1.1);}
+.support-tooltip{position:absolute;bottom:60px;right:0;background:var(--deep);border:1px solid var(--glass-border);padding:10px 16px;white-space:nowrap;font-size:11px;letter-spacing:1.5px;color:var(--aqua);opacity:0;transition:opacity 0.3s;backdrop-filter:blur(10px);}
+.live-support:hover .support-tooltip{opacity:1;}
+.support-dot{display:inline-block;width:6px;height:6px;background:#2ecc71;border-radius:50%;margin-right:6px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* ===== HERO ===== */
+#hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-slides{position:absolute;inset:0;}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.5s ease;background-size:cover;background-position:center;}
+.hero-slide.active{opacity:1;}
+.hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(1,13,20,0.82) 0%,rgba(1,28,38,0.45) 50%,rgba(1,13,20,0.72) 100%);}
+.hero-slide-1{background:linear-gradient(135deg,#010d14 0%,#011c26 40%,#012a36 100%);}
+.hero-slide-2{background:linear-gradient(135deg,#011c26 0%,#012a36 50%,#01303d 100%);}
+.hero-slide-3{background:linear-gradient(135deg,#010d14 0%,#01303d 50%,#011c26 100%);}
+.slide-illustration{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.12;}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:920px;padding:0 40px;}
+.hero-badge{display:inline-block;font-size:10px;letter-spacing:6px;color:var(--aqua);text-transform:uppercase;border:1px solid rgba(0,196,212,0.4);padding:7px 22px;margin-bottom:28px;animation:fadeUp 1s forwards 0.3s;opacity:0;}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(46px,7vw,88px);font-weight:400;line-height:1.1;margin-bottom:22px;opacity:0;animation:fadeUp 1s forwards 0.6s;}
+.hero-title .aqua{color:var(--aqua);}
+.hero-title .outline{color:transparent;-webkit-text-stroke:1px var(--text-light);}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:rgba(240,249,251,0.72);margin-bottom:44px;opacity:0;animation:fadeUp 1s forwards 0.9s;}
+.hero-buttons{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 1s forwards 1.2s;}
+.btn-primary{background:var(--aqua);color:var(--navy);border:none;padding:14px 40px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all 0.4s;position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:var(--aqua-glow);transform:translateX(-100%);transition:transform 0.4s;}
+.btn-primary:hover::before{transform:translateX(0);}
+.btn-primary span{position:relative;z-index:1;}
+.btn-outline{background:transparent;color:var(--text-light);border:1.5px solid rgba(240,249,251,0.35);padding:14px 40px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all 0.4s;}
+.btn-outline:hover{border-color:var(--aqua);color:var(--aqua);}
+.hero-scroll{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--aqua);font-size:9px;letter-spacing:3px;text-transform:uppercase;cursor:none;}
+.scroll-line{width:1.5px;height:46px;background:linear-gradient(180deg,var(--aqua),transparent);animation:scrollLine 2s infinite;}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}100%{transform:scaleY(0) translateY(46px);transform-origin:bottom;}}
+.hero-dots{position:absolute;bottom:38px;right:58px;z-index:2;display:flex;flex-direction:column;gap:8px;}
+.hero-dot{width:28px;height:1.5px;background:rgba(240,249,251,0.28);cursor:none;transition:all 0.3s;}
+.hero-dot.active{background:var(--aqua);width:46px;}
+
+/* ===== SECTION UTILITIES ===== */
+.section-eyebrow{font-size:10px;letter-spacing:6px;color:var(--aqua);text-transform:uppercase;margin-bottom:14px;}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(34px,4vw,52px);font-weight:400;line-height:1.2;margin-bottom:20px;}
+.section-divider{width:56px;height:2px;background:var(--aqua);margin-bottom:28px;}
+.section-body{font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.85;color:var(--text-muted);margin-bottom:18px;}
+.section-header{text-align:center;margin-bottom:70px;}
+.section-header .section-divider{margin:18px auto 0;}
+
+/* Wave Separator */
+.wave-sep{width:100%;line-height:0;position:relative;z-index:1;}
+.wave-sep svg{display:block;width:100%;}
+
+/* ===== WHO WE ARE ===== */
+#who{min-height:100vh;display:flex;align-items:center;padding:110px 60px;background:var(--deep);position:relative;overflow:hidden;}
+#who::before{content:'';position:absolute;right:-180px;top:50%;transform:translateY(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,196,212,0.07) 0%,transparent 70%);}
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:90px;max-width:1380px;margin:0 auto;width:100%;align-items:center;}
+.who-main-frame{width:100%;aspect-ratio:4/5;background:rgba(0,196,212,0.04);border:1px solid var(--glass-border);position:relative;overflow:hidden;}
+.who-corner{position:absolute;width:36px;height:36px;border-color:var(--aqua);border-style:solid;}
+.who-corner.tl{top:-1px;left:-1px;border-width:2.5px 0 0 2.5px;}
+.who-corner.tr{top:-1px;right:-1px;border-width:2.5px 2.5px 0 0;}
+.who-corner.bl{bottom:-1px;left:-1px;border-width:0 0 2.5px 2.5px;}
+.who-corner.br{bottom:-1px;right:-1px;border-width:0 2.5px 2.5px 0;}
+.who-stat-card{position:absolute;bottom:-28px;right:-36px;background:var(--aqua);padding:26px 36px;color:var(--navy);min-width:190px;}
+.who-stat-num{font-family:'DM Serif Display',serif;font-size:48px;font-weight:400;line-height:1;}
+.who-stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;font-weight:700;}
+.who-awards{display:flex;gap:32px;margin-top:36px;flex-wrap:wrap;}
+.award-item{display:flex;align-items:center;gap:12px;}
+.award-icon{width:42px;height:42px;border:1.5px solid var(--aqua);display:flex;align-items:center;justify-content:center;color:var(--aqua);font-size:19px;flex-shrink:0;}
+.award-text{font-size:12px;color:var(--text-muted);line-height:1.5;}
+.award-text strong{color:var(--aqua);display:block;}
+
+/* Who detail button */
+.who-detail-btn{display:inline-flex;align-items:center;gap:10px;background:transparent;border:1.5px solid var(--aqua);color:var(--aqua);padding:14px 36px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all 0.3s;margin-top:36px;}
+.who-detail-btn:hover{background:var(--aqua);color:var(--navy);}
+.kesfet-wrap{display:flex;justify-content:center;margin-top:60px;}
+.kesfet-btn{background:transparent;border:1.5px solid var(--aqua);color:var(--aqua);padding:16px 56px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;cursor:none;transition:all 0.4s;position:relative;overflow:hidden;display:block;width:fit-content;}
+.kesfet-btn::before{content:'';position:absolute;inset:0;background:var(--aqua);transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;}
+.kesfet-btn:hover::before{transform:scaleX(1);}
+.kesfet-btn:hover{color:var(--navy);}
+.kesfet-btn span{position:relative;z-index:1;}
+
+/* ===== CATEGORIES ===== */
+#categories{padding:110px 60px;background:var(--navy);}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:1380px;margin:0 auto;}
+.cat-card{position:relative;aspect-ratio:4/5;overflow:hidden;cursor:none;}
+.cat-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1);transition:transform 0.8s ease;}
+.cat-card:hover .cat-bg{transform:scale(1.07);}
+.cat-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 28%,rgba(1,13,20,0.92) 100%);transition:all 0.4s;}
+.cat-card:hover .cat-overlay{background:linear-gradient(180deg,rgba(1,13,20,0.2) 0%,rgba(1,13,20,0.95) 100%);}
+.cat-num{position:absolute;top:28px;left:28px;font-family:'DM Serif Display',serif;font-size:66px;color:rgba(0,196,212,0.14);line-height:1;transition:color 0.4s;}
+.cat-card:hover .cat-num{color:rgba(0,196,212,0.28);}
+.cat-content{position:absolute;bottom:0;left:0;right:0;padding:36px;transform:translateY(18px);transition:transform 0.4s;}
+.cat-card:hover .cat-content{transform:translateY(0);}
+.cat-label{font-size:9px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;margin-bottom:10px;}
+.cat-name{font-family:'DM Serif Display',serif;font-size:30px;font-weight:400;margin-bottom:10px;}
+.cat-desc{font-size:13px;color:rgba(240,249,251,0.6);margin-bottom:18px;opacity:0;transform:translateY(10px);transition:all 0.4s 0.08s;}
+.cat-card:hover .cat-desc{opacity:1;transform:translateY(0);}
+.cat-btn{display:inline-flex;align-items:center;gap:8px;background:var(--aqua);color:var(--navy);padding:9px 22px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;cursor:none;opacity:0;transform:translateY(10px);transition:all 0.4s 0.12s;border:none;}
+.cat-card:hover .cat-btn{opacity:1;transform:translateY(0);}
+
+/* ===== STATS BAND ===== */
+.stats-band{background:var(--aqua);padding:40px 60px;display:flex;justify-content:center;gap:0;max-width:100%;}
+.stat-item{flex:1;max-width:200px;text-align:center;color:var(--navy);border-right:1px solid rgba(1,28,38,0.2);padding:0 40px;}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:48px;font-weight:400;line-height:1;}
+.stat-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;margin-top:4px;opacity:0.7;}
+
+/* ===== PROJECTS ===== */
+#projects{padding:110px 60px;background:var(--deep);}
+.projects-tabs{display:flex;justify-content:center;gap:0;margin-bottom:56px;border:1.5px solid var(--glass-border);width:fit-content;margin-left:auto;margin-right:auto;overflow:hidden;}
+.proj-tab{padding:13px 38px;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:none;background:transparent;color:var(--text-muted);border:none;transition:all 0.3s;font-family:'Plus Jakarta Sans',sans-serif;}
+.proj-tab.active{background:var(--aqua);color:var(--navy);font-weight:700;}
+.proj-slider-wrap{position:relative;max-width:1380px;margin:0 auto;overflow:hidden;}
+.proj-slider{display:flex;gap:22px;transition:transform 0.6s cubic-bezier(0.25,1,0.5,1);}
+.proj-card{flex:0 0 375px;background:rgba(0,196,212,0.04);border:1px solid var(--glass-border);overflow:hidden;transition:border-color 0.3s,transform 0.3s;cursor:none;}
+.proj-card:hover{border-color:var(--aqua);transform:translateY(-4px);}
+.proj-img{width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;}
+.proj-img-bg{width:100%;height:100%;background-size:cover;background-position:center;transition:transform 0.6s ease;}
+.proj-card:hover .proj-img-bg{transform:scale(1.07);}
+.proj-status{position:absolute;top:14px;left:14px;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;background:var(--aqua);color:var(--navy);font-weight:700;}
+.proj-info{padding:26px;}
+.proj-type{font-size:9px;letter-spacing:3px;color:var(--aqua);text-transform:uppercase;margin-bottom:8px;}
+.proj-name{font-family:'DM Serif Display',serif;font-size:21px;font-weight:400;margin-bottom:10px;}
+.proj-loc{font-size:11px;color:var(--text-muted);margin-bottom:14px;}
+.proj-slogan{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(240,249,251,0.55);padding-top:14px;border-top:1px solid var(--glass-border);}
+.proj-click-hint{font-size:10px;letter-spacing:2px;color:var(--aqua);margin-top:12px;opacity:0;transition:opacity 0.3s;text-transform:uppercase;}
+.proj-card:hover .proj-click-hint{opacity:1;}
+.slider-nav{display:flex;justify-content:center;gap:14px;margin-top:36px;}
+.slider-arrow{width:46px;height:46px;border:1.5px solid var(--glass-border);background:transparent;color:var(--aqua);cursor:none;display:flex;align-items:center;justify-content:center;transition:all 0.3s;font-size:17px;}
+.slider-arrow:hover{background:var(--aqua);color:var(--navy);border-color:var(--aqua);}
+
+/* ===== CONTENT SECTIONS (Berr Dünyası) ===== */
+#content-sections{padding:110px 60px;background:var(--navy);}
+.content-tabs{display:flex;justify-content:center;gap:4px;margin-bottom:56px;flex-wrap:wrap;}
+.content-tab{padding:11px 22px;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:none;background:transparent;color:var(--text-muted);border:1.5px solid var(--glass-border);transition:all 0.3s;font-family:'Plus Jakarta Sans',sans-serif;}
+.content-tab.active{background:rgba(0,196,212,0.1);color:var(--aqua);border-color:var(--aqua);}
+.content-tab:hover{color:var(--aqua);border-color:rgba(0,196,212,0.4);}
+.content-panel{display:none;}
+.content-panel.active{display:block;}
+
+/* Press grid */
+.press-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:1380px;margin:0 auto;}
+.press-card{background:rgba(0,196,212,0.04);padding:36px;border:1px solid var(--glass-border);transition:all 0.3s;cursor:none;position:relative;overflow:hidden;}
+.press-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--aqua);transform:scaleX(0);transition:transform 0.3s;transform-origin:left;}
+.press-card:hover{border-color:var(--aqua);transform:translateY(-3px);}
+.press-card:hover::before{transform:scaleX(1);}
+.press-source{font-size:9px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;margin-bottom:14px;}
+.press-title{font-family:'DM Serif Display',serif;font-size:20px;font-weight:400;line-height:1.4;margin-bottom:14px;}
+.press-excerpt{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text-muted);line-height:1.7;}
+.press-date{font-size:10px;color:rgba(240,249,251,0.28);margin-top:18px;}
+.press-link-hint{font-size:9px;letter-spacing:2px;color:var(--aqua);text-transform:uppercase;margin-top:10px;opacity:0;transition:opacity 0.3s;}
+.press-card:hover .press-link-hint{opacity:1;}
+
+/* Social responsibility */
+.social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;max-width:1380px;margin:0 auto;}
+.social-card{background:rgba(0,196,212,0.04);padding:40px;border:1px solid var(--glass-border);transition:all 0.3s;cursor:none;position:relative;overflow:hidden;}
+.social-card:hover{border-color:var(--aqua);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,196,212,0.08);}
+.social-icon-wrap{width:60px;height:60px;background:rgba(0,196,212,0.12);border:1.5px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:22px;}
+.social-card-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:14px;}
+.social-card-text{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text-muted);line-height:1.75;}
+.social-read-more{font-size:10px;letter-spacing:2px;color:var(--aqua);text-transform:uppercase;margin-top:18px;opacity:0;transition:opacity 0.3s;}
+.social-card:hover .social-read-more{opacity:1;}
+
+/* References */
+.ref-section{max-width:1380px;margin:0 auto;}
+.ref-category-hdr{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:6px;padding-bottom:14px;border-bottom:1.5px solid var(--glass-border);margin-bottom:28px;display:flex;align-items:center;gap:16px;}
+.ref-category-hdr span{font-size:10px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;}
+.ref-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:60px;}
+.ref-card{background:rgba(0,196,212,0.04);padding:30px;border:1px solid var(--glass-border);transition:all 0.3s;cursor:none;text-align:center;}
+.ref-card:hover{border-color:var(--aqua);transform:translateY(-3px);}
+.ref-logo-placeholder{width:70px;height:70px;background:rgba(0,196,212,0.1);border:1px solid var(--glass-border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'DM Serif Display',serif;font-size:26px;color:var(--aqua);}
+.ref-name{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:6px;}
+.ref-sector{font-size:10px;letter-spacing:2px;color:var(--aqua);text-transform:uppercase;}
+.ref-desc{font-size:12px;color:var(--text-muted);margin-top:10px;display:none;}
+.ref-card:hover .ref-desc{display:block;}
+.ref-grid-2col{grid-template-columns:repeat(2,1fr);}
+.ref-grid-3col{grid-template-columns:repeat(3,1fr);}
+
+/* Mimari cards */
+.mimari-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1380px;margin:0 auto;}
+.mimari-card{background:rgba(0,196,212,0.04);border:1px solid var(--glass-border);overflow:hidden;cursor:none;transition:all 0.3s;}
+.mimari-card:hover{border-color:var(--aqua);transform:translateY(-4px);}
+.mimari-img{width:100%;height:180px;position:relative;overflow:hidden;}
+.mimari-num{font-family:'DM Serif Display',serif;font-size:54px;color:rgba(0,196,212,0.14);line-height:1;padding:20px 22px 0;}
+.mimari-body{padding:0 22px 24px;}
+.mimari-title{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:10px;}
+.mimari-text{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--text-muted);line-height:1.7;}
+.mimari-open{font-size:9px;letter-spacing:2px;color:var(--aqua);text-transform:uppercase;margin-top:12px;opacity:0;transition:opacity 0.3s;}
+.mimari-card:hover .mimari-open{opacity:1;}
+
+/* Villa videos */
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1380px;margin:0 auto;}
+.video-card{background:rgba(0,196,212,0.04);border:1px solid var(--glass-border);overflow:hidden;cursor:none;transition:all 0.3s;}
+.video-card:hover{border-color:var(--aqua);transform:translateY(-4px);}
+.video-thumb{width:100%;height:200px;background:rgba(0,196,212,0.08);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.video-play{width:56px;height:56px;background:var(--aqua);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--navy);transition:transform 0.3s;}
+.video-card:hover .video-play{transform:scale(1.12);}
+.video-step{position:absolute;top:14px;left:14px;font-size:9px;letter-spacing:2px;background:var(--aqua);color:var(--navy);padding:4px 10px;font-weight:700;text-transform:uppercase;}
+.video-info{padding:22px;}
+.video-title{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:8px;}
+.video-desc{font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;}
+.video-link{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;color:var(--aqua);text-transform:uppercase;text-decoration:none;font-weight:600;}
+.video-link:hover{text-decoration:underline;}
+
+/* Timeline for villa nasil (alternative view) */
+.timeline-wrap{max-width:900px;margin:0 auto;position:relative;padding-left:50px;}
+.timeline-line{position:absolute;left:20px;top:0;bottom:0;width:1.5px;background:linear-gradient(180deg,var(--aqua),transparent);}
+.timeline-item{position:relative;margin-bottom:52px;}
+.timeline-dot{position:absolute;left:-38px;top:0;width:24px;height:24px;background:var(--aqua);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-weight:400;color:var(--navy);font-size:12px;}
+.timeline-step{font-size:9px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;margin-bottom:8px;}
+.timeline-title{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:14px;}
+.timeline-text{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--text-muted);line-height:1.8;}
+
+/* ===== CONTACT ===== */
+#contact{padding:110px 60px;background:var(--deep);position:relative;overflow:hidden;}
+#contact::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,196,212,0.04) 0%,transparent 60%);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:90px;max-width:1380px;margin:0 auto;position:relative;}
+.contact-item{display:flex;gap:18px;margin-bottom:36px;align-items:flex-start;}
+.contact-icon{width:42px;height:42px;border:1.5px solid var(--aqua);display:flex;align-items:center;justify-content:center;color:var(--aqua);flex-shrink:0;font-size:16px;}
+.contact-text strong{display:block;color:var(--aqua);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+.contact-text p{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--text-muted);}
+.social-row{display:flex;gap:14px;margin-top:36px;}
+.social-btn{width:42px;height:42px;border:1.5px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:16px;transition:all 0.3s;cursor:none;text-decoration:none;}
+.social-btn:hover{border-color:var(--aqua);color:var(--aqua);background:rgba(0,196,212,0.08);}
+.form-group{margin-bottom:20px;}
+.form-group input,.form-group textarea{width:100%;background:rgba(0,196,212,0.04);border:1.5px solid var(--glass-border);color:var(--text-light);padding:14px 18px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.3s;cursor:none;}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--aqua);}
+.form-group textarea{height:130px;resize:none;}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-muted);}
+
+/* ===== FOOTER ===== */
+footer{background:var(--night);border-top:1px solid var(--glass-border);padding:52px 60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
+.footer-logo{font-family:'DM Serif Display',serif;font-size:28px;color:var(--aqua);}
+.footer-logo span{color:var(--text-light);}
+.footer-tagline{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--text-muted);}
+.footer-copy{font-size:11px;color:rgba(240,249,251,0.28);letter-spacing:1px;}
+
+/* ===== REVEAL ANIMATIONS ===== */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-36px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(36px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+
+/* ===== CATEGORY MODAL ===== */
+#modal{position:fixed;inset:0;background:rgba(1,13,20,0.97);z-index:4000;display:none;overflow-y:auto;}
+#modal.open{display:block;}
+.modal-inner{min-height:100vh;display:flex;flex-direction:column;}
+.modal-header{position:sticky;top:0;background:rgba(1,13,20,0.98);border-bottom:1px solid var(--glass-border);padding:18px 56px;display:flex;align-items:center;justify-content:space-between;z-index:10;backdrop-filter:blur(20px);}
+.modal-breadcrumb{font-size:10px;letter-spacing:3px;color:var(--aqua);text-transform:uppercase;}
+.modal-close{background:transparent;border:1.5px solid var(--glass-border);color:var(--aqua);width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:none;font-size:18px;transition:all 0.3s;}
+.modal-close:hover{background:var(--aqua);color:var(--navy);}
+.modal-content{padding:56px;flex:1;}
+.listing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:3px;max-width:1380px;margin:0 auto;}
+.listing-card{background:rgba(0,196,212,0.04);overflow:hidden;cursor:none;border:1px solid var(--glass-border);transition:all 0.3s;}
+.listing-card:hover{border-color:var(--aqua);}
+.listing-img{width:100%;aspect-ratio:16/10;background:rgba(1,28,38,0.8);position:relative;overflow:hidden;}
+.listing-img-bg{width:100%;height:100%;transition:transform 0.6s;}
+.listing-card:hover .listing-img-bg{transform:scale(1.06);}
+.listing-info{padding:26px;}
+.listing-title{font-family:'DM Serif Display',serif;font-size:19px;font-weight:400;margin-bottom:8px;}
+.listing-detail{font-size:11px;color:var(--text-muted);margin-bottom:7px;}
+.listing-slogan{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--aqua);}
+
+/* ===== DETAIL VIEW (Listing) ===== */
+#detail-view{position:fixed;inset:0;background:rgba(1,13,20,0.99);z-index:6000;display:none;overflow-y:auto;}
+#detail-view.open{display:block;}
+.detail-inner{min-height:100vh;}
+.detail-header{position:sticky;top:0;background:rgba(1,13,20,0.98);border-bottom:1px solid var(--glass-border);padding:18px 56px;display:flex;align-items:center;justify-content:space-between;z-index:10;backdrop-filter:blur(20px);}
+.detail-nav{display:flex;gap:10px;align-items:center;}
+.detail-nav-btn{background:transparent;border:1.5px solid var(--glass-border);color:var(--aqua);padding:9px 18px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:all 0.3s;font-family:'Plus Jakarta Sans',sans-serif;}
+.detail-nav-btn:hover{background:var(--aqua);color:var(--navy);}
+.detail-body{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 80px);}
+.detail-img-panel{position:sticky;top:80px;height:calc(100vh - 80px);background:rgba(0,196,212,0.04);overflow:hidden;}
+.detail-main-img{width:100%;height:70%;background:rgba(1,28,38,0.8);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.detail-thumbs{display:flex;gap:4px;padding:14px;background:rgba(1,13,20,0.8);height:30%;}
+.detail-thumb{flex:1;background:rgba(0,196,212,0.08);cursor:none;transition:opacity 0.3s;}
+.detail-thumb.active{border:2px solid var(--aqua);}
+.detail-text{padding:56px;}
+.detail-badge{font-size:9px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;margin-bottom:14px;}
+.detail-title{font-family:'DM Serif Display',serif;font-size:34px;font-weight:400;margin-bottom:18px;line-height:1.3;}
+.detail-slogan{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--aqua-glow);margin-bottom:28px;}
+.detail-divider{width:56px;height:2px;background:var(--aqua);margin-bottom:28px;}
+.detail-specs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:36px;}
+.spec-item{background:rgba(0,196,212,0.06);padding:18px;border:1px solid var(--glass-border);}
+.spec-label{font-size:9px;letter-spacing:3px;color:var(--aqua);text-transform:uppercase;margin-bottom:5px;}
+.spec-val{font-family:'DM Serif Display',serif;font-size:18px;}
+.detail-desc{font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.85;color:var(--text-muted);}
+
+/* ===== WHO DETAIL OVERLAY ===== */
+#who-overlay{position:fixed;inset:0;background:rgba(1,13,20,0.99);z-index:7000;display:none;overflow-y:auto;}
+#who-overlay.open{display:block;}
+.who-ov-header{position:sticky;top:0;background:rgba(1,13,20,0.98);border-bottom:1px solid var(--glass-border);padding:18px 56px;display:flex;align-items:center;justify-content:space-between;z-index:10;backdrop-filter:blur(20px);}
+.who-ov-tabs{display:flex;gap:4px;}
+.who-ov-tab{padding:10px 22px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:none;background:transparent;color:var(--text-muted);border:1.5px solid var(--glass-border);transition:all 0.3s;font-family:'Plus Jakarta Sans',sans-serif;}
+.who-ov-tab.active{background:rgba(0,196,212,0.1);color:var(--aqua);border-color:var(--aqua);}
+.who-ov-body{padding:60px;max-width:1380px;margin:0 auto;}
+.who-ov-panel{display:none;}
+.who-ov-panel.active{display:block;}
+
+/* Award display */
+.awards-timeline{display:flex;flex-direction:column;gap:28px;}
+.award-row{display:grid;grid-template-columns:120px 1fr;gap:32px;align-items:start;border-bottom:1px solid var(--glass-border);padding-bottom:28px;}
+.award-year{font-family:'DM Serif Display',serif;font-size:42px;color:var(--aqua);line-height:1;}
+.award-content .award-org{font-size:10px;letter-spacing:3px;color:var(--aqua);text-transform:uppercase;margin-bottom:8px;}
+.award-content .award-title{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:10px;}
+.award-content .award-detail{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text-muted);line-height:1.75;}
+
+/* Press detail content in who overlay */
+.basin-biz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+
+/* ===== UNIVERSAL OVERLAY (Projects, Press items, Social, Ref, Mimari) ===== */
+#u-overlay{position:fixed;inset:0;background:rgba(1,13,20,0.99);z-index:8000;display:none;overflow-y:auto;}
+#u-overlay.open{display:block;}
+.u-ov-header{position:sticky;top:0;background:rgba(1,13,20,0.98);border-bottom:1px solid var(--glass-border);padding:16px 56px;display:flex;align-items:center;justify-content:space-between;z-index:10;backdrop-filter:blur(20px);}
+.u-ov-nav{display:flex;gap:10px;}
+.u-ov-btn{background:transparent;border:1.5px solid var(--glass-border);color:var(--aqua);padding:9px 18px;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:all 0.3s;font-family:'Plus Jakarta Sans',sans-serif;}
+.u-ov-btn:hover{background:var(--aqua);color:var(--navy);}
+.u-ov-body{padding:60px;max-width:1100px;margin:0 auto;}
+.u-ov-img{width:100%;height:340px;background:rgba(0,196,212,0.06);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;margin-bottom:40px;position:relative;overflow:hidden;}
+.u-ov-badge{font-size:9px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;margin-bottom:12px;}
+.u-ov-title{font-family:'DM Serif Display',serif;font-size:36px;line-height:1.25;margin-bottom:16px;}
+.u-ov-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--aqua-glow);margin-bottom:26px;}
+.u-ov-divider{width:56px;height:2px;background:var(--aqua);margin-bottom:26px;}
+.u-ov-text{font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.85;color:var(--text-muted);}
+.u-ov-meta{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:28px;}
+.u-ov-meta-item{background:rgba(0,196,212,0.06);border:1px solid var(--glass-border);padding:14px 20px;}
+.u-ov-meta-label{font-size:9px;letter-spacing:3px;color:var(--aqua);text-transform:uppercase;margin-bottom:4px;}
+.u-ov-meta-val{font-family:'DM Serif Display',serif;font-size:16px;}
+.u-ov-link{display:inline-flex;align-items:center;gap:8px;background:var(--aqua);color:var(--navy);padding:12px 28px;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;text-decoration:none;margin-top:28px;cursor:none;transition:opacity 0.3s;}
+.u-ov-link:hover{opacity:0.85;}
+.u-ov-counter{font-size:10px;letter-spacing:2px;color:var(--text-muted);margin-top:22px;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  #navbar{padding:14px 18px;}
+  .nav-links,.nav-cta{display:none;}
+  #who,#categories,#projects,#content-sections,#contact{padding:72px 18px;}
+  .who-grid,.contact-grid{grid-template-columns:1fr;gap:50px;}
+  .cat-grid,.press-grid,.social-grid,.mimari-grid,.video-grid{grid-template-columns:1fr;}
+  .ref-grid,.ref-grid-2col,.ref-grid-3col{grid-template-columns:1fr 1fr;}
+  .basin-biz-grid{grid-template-columns:1fr;}
+  .detail-body{grid-template-columns:1fr;}
+  .detail-img-panel{position:relative;top:0;height:46vh;}
+  footer{padding:36px 18px;flex-direction:column;text-align:center;}
+  .modal-content,.detail-text,.u-ov-body,.who-ov-body{padding:26px 16px;}
+  .modal-header,.detail-header,.u-ov-header,.who-ov-header{padding:14px 16px;}
+  .stats-band{flex-wrap:wrap;gap:0;padding:30px 18px;}
+  .stat-item{flex:0 0 50%;border-right:none;border-bottom:1px solid rgba(1,28,38,0.2);padding:20px;}
+  .award-row{grid-template-columns:80px 1fr;gap:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Live Support -->
+<div class="live-support">
+  <div class="support-tooltip"><span class="support-dot"></span> Canlı Destek · Berr Ekibi</div>
+  <div class="support-bubble" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">💬</div>
+</div>
+
+<!-- ===== INTRO ===== -->
+<div id="intro">
+  <div class="intro-bg"></div>
+  <div class="intro-grid"></div>
+  <div class="intro-particles" id="particles"></div>
+  <svg class="intro-wave" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,60 C240,110 480,10 720,60 C960,110 1200,10 1440,60 L1440,120 L0,120 Z" fill="rgba(0,196,212,0.08)"/>
+    <path d="M0,80 C180,40 360,100 540,70 C720,40 900,100 1080,70 C1260,40 1380,90 1440,80 L1440,120 L0,120 Z" fill="rgba(0,196,212,0.05)"/>
+  </svg>
+  <div class="intro-content">
+    <div class="intro-eyebrow">Mimarlık · İnşaat · Arsa</div>
+    <div class="intro-logo">BERR <span>ARSA</span></div>
+    <div class="intro-line"></div>
+    <div class="intro-sub">Hayalinizdeki Yaşam Alanına Giden Yol</div>
+    <div class="intro-loading">
+      <div class="loading-bar-wrap"><div class="loading-bar" id="loadBar"></div></div>
+      <div class="loading-pct" id="loadPct">0%</div>
+    </div>
+  </div>
+  <div class="intro-flash" id="introFlash"></div>
+</div>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">BERR<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#who">Biz Kimiz</a></li>
+    <li><a href="#categories">Kategoriler</a></li>
+    <li><a href="#projects">Projeler</a></li>
+    <li><a href="#content-sections">Berr Dünyası</a></li>
+    <li><a href="#contact">İletişim</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Bize Ulaşın</button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-slides">
+    <div class="hero-slide hero-slide-1 active">
+      <div class="slide-illustration">
+        <svg width="820" height="520" viewBox="0 0 820 520" fill="none">
+          <path d="M0,460 C200,380 400,500 620,420 C820,350 820,460 820,460" fill="none" stroke="#00c4d4" stroke-width="0.6" opacity="0.5"/>
+          <path d="M0,480 C180,430 360,490 540,450 C720,410 820,470 820,470" fill="none" stroke="#00c4d4" stroke-width="0.4" opacity="0.3"/>
+          <rect x="150" y="100" width="520" height="360" fill="none" stroke="#00c4d4" stroke-width="0.7" opacity="0.35"/>
+          <polygon points="150,100 410,22 670,100" fill="none" stroke="#00c4d4" stroke-width="0.7" opacity="0.45"/>
+          <rect x="185" y="140" width="60" height="80" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="265" y="140" width="60" height="80" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="345" y="140" width="60" height="80" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="425" y="140" width="60" height="80" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="505" y="140" width="60" height="80" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="310" y="350" width="200" height="110" fill="none" stroke="#00c4d4" stroke-width="0.7"/>
+          <circle cx="410" cy="60" r="14" fill="none" stroke="#00c4d4" stroke-width="0.8" opacity="0.7"/>
+        </svg>
+      </div>
+    </div>
+    <div class="hero-slide hero-slide-2">
+      <div class="slide-illustration">
+        <svg width="820" height="520" viewBox="0 0 820 520" fill="none">
+          <path d="M0,300 C80,160 200,220 300,180 C400,140 450,200 500,160 C600,100 700,180 820,140" fill="none" stroke="#00c4d4" stroke-width="0.7" opacity="0.35"/>
+          <circle cx="410" cy="130" r="60" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.35"/>
+          <line x1="410" y1="62" x2="410" y2="42" stroke="#00c4d4" opacity="0.3"/>
+          <line x1="410" y1="198" x2="410" y2="218" stroke="#00c4d4" opacity="0.3"/>
+          <line x1="348" y1="130" x2="328" y2="130" stroke="#00c4d4" opacity="0.3"/>
+          <line x1="472" y1="130" x2="492" y2="130" stroke="#00c4d4" opacity="0.3"/>
+          <rect x="100" y="310" width="620" height="160" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.3"/>
+          <line x1="100" y1="380" x2="720" y2="380" stroke="#00c4d4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="200" y1="310" x2="200" y2="470" stroke="#00c4d4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="350" y1="310" x2="350" y2="470" stroke="#00c4d4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="500" y1="310" x2="500" y2="470" stroke="#00c4d4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="650" y1="310" x2="650" y2="470" stroke="#00c4d4" stroke-width="0.3" opacity="0.2"/>
+        </svg>
+      </div>
+    </div>
+    <div class="hero-slide hero-slide-3">
+      <div class="slide-illustration">
+        <svg width="820" height="520" viewBox="0 0 820 520" fill="none">
+          <rect x="210" y="200" width="400" height="270" fill="none" stroke="#00c4d4" stroke-width="0.7" opacity="0.45"/>
+          <polygon points="210,200 410,80 610,200" fill="none" stroke="#00c4d4" stroke-width="0.7" opacity="0.45"/>
+          <rect x="490" y="100" width="36" height="76" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.35"/>
+          <rect x="248" y="240" width="80" height="100" fill="rgba(0,196,212,0.07)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="492" y="240" width="80" height="100" fill="rgba(0,196,212,0.07)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="370" y="350" width="80" height="120" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.7"/>
+          <rect x="120" y="420" width="190" height="56" fill="none" stroke="#00c4d4" stroke-width="0.4" opacity="0.4"/>
+          <path d="M0,480 C200,440 400,500 620,460 C820,430 820,480 820,480" fill="none" stroke="#00c4d4" stroke-width="0.6" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Dünya Standartlarında Gayrimenkul</div>
+    <h1 class="hero-title">
+      Geleceğinizi<br>
+      <span class="aqua">Berr</span> ile<br>
+      <span class="outline">İnşa Edin</span>
+    </h1>
+    <p class="hero-desc">3 Kez Dünya Çapında Üstün Gayrimenkul Ödülü — Ege Kıyılarından Türkiye'ye</p>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="document.getElementById('who').scrollIntoView({behavior:'smooth'})"><span>Bizi Keşfedin</span></button>
+      <button class="btn-outline" onclick="openCatModal('arsa')">Portföyümüz</button>
+    </div>
+  </div>
+
+  <div class="hero-scroll" onclick="document.getElementById('who').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-line"></div>
+    <span>Kaydır</span>
+  </div>
+  <div class="hero-dots" id="heroDots">
+    <div class="hero-dot active" onclick="goSlide(0)"></div>
+    <div class="hero-dot" onclick="goSlide(1)"></div>
+    <div class="hero-dot" onclick="goSlide(2)"></div>
+  </div>
+</section>
+
+<!-- ===== STATS BAND ===== -->
+<div class="stats-band">
+  <div class="stat-item"><div class="stat-num">3×</div><div class="stat-label">Dünya Ödülü</div></div>
+  <div class="stat-item"><div class="stat-num">247</div><div class="stat-label">Mutlu Müşteri</div></div>
+  <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Yıllık Deneyim</div></div>
+  <div class="stat-item"><div class="stat-num">63</div><div class="stat-label">Teslim Edilen Proje</div></div>
+</div>
+
+<!-- ===== BİZ KİMİZ ===== -->
+<section id="who">
+  <div class="who-grid">
+    <div class="who-visual reveal-left">
+      <div class="who-main-frame">
+        <div class="who-corner tl"></div><div class="who-corner tr"></div>
+        <div class="who-corner bl"></div><div class="who-corner br"></div>
+        <svg width="100%" height="100%" viewBox="0 0 400 500" fill="none" style="opacity:0.45;">
+          <rect x="60" y="100" width="280" height="360" fill="none" stroke="#00c4d4" stroke-width="1"/>
+          <polygon points="60,100 200,30 340,100" fill="none" stroke="#00c4d4" stroke-width="1"/>
+          <rect x="80" y="130" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="150" y="130" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="220" y="130" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="290" y="130" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="80" y="220" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="150" y="220" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="220" y="220" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="290" y="220" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="155" y="330" width="90" height="130" fill="rgba(0,196,212,0.12)" stroke="#00c4d4" stroke-width="0.8"/>
+          <path d="M0,460 C80,440 160,470 200,450 C260,420 340,470 400,440" fill="none" stroke="#00c4d4" stroke-width="0.6" opacity="0.4"/>
+          <circle cx="200" cy="60" r="10" fill="none" stroke="#00c4d4" stroke-width="0.8" opacity="0.7"/>
+        </svg>
+        <div class="who-stat-card">
+          <div class="who-stat-num">3×</div>
+          <div class="who-stat-label">Dünya Ödülü</div>
+        </div>
+      </div>
+    </div>
+    <div class="who-text reveal-right">
+      <div class="section-eyebrow">Biz Kimiz</div>
+      <h2 class="section-title">Mimarlığı Bir<br>Sanat Eseri<br>Olarak Görüyoruz</h2>
+      <div class="section-divider"></div>
+      <p class="section-body">Berr Arsa & İç Mimarlık olarak, dünya standartlarında gayrimenkul projelerini hayata geçiriyoruz. Arsa seçiminden villa inşaatına, iç mekan tasarımından teslimata kadar her aşamada yanınızdayız.</p>
+      <p class="section-body">Ege'nin eşsiz manzarasından Türkiye'nin en değerli lokasyonlarına uzanan portföyümüzle, hayalinizdeki yaşam alanını gerçeğe dönüştürüyoruz.</p>
+      <div class="who-awards">
+        <div class="award-item">
+          <div class="award-icon">🏆</div>
+          <div class="award-text"><strong>2021 · 2022 · 2023</strong>Dünya Üstün Gayrimenkul Ödülü</div>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">📐</div>
+          <div class="award-text"><strong>100+</strong>Tamamlanan Proje</div>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">🌊</div>
+          <div class="award-text"><strong>15+ Yıl</strong>Sektör Deneyimi</div>
+        </div>
+      </div>
+      <button class="who-detail-btn" onclick="openWhoOverlay()">
+        Bizi Daha Yakından Tanıyın →
+      </button>
+    </div>
+  </div>
+  <div class="kesfet-wrap reveal" style="margin-top:70px;">
+    <button class="kesfet-btn" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">
+      <span>✦ Portföyü Keşfet ✦</span>
+    </button>
+  </div>
+</section>
+
+<!-- ===== KATEGORİLER ===== -->
+<section id="categories">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">Kategoriler</div>
+    <h2 class="section-title">Portföy Kategorileri</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card reveal" onclick="openCatModal('arsa')">
+      <div class="cat-bg" style="background:linear-gradient(135deg,#010f18 0%,#011c26 50%,#012a36 100%);">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" fill="none" style="position:absolute;inset:0;opacity:0.28;">
+          <rect x="40" y="200" width="320" height="260" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+          <line x1="40" y1="320" x2="360" y2="320" stroke="#00c4d4" stroke-width="0.3" opacity="0.5"/>
+          <line x1="200" y1="200" x2="200" y2="460" stroke="#00c4d4" stroke-width="0.3" opacity="0.5"/>
+          <polyline points="0,220 80,100 200,160 280,80 400,180" fill="none" stroke="#00c4d4" stroke-width="0.8" opacity="0.55"/>
+          <circle cx="200" cy="120" r="38" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.4"/>
+          <line x1="200" y1="76" x2="200" y2="56" stroke="#00c4d4" opacity="0.35"/>
+          <line x1="244" y1="120" x2="264" y2="120" stroke="#00c4d4" opacity="0.35"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-num">01</div>
+      <div class="cat-content">
+        <div class="cat-label">Kategori</div>
+        <div class="cat-name">Arsa</div>
+        <div class="cat-desc">Ege kıyılarından iç bölgelere, en değerli araziler. Yatırımınız için doğru arsa.</div>
+        <button class="cat-btn" onclick="event.stopPropagation();openCatModal('arsa')">Arsaları Keşfet →</button>
+      </div>
+    </div>
+    <div class="cat-card reveal" style="transition-delay:0.12s;" onclick="openCatModal('villa')">
+      <div class="cat-bg" style="background:linear-gradient(135deg,#010f18 0%,#012a36 50%,#01303d 100%);">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" fill="none" style="position:absolute;inset:0;opacity:0.28;">
+          <rect x="80" y="180" width="240" height="280" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+          <polygon points="80,180 200,80 320,180" fill="none" stroke="#00c4d4" stroke-width="0.8" opacity="0.65"/>
+          <rect x="280" y="100" width="28" height="68" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.6"/>
+          <rect x="100" y="210" width="58" height="78" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="242" y="210" width="58" height="78" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="158" y="330" width="84" height="130" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.8"/>
+          <path d="M0,470 C100,440 200,480 300,460 C380,440 400,470 400,470" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-num">02</div>
+      <div class="cat-content">
+        <div class="cat-label">Kategori</div>
+        <div class="cat-name">Villa</div>
+        <div class="cat-desc">Lüks villa projeleri. Mimariden iç mekana, tam anahtar teslim yaşam alanları.</div>
+        <button class="cat-btn" onclick="event.stopPropagation();openCatModal('villa')">Villaları Keşfet →</button>
+      </div>
+    </div>
+    <div class="cat-card reveal" style="transition-delay:0.24s;" onclick="openCatModal('malikane')">
+      <div class="cat-bg" style="background:linear-gradient(135deg,#010f18 0%,#01303d 50%,#011c26 100%);">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" fill="none" style="position:absolute;inset:0;opacity:0.28;">
+          <rect x="50" y="140" width="300" height="320" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="50" y="60" width="78" height="80" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.65"/>
+          <rect x="272" y="60" width="78" height="80" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.65"/>
+          <line x1="128" y1="60" x2="272" y2="60" stroke="#00c4d4" stroke-width="0.5" opacity="0.5"/>
+          <rect x="80" y="170" width="58" height="78" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="171" y="170" width="58" height="78" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="262" y="170" width="58" height="78" fill="rgba(0,196,212,0.06)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="160" y="370" width="80" height="90" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-num">03</div>
+      <div class="cat-content">
+        <div class="cat-label">Kategori</div>
+        <div class="cat-name">Malikane</div>
+        <div class="cat-desc">Tarihi dokuda prestijli malikane projeleri. Asalet ve modernliğin buluşması.</div>
+        <button class="cat-btn" onclick="event.stopPropagation();openCatModal('malikane')">Malikaneleri Keşfet →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJELERİMİZ ===== -->
+<section id="projects">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">Projelerimiz</div>
+    <h2 class="section-title">Aktif & Tamamlanan Projeler</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="projects-tabs">
+    <button class="proj-tab active" onclick="switchProjTab('devam',this)">Devam Eden</button>
+    <button class="proj-tab" onclick="switchProjTab('planlanan',this)">Planlanan</button>
+    <button class="proj-tab" onclick="switchProjTab('tamamlanan',this)">Tamamlanan</button>
+  </div>
+  <div class="proj-slider-wrap">
+    <div class="proj-slider" id="projSlider"></div>
+  </div>
+  <div class="slider-nav">
+    <button class="slider-arrow" onclick="slideProj(-1)">←</button>
+    <button class="slider-arrow" onclick="slideProj(1)">→</button>
+  </div>
+</section>
+
+<!-- ===== BERR DÜNYASI ===== -->
+<section id="content-sections">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">Keşfedin</div>
+    <h2 class="section-title">Berr Dünyası</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="content-tabs">
+    <button class="content-tab active" onclick="switchContentTab('basinda',this)">Basında Biz</button>
+    <button class="content-tab" onclick="switchContentTab('referans',this)">Referanslarımız</button>
+    <button class="content-tab" onclick="switchContentTab('sorumluluk',this)">Sosyal Sorumluluk</button>
+    <button class="content-tab" onclick="switchContentTab('mimari',this)">100 Mimari İç Detay</button>
+    <button class="content-tab" onclick="switchContentTab('villa-nasil',this)">Villa İnşaatı Nasıl Yapılır</button>
+  </div>
+
+  <!-- BASINDA BİZ -->
+  <div class="content-panel active" id="panel-basinda">
+    <div class="press-grid">
+      <div class="press-card reveal" onclick="openPressDetail(0)">
+        <div class="press-source">Milliyet Emlak</div>
+        <div class="press-title">Ege'nin En Prestijli Arsa Projesinde Berr İmzası</div>
+        <div class="press-excerpt">Kuşadası'nın en değerli noktalarından birinde hayata geçirilen proje, bölgenin gayrimenkul yatırım değerini yeniden tanımladı...</div>
+        <div class="press-date">Mart 2024</div>
+        <div class="press-link-hint">Detayı Oku →</div>
+      </div>
+      <div class="press-card reveal" style="transition-delay:0.08s;" onclick="openPressDetail(1)">
+        <div class="press-source">Hürriyet Ege</div>
+        <div class="press-title">3. Kez Dünya Ödülü: Berr Arsa Başarısını Taçlandırdı</div>
+        <div class="press-excerpt">Üst üste üçüncü kez "Dünya Çapında Üstün Gayrimenkul Ödülü"nü alan Berr İç Mimarlık, Türk sektörünün gururu olmaya devam ediyor...</div>
+        <div class="press-date">Şubat 2024</div>
+        <div class="press-link-hint">Detayı Oku →</div>
+      </div>
+      <div class="press-card reveal" style="transition-delay:0.16s;" onclick="openPressDetail(2)">
+        <div class="press-source">Sabah Ekonomi</div>
+        <div class="press-title">Ege Kıyılarında Lüks Villa Yatırımı Neden Cazip?</div>
+        <div class="press-excerpt">Sektör uzmanı Berr İç Mimarlık yöneticileri, Ege'deki arsa ve villa yatırımının neden karlı olduğunu anlattı...</div>
+        <div class="press-date">Ocak 2024</div>
+        <div class="press-link-hint">Detayı Oku →</div>
+      </div>
+      <div class="press-card reveal" style="transition-delay:0.24s;" onclick="openPressDetail(3)">
+        <div class="press-source">Property TR</div>
+        <div class="press-title">Önce Arsam Sonra Evim: Yeni Nesil Yatırım Yaklaşımı</div>
+        <div class="press-excerpt">Berr'in geliştirdiği "Önce Arsam Sonra Evim" konsepti, Türkiye genelinde yatırımcıların gündemine girdi...</div>
+        <div class="press-date">Kasım 2023</div>
+        <div class="press-link-hint">Detayı Oku →</div>
+      </div>
+      <div class="press-card reveal" style="transition-delay:0.32s;" onclick="openPressDetail(4)">
+        <div class="press-source">CNN Türk</div>
+        <div class="press-title">Golf Resort Bölgesinde Villa İmarlı Arsa Projesi</div>
+        <div class="press-excerpt">Söke-Ağaçlı'da hayata geçirilen ve deniz manzarası sunan villa imarlı arsa projesi medyanın gündemine taşındı...</div>
+        <div class="press-date">Ekim 2023</div>
+        <div class="press-link-hint">Detayı Oku →</div>
+      </div>
+      <div class="press-card reveal" style="transition-delay:0.40s;" onclick="openPressDetail(5)">
+        <div class="press-source">Yapı Dünyası</div>
+        <div class="press-title">Mimarlıkta Sürdürülebilirlik: Berr'in Yaklaşımı</div>
+        <div class="press-excerpt">Çevre dostu inşaat malzemeleri ve enerji verimli tasarım anlayışıyla Berr, sürdürülebilir mimarlık alanında öne çıkıyor...</div>
+        <div class="press-date">Eylül 2023</div>
+        <div class="press-link-hint">Detayı Oku →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFERANSLARIMIZ -->
+  <div class="content-panel" id="panel-referans">
+    <div class="ref-section">
+      <!-- Birlikte Çalıştığımız Firmalar -->
+      <div class="reveal" style="margin-bottom:50px;">
+        <h3 class="ref-category-hdr">Birlikte Çalıştığımız Firmalar <span>İş Ortaklarımız</span></h3>
+        <div class="ref-grid">
+          <div class="ref-card" onclick="openRefDetail('firma',0)">
+            <div class="ref-logo-placeholder">M</div>
+            <div class="ref-name">Marmara Yapı</div>
+            <div class="ref-sector">İnşaat & Müteahhitlik</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('firma',1)">
+            <div class="ref-logo-placeholder">E</div>
+            <div class="ref-name">Ege Tapu & Hukuk</div>
+            <div class="ref-sector">Gayrimenkul Hukuku</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('firma',2)">
+            <div class="ref-logo-placeholder">A</div>
+            <div class="ref-name">Akdeniz Peyzaj</div>
+            <div class="ref-sector">Peyzaj & Bahçe Tasarımı</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('firma',3)">
+            <div class="ref-logo-placeholder">T</div>
+            <div class="ref-name">TeknoEv Akıllı Sistemler</div>
+            <div class="ref-sector">Smart Home Entegrasyonu</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('firma',4)">
+            <div class="ref-logo-placeholder">P</div>
+            <div class="ref-name">Premium Doğaltaş</div>
+            <div class="ref-sector">Mermer & Taş Kaplama</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('firma',5)">
+            <div class="ref-logo-placeholder">S</div>
+            <div class="ref-name">Sonsuzluk Havuz</div>
+            <div class="ref-sector">Havuz & Spa Sistemleri</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('firma',6)">
+            <div class="ref-logo-placeholder">İ</div>
+            <div class="ref-name">İzmir Zemin Etüt</div>
+            <div class="ref-sector">Jeoloji & Zemin Mühendisliği</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('firma',7)">
+            <div class="ref-logo-placeholder">L</div>
+            <div class="ref-name">Lümino Aydınlatma</div>
+            <div class="ref-sector">Tasarım Aydınlatma</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diğer Alanlardaki Faaliyetlerimiz -->
+      <div class="reveal" style="margin-bottom:50px;">
+        <h3 class="ref-category-hdr">Diğer Alanlardaki Faaliyetlerimiz <span>Çok Alanlı Varlık</span></h3>
+        <div class="ref-grid ref-grid-3col">
+          <div class="ref-card" onclick="openRefDetail('faaliyet',0)">
+            <div class="ref-logo-placeholder">🌿</div>
+            <div class="ref-name">Eko Tarım Yatırımları</div>
+            <div class="ref-sector">Organik Zeytinlik & Bağ</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('faaliyet',1)">
+            <div class="ref-logo-placeholder">⚓</div>
+            <div class="ref-name">Marinaya Yakın Konut</div>
+            <div class="ref-sector">Tekne & Deniz Yaşamı</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('faaliyet',2)">
+            <div class="ref-logo-placeholder">🏛️</div>
+            <div class="ref-name">Kültürel Miras Restorasyonu</div>
+            <div class="ref-sector">Tarihi Yapı Koruma</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('faaliyet',3)">
+            <div class="ref-logo-placeholder">☀️</div>
+            <div class="ref-name">Enerji Verimli Yapılar</div>
+            <div class="ref-sector">Güneş Enerjisi & Yalıtım</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('faaliyet',4)">
+            <div class="ref-logo-placeholder">📊</div>
+            <div class="ref-name">Gayrimenkul Danışmanlığı</div>
+            <div class="ref-sector">Portföy Yönetimi</div>
+          </div>
+          <div class="ref-card" onclick="openRefDetail('faaliyet',5)">
+            <div class="ref-logo-placeholder">🎓</div>
+            <div class="ref-name">Mimarlık Eğitim Programı</div>
+            <div class="ref-sector">Staj & Mentorluk</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Yan Kollarımız -->
+      <div class="reveal">
+        <h3 class="ref-category-hdr">Diğer Yan Kollarımız <span>Berr Ailesi</span></h3>
+        <div class="ref-grid ref-grid-2col">
+          <div class="ref-card" style="text-align:left;padding:36px;" onclick="openRefDetail('yankol',0)">
+            <div class="ref-logo-placeholder" style="margin:0 0 18px 0;">B</div>
+            <div class="ref-name">Berr İç Mimarlık</div>
+            <div class="ref-sector" style="margin-bottom:12px;">Tasarım Stüdyosu</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Proje bazında iç mekan tasarımı, mobilya seçimi ve uygulama süreçleri.</p>
+          </div>
+          <div class="ref-card" style="text-align:left;padding:36px;" onclick="openRefDetail('yankol',1)">
+            <div class="ref-logo-placeholder" style="margin:0 0 18px 0;">BA</div>
+            <div class="ref-name">Berr Akademi</div>
+            <div class="ref-sector" style="margin-bottom:12px;">Eğitim & Gelişim</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Yatırımcılara yönelik gayrimenkul ve mimarlık farkındalık programları.</p>
+          </div>
+          <div class="ref-card" style="text-align:left;padding:36px;" onclick="openRefDetail('yankol',2)">
+            <div class="ref-logo-placeholder" style="margin:0 0 18px 0;">BD</div>
+            <div class="ref-name">Berr Dijital</div>
+            <div class="ref-sector" style="margin-bottom:12px;">Teknoloji & Görselleştirme</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">3D mimari görselleştirme, sanal tur ve dijital sunum hizmetleri.</p>
+          </div>
+          <div class="ref-card" style="text-align:left;padding:36px;" onclick="openRefDetail('yankol',3)">
+            <div class="ref-logo-placeholder" style="margin:0 0 18px 0;">BP</div>
+            <div class="ref-name">Berr Premium</div>
+            <div class="ref-sector" style="margin-bottom:12px;">VIP Portföy Hizmetleri</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Ultra lüks segmente özel kişiselleştirilmiş gayrimenkul danışmanlığı.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOSYAL SORUMLULUK -->
+  <div class="content-panel" id="panel-sorumluluk">
+    <div class="social-grid" style="max-width:1380px;margin:0 auto;">
+      <div class="social-card reveal" onclick="openSocialDetail(0)">
+        <div class="social-icon-wrap">🌿</div>
+        <div class="social-card-title">Yeşil İnşaat Programı</div>
+        <div class="social-card-text">Her projede sürdürülebilir malzeme kullanımı ve çevre dostu inşaat tekniklerini uyguluyoruz. 2023'te %40 enerji verimliliği hedefine ulaştık.</div>
+        <div class="social-read-more">Detaylı İncele →</div>
+      </div>
+      <div class="social-card reveal" style="transition-delay:0.1s;" onclick="openSocialDetail(1)">
+        <div class="social-icon-wrap">🏫</div>
+        <div class="social-card-title">Eğitime Destek</div>
+        <div class="social-card-text">Bölgedeki okullara altyapı desteği ve mimarlık bölümü öğrencilerine staj olanakları sağlıyoruz. 2023'te 12 öğrenciye burs verdik.</div>
+        <div class="social-read-more">Detaylı İncele →</div>
+      </div>
+      <div class="social-card reveal" style="transition-delay:0.2s;" onclick="openSocialDetail(2)">
+        <div class="social-icon-wrap">🤝</div>
+        <div class="social-card-title">Afet Konutları</div>
+        <div class="social-card-text">2023 depreminin ardından afet bölgelerinde 8 konut yapımına katkıda bulunduk. Berr ailesi olarak her zaman toplumun yanındayız.</div>
+        <div class="social-read-more">Detaylı İncele →</div>
+      </div>
+      <div class="social-card reveal" style="transition-delay:0.3s;" onclick="openSocialDetail(3)">
+        <div class="social-icon-wrap">🌊</div>
+        <div class="social-card-title">Kıyı Temizliği Kampanyası</div>
+        <div class="social-card-text">Ege kıyılarında yıllık kıyı temizliği ve koruma kampanyaları düzenliyoruz. 2023'te 4 kıyı bölgesinde 500+ gönüllüyle çalıştık.</div>
+        <div class="social-read-more">Detaylı İncele →</div>
+      </div>
+      <div class="social-card reveal" style="transition-delay:0.4s;" onclick="openSocialDetail(4)">
+        <div class="social-icon-wrap">🎨</div>
+        <div class="social-card-title">Kültür & Sanat Sponsorluğu</div>
+        <div class="social-card-text">Ege bölgesindeki mimarlık, sanat ve kültürel etkinliklere sponsor olarak yerel kültürün gelişimine katkı sağlıyoruz.</div>
+        <div class="social-read-more">Detaylı İncele →</div>
+      </div>
+      <div class="social-card reveal" style="transition-delay:0.5s;" onclick="openSocialDetail(5)">
+        <div class="social-icon-wrap">🌳</div>
+        <div class="social-card-title">Ağaçlandırma Projesi</div>
+        <div class="social-card-text">Her tamamlanan proje başına 50 ağaç dikme taahhüdümüzle 2023'e kadar 3.150+ ağaç dikme hedefimize ulaştık.</div>
+        <div class="social-read-more">Detaylı İncele →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 100 MİMARİ İÇ DETAY -->
+  <div class="content-panel" id="panel-mimari">
+    <div class="mimari-grid">
+      <div class="mimari-card reveal" onclick="openMimariDetail(0)">
+        <div class="mimari-img" style="background:linear-gradient(135deg,#012a36,#01303d);">
+          <svg width="100%" height="100%" viewBox="0 0 380 180" fill="none" style="position:absolute;inset:0;opacity:0.5;">
+            <rect x="40" y="30" width="300" height="120" fill="none" stroke="#00c4d4" stroke-width="0.6"/>
+            <line x1="40" y1="90" x2="340" y2="90" stroke="#00c4d4" stroke-width="0.4" opacity="0.5"/>
+            <rect x="60" y="50" width="40" height="30" fill="rgba(0,196,212,0.15)"/>
+            <rect x="170" y="110" width="40" height="30" fill="rgba(0,196,212,0.1)"/>
+          </svg>
+        </div>
+        <div class="mimari-num">01</div>
+        <div class="mimari-body">
+          <div class="mimari-title">Zemin Malzeme Seçimi</div>
+          <div class="mimari-text">Doğal taş, seramik veya parke seçiminde göz önünde bulundurmanız gereken faktörler...</div>
+          <div class="mimari-open">Detayı Gör →</div>
+        </div>
+      </div>
+      <div class="mimari-card reveal" style="transition-delay:0.08s;" onclick="openMimariDetail(1)">
+        <div class="mimari-img" style="background:linear-gradient(135deg,#011c26,#012a36);">
+          <svg width="100%" height="100%" viewBox="0 0 380 180" fill="none" style="position:absolute;inset:0;opacity:0.5;">
+            <line x1="190" y1="0" x2="190" y2="180" stroke="#00c4d4" stroke-width="0.5"/>
+            <line x1="0" y1="90" x2="380" y2="90" stroke="#00c4d4" stroke-width="0.5"/>
+            <circle cx="190" cy="90" r="50" fill="none" stroke="#00c4d4" stroke-width="0.6"/>
+            <circle cx="190" cy="90" r="20" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div class="mimari-num">02</div>
+        <div class="mimari-body">
+          <div class="mimari-title">Tavan Yüksekliği & Optikler</div>
+          <div class="mimari-text">280–320cm tavan yüksekliğinin mekan algısına etkisi. Çift yüksek tavan uygulamaları...</div>
+          <div class="mimari-open">Detayı Gör →</div>
+        </div>
+      </div>
+      <div class="mimari-card reveal" style="transition-delay:0.16s;" onclick="openMimariDetail(2)">
+        <div class="mimari-img" style="background:linear-gradient(135deg,#01303d,#011c26);">
+          <svg width="100%" height="100%" viewBox="0 0 380 180" fill="none" style="position:absolute;inset:0;opacity:0.5;">
+            <circle cx="100" cy="60" r="20" fill="rgba(0,196,212,0.2)" stroke="#00c4d4" stroke-width="0.6"/>
+            <circle cx="200" cy="100" r="30" fill="rgba(0,196,212,0.12)" stroke="#00c4d4" stroke-width="0.6"/>
+            <circle cx="300" cy="50" r="15" fill="rgba(0,196,212,0.15)" stroke="#00c4d4" stroke-width="0.6"/>
+            <line x1="100" y1="80" x2="100" y2="180" stroke="#00c4d4" stroke-width="0.4" opacity="0.4"/>
+            <line x1="200" y1="130" x2="200" y2="180" stroke="#00c4d4" stroke-width="0.4" opacity="0.4"/>
+            <line x1="300" y1="65" x2="300" y2="180" stroke="#00c4d4" stroke-width="0.4" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="mimari-num">03</div>
+        <div class="mimari-body">
+          <div class="mimari-title">Aydınlatma Tasarımı</div>
+          <div class="mimari-text">Ambiyans, görev ve vurgu aydınlatmasının dengelenmesi. LED strip, sarkıt teknikleri...</div>
+          <div class="mimari-open">Detayı Gör →</div>
+        </div>
+      </div>
+      <div class="mimari-card reveal" style="transition-delay:0.24s;" onclick="openMimariDetail(3)">
+        <div class="mimari-img" style="background:linear-gradient(135deg,#012a36,#010f18);">
+          <svg width="100%" height="100%" viewBox="0 0 380 180" fill="none" style="position:absolute;inset:0;opacity:0.5;">
+            <rect x="20" y="20" width="340" height="140" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+            <line x1="190" y1="20" x2="190" y2="160" stroke="#00c4d4" stroke-width="2" opacity="0.3"/>
+            <rect x="20" y="20" width="170" height="140" fill="rgba(0,196,212,0.05)"/>
+          </svg>
+        </div>
+        <div class="mimari-num">04</div>
+        <div class="mimari-body">
+          <div class="mimari-title">Açık-Kapalı Mekan Geçişleri</div>
+          <div class="mimari-text">Sürgülü cam sistemler ve katlanır kapılarla iç-dış mekan bütünleşmesi. Ege iklimine özel...</div>
+          <div class="mimari-open">Detayı Gör →</div>
+        </div>
+      </div>
+      <div class="mimari-card reveal" style="transition-delay:0.32s;" onclick="openMimariDetail(4)">
+        <div class="mimari-img" style="background:linear-gradient(135deg,#011c26,#01303d);">
+          <svg width="100%" height="100%" viewBox="0 0 380 180" fill="none" style="position:absolute;inset:0;opacity:0.5;">
+            <rect x="80" y="40" width="220" height="100" fill="none" stroke="#00c4d4" stroke-width="0.7"/>
+            <rect x="120" y="60" width="140" height="60" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.5"/>
+            <circle cx="190" cy="90" r="14" fill="rgba(0,196,212,0.2)"/>
+          </svg>
+        </div>
+        <div class="mimari-num">05</div>
+        <div class="mimari-body">
+          <div class="mimari-title">Mutfak Ada Tasarımları</div>
+          <div class="mimari-text">Modern mutfak adası boyutlandırma, ergonomi ve estetik dengesi. Mermer-granit karşılaştırması...</div>
+          <div class="mimari-open">Detayı Gör →</div>
+        </div>
+      </div>
+      <div class="mimari-card reveal" style="transition-delay:0.40s;" onclick="openMimariDetail(5)">
+        <div class="mimari-img" style="background:linear-gradient(135deg,#01303d,#012a36);">
+          <svg width="100%" height="100%" viewBox="0 0 380 180" fill="none" style="position:absolute;inset:0;opacity:0.5;">
+            <path d="M60,150 Q190,20 320,150" fill="none" stroke="#00c4d4" stroke-width="0.8"/>
+            <path d="M60,160 Q190,40 320,160" fill="rgba(0,196,212,0.08)" stroke="none"/>
+            <rect x="140" y="100" width="100" height="70" fill="rgba(0,196,212,0.12)" stroke="#00c4d4" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div class="mimari-num">06</div>
+        <div class="mimari-body">
+          <div class="mimari-title">Banyo Lüks Detayları</div>
+          <div class="mimari-text">Yürüyüş duşu, duvar armatürleri ve gizli rezervuarlar. Spa banyo teknikleri...</div>
+          <div class="mimari-open">Detayı Gör →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VİLLA İNŞAATI NASIL YAPILIR -->
+  <div class="content-panel" id="panel-villa-nasil">
+    <div style="max-width:1380px;margin:0 auto;">
+      <div class="video-grid" style="margin-bottom:60px;">
+        <div class="video-card reveal" onclick="openVideoCard(0)">
+          <div class="video-thumb" style="background:linear-gradient(135deg,#011c26,#012a36);">
+            <svg width="100%" height="100%" viewBox="0 0 380 200" fill="none" style="position:absolute;inset:0;opacity:0.3;">
+              <rect x="40" y="40" width="300" height="120" fill="none" stroke="#00c4d4" stroke-width="0.6"/>
+              <line x1="40" y1="100" x2="340" y2="100" stroke="#00c4d4" stroke-width="0.4"/>
+              <line x1="190" y1="40" x2="190" y2="160" stroke="#00c4d4" stroke-width="0.4"/>
+            </svg>
+            <div class="video-play">▶</div>
+            <div class="video-step">Adım 01</div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">Arsa Seçimi & İmar Durumu</div>
+            <div class="video-desc">İnşaat sürecinin temeli doğru arsa seçimiyle başlar. İmar durumu, TAKS, kat yüksekliği ve altyapı...</div>
+            <a href="https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA" target="_blank" class="video-link">▶ YouTube'da İzle</a>
+          </div>
+        </div>
+        <div class="video-card reveal" style="transition-delay:0.08s;" onclick="openVideoCard(1)">
+          <div class="video-thumb" style="background:linear-gradient(135deg,#012a36,#01303d);">
+            <svg width="100%" height="100%" viewBox="0 0 380 200" fill="none" style="position:absolute;inset:0;opacity:0.3;">
+              <polygon points="40,160 190,40 340,160" fill="none" stroke="#00c4d4" stroke-width="0.6"/>
+              <rect x="155" y="130" width="70" height="30" fill="rgba(0,196,212,0.1)"/>
+            </svg>
+            <div class="video-play">▶</div>
+            <div class="video-step">Adım 02</div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">Mimari Proje & Ruhsat</div>
+            <div class="video-desc">Lisanslı mimar tarafından hazırlanan proje belediyeye sunulur. Statik, elektrik, tesisat...</div>
+            <a href="https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA" target="_blank" class="video-link">▶ YouTube'da İzle</a>
+          </div>
+        </div>
+        <div class="video-card reveal" style="transition-delay:0.16s;" onclick="openVideoCard(2)">
+          <div class="video-thumb" style="background:linear-gradient(135deg,#01303d,#011c26);">
+            <svg width="100%" height="100%" viewBox="0 0 380 200" fill="none" style="position:absolute;inset:0;opacity:0.3;">
+              <rect x="60" y="60" width="260" height="120" fill="none" stroke="#00c4d4" stroke-width="0.6"/>
+              <rect x="80" y="80" width="220" height="80" fill="rgba(0,196,212,0.08)"/>
+              <line x1="60" y1="120" x2="320" y2="120" stroke="#00c4d4" stroke-width="0.5"/>
+            </svg>
+            <div class="video-play">▶</div>
+            <div class="video-step">Adım 03</div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">Temel & Kaba İnşaat</div>
+            <div class="video-desc">Zemin etüdü, kazı ve temel betonlaması. Kolon, kiriş ve döşeme sistemi kurulumu...</div>
+            <a href="https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA" target="_blank" class="video-link">▶ YouTube'da İzle</a>
+          </div>
+        </div>
+        <div class="video-card reveal" style="transition-delay:0.24s;" onclick="openVideoCard(3)">
+          <div class="video-thumb" style="background:linear-gradient(135deg,#011c26,#01303d);">
+            <svg width="100%" height="100%" viewBox="0 0 380 200" fill="none" style="position:absolute;inset:0;opacity:0.3;">
+              <circle cx="190" cy="100" r="60" fill="none" stroke="#00c4d4" stroke-width="0.6"/>
+              <circle cx="190" cy="100" r="30" fill="rgba(0,196,212,0.1)"/>
+              <line x1="190" y1="40" x2="190" y2="160" stroke="#00c4d4" stroke-width="0.4"/>
+              <line x1="130" y1="100" x2="250" y2="100" stroke="#00c4d4" stroke-width="0.4"/>
+            </svg>
+            <div class="video-play">▶</div>
+            <div class="video-step">Adım 04</div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">İnce İşler & İç Mekan</div>
+            <div class="video-desc">Sıva, boya, kaplama, doğrama ve elektrik-tesisat tamamlanır. Berr iç mimarları rehberlik eder...</div>
+            <a href="https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA" target="_blank" class="video-link">▶ YouTube'da İzle</a>
+          </div>
+        </div>
+        <div class="video-card reveal" style="transition-delay:0.32s;" onclick="openVideoCard(4)">
+          <div class="video-thumb" style="background:linear-gradient(135deg,#012a36,#011c26);">
+            <svg width="100%" height="100%" viewBox="0 0 380 200" fill="none" style="position:absolute;inset:0;opacity:0.3;">
+              <path d="M0,160 C100,120 200,180 300,140 C360,118 380,150 380,150" fill="none" stroke="#00c4d4" stroke-width="0.8"/>
+              <path d="M0,170 C80,150 160,175 240,160 C320,145 380,165 380,165" fill="rgba(0,196,212,0.08)"/>
+              <rect x="80" y="60" width="220" height="80" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+            </svg>
+            <div class="video-play">▶</div>
+            <div class="video-step">Adım 05</div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">Peyzaj & Anahtar Teslim</div>
+            <div class="video-desc">Bahçe düzenlemesi, peyzaj ve havuz yapımı. Belediye iskanı ve tüm dokümanlar...</div>
+            <a href="https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA" target="_blank" class="video-link">▶ YouTube'da İzle</a>
+          </div>
+        </div>
+        <div class="video-card reveal" style="transition-delay:0.40s;" onclick="openVideoCard(5)">
+          <div class="video-thumb" style="background:linear-gradient(135deg,#01303d,#012a36);">
+            <svg width="100%" height="100%" viewBox="0 0 380 200" fill="none" style="position:absolute;inset:0;opacity:0.3;">
+              <rect x="20" y="20" width="340" height="160" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+              <rect x="40" y="40" width="140" height="120" fill="rgba(0,196,212,0.08)"/>
+              <rect x="200" y="40" width="140" height="120" fill="rgba(0,196,212,0.05)"/>
+            </svg>
+            <div class="video-play">▶</div>
+            <div class="video-step">Bonus</div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">Akıllı Ev Sistemleri</div>
+            <div class="video-desc">Otomasyon, güvenlik ve enerji yönetimi sistemlerinin villaya entegrasyonu...</div>
+            <a href="https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA" target="_blank" class="video-link">▶ YouTube'da İzle</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== İLETİŞİM ===== -->
+<section id="contact">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">İletişim</div>
+    <h2 class="section-title">Bize Ulaşın</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info reveal-left">
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div class="contact-text"><strong>Telefon</strong><p>0532 441 33 30</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div class="contact-text"><strong>Adres</strong><p>Kuşadası / Aydın, Türkiye</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🌐</div>
+        <div class="contact-text"><strong>Web</strong><p>www.berrarsa.com</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div class="contact-text"><strong>Çalışma Saatleri</strong><p>Hft. içi 09:00–18:00 · Cumartesi 10:00–16:00</p></div>
+      </div>
+      <div class="social-row">
+        <a href="https://www.instagram.com/berr.arsa/" class="social-btn" target="_blank">📷</a>
+        <a href="https://www.facebook.com/profile.php?id=100059929685406" class="social-btn" target="_blank">👥</a>
+        <a href="https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA" class="social-btn" target="_blank">▶️</a>
+        <a href="https://berr.sahibinden.com/" class="social-btn" target="_blank">🏠</a>
+      </div>
+    </div>
+    <div class="contact-form reveal-right">
+      <div class="form-group"><input type="text" placeholder="Adınız Soyadınız"></div>
+      <div class="form-group"><input type="tel" placeholder="Telefon Numaranız"></div>
+      <div class="form-group"><input type="email" placeholder="E-posta Adresiniz"></div>
+      <div class="form-group"><input type="text" placeholder="Konu (Arsa / Villa / Malikane)"></div>
+      <div class="form-group"><textarea placeholder="Mesajınız..."></textarea></div>
+      <button class="btn-primary" style="width:100%;padding:16px;" onclick="alert('Mesajınız alındı! En kısa sürede dönüş yapacağız.')"><span>Gönder →</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BERR<span>.</span>ARSA</div>
+  <div class="footer-tagline">"Hayalinizdeki Yaşam Alanına Giden Yol"</div>
+  <div class="footer-copy">© 2024 Berr İç Mimarlık. Tüm hakları saklıdır.</div>
+</footer>
+
+<!-- ===== CATEGORY MODAL ===== -->
+<div id="modal">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div class="modal-breadcrumb">Berr Arsa › <span id="modalCatName">Kategori</span></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-content">
+      <div class="listing-grid" id="listingGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LISTING DETAIL VIEW ===== -->
+<div id="detail-view">
+  <div class="detail-inner">
+    <div class="detail-header">
+      <div class="detail-nav">
+        <button class="detail-nav-btn" onclick="navigateListing(-1)">← Önceki</button>
+        <button class="detail-nav-btn" onclick="closeDetail()">↩ Listeye Dön</button>
+        <button class="detail-nav-btn" onclick="navigateListing(1)">Sonraki →</button>
+      </div>
+      <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-body">
+      <div class="detail-img-panel">
+        <div class="detail-main-img" id="detailMainImg">
+          <svg width="100%" height="100%" viewBox="0 0 600 400" fill="none" style="opacity:0.25;">
+            <rect x="100" y="60" width="400" height="300" fill="none" stroke="#00c4d4" stroke-width="1"/>
+            <polygon points="100,60 300,10 500,60" fill="none" stroke="#00c4d4" stroke-width="1"/>
+            <rect x="140" y="90" width="70" height="90" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.5"/>
+            <rect x="265" y="90" width="70" height="90" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.5"/>
+            <rect x="390" y="90" width="70" height="90" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.5"/>
+            <rect x="220" y="250" width="160" height="110" fill="rgba(0,196,212,0.14)" stroke="#00c4d4" stroke-width="0.8"/>
+            <path d="M0,390 C100,360 200,390 300,370 C400,350 500,385 600,360" fill="none" stroke="#00c4d4" stroke-width="0.6" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="detail-thumbs">
+          <div class="detail-thumb active"></div>
+          <div class="detail-thumb"></div>
+          <div class="detail-thumb"></div>
+          <div class="detail-thumb"></div>
+        </div>
+      </div>
+      <div class="detail-text" id="detailText"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BİZ KİMİZ DETAY OVERLAY ===== -->
+<div id="who-overlay">
+  <div class="who-ov-header">
+    <div class="who-ov-tabs">
+      <button class="who-ov-tab active" onclick="switchWhoTab('hakkimizda',this)">Hakkımızda</button>
+      <button class="who-ov-tab" onclick="switchWhoTab('odüller',this)">Ödüller & Başarılar</button>
+      <button class="who-ov-tab" onclick="switchWhoTab('basinda',this)">Basında Biz</button>
+    </div>
+    <button class="modal-close" onclick="closeWhoOverlay()">✕</button>
+  </div>
+  <div class="who-ov-body">
+
+    <!-- Hakkımızda Panel -->
+    <div class="who-ov-panel active" id="who-panel-hakkimizda">
+      <div style="max-width:900px;">
+        <div class="section-eyebrow" style="margin-bottom:12px;">Berr Arsa & İç Mimarlık</div>
+        <h2 class="section-title" style="margin-bottom:20px;">15 Yıllık Tutkuyla<br>İnşa Edilen Bir Miras</h2>
+        <div class="section-divider"></div>
+        <p class="section-body">Berr Arsa & İç Mimarlık, 2008 yılında Kuşadası'nda kurulmuş, Türkiye'nin Ege kıyısının en prestijli gayrimenkul ve mimarlık firmalarından biridir. Kuruluşumuzdan bu yana arsa geliştirme, villa inşaatı, tarihi mekan restorasyonu ve iç mimarlık alanlarında 247'den fazla başarılı projeye imza attık.</p>
+        <p class="section-body">Firmamız, uluslararası standartlarda sunduğu hizmetler ve yenilikçi tasarım anlayışıyla dikkat çekerek 2021, 2022 ve 2023 yıllarında üst üste "World Property Awards – Dünya Çapında Üstün Gayrimenkul Ödülü"ne layık görüldü.</p>
+        <p class="section-body">Berr ekibi; deneyimli mimarlar, mühendisler, iç tasarımcılar ve gayrimenkul uzmanlarından oluşan disiplinlerarası bir yapıya sahiptir. Her projede müşteri vizyonunu merkezine alan özelleştirilmiş çözümler üretiyoruz.</p>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px;">
+          <div style="background:var(--glass);border:1px solid var(--glass-border);padding:30px;text-align:center;backdrop-filter:blur(8px);">
+            <div style="font-family:'DM Serif Display',serif;font-size:42px;color:var(--aqua);">2008</div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Kuruluş Yılı</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-border);padding:30px;text-align:center;backdrop-filter:blur(8px);">
+            <div style="font-family:'DM Serif Display',serif;font-size:42px;color:var(--aqua);">23+</div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Uzman Çalışan</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-border);padding:30px;text-align:center;backdrop-filter:blur(8px);">
+            <div style="font-family:'DM Serif Display',serif;font-size:42px;color:var(--aqua);">12</div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Aktif Şehir</div>
+          </div>
+        </div>
+
+        <div style="margin-top:50px;">
+          <h3 style="font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:20px;">Vizyon & Misyon</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;">
+            <div style="background:rgba(0,196,212,0.06);border:1.5px solid var(--glass-border);padding:30px;">
+              <div style="font-size:9px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;margin-bottom:12px;">Vizyonumuz</div>
+              <p style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--text-muted);line-height:1.8;">Türkiye'nin en güvenilir ve yenilikçi gayrimenkul firması olarak, her projeyle yaşam standartlarını yükseltmek.</p>
+            </div>
+            <div style="background:rgba(0,196,212,0.06);border:1.5px solid var(--glass-border);padding:30px;">
+              <div style="font-size:9px;letter-spacing:4px;color:var(--aqua);text-transform:uppercase;margin-bottom:12px;">Misyonumuz</div>
+              <p style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--text-muted);line-height:1.8;">Müşterilerimizin hayallerini, sürdürülebilir ve estetik tasarımlarla gerçeğe dönüştürerek değer yaratmak.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ödüller Panel -->
+    <div class="who-ov-panel" id="who-panel-odüller">
+      <div style="max-width:900px;">
+        <div class="section-eyebrow" style="margin-bottom:12px;">Uluslararası Başarılar</div>
+        <h2 class="section-title" style="margin-bottom:20px;">Ödüllerimiz &<br>Sertifikalarımız</h2>
+        <div class="section-divider"></div>
+        <div class="awards-timeline">
+          <div class="award-row">
+            <div class="award-year">2023</div>
+            <div class="award-content">
+              <div class="award-org">World Property Awards · Londra</div>
+              <div class="award-title">Dünya Çapında Üstün Gayrimenkul Ödülü</div>
+              <div class="award-detail">Türkiye'yi temsil eden en iyi gayrimenkul geliştirme firması kategorisinde, 3. kez peş peşe bu prestijli ödülü aldık. Jüri, Berr'in sürdürülebilir mimari yaklaşımını ve müşteri odaklı hizmet anlayışını özellikle vurguladı.</div>
+            </div>
+          </div>
+          <div class="award-row">
+            <div class="award-year">2022</div>
+            <div class="award-content">
+              <div class="award-org">World Property Awards · Londra</div>
+              <div class="award-title">Dünya Çapında Üstün Gayrimenkul Ödülü</div>
+              <div class="award-detail">Ege bölgesinde geliştirilen ultra lüks arsa ve villa projeleriyle bu uluslararası ödüle ikinci kez layık görüldük. Kuşadası Yaylaköy ve Bodrum projeleri büyük dikkat çekti.</div>
+            </div>
+          </div>
+          <div class="award-row">
+            <div class="award-year">2021</div>
+            <div class="award-content">
+              <div class="award-org">World Property Awards · Londra</div>
+              <div class="award-title">Dünya Çapında Üstün Gayrimenkul Ödülü</div>
+              <div class="award-detail">Türkiye'nin Ege kıyısındaki ilk büyük ölçekli golf resort arsa projesini başarıyla tamamlamamızın ardından ilk uluslararası ödülümüzü aldık.</div>
+            </div>
+          </div>
+          <div class="award-row">
+            <div class="award-year">2020</div>
+            <div class="award-content">
+              <div class="award-org">Türkiye Mimarlık Ödülleri</div>
+              <div class="award-title">Yılın En İyi Konut Tasarımı</div>
+              <div class="award-detail">Çeşme Alaçatı'daki taş villa restorasyon projesiyle Türkiye Mimarlık Ödülleri'nde "Yılın En İyi Konut Tasarımı" ödülünü aldık.</div>
+            </div>
+          </div>
+          <div class="award-row">
+            <div class="award-year">2019</div>
+            <div class="award-content">
+              <div class="award-org">Ege Girişimcilik Platformu</div>
+              <div class="award-title">Bölgenin En Hızlı Büyüyen Firması</div>
+              <div class="award-detail">Kuşadası merkezli firmaların değerlendirildiği bu platformda Berr, 5 yılda %280 büyüme oranıyla bölgenin en hızlı büyüyen gayrimenkul firması seçildi.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Basında Biz Panel -->
+    <div class="who-ov-panel" id="who-panel-basinda">
+      <div class="section-eyebrow" style="margin-bottom:12px;">Medyada Berr</div>
+      <h2 class="section-title" style="margin-bottom:30px;">Basında Biz</h2>
+      <div class="basin-biz-grid">
+        <div class="press-card" onclick="closeWhoOverlay();setTimeout(()=>{document.getElementById('content-sections').scrollIntoView({behavior:'smooth'});switchContentTab('basinda',document.querySelector('.content-tab'));openPressDetail(0);},300);">
+          <div class="press-source">Milliyet Emlak</div>
+          <div class="press-title">Ege'nin En Prestijli Arsa Projesinde Berr İmzası</div>
+          <div class="press-date">Mart 2024</div>
+          <div class="press-link-hint" style="opacity:1;">Detayı Oku →</div>
+        </div>
+        <div class="press-card" onclick="closeWhoOverlay();setTimeout(()=>{openPressDetail(1);},300);">
+          <div class="press-source">Hürriyet Ege</div>
+          <div class="press-title">3. Kez Dünya Ödülü: Berr Arsa Başarısını Taçlandırdı</div>
+          <div class="press-date">Şubat 2024</div>
+          <div class="press-link-hint" style="opacity:1;">Detayı Oku →</div>
+        </div>
+        <div class="press-card" onclick="closeWhoOverlay();setTimeout(()=>{openPressDetail(2);},300);">
+          <div class="press-source">Sabah Ekonomi</div>
+          <div class="press-title">Ege Kıyılarında Lüks Villa Yatırımı Neden Cazip?</div>
+          <div class="press-date">Ocak 2024</div>
+          <div class="press-link-hint" style="opacity:1;">Detayı Oku →</div>
+        </div>
+        <div class="press-card" onclick="closeWhoOverlay();setTimeout(()=>{openPressDetail(3);},300);">
+          <div class="press-source">Property TR</div>
+          <div class="press-title">Önce Arsam Sonra Evim: Yeni Nesil Yatırım</div>
+          <div class="press-date">Kasım 2023</div>
+          <div class="press-link-hint" style="opacity:1;">Detayı Oku →</div>
+        </div>
+        <div class="press-card" onclick="closeWhoOverlay();setTimeout(()=>{openPressDetail(4);},300);">
+          <div class="press-source">CNN Türk</div>
+          <div class="press-title">Golf Resort Bölgesinde Villa İmarlı Arsa Projesi</div>
+          <div class="press-date">Ekim 2023</div>
+          <div class="press-link-hint" style="opacity:1;">Detayı Oku →</div>
+        </div>
+        <div class="press-card" onclick="closeWhoOverlay();setTimeout(()=>{openPressDetail(5);},300);">
+          <div class="press-source">Yapı Dünyası</div>
+          <div class="press-title">Mimarlıkta Sürdürülebilirlik: Berr'in Yaklaşımı</div>
+          <div class="press-date">Eylül 2023</div>
+          <div class="press-link-hint" style="opacity:1;">Detayı Oku →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== UNIVERSAL DETAIL OVERLAY ===== -->
+<div id="u-overlay">
+  <div class="u-ov-header">
+    <div class="u-ov-nav">
+      <button class="u-ov-btn" id="uPrevBtn" onclick="uNavPrev()">← Önceki</button>
+      <button class="u-ov-btn" onclick="closeUOverlay()">↩ Geri</button>
+      <button class="u-ov-btn" id="uNextBtn" onclick="uNavNext()">Sonraki →</button>
+    </div>
+    <button class="modal-close" onclick="closeUOverlay()">✕</button>
+  </div>
+  <div class="u-ov-body" id="uBody"></div>
+</div>
+
+<script>
+/* ===== DATA ===== */
+const listings={
+  arsa:[
+    {title:'Söke Ağaçlı Deniz Manzaralı 960m² Arsa',detail:'Villa İmarlı · Golf Resort Bölgesi',slogan:'Egenin Mavi Yüreği, Sizin Parçanız',area:'960 m²',loc:'Aydın · Söke · Ağaçlı',fiyat:'Fiyat Listesi İçin İletişime Geçin',desc:'Golf resort bölgesinde iki villa imarlı, Ege denizine nazır eşsiz arsa. Altyapısı tamamlanmış, hazır inşaat parseli. Berr\'in mimari danışmanlığıyla hayalinizdeki villayı inşa edin.'},
+    {title:'Kuşadası Yaylaköy Panoramik Ege Manzaralı 1.020m² Arsa',detail:'4 Köşk Projesi Hazır · Ultra Lüks',slogan:'Ufku Kendinize Çizin',area:'1.020 m²',loc:'Aydın · Kuşadası · Yaylaköy',fiyat:'Değer Analizi İçin Arayın',desc:'Kuşadası\'nın en prestijli lokasyonlarından birinde, 4 adet ultra lüks köşk inşaatına hazır arsa. Projeniz için mimari çizimler hazır.'},
+    {title:'Bodrum Gündoğan Denize Sıfır İmarlı Arsa',detail:'Konut İmarlı · 650m²',slogan:'Her Sabah Ufku Seyredin',area:'650 m²',loc:'Muğla · Bodrum · Gündoğan',fiyat:'Randevu İçin İletişime Geçin',desc:'Gündoğan koyuna sıfır konumuyla eşi bulunmaz bir parsel. Konut imarlı yapısıyla villa ya da apart villa projesine uygun.'},
+    {title:'Çeşme Alaçatı Bağ & Bahçe Arazisi 3.200m²',detail:'Tarımsal Arazi · Proje Potansiyeli',slogan:'Toprakla Kök Salın',area:'3.200 m²',loc:'İzmir · Çeşme · Alaçatı',fiyat:'Detaylı Bilgi İçin Arayın',desc:'Alaçatı\'nın rüzgar değirmenleri silüetiyle taçlanan bağ arazisi. Bağcılık, zeytinlik veya özel bahçe konseptli konut projesine uygun.'},
+  ],
+  villa:[
+    {title:'Panoramik Ege\'ye Sıfır Ultra Lüks 4+1 Villa',detail:'İnşaat Aşamasında · 420m² Kapalı Alan',slogan:'Ufku Yaşayan Tek Adres',area:'420 m²',loc:'Aydın · Kuşadası',fiyat:'Değer Analizi İçin Arayın',desc:'Ege\'ye bakan geniş teraslı, yüzme havuzlu, akıllı ev sistemleri entegre 4+1 villa. Berr\'in imza iç mimari konseptiyle her detay özenle tasarlanmış.'},
+    {title:'Bodrum Yarımadası Deniz Manzaralı Bahçeli 3+1 Villa',detail:'Anahtar Teslim · 280m² · Özel Havuz',slogan:'Mavinin İçinde Beyaz Bir Şiir',area:'280 m²',loc:'Muğla · Bodrum',fiyat:'Randevu İçin İletişime Geçin',desc:'Akdeniz mimarisinin en saf yorumu. Sonsuzluk havuzu, peyzajlı bahçe ve minimalist Bodrum estetiğiyle özel villa.'},
+    {title:'Çeşme Alaçatı Modern Taş Villa 5+2',detail:'Lüks Yaşam · 580m² · İç Mimari Hazır',slogan:'Taşın Zarafeti, Modernin Konforu',area:'580 m²',loc:'İzmir · Çeşme',fiyat:'Fiyat Bilgisi İçin Arayın',desc:'Alaçatı\'nın tarihi dokusunda konumlanan, masif taş dış cephe ve modern iç mekanlara sahip 5+2 villa.'},
+  ],
+  malikane:[
+    {title:'Kuşadası Tarihî Köy Dokusunda Restore Malikane',detail:'Orijinal Taş · 7 Oda · 1.200m² Arazi',slogan:'Asaleti Yeniden Keşfet',area:'1.200 m² arazi',loc:'Aydın · Kuşadası',fiyat:'Değerleme İçin Görüşelim',desc:'Tarihi köy dokusunun kalbinde, orijinal taş örgüsü korunarak modernize edilmiş malikane. 7 oda, hamam, şömineli salon ve meyve bahçesi.'},
+    {title:'İzmir Bornova Geç Osmanlı Dönemi Köşk',detail:'Tescilli · Restorasyon Projesine Uygun',slogan:'Tarihin Zarif Tanığı',area:'850 m² kapalı',loc:'İzmir · Bornova',fiyat:'Proje Danışmanlığı İçin Arayın',desc:'19. yüzyıl geç Osmanlı mimarisinin özgün örneği. Cumbalı cephe, yüksek tavanlar ve özgün ahşap işçiliğiyle tescilli yapı.'},
+  ]
+};
+
+const projData={
+  devam:[
+    {type:'Arsa',name:'Kuşadası Yaylaköy Köşk Projesi',loc:'Aydın · Kuşadası',slogan:'4 Adet Ultra Lüks Köşk',status:'Devam Ediyor',detail:'Kuşadası Yaylaköy\'ün muhteşem Ege manzarasına hakim konumunda, 1.020m² arazi üzerinde 4 adet ultra lüks köşk projesi. Her köşk kendi özel bahçesi, havuzu ve panoramik terasıyla tasarlanmıştır. Projede akıllı ev sistemleri, enerji verimli malzemeler ve Ege mimarisinin modern yorumu bir arada sunulmaktadır.',area:'1.020 m²',sure:'18 Ay',baslangic:'Ocak 2024'},
+    {type:'Villa',name:'Bodrum Denize Sıfır Villa Projesi',loc:'Muğla · Bodrum',slogan:'Sonsuzluk Havuzlu Beyaz Villa',status:'Devam Ediyor',detail:'Bodrum\'un eşsiz koyuna sıfır konumuyla öne çıkan bu villa projesi, 280m² kapalı alan ve geniş dış yaşam alanlarıyla tasarlanmıştır. Sonsuzluk havuzu, açık yemek terası ve denize bakan yatak odalarıyla lüks yaşamın en saf ifadesidir.',area:'280 m²',sure:'14 Ay',baslangic:'Mart 2024'},
+    {type:'İç Mimari',name:'Çeşme Alaçatı Taş Villa Restorasyonu',loc:'İzmir · Çeşme',slogan:'Modern Ruh, Tarihi Doku',status:'Devam Ediyor',detail:'Alaçatı\'nın tarihi dokusundaki bu geleneksel taş yapı, modern yaşam konforu korunarak özgün dokusuna uygun biçimde restore edilmektedir. Proje; özgün taş cephe, geleneksel ahşap doğramalar ve çağdaş iç mekan çözümleriyle birleşmektedir.',area:'580 m²',sure:'10 Ay',baslangic:'Şubat 2024'},
+    {type:'Arsa',name:'Söke Golf Resort Arsa Düzenlemesi',loc:'Aydın · Söke',slogan:'Golf ve Ege\'nin Eşsiz Birlikteliği',status:'Devam Ediyor',detail:'Söke-Ağaçlı golf resort bölgesinde 960m² üzerinde yürütülen bu arsa düzenleme projesi; altyapı, parselleme ve mimari etüt çalışmalarını kapsamaktadır. Tamamlandığında iki adet villa imarlı parsel oluşturulacaktır.',area:'960 m²',sure:'6 Ay',baslangic:'Nisan 2024'},
+  ],
+  planlanan:[
+    {type:'Malikane',name:'İzmir Bornova Köşk Restorasyonu',loc:'İzmir · Bornova',slogan:'Tarihin Zarif Yeniden Doğuşu',status:'Planlanan',detail:'19. yüzyıl geç Osmanlı döneminden kalma bu tescilli köşk yapısı için kapsamlı bir restorasyon projesi hazırlanmaktadır. Özgün cumba, ahşap tavanlar ve bahçe düzenlemesiyle birlikte modern konforu da barındıracak.',area:'850 m²',sure:'20 Ay',baslangic:'Ekim 2024'},
+    {type:'Villa',name:'Selçuk Efes Bölgesi Villa Sitesi',loc:'İzmir · Selçuk',slogan:'Tarihin Yanı Başında Modern Yaşam',status:'Planlanan',detail:'Efes antik kentinin yakınında, tarihi atmosferi yansıtan modern villa sitesi projesi. 6 adet villa, ortak yüzme havuzu, sosyal tesisler ve peyzajlı bahçelerden oluşacak.',area:'5.200 m² toplam',sure:'24 Ay',baslangic:'Kasım 2024'},
+    {type:'Arsa',name:'Foça Sahil Parsel Geliştirme',loc:'İzmir · Foça',slogan:'Antik Denizin Yeni Sahiplerini Bekliyor',status:'Planlanan',detail:'Foça\'nın antik liman bölgesine yakın konumdaki bu sahil parseli için detaylı imar araştırması ve yapılabilirlik etüdü devam etmektedir. Tekli villa ya da küçük ölçekli konut projesi olarak değerlendirilecek.',area:'1.100 m²',sure:'12 Ay',baslangic:'Aralık 2024'},
+  ],
+  tamamlanan:[
+    {type:'Villa',name:'Kuşadası Kadıkalesi Deniz Manzaralı Villa',loc:'Aydın · Kuşadası',slogan:'Ege\'ye Açılan Pencere',status:'Tamamlandı',detail:'Kuşadası\'nın Kadıkalesi mevkiinde inşa edilen bu 350m² villa projesi 2023 yılında teslim edilmiştir. 4+1 oda, özel havuz, sonsuzluk terrası ve akıllı ev sistemleriyle donatılmış olan villa, müşterimizin hayallerini aşmıştır.',area:'350 m²',sure:'16 Ay',baslangic:'2022'},
+    {type:'İç Mimari',name:'İzmir Alsancak Loft Dönüşümü',loc:'İzmir · Alsancak',slogan:'Endüstriyel Şıklık',status:'Tamamlandı',detail:'Alsancak\'ın tarihi depo binasından dönüştürülen bu loft dairesi, endüstriyel estetikle modern minimalizmi birleştiriyor. Ham beton yüzeyler, yüksek tavan ve büyük pencereler mekanın özgün karakterini oluşturuyor.',area:'180 m²',sure:'8 Ay',baslangic:'2022'},
+    {type:'Arsa',name:'Didim Altınkum Parsel Düzenlemesi',loc:'Aydın · Didim',slogan:'Altın Sahilin Hazinesi',status:'Tamamlandı',detail:'Didim Altınkum plajına yürüme mesafesinde, 1.400m² konut imarlı arsada gerçekleştirilen altyapı ve parselleme çalışması başarıyla tamamlanmıştır.',area:'1.400 m²',sure:'5 Ay',baslangic:'2023'},
+    {type:'Malikane',name:'Kuşadası Tarihî Köy Mahallesi Malikane',loc:'Aydın · Kuşadası',slogan:'Asrın Restorasyonu',status:'Tamamlandı',detail:'Kuşadası\'nın tarihi köy dokusundaki bu 7 odalı malikane, orijinal taş örgüsü korunarak modernize edilmiştir. Hamam, şömineli salon, meyve bahçesi ve güncellenen altyapısıyla eşsiz bir yaşam alanına kavuştu.',area:'1.200 m² arazi',sure:'22 Ay',baslangic:'2021'},
+  ]
+};
+
+const pressItems=[
+  {source:'Milliyet Emlak',title:'Ege\'nin En Prestijli Arsa Projesinde Berr İmzası',excerpt:'Kuşadası\'nın en değerli noktalarından birinde hayata geçirilen proje, bölgenin gayrimenkul yatırım değerini yeniden tanımladı...',date:'Mart 2024',detail:'Bu kapsamlı haber, Berr Arsa\'nın Kuşadası Yaylaköy\'deki 4 köşk projesini ele almaktadır. Proje, bölgede lüks gayrimenkul değerlerini %35 artırdı. Haberden alıntı: "Berr ekibi her aşamada profesyonelliği ve estetik kaygıyı birlikte yürüterek Ege\'nin en prestijli arsa projesini hayata geçirdi." Haberin devamında yatırımcı yorumları ve piyasa analizine yer verilmiştir.',link:'https://www.berrarsa.com/'},
+  {source:'Hürriyet Ege',title:'3. Kez Dünya Ödülü: Berr Arsa Başarısını Taçlandırdı',excerpt:'Üst üste üçüncü kez "Dünya Çapında Üstün Gayrimenkul Ödülü"nü alan Berr İç Mimarlık...',date:'Şubat 2024',detail:'World Property Awards töreninde üçüncü kez ödül alan Berr\'in bu başarısını Hürriyet Ege birinci sayfasından haberleştirdi. Firma yöneticisi: "Bu ödül sadece bize değil, Ege\'nin tüm gayrimenkul sektörüne verilen bir onurdur" dedi. Haber Avrupa\'daki Türk yatırımcılar arasında da büyük yankı uyandırdı.',link:'https://www.berrarsa.com/'},
+  {source:'Sabah Ekonomi',title:'Ege Kıyılarında Lüks Villa Yatırımı Neden Cazip?',excerpt:'Sektör uzmanı Berr İç Mimarlık yöneticileri, Ege\'deki arsa ve villa yatırımının neden karlı olduğunu anlattı...',date:'Ocak 2024',detail:'Sabah Ekonomi\'nin kapsamlı analizinde Berr uzmanları, Ege\'de arsa değerlerinin 10 yılda %240 artış gösterdiğini ve bu trendin devam edeceğini öngördüklerini aktardı. Kuşadası, Bodrum ve Çeşme pazarları ayrıntılı incelendi. Haberde Berr\'in "Önce Arsam Sonra Evim" konsepti de detaylandırıldı.',link:'https://www.berrarsa.com/'},
+  {source:'Property TR',title:'Önce Arsam Sonra Evim: Yeni Nesil Yatırım Yaklaşımı',excerpt:'Berr\'in geliştirdiği "Önce Arsam Sonra Evim" konsepti, Türkiye genelinde yatırımcıların gündemine girdi...',date:'Kasım 2023',detail:'Property TR, Berr\'in öncülüğünde geliştirilen bu yatırım modelini kapsamlı biçimde ele aldı. Önce arsa alıp değer artışını bekleyen, ardından Berr ile villa inşa eden yatırımcıların hikayelerine yer verildi. Haberde bu modelin geleneksel konut alımına kıyasla %60 daha fazla değer artışı sağladığı vurgulandı.',link:'https://www.berrarsa.com/'},
+  {source:'CNN Türk',title:'Golf Resort Bölgesinde Villa İmarlı Arsa Projesi',excerpt:'Söke-Ağaçlı\'da hayata geçirilen ve deniz manzarası sunan villa imarlı arsa projesi medyanın gündemine taşındı...',date:'Ekim 2023',detail:'CNN Türk\'ün canlı yayınında ele alınan bu haber, Söke Golf Resort bölgesindeki Berr arsalarını ve bölgenin yatırım potansiyelini gündeme taşıdı. Yayında uzmanlar Ege kıyısında golf-deniz-doğa bütünleşik projelerin giderek artan talebini değerlendirdi.',link:'https://www.berrarsa.com/'},
+  {source:'Yapı Dünyası',title:'Mimarlıkta Sürdürülebilirlik: Berr\'in Yaklaşımı',excerpt:'Çevre dostu inşaat malzemeleri ve enerji verimli tasarım anlayışıyla Berr öne çıkıyor...',date:'Eylül 2023',detail:'Yapı Dünyası dergisinin Sürdürülebilir Mimarlık özel sayısında Berr\'in yaklaşımı kapak konusu oldu. Her projede kullanılan yenilenebilir enerji çözümleri, doğal malzeme seçimi ve yeşil sertifikasyon süreçleri detaylandırıldı. Berr, Ege\'deki projelerinde %40 enerji verimliliği hedefine ulaştığını açıkladı.',link:'https://www.berrarsa.com/'},
+];
+
+const socialItems=[
+  {icon:'🌿',title:'Yeşil İnşaat Programı',subtitle:'Sürdürülebilir Yapılaşma',detail:'Berr\'in Yeşil İnşaat Programı kapsamında her projede sürdürülebilir malzeme kullanımı zorunlu hale getirilmiştir. Güneş paneli entegrasyonu, gri su geri dönüşümü, ısı yalıtım sistemleri ve doğal havalandırma tasarımları standart uygulama olarak benimsenmiştir. 2023 yılında tüm projelerimizde ortalama %40 enerji verimliliği sağlandı. Bu programla Türkiye\'nin yeşil mimarlık alanındaki öncü firmalarından biri olma yolunda ilerliyoruz.',gorsel:'yeşil'},
+  {icon:'🏫',title:'Eğitime Destek',subtitle:'Gelecek Nesil Mimarlar',detail:'Berr Akademi aracılığıyla her yıl mimarlık ve iç tasarım bölümü öğrencilerine kapsamlı staj olanakları sunuyoruz. 2023 yılında 12 öğrenciye burs, 8 öğrenciye de ücretli staj imkânı sağladık. Ayrıca bölgedeki okullara altyapı desteği vererek eğitim kalitesine katkıda bulunduk. Üniversite öğrencileriyle yürütülen "Yaşayan Mekan" atölye çalışmaları her yıl düzenleniyor.',gorsel:'egitim'},
+  {icon:'🤝',title:'Afet Konutları',subtitle:'Toplumun Yanındayız',detail:'2023 Kahramanmaraş depremi sonrasında Berr ekibi gönüllü olarak afet bölgesine yöneldi. 3 ayda 8 adet dayanıklı konutun yapımına katkıda bulunduk. Yapı malzemesi, iş gücü ve lojistik destek sağladık. Berr, olağanüstü dönemlerde de toplumun yanında olmayı kurumsal sorumluluğun en temel parçası olarak görüyor.',gorsel:'afet'},
+  {icon:'🌊',title:'Kıyı Temizliği Kampanyası',subtitle:'Ege\'ye Sahip Çıkıyoruz',detail:'Her yıl bahar ve sonbaharda düzenlediğimiz Ege Kıyısı Temizlik Kampanyası 2023\'te dördüncü yılına girdi. Bu yıl Kuşadası, Foça, Çeşme ve Bodrum kıyılarında 500\'den fazla gönüllüyle çalışarak tonlarca atık toplandı. Deniz kirliliğine dikkat çeken sosyal medya kampanyamız 2 milyonun üzerinde erişim sağladı.',gorsel:'kıyı'},
+  {icon:'🎨',title:'Kültür & Sanat Sponsorluğu',subtitle:'Ege\'nin Kültürünü Destekliyoruz',detail:'Ege\'nin mimari mirası ve sanatsal zenginliğini gelecek nesillere taşımak için kültür sponsorluğu programımız kapsamında 2023 yılında 6 farklı etkinliği destekledik. Kuşadası\'ndaki mimarlık sergisi, Alaçatı yaz film festivali ve genç tasarımcılara yönelik yarışmalar bunlar arasında sayılabilir.',gorsel:'sanat'},
+  {icon:'🌳',title:'Ağaçlandırma Projesi',subtitle:'Her Projede 50 Ağaç',detail:'2019\'da başlattığımız "Her Projede 50 Ağaç" taahhüdümüz bugüne kadar 3.150+ ağacın Ege\'nin farklı bölgelerine dikilmesini sağladı. Zeytin, defne ve Akdeniz çamı türleri tercih ediliyor. Bu ağaçlandırma çalışmaları bölge ekolojisine ve karbon dengesine somut katkı sağlıyor.',gorsel:'agaç'},
+];
+
+const refData={
+  firma:[
+    {name:'Marmara Yapı',sector:'İnşaat & Müteahhitlik',detail:'15 yıllık tecrübesiyle Türkiye\'nin önde gelen müteahhitlik firmalarından biri olan Marmara Yapı ile 12 villa projesinde birlikte çalıştık. Yüksek kaliteli işçilik ve zamanında teslimat konusundaki üstün sicilleriyle projelerimizin vazgeçilmez ortağı.'},
+    {name:'Ege Tapu & Hukuk',sector:'Gayrimenkul Hukuku',detail:'Ege bölgesinin önde gelen gayrimenkul hukuk bürosu. Her parselde tapu tescil, imar süreçleri ve hukuki danışmanlık konularında 8 yıldır güvenilir partnerimiz.'},
+    {name:'Akdeniz Peyzaj',sector:'Peyzaj & Bahçe Tasarımı',detail:'Her projede özel bahçe tasarımı ve peyzaj uygulamalarında Akdeniz Peyzaj ile çalışıyoruz. Akdeniz ikliminin doğal bitkilerini kullanan özgün tasarımları projelerimize ayrı bir değer katıyor.'},
+    {name:'TeknoEv Akıllı Sistemler',sector:'Smart Home Entegrasyonu',detail:'Villa projelerimizin tamamına akıllı ev sistemi entegrasyonunu TeknoEv ile yapıyoruz. Aydınlatma otomasyonu, güvenlik kameraları, enerji yönetimi ve sesli kontrol sistemlerinde uzman.'},
+    {name:'Premium Doğaltaş',sector:'Mermer & Taş Kaplama',detail:'İtalyan ve Türk mermerlerinin yanı sıra yerel doğal taş çözümleri sunan Premium Doğaltaş, projelerimizin zemin ve cephe kaplamalarında standart ortağımız.'},
+    {name:'Sonsuzluk Havuz',sector:'Havuz & Spa Sistemleri',detail:'İnfinity havuz tasarımı ve spa sistemlerinde Türkiye\'nin lider firmalarından biri. Bodrum ve Kuşadası projelerinde mimari estetikle mühendisliği mükemmel biçimde buluşturuyorlar.'},
+    {name:'İzmir Zemin Etüt',sector:'Jeoloji & Zemin Mühendisliği',detail:'Her projede zemin sağlamlığı ve deprem güvenliğini ön planda tutan İzmir Zemin Etüt, yapı güvenliği raporlarımızda güvendiğimiz firmadır.'},
+    {name:'Lümino Aydınlatma',sector:'Tasarım Aydınlatma',detail:'Mekânın ruhunu aydınlatmayla şekillendiren Lümino, villa iç mekan projelerimizde mimari aydınlatma tasarımı ve uygulamasında çözüm ortağımız.'},
+  ],
+  faaliyet:[
+    {name:'Eko Tarım Yatırımları',sector:'Organik Zeytinlik & Bağ',detail:'Ege\'nin bereketli topraklarında organik zeytinlik ve bağ yatırımları alanında faaliyet gösteriyoruz. Bu çalışmalar hem tarımsal değer üretirken hem de bölgenin doğal peyzajını koruyor.'},
+    {name:'Marinaya Yakın Konut',sector:'Tekne & Deniz Yaşamı',detail:'Ege\'nin marina bölgelerine yakın konumlarda, deniz severlere yönelik özel konut çözümleri geliştiriyoruz. Tekne bağlama noktasına yakınlık, proje tasarımlarımızda öncelikli kriterler arasında yer alıyor.'},
+    {name:'Kültürel Miras Restorasyonu',sector:'Tarihi Yapı Koruma',detail:'Ege\'nin zengin tarihi mirasını geleceğe taşımak amacıyla tescilli tarihi yapıların restorasyonunda uzmanlaşıyoruz. Her projeyi özgün dokusuna sadık kalarak yeniliyoruz.'},
+    {name:'Enerji Verimli Yapılar',sector:'Güneş Enerjisi & Yalıtım',detail:'Sıfır enerji ya da yakın sıfır enerji binalar geliştirme hedefiyle güneş paneli, ısıtma/soğutma optimizasyonu ve yüksek performanslı yalıtım çözümlerini tüm projelerimize entegre ediyoruz.'},
+    {name:'Gayrimenkul Danışmanlığı',sector:'Portföy Yönetimi',detail:'Bireysel ve kurumsal yatırımcılara yönelik portföy analizi, değerleme ve yatırım stratejisi hizmetleri sunuyoruz. 247 müşterimizin varlığını en iyi şekilde büyütmelerine destek oluyoruz.'},
+    {name:'Mimarlık Eğitim Programı',sector:'Staj & Mentorluk',detail:'Mimarlık ve iç tasarım öğrencilerine yönelik yıllık eğitim programlarımızda teorik bilgiyle saha deneyimini birleştiriyoruz. Bu programdan mezun olan her öğrenci birer Berr elçisi haline geliyor.'},
+  ],
+  yankol:[
+    {name:'Berr İç Mimarlık',sector:'Tasarım Stüdyosu',detail:'Berr\'in iç mimarlık kolu olan bu stüdyo, 2012\'den bu yana Türkiye\'nin önde gelen villa ve özel konutlarının iç mekan tasarımlarını üstleniyor. Özelleştirilmiş mobilya tasarımı, renk danışmanlığı ve tüm uygulama süreci hizmetleri sunulmaktadır.'},
+    {name:'Berr Akademi',sector:'Eğitim & Gelişim',detail:'2020\'de kurulan Berr Akademi, gayrimenkul yatırımcılarına ve mimarlık meraklılarına yönelik online ve yüz yüze eğitim programları, seminer ve workshop etkinlikleri düzenlemektedir. Şimdiye kadar 800\'den fazla katılımcıya ulaştık.'},
+    {name:'Berr Dijital',sector:'Teknoloji & Görselleştirme',detail:'3D mimari görselleştirme, sanal gerçeklik (VR) villa turu ve dijital pazarlama çözümleri sunan Berr Dijital, müşterilerin henüz inşa edilmemiş bir evi sanal olarak gezebilmelerine olanak tanıyor. Photorealistic render kalitesiyle sektörde referans noktasıyız.'},
+    {name:'Berr Premium',sector:'VIP Portföy Hizmetleri',detail:'Ultra lüks segmentte faaliyet gösteren Berr Premium, seçkin bir müşteri kitlesine özel hizmet vermektedir. Kişisel gayrimenkul danışmanı, yurt dışı yatırım rehberliği ve gizlilik odaklı alım-satım süreçleri sunulmaktadır.'},
+  ],
+};
+
+const mimariItems=[
+  {num:'01',title:'Zemin Malzeme Seçimi',text:'Doğal taş, seramik veya parke seçiminde göz önünde bulundurmanız gereken faktörler ve her mekan için ideal çözümler.',detail:'Zemin malzeme seçimi, bir mekânın hem estetik hem de fonksiyonel kalitesini belirleyen en kritik tasarım kararlarından biridir. Doğal taş (mermer, traverten, granit) zamansız prestij sunarken bakım gerektirir. Seramik çok yönlüdür ve suya dayanıklıdır. Doğal parke sıcak bir his verirken Ege iklimine dikkatli bakım gerektirir. Berr projelerinde zemin seçimi mekânın kullanımına, iklim koşullarına ve müşterinin yaşam tarzına göre ayrı ayrı değerlendirilir.'},
+  {num:'02',title:'Tavan Yüksekliği & Optikler',text:'280–320cm tavan yüksekliğinin mekan algısına etkisi. Çift yüksek tavan uygulamaları.',detail:'Tavan yüksekliği, mekânın psikolojik algısını doğrudan etkiler. 280cm altındaki tavanlar kapalılık hissi verirken 320cm+ çift yüksek tavanlar hem vizüel açıklık hem de prestij yaratır. Berr projelerinde özellikle oturma odaları ve girişlerde 340–400cm yükseklik tercih ediliyor. Çift yükseklik, ahşap kiriş detayları ve gizli aydınlatma ile birleştiğinde mimari bir şaheser ortaya çıkıyor.'},
+  {num:'03',title:'Aydınlatma Tasarımı',text:'Ambiyans, görev ve vurgu aydınlatmasının dengesi. LED strip, sarkıt, gizli teknikleri.',detail:'Başarılı bir aydınlatma tasarımı üç katmandan oluşur: Genel (ambient) aydınlatma mekânın temelini oluştururken; görev aydınlatması çalışma ve okuma gibi aktiviteler için odaklanır; vurgu aydınlatması ise sanat eserleri ve mimari detayları öne çıkarır. Berr projelerinde Philips Hue veya Lutron sistemleriyle entegre akıllı aydınlatma kullanılmakta, renk sıcaklığı gün boyunca otomatik olarak değiştirilebilmektedir.'},
+  {num:'04',title:'Açık-Kapalı Mekan Geçişleri',text:'Sürgülü cam sistemler ve katlanır kapılarla iç-dış bütünleşme. Ege iklimine özel stratejiler.',detail:'Ege\'nin açık hava yaşam kültüründe iç-dış mekan geçişleri villaların en değerli tasarım öğesini oluşturur. Doğrama sistemleri arasında Schüco ve Reynaers aluminum sistemleri ile Schueco geniş sürgülü cam kapılar öne çıkmaktadır. Berr projelerinde salon ve terrasın kesintisiz bir mekan olarak algılanması için zemin kaplamasında iç-dış süreklilik sağlanmakta, eşik yüksekliği sıfıra indirilmektedir.'},
+  {num:'05',title:'Mutfak Ada Tasarımları',text:'Modern mutfak adası boyutlandırma, ergonomi ve estetik dengesi. Mermer-granit karşılaştırması.',detail:'Villa mutfaklarında ada (kitchen island), hem fonksiyonel hem de sosyal bir merkez işlevi görür. Minimum 90cm genişlik, 90cm çalışma yüksekliği ve 60cm etrafında dolaşım alanı temel ergonomi gereksinimleridir. Berr projelerinde Calacatta mermer, beyaz granit veya sintered taş (Dekton, Neolith) kullanılmaktadır. Ada altına entegre çekmeceler, şarap dolabı ve oturma barı da sık tercih edilen detaylardır.'},
+  {num:'06',title:'Banyo Lüks Detayları',text:'Yürüyüş duşu, duvar armatürleri ve gizli rezervuarlar. Spa banyo teknikleri.',detail:'Lüks villa banyoları artık birer özel spa deneyimi sunar. Berr tasarım standartlarında: serbest duran küvet (freestanding bathtub), tüm vücut duş sistemi, radyan ısıtmalı zemin, buhar kabini, Villeroy & Boch veya Hansgrohe armatürler ve özel ışıklı ayna sistemleri bulunmaktadır. Mermer veya granit kullanımı tercih edilen zemin ve duvar kaplama malzemeleridir. Duvar içi rezervuar (gizli sifon) kullanımı hem estetik hem de temizlik kolaylığı açısından standart haline gelmiştir.'},
+];
+
+const videoItems=[
+  {step:'Adım 01',title:'Arsa Seçimi & İmar Durumu',desc:'İnşaat sürecinin temeli doğru arsa seçimiyle başlar. İmar durumu, TAKS, kat yüksekliği ve altyapı bağlantıları incelenir.',detail:'Arsa seçimi sürecinin ayrıntılarını, imar durumu nasıl sorgulanır, hangi belgeler gereklidir gibi konuları ele aldığımız bu video bölümünde Berr uzmanları pratik bilgiler paylaşıyor. TAKS (Taban Alanı Katsayısı), KAKS (Kat Alanı Katsayısı), setback mesafeleri ve bölge planı nasıl okunur konularına da değiniyoruz.',link:'https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA'},
+  {step:'Adım 02',title:'Mimari Proje & Ruhsat',desc:'Lisanslı mimar tarafından hazırlanan proje belediyeye sunulur. Statik, elektrik ve tesisat projeleri tamamlanır.',detail:'Mimari proje hazırlama süreci, belediye başvuruları ve ruhsat alma adımlarını anlattığımız bu bölümde, hangi belgeler ne zaman hazırlanmalı ve süreçte nelere dikkat edilmeli konusunda kapsamlı rehberlik sunuyoruz.',link:'https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA'},
+  {step:'Adım 03',title:'Temel & Kaba İnşaat',desc:'Zemin etüdü, kazı ve temel betonlaması. Kolon, kiriş ve döşeme sistemi kurulumu.',detail:'İnşaatın en kritik aşaması olan temel ve kaba inşaat sürecini adım adım anlattığımız bu bölümde; zemin etüdü neden önemlidir, yalıtım nasıl yapılır ve depreme dayanıklı yapı için ne gerekir sorularını yanıtlıyoruz.',link:'https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA'},
+  {step:'Adım 04',title:'İnce İşler & İç Mekan',desc:'Sıva, boya, kaplama, doğrama ve elektrik-tesisat tamamlanır.',detail:'Villa inşaatının görsel kimliğini oluşturan ince işler sürecini anlattığımız bu bölümde zemin kaplamaları, badana, boya, iç kapılar, pencereler ve elektrik-tesisat sistemlerinin nasıl kurulduğunu paylaşıyoruz.',link:'https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA'},
+  {step:'Adım 05',title:'Peyzaj & Anahtar Teslim',desc:'Bahçe düzenlemesi, peyzaj ve havuz yapımı. Belediye iskanı ve dokümanlar.',detail:'Son aşamada bahçe peyzajı, havuz inşaatı ve iskan belgesi alım süreci hakkında bilgi verdiğimiz bu bölümde, teslim öncesi kontrol listesi ve garanti süreçlerini de ele alıyoruz.',link:'https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA'},
+  {step:'Bonus',title:'Akıllı Ev Sistemleri',desc:'Otomasyon, güvenlik ve enerji yönetimi sistemlerinin villaya entegrasyonu.',detail:'Villanızı akıllı hale getirmek için hangi sistemlere yatırım yapmalı? Bu bonus bölümde akıllı ev otomasyon protokolleri, güvenlik kamerası sistemleri, enerji yönetimi ve sesli kontrol entegrasyonu hakkında kapsamlı bilgi sunuyoruz.',link:'https://www.youtube.com/channel/UCu69EU4q2ADkEGRysg9JMzA'},
+];
+
+/* ===== UNIVERSAL OVERLAY STATE ===== */
+let uType='', uIdx=0, uData=[];
+
+function openUOverlay(type, idx, data){
+  uType=type; uIdx=idx; uData=data;
+  renderUOverlay();
+  document.getElementById('u-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeUOverlay(){
+  document.getElementById('u-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function uNavPrev(){
+  uIdx=(uIdx-1+uData.length)%uData.length;
+  renderUOverlay();
+}
+function uNavNext(){
+  uIdx=(uIdx+1)%uData.length;
+  renderUOverlay();
+}
+
+function renderUOverlay(){
+  const body=document.getElementById('uBody');
+  const item=uData[uIdx];
+  if(uType==='press'){
+    body.innerHTML=`
+      <div class="u-ov-img" style="background:linear-gradient(135deg,#012a36,#01303d);">
+        <svg width="60%" height="60%" viewBox="0 0 500 280" fill="none" style="opacity:0.3;">
+          <rect x="40" y="30" width="420" height="220" fill="none" stroke="#00c4d4" stroke-width="0.8"/>
+          <line x1="40" y1="100" x2="460" y2="100" stroke="#00c4d4" stroke-width="0.5" opacity="0.5"/>
+          <rect x="60" y="120" width="120" height="110" fill="rgba(0,196,212,0.08)"/>
+          <line x1="210" y1="120" x2="440" y2="120" stroke="#00c4d4" stroke-width="0.4"/>
+          <line x1="210" y1="150" x2="440" y2="150" stroke="#00c4d4" stroke-width="0.3" opacity="0.5"/>
+          <line x1="210" y1="175" x2="380" y2="175" stroke="#00c4d4" stroke-width="0.3" opacity="0.5"/>
+        </svg>
+        <div style="position:absolute;top:14px;left:14px;background:var(--aqua);color:var(--navy);padding:5px 12px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">${item.source}</div>
+      </div>
+      <div class="u-ov-badge">${item.date} · Basın Haberi</div>
+      <div class="u-ov-title">${item.title}</div>
+      <div class="u-ov-divider"></div>
+      <div class="u-ov-text">${item.detail}</div>
+      <a href="${item.link}" target="_blank" class="u-ov-link">🔗 Habere Git</a>
+      <div class="u-ov-counter">${uIdx+1} / ${uData.length} · BASIN HABERİ</div>`;
+  } else if(uType==='proj'){
+    body.innerHTML=`
+      <div class="u-ov-img" style="background:linear-gradient(135deg,#012a36,#01303d);">
+        <svg width="60%" height="60%" viewBox="0 0 500 280" fill="none" style="opacity:0.3;">
+          <rect x="80" y="40" width="340" height="220" fill="none" stroke="#00c4d4" stroke-width="0.8"/>
+          <polygon points="80,40 250,10 420,40" fill="none" stroke="#00c4d4" stroke-width="0.8"/>
+          <rect x="100" y="70" width="60" height="80" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="220" y="70" width="60" height="80" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="340" y="70" width="60" height="80" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.5"/>
+          <rect x="200" y="190" width="100" height="70" fill="rgba(0,196,212,0.12)" stroke="#00c4d4" stroke-width="0.8"/>
+        </svg>
+        <div style="position:absolute;top:14px;left:14px;background:var(--aqua);color:var(--navy);padding:5px 12px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">${item.status}</div>
+      </div>
+      <div class="u-ov-badge">${item.type}</div>
+      <div class="u-ov-title">${item.name}</div>
+      <div class="u-ov-subtitle">"${item.slogan}"</div>
+      <div class="u-ov-divider"></div>
+      <div class="u-ov-meta">
+        <div class="u-ov-meta-item"><div class="u-ov-meta-label">Lokasyon</div><div class="u-ov-meta-val">${item.loc}</div></div>
+        <div class="u-ov-meta-item"><div class="u-ov-meta-label">Alan</div><div class="u-ov-meta-val">${item.area}</div></div>
+        <div class="u-ov-meta-item"><div class="u-ov-meta-label">Süre</div><div class="u-ov-meta-val">${item.sure}</div></div>
+        <div class="u-ov-meta-item"><div class="u-ov-meta-label">Başlangıç</div><div class="u-ov-meta-val">${item.baslangic}</div></div>
+      </div>
+      <div class="u-ov-text">${item.detail}</div>
+      <div class="u-ov-counter">${uIdx+1} / ${uData.length} · ${uType.toUpperCase()}</div>`;
+  } else if(uType==='social'){
+    body.innerHTML=`
+      <div class="u-ov-img" style="background:linear-gradient(135deg,#012a36,#01303d);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:90px;">${item.icon}</div>
+      </div>
+      <div class="u-ov-badge">Sosyal Sorumluluk</div>
+      <div class="u-ov-title">${item.title}</div>
+      <div class="u-ov-subtitle">${item.subtitle}</div>
+      <div class="u-ov-divider"></div>
+      <div class="u-ov-text">${item.detail}</div>
+      <div class="u-ov-counter">${uIdx+1} / ${uData.length} · SOSYAL SORUMLULUK</div>`;
+  } else if(uType==='ref'){
+    body.innerHTML=`
+      <div class="u-ov-img" style="background:linear-gradient(135deg,#012a36,#01303d);">
+        <div style="font-family:'DM Serif Display',serif;font-size:72px;color:var(--aqua);opacity:0.5;">${item.name.charAt(0)}</div>
+      </div>
+      <div class="u-ov-badge">${item.sector}</div>
+      <div class="u-ov-title">${item.name}</div>
+      <div class="u-ov-divider"></div>
+      <div class="u-ov-text">${item.detail}</div>
+      <div class="u-ov-counter">${uIdx+1} / ${uData.length}</div>`;
+  } else if(uType==='mimari'){
+    body.innerHTML=`
+      <div class="u-ov-img" style="background:linear-gradient(135deg,#012a36,#01303d);">
+        <div style="font-family:'DM Serif Display',serif;font-size:90px;color:rgba(0,196,212,0.3);">${item.num}</div>
+      </div>
+      <div class="u-ov-badge">100 Mimari İç Detay</div>
+      <div class="u-ov-title">${item.title}</div>
+      <div class="u-ov-divider"></div>
+      <div class="u-ov-text">${item.detail}</div>
+      <div class="u-ov-counter">${uIdx+1} / ${uData.length} · MİMARİ DETAY</div>`;
+  } else if(uType==='video'){
+    body.innerHTML=`
+      <div class="u-ov-img" style="background:linear-gradient(135deg,#012a36,#01303d);">
+        <div style="width:70px;height:70px;background:var(--aqua);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--navy);">▶</div>
+        <div style="position:absolute;top:14px;left:14px;background:var(--aqua);color:var(--navy);padding:5px 12px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">${item.step}</div>
+      </div>
+      <div class="u-ov-badge">Villa İnşaatı Nasıl Yapılır</div>
+      <div class="u-ov-title">${item.title}</div>
+      <div class="u-ov-divider"></div>
+      <div class="u-ov-text">${item.detail}</div>
+      <a href="${item.link}" target="_blank" class="u-ov-link">▶ YouTube'da İzle</a>
+      <div class="u-ov-counter">${uIdx+1} / ${uData.length} · VİDEO</div>`;
+  }
+  document.getElementById('u-overlay').scrollTop=0;
+}
+
+function openPressDetail(idx){ openUOverlay('press',idx,pressItems); }
+function openSocialDetail(idx){ openUOverlay('social',idx,socialItems); }
+function openMimariDetail(idx){ openUOverlay('mimari',idx,mimariItems); }
+function openVideoCard(idx){ openUOverlay('video',idx,videoItems); }
+function openRefDetail(subtype, idx){
+  const data = refData[subtype] || [];
+  openUOverlay('ref', idx, data);
+}
+
+/* ===== PROJECT SLIDER ===== */
+let currentProjCategory='devam', projOffset=0;
+function renderProj(){
+  const slider=document.getElementById('projSlider');
+  const data=projData[currentProjCategory];
+  slider.innerHTML=data.map((p,i)=>`
+    <div class="proj-card" onclick="openProjDetail(${i})">
+      <div class="proj-img">
+        <div class="proj-img-bg" style="background:linear-gradient(135deg,hsl(${190+i*15},60%,8%) 0%,hsl(${195+i*10},50%,5%) 100%);">
+          <svg width="100%" height="100%" viewBox="0 0 380 240" fill="none" style="opacity:0.3;position:absolute;inset:0;">
+            <rect x="60" y="30" width="260" height="190" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+            <polygon points="60,30 190,10 320,30" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+            <rect x="80" y="50" width="50" height="60" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.3"/>
+            <rect x="160" y="50" width="60" height="60" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.3"/>
+            <rect x="240" y="50" width="50" height="60" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.3"/>
+            <rect x="140" y="150" width="100" height="70" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.5"/>
+            <path d="M0,230 C80,210 160,235 240,220 C320,205 380,225 380,225" fill="none" stroke="#00c4d4" stroke-width="0.5" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="proj-status">${p.status}</div>
+      </div>
+      <div class="proj-info">
+        <div class="proj-type">${p.type}</div>
+        <div class="proj-name">${p.name}</div>
+        <div class="proj-loc">📍 ${p.loc}</div>
+        <div class="proj-slogan">"${p.slogan}"</div>
+        <div class="proj-click-hint">Detayı İncele →</div>
+      </div>
+    </div>
+  `).join('');
+  projOffset=0;
+  slider.style.transform='translateX(0)';
+}
+function openProjDetail(idx){
+  const data=projData[currentProjCategory];
+  openUOverlay('proj',idx,data);
+}
+function switchProjTab(cat,btn){
+  currentProjCategory=cat;
+  document.querySelectorAll('.proj-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderProj();
+}
+function slideProj(dir){
+  const slider=document.getElementById('projSlider');
+  const cards=slider.querySelectorAll('.proj-card');
+  const total=cards.length;
+  const visible=Math.max(1,Math.floor(slider.parentElement.offsetWidth/400));
+  projOffset=Math.max(0,Math.min(total-visible,projOffset+dir));
+  slider.style.transform=`translateX(-${projOffset*400}px)`;
+}
+renderProj();
+
+/* ===== CONTENT TABS ===== */
+function switchContentTab(id,btn){
+  document.querySelectorAll('.content-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.content-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+/* ===== CATEGORY MODAL ===== */
+let currentCat='', currentListingIdx=0;
+function openCatModal(cat){
+  currentCat=cat;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  const names={arsa:'Arsa',villa:'Villa',malikane:'Malikane'};
+  document.getElementById('modalCatName').textContent=names[cat]||cat;
+  const grid=document.getElementById('listingGrid');
+  const data=listings[cat]||[];
+  grid.innerHTML=data.map((item,i)=>`
+    <div class="listing-card" onclick="openDetail(${i})">
+      <div class="listing-img">
+        <div class="listing-img-bg" style="background:linear-gradient(135deg,hsl(${190+i*18},55%,8%) 0%,hsl(${195+i*12},45%,5%) 100%);width:100%;height:100%;">
+          <svg width="100%" height="100%" viewBox="0 0 380 240" fill="none" style="opacity:0.3;position:absolute;inset:0;">
+            <rect x="60" y="20" width="260" height="200" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+            <polygon points="60,20 190,0 320,20" fill="none" stroke="#00c4d4" stroke-width="0.5"/>
+            <rect x="80" y="45" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.3"/>
+            <rect x="165" y="45" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.3"/>
+            <rect x="250" y="45" width="50" height="70" fill="rgba(0,196,212,0.08)" stroke="#00c4d4" stroke-width="0.3"/>
+            <rect x="150" y="150" width="80" height="70" fill="rgba(0,196,212,0.1)" stroke="#00c4d4" stroke-width="0.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="listing-info">
+        <div class="listing-title">${item.title}</div>
+        <div class="listing-detail">📍 ${item.loc} · ${item.area}</div>
+        <div class="listing-slogan">"${item.slogan}"</div>
+      </div>
+    </div>
+  `).join('');
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function openDetail(idx){
+  currentListingIdx=idx;
+  const item=listings[currentCat][idx];
+  document.getElementById('detail-view').classList.add('open');
+  document.getElementById('detailText').innerHTML=`
+    <div class="detail-badge">${currentCat.charAt(0).toUpperCase()+currentCat.slice(1)}</div>
+    <div class="detail-title">${item.title}</div>
+    <div class="detail-slogan">"${item.slogan}"</div>
+    <div class="detail-divider"></div>
+    <div class="detail-specs">
+      <div class="spec-item"><div class="spec-label">Alan</div><div class="spec-val">${item.area}</div></div>
+      <div class="spec-item"><div class="spec-label">Lokasyon</div><div class="spec-val">${item.loc}</div></div>
+      <div class="spec-item"><div class="spec-label">Tür</div><div class="spec-val">${item.detail.split('·')[0].trim()}</div></div>
+      <div class="spec-item"><div class="spec-label">Fiyat</div><div class="spec-val" style="font-size:14px;">${item.fiyat}</div></div>
+    </div>
+    <p class="detail-desc">${item.desc}</p>
+    <div style="margin-top:36px;display:flex;gap:14px;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'});closeDetail();closeModal();"><span>Bilgi Al →</span></button>
+      <button class="btn-outline" onclick="closeDetail()">← Geri Dön</button>
+    </div>
+    <div style="margin-top:22px;font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">${idx+1} / ${listings[currentCat].length} · ${currentCat.toUpperCase()}</div>
+  `;
+}
+function closeDetail(){
+  document.getElementById('detail-view').classList.remove('open');
+}
+function navigateListing(dir){
+  const data=listings[currentCat];
+  currentListingIdx=(currentListingIdx+dir+data.length)%data.length;
+  openDetail(currentListingIdx);
+}
+
+/* ===== WHO OVERLAY ===== */
+function openWhoOverlay(){
+  document.getElementById('who-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeWhoOverlay(){
+  document.getElementById('who-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function switchWhoTab(id,btn){
+  document.querySelectorAll('.who-ov-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.who-ov-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('who-panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ===== CURSOR ===== */
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx-4+'px';cursor.style.top=my-4+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+  ring.style.left=rx-16+'px';ring.style.top=ry-16+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+/* ===== PARTICLES ===== */
+const pc=document.getElementById('particles');
+for(let i=0;i<36;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const left=Math.random()*100;
+  const drift=(Math.random()-0.5)*180;
+  const dur=4+Math.random()*6;
+  const delay=Math.random()*8;
+  p.style.cssText=`left:${left}%;--drift:${drift}px;animation-duration:${dur}s;animation-delay:${delay}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
+  pc.appendChild(p);
+}
+
+/* ===== LOADING ===== */
+const loadPct=document.getElementById('loadPct');
+let pct=0;
+const loadInt=setInterval(()=>{
+  pct=Math.min(100,pct+Math.random()*3);
+  loadPct.textContent=Math.floor(pct)+'%';
+  if(pct>=100)clearInterval(loadInt);
+},60);
+
+setTimeout(()=>{
+  const flash=document.getElementById('introFlash');
+  flash.style.transition='opacity 0.15s';
+  flash.style.opacity='0.6';
+  setTimeout(()=>{
+    flash.style.opacity='0';
+    setTimeout(()=>{
+      const intro=document.getElementById('intro');
+      intro.style.transition='opacity 0.6s';
+      intro.style.opacity='0';
+      setTimeout(()=>{intro.style.display='none';},600);
+    },150);
+  },150);
+},5000);
+
+/* ===== NAVBAR ===== */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>80);
+});
+
+/* ===== HERO SLIDER ===== */
+let slideIdx=0;
+const slides=document.querySelectorAll('.hero-slide');
+const dots=document.querySelectorAll('.hero-dot');
+function goSlide(n){
+  slides[slideIdx].classList.remove('active');
+  dots[slideIdx].classList.remove('active');
+  slideIdx=n;
+  slides[slideIdx].classList.add('active');
+  dots[slideIdx].classList.add('active');
+}
+setInterval(()=>goSlide((slideIdx+1)%slides.length),5000);
+
+/* ===== SCROLL REVEAL ===== */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
