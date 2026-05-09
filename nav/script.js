@@ -165,14 +165,30 @@ function updateProgressBar(){
 function playStopAudio(n){
   if(speakerMuted)return;
   const audio=document.getElementById('stop-audio');
-  audio.src=getAudioFile(n,currentLang);
-  audio.play().catch(()=>{});
+  const newSrc=getAudioFile(n,currentLang);
+  // Aynı ses dosyası zaten yüklüyse sadece play() — başa dönme
+  if(audio._loadedSrc===newSrc){
+    audio.play().catch(()=>{});
+  } else {
+    audio._loadedSrc=newSrc;
+    audio.src=newSrc;
+    audio.play().catch(()=>{});
+  }
 }
 function toggleSpeaker(){
   speakerMuted=!speakerMuted;
   document.getElementById('btn-speaker').textContent=speakerMuted?'🔇':'🔊';
   const audio=document.getElementById('stop-audio');
-  if(speakerMuted)audio.pause();else playStopAudio(currentStop);
+  if(speakerMuted){
+    audio.pause();
+  } else {
+    // Ses dosyası zaten yüklüyse kaldığı yerden devam et, yoksa yeniden yükle
+    if(audio.src){
+      audio.play().catch(()=>{ playStopAudio(currentStop); });
+    } else {
+      playStopAudio(currentStop);
+    }
+  }
   localStorage.setItem('rehber-speaker-muted',speakerMuted?'1':'0');
 }
 
