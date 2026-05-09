@@ -682,8 +682,22 @@ body::before {
 
 .empty-msg { text-align: center; padding: 50px 20px; color: var(--ink-soft); font-style: italic; font-size: 15px; }
 
-/* Sayfalama */
-.pagination {
+.page-btn.disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+.page-nav-btn { min-width: 110px; font-size: 12px; letter-spacing: 1px; }
+.page-info {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    padding: 9px 16px;
+    border: 1.5px solid rgba(212,175,55,0.22);
+    border-radius: 5px;
+    background: #fff;
+    min-width: 110px;
+    text-align: center;
+}
+.archive-toggle-header:hover { background: #1e3045; }
+.archive-toggle-header { transition: background 0.25s; user-select: none; }
     display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
     margin-top: 32px; padding-top: 24px;
     border-top: 1px solid rgba(212,175,55,0.22);
@@ -963,12 +977,14 @@ body::before {
             </div>
 
             <div class="archive-section">
-                <div class="section-divider" style="margin-bottom: 28px;">
-                    <h3>🗂️ Arşiv</h3>
+                <div class="section-divider archive-toggle-header" id="archive-toggle-btn" style="margin-bottom: 0; cursor: pointer;" title="Arşivi Aç / Kapat">
+                    <h3>🗂️ Arşiv <span id="archive-toggle-icon" style="font-size:14px; margin-left:10px; opacity:0.7;">▼ Tüm Mesajları Göster</span></h3>
                     <small>"Gönül Köprüsü'ne Taş Koyanlar — Tüm Ziyaretçilerimiz"</small>
                 </div>
-                <div id="archive-target"></div>
-                <div id="page-target" class="pagination"></div>
+                <div id="archive-body" style="display:none; margin-top: 28px;">
+                    <div id="archive-target"></div>
+                    <div id="page-target" class="pagination"></div>
+                </div>
             </div>
         </div>
 
@@ -1141,21 +1157,44 @@ window.addEventListener('click', function() {
         if (!archiveTarget || !pageTarget) return;
         if (!archive.length) { archiveTarget.innerHTML = ''; pageTarget.innerHTML = ''; return; }
         const totalPages = Math.ceil(archive.length / PER_PAGE);
-        if (archivePage > totalPages) archivePage = 1;
+        if (archivePage > totalPages) archivePage = totalPages;
+        if (archivePage < 1) archivePage = 1;
         const start = (archivePage - 1) * PER_PAGE;
         archiveTarget.innerHTML = archive.slice(start, start + PER_PAGE).map(cardCompact).join('');
         pageTarget.innerHTML = '';
-        if (totalPages <= 1) return;
-        for (let i = 1; i <= totalPages; i++) {
-            const b = document.createElement('button');
-            b.textContent = i;
-            b.className   = 'page-btn' + (i === archivePage ? ' active' : '');
-            b.addEventListener('click', () => {
-                archivePage = i;
+
+        const info = document.createElement('div');
+        info.className = 'page-info';
+        info.textContent = archivePage + ' / ' + totalPages + '. sayfa';
+
+        const prev = document.createElement('button');
+        prev.textContent = '← Önceki';
+        prev.className   = 'page-btn page-nav-btn' + (archivePage === 1 ? ' disabled' : '');
+        prev.disabled    = archivePage === 1;
+        prev.addEventListener('click', () => {
+            if (archivePage > 1) {
+                archivePage--;
                 renderArchive();
-                document.getElementById('archive-target')?.scrollIntoView({ behavior:'smooth', block:'start' });
-            });
-            pageTarget.appendChild(b);
+                document.getElementById('archive-toggle-btn')?.scrollIntoView({ behavior:'smooth', block:'start' });
+            }
+        });
+
+        const next = document.createElement('button');
+        next.textContent = 'Sonraki →';
+        next.className   = 'page-btn page-nav-btn' + (archivePage === totalPages ? ' disabled' : '');
+        next.disabled    = archivePage === totalPages;
+        next.addEventListener('click', () => {
+            if (archivePage < totalPages) {
+                archivePage++;
+                renderArchive();
+                document.getElementById('archive-toggle-btn')?.scrollIntoView({ behavior:'smooth', block:'start' });
+            }
+        });
+
+        if (totalPages > 1) {
+            pageTarget.appendChild(prev);
+            pageTarget.appendChild(info);
+            pageTarget.appendChild(next);
         }
     }
 
@@ -1221,6 +1260,17 @@ window.addEventListener('click', function() {
     document.addEventListener('DOMContentLoaded', () => {
         loadMessages();
         document.getElementById('btn-send')?.addEventListener('click', sendMessage);
+
+        // Arşiv aç/kapat
+        const toggleBtn  = document.getElementById('archive-toggle-btn');
+        const archiveBody = document.getElementById('archive-body');
+        const toggleIcon  = document.getElementById('archive-toggle-icon');
+        let archiveOpen  = false;
+        toggleBtn?.addEventListener('click', () => {
+            archiveOpen = !archiveOpen;
+            archiveBody.style.display = archiveOpen ? 'block' : 'none';
+            toggleIcon.textContent = archiveOpen ? '▲ Gizle' : '▼ Tüm Mesajları Göster';
+        });
     });
 })();
 </script>
