@@ -5027,21 +5027,217 @@ function addTypingIndicator(){
 }
 function removeTypingIndicator(){const el=document.getElementById('evliya-typing');if(el)el.remove();}
 
+// ── Evliya Çelebi hata mesajları (dile göre) ──
+function _evliyaErrorMsg(type, lang){
+  const msgs = {
+    network: {
+      tr: ['🕯️ Kervan yolda düzülür… Bağlantım kesildi, bir an bekleyip tekrar sorar mısınız?',
+           '🌙 Seyahat yolları bazen kapanır. Lütfen sabırla bir daha deneyin.',
+           '🏛️ Bu köhne duvarlar bazen sesi tutmaz — bağlantı kurulamadı, tekrar sorun.'],
+      en: ['🕯️ The caravan finds its way… Connection lost. Please try once more.',
+           '🌙 Even the keenest traveller must wait. Could you ask again?',
+           '🏛️ These ancient walls sometimes muffle voices — please retry.'],
+      de: ['🕯️ Die Karawane findet ihren Weg… Verbindung verloren. Bitte noch einmal versuchen.',
+           '🌙 Auch der kühnste Reisende muss manchmal warten. Bitte erneut fragen.'],
+      fr: ['🕯️ La caravane trouve son chemin… Connexion perdue. Veuillez réessayer.',
+           '🌙 Même le voyageur le plus ardent doit parfois patienter. Posez à nouveau votre question.'],
+      es: ['🕯️ La caravana encuentra su camino… Conexión perdida. Por favor, inténtelo de nuevo.',
+           '🌙 Hasta el viajero más audaz debe esperar. ¿Podría volver a preguntar?'],
+      it: ['🕯️ La carovana trova la sua strada… Connessione persa. Riprova, per favore.',
+           '🌙 Anche il viaggiatore più ardito deve aspettare. Poni di nuovo la domanda.'],
+      ar: ['🕯️ القافلة تجد طريقها… انقطع الاتصال. من فضلك حاول مرة أخرى.',
+           '🌙 حتى أشجع المسافرين يحتاج للانتظار أحياناً. هل يمكنك السؤال مجدداً؟'],
+      ru: ['🕯️ Путь каравана не прерывается… Соединение потеряно. Пожалуйста, попробуйте ещё раз.',
+           '🌙 Даже самый смелый путник иногда ждёт. Задайте вопрос снова.'],
+      zh: ['🕯️ 驼队自会寻到路途……连接中断，请稍后再试。',
+           '🌙 最勇敢的旅者也需耐心等待，请再问一次。'],
+      ja: ['🕯️ 隊商はいつか道を見つけます……接続が途切れました。もう一度お試しください。',
+           '🌙 勇敢な旅人も時に待つもの。もう一度ご質問ください。'],
+      el: ['🕯️ Το καραβάνι βρίσκει πάντα το δρόμο του… Χάθηκε η σύνδεση. Παρακαλώ δοκιμάστε ξανά.',
+           '🌙 Ακόμα και ο πιο τολμηρός ταξιδιώτης περιμένει μερικές φορές.'],
+      bg: ['🕯️ Керванът ще намери пътя си… Връзката е прекъсната. Моля, опитайте отново.',
+           '🌙 Дори най-смелият пътешественик понякога чака.'],
+      ro: ['🕯️ Caravana își găsește calea… Conexiune pierdută. Vă rugăm încercați din nou.',
+           '🌙 Chiar și cel mai curajos călător trebuie să aștepte uneori.'],
+    },
+    ratelimit: {
+      tr: ['⏳ Kalemim dinleniyor — çok soru art arda geldi. Biraz nefes alalım, sonra devam edelim.',
+           '🌿 Her bilge kişi söyler: Acele işe şeytan karışır. Biraz bekleyelim, sonra konuşalım.',
+           '📜 Seyahatnâmemi yazmak da vakit almıştı — biraz sabır lütfen.'],
+      en: ['⏳ My quill needs a moment — too many questions at once. Let us breathe, then continue.',
+           '🌿 Every wise man knows: haste brings trouble. A moment\'s patience, please.',
+           '📜 Writing the Seyahatname took time too — please wait a moment.'],
+      de: ['⏳ Meine Feder braucht einen Augenblick — zu viele Fragen auf einmal. Atmen wir kurz durch.',
+           '🌿 Jeder Weise weiß: Eile bringt Verderb. Einen Moment Geduld, bitte.'],
+      fr: ['⏳ Ma plume a besoin d\'un moment — trop de questions à la fois. Respirons, puis continuons.',
+           '🌿 Tout sage le sait : la hâte cause des problèmes. Un instant de patience, s\'il vous plaît.'],
+      es: ['⏳ Mi pluma necesita un momento — demasiadas preguntas a la vez. Respiremos, luego continuamos.',
+           '🌿 Todo sabio lo sabe: las prisas traen problemas. Un momento de paciencia, por favor.'],
+      it: ['⏳ La mia penna ha bisogno di un momento — troppe domande in una volta. Respiriamo, poi continuiamo.',
+           '🌿 Ogni saggio lo sa: la fretta porta guai. Un momento di pazienza, per favore.'],
+      ar: ['⏳ قلمي يحتاج للراحة لحظة — كثير من الأسئلة دفعة واحدة. لنتنفس ثم نكمل.',
+           '🌿 كل حكيم يعرف: التسرع يجلب المتاعب. لحظة من الصبر من فضلك.'],
+      ru: ['⏳ Мому перу нужна минута — слишком много вопросов сразу. Давайте передохнём.',
+           '🌿 Каждый мудрец знает: спешка вредит. Чуть терпения, пожалуйста.'],
+      zh: ['⏳ 我的笔需要片刻休息——问题太多了。让我们先歇口气，再继续。',
+           '🌿 智者皆知：欲速则不达。请稍候片刻。'],
+      ja: ['⏳ 私の筆は少し休みが必要です——質問が多すぎます。少し待ってからまた話しましょう。',
+           '🌿 すべての賢者が知っています：急ぎすぎは問題を招く。少々お待ちください。'],
+      el: ['⏳ Η πένα μου χρειάζεται μια στιγμή — πολλές ερωτήσεις μαζί. Ας αναπνεύσουμε.',
+           '🌿 Κάθε σοφός το ξέρει: η βιασύνη φέρνει πρόβλημα. Λίγη υπομονή.'],
+      bg: ['⏳ Перото ми се нуждае от момент — твърде много въпроси наведнъж. Нека си поемем дъх.',
+           '🌿 Всеки мъдрец знае: бързането докарва беда. Малко търпение, моля.'],
+      ro: ['⏳ Pana mea are nevoie de un moment — prea multe întrebări deodată. Să respirăm puțin.',
+           '🌿 Orice înțelept știe: graba strică treaba. Puțină răbdare, vă rog.'],
+    },
+    timeout: {
+      tr: ['🌙 Düşünceler bazen derinlere dalar — yanıt gelmedi. Sorunuzu tekrar sorabilir misiniz?',
+           '⏳ Yollar karanlıkta uzar… cevap yetişemedi. Bir daha dener misiniz?',
+           '🕯️ Mum ışığında okumak zor olur bazen — zaman aşıldı, lütfen tekrar sorun.'],
+      en: ['🌙 Thoughts sometimes wander deep — no reply came. Could you ask again?',
+           '⏳ The road grows long in darkness… the answer did not arrive. Please try once more.',
+           '🕯️ Reading by candlelight takes patience — request timed out, please ask again.'],
+      de: ['🌙 Gedanken schweifen manchmal in die Tiefe — keine Antwort. Könnten Sie noch einmal fragen?',
+           '⏳ Der Weg wird lang in der Dunkelheit… die Antwort kam nicht an. Bitte noch einmal versuchen.'],
+      fr: ['🌙 Les pensées s\'égarent parfois en profondeur — pas de réponse. Pourriez-vous redemander?',
+           '⏳ La route s\'allonge dans l\'obscurité… la réponse n\'est pas arrivée. Veuillez réessayer.'],
+      es: ['🌙 Los pensamientos a veces se pierden en lo profundo — sin respuesta. ¿Podría preguntar de nuevo?',
+           '⏳ El camino se alarga en la oscuridad… la respuesta no llegó. Por favor, inténtelo de nuevo.'],
+      it: ['🌙 I pensieri a volte vagano in profondità — nessuna risposta. Potrebbe chiedere di nuovo?',
+           '⏳ La strada si allunga nell\'oscurità… la risposta non è arrivata. Riprova, per favore.'],
+      ar: ['🌙 الأفكار أحياناً تغوص في العمق — لم تصل إجابة. هل يمكنك السؤال مجدداً؟',
+           '⏳ الطريق يطول في الظلام… لم تصل الإجابة. من فضلك حاول مرة أخرى.'],
+      ru: ['🌙 Мысли иногда уходят в глубину — ответ не пришёл. Не могли бы вы спросить снова?',
+           '⏳ Дорога длинна в темноте… ответ не добрался. Попробуйте ещё раз.'],
+      zh: ['🌙 思绪有时沉入深处——没有回应。能再问一次吗？',
+           '⏳ 路途在黑暗中漫长……答案未到。请再试一次。'],
+      ja: ['🌙 思考が深みに迷い込むことがある——返答がありませんでした。もう一度お聞かせください。',
+           '⏳ 闇の中で道は長くなる……答えが届きませんでした。もう一度試してください。'],
+      el: ['🌙 Οι σκέψεις μερικές φορές βυθίζονται βαθιά — δεν ήρθε απάντηση. Μπορείτε να ρωτήσετε ξανά;',
+           '⏳ Ο δρόμος μακραίνει στο σκοτάδι… η απάντηση δεν έφθασε. Παρακαλώ δοκιμάστε ξανά.'],
+      bg: ['🌙 Мислите понякога се губят в дълбините — не дойде отговор. Можете ли да попитате отново?',
+           '⏳ Пътят се удължава в тъмнината… отговорът не пристигна. Моля, опитайте отново.'],
+      ro: ['🌙 Gândurile se pierd uneori în adâncuri — niciun răspuns. Ați putea întreba din nou?',
+           '⏳ Drumul se lungește în întuneric… răspunsul nu a sosit. Vă rugăm încercați din nou.'],
+    },
+    generic: {
+      tr: ['📜 Seyahat yolları kimi zaman tıkanır. Lütfen biraz bekleyip tekrar deneyin.',
+           '🏛️ Bu kadim duvarlar bazen sesi tutar — biraz sonra yeniden sorun.',
+           '🌿 Her yolun bir engeli olur; bu da geçer. Tekrar sorar mısınız?'],
+      en: ['📜 The road is sometimes blocked. Please wait a moment and try again.',
+           '🏛️ Even ancient walls sometimes trap sound — please ask again shortly.',
+           '🌿 Every journey has its obstacles; this too shall pass. Could you try again?'],
+      de: ['📜 Der Weg ist manchmal versperrt. Bitte warten Sie einen Moment und versuchen Sie es erneut.',
+           '🏛️ Auch alte Mauern halten manchmal den Klang fest — bitte kurz darauf noch einmal fragen.'],
+      fr: ['📜 La route est parfois bloquée. Veuillez patienter un moment et réessayer.',
+           '🏛️ Même les vieux murs retiennent parfois le son — veuillez redemander sous peu.'],
+      es: ['📜 El camino a veces está bloqueado. Por favor, espere un momento e inténtelo de nuevo.',
+           '🏛️ Hasta los muros antiguos retienen el sonido a veces — por favor, pregunte de nuevo pronto.'],
+      it: ['📜 La strada è a volte bloccata. Aspettate un momento e riprovate.',
+           '🏛️ Anche i vecchi muri a volte trattengono il suono — per favore, chiedete di nuovo tra poco.'],
+      ar: ['📜 الطريق أحياناً تسد. انتظر لحظة وحاول مجدداً.',
+           '🏛️ حتى الجدران القديمة أحياناً تحبس الصوت — من فضلك اسأل ثانية قريباً.'],
+      ru: ['📜 Дорога иногда заблокирована. Подождите мгновение и попробуйте снова.',
+           '🏛️ Даже старые стены иногда удерживают звук — пожалуйста, спросите снова вскоре.'],
+      zh: ['📜 路途有时受阻。请稍候片刻，再试一次。',
+           '🏛️ 即便是古老的墙壁，有时也会困住声音——请稍后再问。'],
+      ja: ['📜 道が塞がれることもあります。少しお待ちになって、もう一度お試しください。',
+           '🏛️ 古い壁でも時に音を閉じ込めます——少し後にもう一度お聞きください。'],
+      el: ['📜 Ο δρόμος μερικές φορές κλείνει. Παρακαλώ περιμένετε λίγο και δοκιμάστε ξανά.',
+           '🏛️ Ακόμα και παλιοί τοίχοι παγιδεύουν μερικές φορές τον ήχο — ρωτήστε ξανά σύντομα.'],
+      bg: ['📜 Пътят е понякога блокиран. Изчакайте момент и опитайте отново.',
+           '🏛️ Дори старите стени понякога улавят звука — попитайте отново скоро.'],
+      ro: ['📜 Drumul este uneori blocat. Vă rugăm așteptați un moment și încercați din nou.',
+           '🏛️ Chiar și zidurile vechi rețin uneori sunetul — vă rugăm întrebați din nou în curând.'],
+    }
+  };
+  const langMsgs = (msgs[type]||msgs.generic);
+  const pool = langMsgs[lang] || langMsgs['tr'];
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+// Kullanıcının mesajının dilini tespit et (basit ama etkili)
+function _detectLang(text){
+  // Önce açık Latin dışı alfabeler
+  if(/[\u0600-\u06FF]/.test(text)) return 'ar';   // Arapça / Farsça
+  if(/[\u4E00-\u9FFF]/.test(text)) return 'zh';   // Çince
+  if(/[\u3040-\u30FF]/.test(text)) return 'ja';   // Japonca
+  if(/[\u0400-\u04FF]/.test(text)) return 'ru';   // Rusça / Bulgarca heuristic
+  if(/[\u0370-\u03FF]/.test(text)) return 'el';   // Yunanca
+
+  // Latin-tabanlı diller için yaygın kelimeler / karakterler
+  const t = text.toLowerCase();
+  const frWords = /\b(je|tu|vous|nous|les|des|est|une|bonjour|merci|quel|quelle|comment)\b/;
+  const deWords = /\b(ich|sie|das|der|die|ein|bitte|danke|wie|was|ist|haben|und|oder)\b/;
+  const esWords = /\b(yo|usted|los|las|es|un|una|gracias|hola|como|que|por|favor)\b/;
+  const itWords = /\b(io|lei|gli|una|è|grazie|ciao|come|che|per|prego|sono)\b/;
+  const roWords = /\b(eu|el|ea|un|ce|buna|multumesc|cum|este|sunt|aveti)\b/;
+  const bgWords = /[ъьюяий]/;
+  const enWords = /\b(the|is|are|was|what|how|when|where|who|this|that|please|thank|hello|hi)\b/;
+  const trWords = /\b(bir|bu|ne|mi|mı|mu|mü|için|ile|ve|evet|hayır|nasıl|nerede|kim|merhaba|teşekkür)\b/;
+
+  if(frWords.test(t)) return 'fr';
+  if(deWords.test(t)) return 'de';
+  if(esWords.test(t)) return 'es';
+  if(itWords.test(t)) return 'it';
+  if(roWords.test(t)) return 'ro';
+  if(bgWords.test(t)) return 'bg';
+  if(enWords.test(t)) return 'en';
+  if(trWords.test(t)) return 'tr';
+
+  // Varsayılan
+  return 'tr';
+}
+
 async function sendEvliyaMsg(){
   if(evliyaThinking)return;
   const input=document.getElementById('evliya-chat-input');
   const text=input.value.trim();if(!text)return;
   input.value='';input.style.height='auto';
   addEvliyaMsg('user',text);
+  const userLang = _detectLang(text);
   evliyaChatHistory.push({role:'user',content:text});
   evliyaThinking=true;document.getElementById('evliya-send-btn').disabled=true;addTypingIndicator();
+
+  // Timeout kontrolü: 25 saniye
+  const controller = new AbortController();
+  const timeoutId = setTimeout(()=>controller.abort(), 25000);
+
   try{
     const msgs=[{role:'system',content:EVLIYA_SYSTEM_PROMPT},...evliyaChatHistory.map(m=>({role:m.role==='assistant'?'assistant':m.role,content:m.content}))];
-    const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85})});
-    const data=await response.json();removeTypingIndicator();
-    if(data.error){addEvliyaMsg('bot','⚠️ Hata: '+(data.error.message||'Bilinmeyen hata'));}
-    else{const reply=data.choices?.[0]?.message?.content||'🕯️ Cevap alınamadı.';evliyaChatHistory.push({role:'assistant',content:reply});if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);addEvliyaMsg('bot',reply);}
-  }catch(e){removeTypingIndicator();addEvliyaMsg('bot','🕯️ Bağlantı kurulamadı. Lütfen tekrar deneyin.');console.error(e);}
+    const response=await fetch('https://silent-dust-f74c.edirnesaglikmuzesi.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:600,temperature:0.85}),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    const data=await response.json();
+    removeTypingIndicator();
+
+    if(data.error){
+      const errMsg = data.error.message||'';
+      const errCode = data.error.code||data.error.type||'';
+      let errType = 'generic';
+      if(/rate.limit|too.many|quota|429/i.test(errMsg+errCode)) errType='ratelimit';
+      else if(/timeout|timed.out|deadline/i.test(errMsg+errCode)) errType='timeout';
+      else if(/network|connect|socket|fetch/i.test(errMsg+errCode)) errType='network';
+      console.error('[Evliya] API hatası:', data.error);
+      addEvliyaMsg('bot', _evliyaErrorMsg(errType, userLang));
+    } else {
+      const reply=data.choices?.[0]?.message?.content||_evliyaErrorMsg('generic', userLang);
+      evliyaChatHistory.push({role:'assistant',content:reply});
+      if(evliyaChatHistory.length>20)evliyaChatHistory=evliyaChatHistory.slice(-18);
+      addEvliyaMsg('bot',reply);
+    }
+  } catch(e) {
+    clearTimeout(timeoutId);
+    removeTypingIndicator();
+    let errType = 'network';
+    if(e.name==='AbortError') errType='timeout';
+    console.error('[Evliya] Fetch hatası:', e);
+    addEvliyaMsg('bot', _evliyaErrorMsg(errType, userLang));
+  }
   evliyaThinking=false;document.getElementById('evliya-send-btn').disabled=false;
 }
 
