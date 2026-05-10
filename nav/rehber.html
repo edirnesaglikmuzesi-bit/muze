@@ -3595,7 +3595,7 @@ const ZONES = [
 // Bölge duyuru metinleri — 13 dil
 
 const HARITA_I18N = {
-  tr:{ title:'📍 Müze Konumu', gmaps:'Google Maps’te Aç ↗', outside:'Külliye dışındasınız' },
+  tr:{ title:'📍 Müze Konumu', gmaps:"Google Maps'te Aç ↗", outside:'Külliye dışındasınız' },
   en:{ title:'📍 Museum Location', gmaps:'Open in Google Maps ↗', outside:'You are outside the Külliye' },
   de:{ title:'📍 Museumsstandort', gmaps:'In Google Maps öffnen ↗', outside:'Sie befinden sich außerhalb des Külliye' },
   fr:{ title:'📍 Emplacement du Musée', gmaps:'Ouvrir dans Google Maps ↗', outside:'Vous êtes en dehors du Külliye' },
@@ -4073,6 +4073,51 @@ function openHaritaPopup() {
       weight: 1.5,
       dashArray: '4,4'
     }).addTo(_haritaMap);
+
+    // ── Bölge poligonları + isim etiketleri (referan_map.html stili) ──────
+    ZONES.forEach(z => {
+      const poly = L.polygon(z.coords, {
+        color: '#b8860b',
+        weight: 1,
+        fillColor: '#b8860b',
+        fillOpacity: 0.18
+      }).addTo(_haritaMap);
+
+      poly.bindPopup(
+        `<div style="font-family:'Cinzel',serif;font-size:11px;color:#1a0f00;font-weight:700;text-align:center;line-height:1.5;">
+          ${z.name}
+          <br><span style="font-family:'Lora',serif;font-size:10px;font-weight:400;color:#4a3010;">${z.announce}</span>
+        </div>`,
+        { maxWidth: 220 }
+      );
+
+      // Poligon ortasına isim etiketi
+      const center = poly.getBounds().getCenter();
+      L.marker(center, {
+        icon: L.divIcon({
+          className: '',
+          html: `<div style="
+            background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(6px);
+            padding:5px 10px;
+            border-radius:12px;
+            border:1.5px solid rgba(184,134,11,0.55);
+            box-shadow:0 3px 10px rgba(0,0,0,0.18);
+            font-family:'Cinzel',serif;
+            font-weight:700;
+            font-size:11px;
+            color:#5a4300;
+            white-space:nowrap;
+            text-align:center;
+            letter-spacing:0.3px;
+            pointer-events:none;
+          ">${z.name}</div>`,
+          iconAnchor: [0, 0]
+        }),
+        interactive: false,
+        zIndexOffset: 500
+      }).addTo(_haritaMap);
+    });
   }
 
   // Harita boyutunu yenile (display:none'dan açılırken)
@@ -5153,7 +5198,7 @@ Evliya Çelebi zaman zaman hayret etsin:
 “Göreni hayran bırakır.”
 “İnsanın gönlüne ferahlık verir.”
 
-Bu onun tabiatıdır. ;
+Bu onun tabiatıdır. `;
 
 let evliyaChatHistory=[];let evliyaThinking=false;let evliyaVoiceMuted=false;
 
