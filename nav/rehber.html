@@ -811,11 +811,37 @@
       <div class="harita-title" id="harita-title-text">📍 Müze Konumu</div>
       <button class="harita-close" onclick="closeHaritaPopup()">×</button>
     </div>
+    <!-- Külliye dışı uyarı bandı -->
+    <div id="harita-outside-banner" style="display:none;background:linear-gradient(90deg,#7a1a00,#c0392b,#7a1a00);color:#fff;text-align:center;padding:8px 12px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px;font-weight:700;animation:harita-pulse 1.2s ease-in-out infinite;"></div>
     <div id="harita-map"></div>
     <div class="harita-info" id="harita-info-text">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
     <div class="harita-footer">Edirne, Türkiye · <a href="https://maps.google.com/?q=41.685500,26.543700" target="_blank" style="color:var(--gold);text-decoration:none;" id="harita-gmaps-link">Google Maps'te Aç ↗</a></div>
   </div>
 </div>
+
+<style>
+@keyframes harita-pulse {
+  0%,100% { opacity:1; }
+  50%      { opacity:0.65; }
+}
+.harita-zone-label { background: transparent !important; border: none !important; }
+.harita-zone-label-inner {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(6px);
+  padding: 5px 10px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(184,134,11,0.55);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 11px;
+  color: #5a4300;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.3px;
+  pointer-events: none;
+}
+</style>
 
 <!-- ══ LOC TOAST ══ -->
 <div id="loc-toast"></div>
@@ -1652,6 +1678,9 @@ if (onIntro) {
   document.querySelectorAll('.stop-page').forEach(p=>p.classList.remove('active'));
   const activeStop = document.getElementById('stop-'+currentStop);
   if(activeStop) activeStop.classList.add('active');
+
+  // Harita bölge etiketlerini ve mevcut dış/iç durumu güncelle
+  if (typeof _haritaUpdateZoneLabels === 'function') _haritaUpdateZoneLabels();
 }
 
 function openLangFromMenu(){
@@ -3902,7 +3931,12 @@ function speakText(text){
   if(!('speechSynthesis' in window))return;
   window.speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
-  u.lang=currentLang==='en'?'en-US':currentLang==='de'?'de-DE':currentLang==='fr'?'fr-FR':currentLang==='el'?'el-GR':currentLang==='zh'?'zh-CN':currentLang==='fa'?'fa-IR':'tr-TR';
+  const langMap={
+    tr:'tr-TR',en:'en-US',de:'de-DE',fr:'fr-FR',it:'it-IT',
+    es:'es-ES',ru:'ru-RU',ar:'ar-SA',bg:'bg-BG',el:'el-GR',
+    zh:'zh-CN',fa:'fa-IR',ro:'ro-RO',ja:'ja-JP'
+  };
+  u.lang=langMap[currentLang]||'tr-TR';
   u.rate=0.92;u.pitch=1;
   const voices=window.speechSynthesis.getVoices();
   const match=voices.find(v=>v.lang.startsWith(u.lang.split('-')[0]));
@@ -3923,6 +3957,14 @@ let _haritaAccuracyCircle = null; // doğruluk çemberi
 const MUZE_LAT = 41.6855;
 const MUZE_LON = 26.5437;
 
+// Ana Külliye sınır poligonu — bu koordinatların DIŞINDA kalınırsa "Külliye dışındasınız" uyarısı verilir
+const KULLIYE_SINIR = [
+  [41.685612079414234, 26.54238027697677],
+  [41.684594502853884, 26.543624821923274],
+  [41.68582595633512,  26.5456604627483],
+  [41.686774016456106, 26.544365443759677]
+];
+
 /* Bölge adını haritadaki tooltip için kısa döndür */
 function _zoneShortName(zoneId) {
   const lang = currentLang || 'tr';
@@ -3937,7 +3979,10 @@ function _haritaOnPosition(pos) {
   const acc = pos.coords.accuracy;   // metre cinsinden doğruluk
   const infoEl = document.getElementById('harita-info-text');
 
-  // Bölge tespiti
+  // Ana Külliye sınırı içinde mi?
+  const insideKulliye = ptInPoly(lat, lon, KULLIYE_SINIR);
+
+  // Bölge tespiti (yalnızca külliye içindeyse anlamlı)
   const zone = ZONES.find(z => ptInPoly(lat, lon, z.coords));
   const zoneId = zone ? zone.id : null;
 
@@ -3970,9 +4015,11 @@ function _haritaOnPosition(pos) {
 
   // ── Tooltip: iğne üzerinde bölge adını yaz ───────────────────────────
   const _hi = HARITA_I18N[currentLang] || HARITA_I18N['tr'];
-  const tooltipText = zoneId
-    ? '📍 ' + _zoneShortName(zoneId)
-    : '📍 ' + _hi.outside;
+  const tooltipText = (!insideKulliye)
+    ? '⚠️ ' + _hi.outside
+    : (zoneId
+        ? '📍 ' + _zoneShortName(zoneId)
+        : '📍 ...');
 
   if (_haritaUserMarker.getTooltip()) {
     _haritaUserMarker.setTooltipContent(tooltipText);
@@ -3985,30 +4032,47 @@ function _haritaOnPosition(pos) {
     }).openTooltip();
   }
 
-  // ── Alt bilgi metnini güncelle ────────────────────────────────────────
-  if (zoneId) {
+  // ── Alt bilgi metnini güncelle + dışarı uyarı bandı ─────────────────
+  const bannerEl = document.getElementById('harita-outside-banner');
+  if (!insideKulliye) {
+    // Külliye DIŞINDA — uyarı göster
+    const outsideMsg = getLocMsg('outside');
+    infoEl.textContent = '⚠️ ' + outsideMsg;
+    infoEl.style.color = '#e05c3a';
+    if (bannerEl) {
+      bannerEl.textContent = '⚠️ ' + outsideMsg;
+      bannerEl.style.display = 'block';
+    }
+  } else if (zoneId) {
+    infoEl.style.color = '';
     const announceText = getZoneAnnounce(zoneId);
     infoEl.textContent = '📍 ' + announceText;
+    if (bannerEl) bannerEl.style.display = 'none';
   } else {
-    const outsideMsg = getLocMsg('outside');
-    infoEl.textContent = '📍 ' + outsideMsg;
+    // Külliye içinde ama tanımlı bölgede değil — genel bilgi
+    infoEl.style.color = '';
+    infoEl.textContent = '📍 ' + (_hi.title || 'Külliye içindesiniz');
+    if (bannerEl) bannerEl.style.display = 'none';
   }
 
   // ── Haritayı HER ZAMAN gerçek kullanıcı konumuna odakla ─────────────
-  const zoom = zoneId ? 18 : 15;
+  const zoom = insideKulliye ? 18 : 15;
   _haritaMap.setView([lat, lon], zoom, { animate: true });
 
-  // ── Sesli anons — yalnızca bölge DEĞİŞİNCE çalışır ──────────────────
+  // ── Sesli anons — yalnızca bölge/durum DEĞİŞİNCE çalışır ─────────────
+  // Dışarıdaysa zoneKey='__outside__', içerideyse zoneId (veya '__inside__')
+  const currentKey = !insideKulliye ? '__outside__' : (zoneId || '__inside__');
   const isFirstFix = (_haritaLastZoneId === undefined);
-  const zoneChanged = (_haritaLastZoneId !== zoneId);
+  const zoneChanged = (_haritaLastZoneId !== currentKey);
 
   if (isFirstFix || zoneChanged) {
-    if (zoneId) {
-      speakText(getZoneAnnounce(zoneId));
-    } else if (!isFirstFix) {
+    if (!insideKulliye) {
+      // Külliye dışı uyarısını HER ZAMAN sesli oku (ilk fix veya durum değişince)
       speakText(getLocMsg('outside'));
+    } else if (zoneId) {
+      speakText(getZoneAnnounce(zoneId));
     }
-    _haritaLastZoneId = zoneId;
+    _haritaLastZoneId = currentKey;
   }
 }
 
@@ -4056,7 +4120,7 @@ function openHaritaPopup() {
       popupAnchor: [0, -44]
     });
 
-    const muzeMarker = L.marker([MUZE_LAT, MUZE_LON], { icon: muzeIcon }).addTo(_haritaMap);
+    const muzeMarker = L.marker([41.686210822921986, 26.543624785404425], { icon: muzeIcon }).addTo(_haritaMap);
     muzeMarker.bindPopup(`
       <div style="font-family:'Cinzel',serif;font-size:11px;color:#1a0f00;text-align:center;font-weight:700;line-height:1.5;">
         🏛️ Sultan II. Bayezid Külliyesi<br>
@@ -4074,7 +4138,11 @@ function openHaritaPopup() {
       dashArray: '4,4'
     }).addTo(_haritaMap);
 
-    // ── Bölge poligonları + isim etiketleri (referan_map.html stili) ──────
+    // ── Bölge poligonları + isim etiketleri (dile duyarlı) ──────────────
+    // Hem polygon popup'ları hem etiket marker'ları dil değişiminde güncellenebilsin diye sakla
+    _haritaMap._zonePolys = [];
+    _haritaMap._zoneLabelMarkers = [];
+
     ZONES.forEach(z => {
       const poly = L.polygon(z.coords, {
         color: '#b8860b',
@@ -4083,42 +4151,53 @@ function openHaritaPopup() {
         fillOpacity: 0.18
       }).addTo(_haritaMap);
 
-      poly.bindPopup(
-        `<div style="font-family:'Cinzel',serif;font-size:11px;color:#1a0f00;font-weight:700;text-align:center;line-height:1.5;">
-          ${z.name}
-          <br><span style="font-family:'Lora',serif;font-size:10px;font-weight:400;color:#4a3010;">${z.announce}</span>
-        </div>`,
-        { maxWidth: 220 }
-      );
+      // Popup dil-farkındal (zoneId sakla, içerik dil değişiminde güncellenir)
+      poly._zoneId = z.id;
+      poly.bindPopup('', { maxWidth: 220 });
+      poly.on('popupopen', () => {
+        const L2 = currentLang || 'tr';
+        const names = ZONE_NAMES_I18N[L2] || ZONE_NAMES_I18N['tr'];
+        const announces = ZONE_ANNOUNCES[L2] || ZONE_ANNOUNCES['tr'];
+        const zoneName = names[z.id] || z.name;
+        const zoneAnn  = announces[z.id] || z.announce;
+        poly.setPopupContent(
+          `<div style="font-family:'Cinzel',serif;font-size:11px;color:#1a0f00;font-weight:700;text-align:center;line-height:1.5;">
+            ${zoneName}
+            <br><span style="font-family:'Lora',serif;font-size:10px;font-weight:400;color:#4a3010;">${zoneAnn}</span>
+          </div>`
+        );
+      });
+      _haritaMap._zonePolys.push(poly);
 
       // Poligon ortasına isim etiketi
       const center = poly.getBounds().getCenter();
-      L.marker(center, {
+      const labelMarker = L.marker(center, {
         icon: L.divIcon({
-          className: '',
-          html: `<div style="
-            background:rgba(255,255,255,0.92);
-            backdrop-filter:blur(6px);
-            padding:5px 10px;
-            border-radius:12px;
-            border:1.5px solid rgba(184,134,11,0.55);
-            box-shadow:0 3px 10px rgba(0,0,0,0.18);
-            font-family:'Cinzel',serif;
-            font-weight:700;
-            font-size:11px;
-            color:#5a4300;
-            white-space:nowrap;
-            text-align:center;
-            letter-spacing:0.3px;
-            pointer-events:none;
-          ">${z.name}</div>`,
+          className: 'harita-zone-label',
+          html: `<div class="harita-zone-label-inner" data-zone="${z.id}">${z.name}</div>`,
           iconAnchor: [0, 0]
         }),
         interactive: false,
         zIndexOffset: 500
       }).addTo(_haritaMap);
+      _haritaMap._zoneLabelMarkers.push({ marker: labelMarker, zoneId: z.id });
     });
   }
+
+  // ── Dil değişiminde harita etiketlerini güncelle ─────────────────────
+  window._haritaUpdateZoneLabels = function() {
+    if (!_haritaMap) return;
+    const L2 = currentLang || 'tr';
+    const names = ZONE_NAMES_I18N[L2] || ZONE_NAMES_I18N['tr'];
+    // Etiket div'lerini güncelle
+    document.querySelectorAll('.harita-zone-label-inner').forEach(el => {
+      const zid = el.getAttribute('data-zone');
+      if (zid && names[zid]) el.textContent = names[zid];
+    });
+  };
+  // Dil değişimi hook'u — mevcut setLang/changeLang fonksiyonuna ek
+  const _origSetLang = window._haritaSetLangHook;
+  window._haritaSetLangHook = function() { _haritaUpdateZoneLabels(); };
 
   // Harita boyutunu yenile (display:none'dan açılırken)
   setTimeout(() => { if (_haritaMap) _haritaMap.invalidateSize(); }, 200);
@@ -4156,6 +4235,10 @@ function openHaritaPopup() {
 
 function closeHaritaPopup() {
   document.getElementById('harita-popup').classList.remove('open');
+  const bannerEl = document.getElementById('harita-outside-banner');
+  if (bannerEl) bannerEl.style.display = 'none';
+  const infoEl = document.getElementById('harita-info-text');
+  if (infoEl) infoEl.style.color = '';
 
   // Harita kapatılınca watchPosition'ı durdur; bölge sıfırla
   if (_haritaWatchId !== null) {
@@ -4175,11 +4258,12 @@ function checkLocation(){
   showLocToast(getLocMsg('searching'));
   navigator.geolocation.getCurrentPosition(pos=>{
     const{latitude:lat,longitude:lon}=pos.coords;
-    const zone=ZONES.find(z=>ptInPoly(lat,lon,z.coords));
-    const announceText=zone?getZoneAnnounce(zone.id):getLocMsg('outside');
-    const msg=zone?'📍 '+announceText:('📍 '+announceText);
+    const insideKulliye=ptInPoly(lat,lon,KULLIYE_SINIR);
+    const zone=insideKulliye?ZONES.find(z=>ptInPoly(lat,lon,z.coords)):null;
+    const announceText=(!insideKulliye)?getLocMsg('outside'):(zone?getZoneAnnounce(zone.id):'');
+    const msg=(!insideKulliye)?('⚠️ '+announceText):('📍 '+(announceText||'...'));
     showLocToast(msg);
-    speakText(announceText);
+    speakText(announceText||getLocMsg('outside'));
   },err=>{showLocToast('📍 '+getLocMsg('outside'));},{enableHighAccuracy:true,timeout:10000,maximumAge:5000});
 }
 
