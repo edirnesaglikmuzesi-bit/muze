@@ -1362,15 +1362,25 @@ function startTour(){
   introAudio.pause();introAudio.currentTime=0;
   showScreen('tour');
   document.getElementById('btn-loc-fixed').style.display='flex';
-  goStop(0);loadMessages();
+  loadMessages();
   // Tracking
   TRACKING.sessionId='sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
   TRACKING.startTime=Date.now();TRACKING.active=true;
   createSession();
-  // Konum kararı intro'da verilmedi mi? Tur başında sor
+  // Konum kararı henüz verilmedi mi? Popup'ı hemen göster, karardan sonra tur başlasın
   if(!sessionStorage.getItem('loc-perm-decided')){
-    setTimeout(()=>{document.getElementById('loc-permission-popup').classList.add('open');},1500);
+    // Popup'ı göster — karar verilince afterLocationDecision() çağrılacak
+    const popup=document.getElementById('loc-permission-popup');
+    if(popup) popup.classList.add('open');
+  } else {
+    // Daha önce karar verilmiş — direkt başlat
+    afterLocationDecision();
   }
+}
+
+/* Konum izninden sonra (kabul veya red) çağrılır — tur sesini ve durak 0'ı başlatır */
+function afterLocationDecision(){
+  goStop(0);
 }
 
 /* ────────────────────────────────────────
@@ -1498,7 +1508,7 @@ function closeMenu(keepAudioMuted) {
 
     const onIntro = document.getElementById('screen-intro').classList.contains('active');
     const fab=document.getElementById('evliya-fab-wrap');
-    if(fab&&!onIntro)fab.style.display='flex';
+    if(fab&&!onIntro){fab.style.display='flex';fab.style.opacity='1';}
 
     if(keepAudioMuted)return;
 
@@ -4608,13 +4618,14 @@ function _doGetLocation(){
     TRACKING.locationGranted=true;sessionStorage.setItem('loc-perm-decided','granted');updateSessionField({locationGranted:true});showLocToast(getLocMsg('tracking_started'));
     onLocationUpdate(pos.coords.latitude,pos.coords.longitude);
     TRACKING.watchId=navigator.geolocation.watchPosition(p=>onLocationUpdate(p.coords.latitude,p.coords.longitude),e=>console.warn(e.code),{enableHighAccuracy:true,timeout:20000,maximumAge:5000});
+    if(typeof afterLocationDecision==='function')afterLocationDecision();
   },err=>{
-    if(err.code===1){sessionStorage.setItem('loc-perm-decided','denied');showLocToast('📍 '+getLocMsg('denied'));}
-    else{TRACKING.locationGranted=true;sessionStorage.setItem('loc-perm-decided','granted');updateSessionField({locationGranted:true});showLocToast('📍 '+getLocMsg('waiting_gps'));TRACKING.watchId=navigator.geolocation.watchPosition(p=>onLocationUpdate(p.coords.latitude,p.coords.longitude),e=>console.warn(e.code),{enableHighAccuracy:false,timeout:30000,maximumAge:10000});}
+    if(err.code===1){sessionStorage.setItem('loc-perm-decided','denied');showLocToast('📍 '+getLocMsg('denied'));if(typeof afterLocationDecision==='function')afterLocationDecision();}
+    else{TRACKING.locationGranted=true;sessionStorage.setItem('loc-perm-decided','granted');updateSessionField({locationGranted:true});showLocToast('📍 '+getLocMsg('waiting_gps'));TRACKING.watchId=navigator.geolocation.watchPosition(p=>onLocationUpdate(p.coords.latitude,p.coords.longitude),e=>console.warn(e.code),{enableHighAccuracy:false,timeout:30000,maximumAge:10000});if(typeof afterLocationDecision==='function')afterLocationDecision();}
   },{enableHighAccuracy:true,timeout:10000,maximumAge:0});
 }
 
-function skipLocationPermission(){document.getElementById('loc-permission-popup').classList.remove('open');sessionStorage.setItem('loc-perm-decided','denied');TRACKING.locationGranted=false;updateSessionField({locationGranted:false});}
+function skipLocationPermission(){document.getElementById('loc-permission-popup').classList.remove('open');sessionStorage.setItem('loc-perm-decided','denied');TRACKING.locationGranted=false;updateSessionField({locationGranted:false});if(typeof afterLocationDecision==='function')afterLocationDecision();}
 
 /* ────────────────────────────────────────
    INTRO KONUM POPUP (intro'da 5sn sonra açılır)
@@ -4748,12 +4759,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     _activateStartBtn();
   }
 
-  // ── Intro'da 2sn sonra konum/gizlilik popup'ı göster ──
-  setTimeout(()=>{
-    if(document.getElementById('screen-intro').classList.contains('active')){
-      showIntroLocPopup();
-    }
-  },2000);
+  // ── Konum popup'ı artık intro'da değil, "Yolculuğa Başla" butonuna basıldıktan sonra açılır ──
 
   // ── Intro'da Evliya FAB artık gösterilmiyor (giriş ekranında FAB çıkmaz) ──
   // FAB yalnızca tur ekranına geçilince 4sn sonra belirir (showScreen içinde yönetilir)
@@ -4791,11 +4797,11 @@ window.addEventListener('DOMContentLoaded',()=>{
 (function(){
   const canvas=document.getElementById('water-canvas');if(!canvas)return;
   const ctx=canvas.getContext('2d');let W,H,cols,rows,current,previous;const DAMP=0.97,DROP_INTERVAL=900;
-  function resize(){const pw=canvas.parentElement?canvas.parentElement.offsetWidth:window.innerWidth;const ph=canvas.parentElement?canvas.parentElement.offsetHeight:window.innerHeight;W=canvas.width=pw||window.innerWidth;H=canvas.height=ph||window.innerHeight;if(W<1)W=canvas.width=window.innerWidth;if(H<1)H=canvas.height=window.innerHeight;cols=W;rows=H;current=new Float32Array(cols*rows);previous=new Float32Array(cols*rows);}
+  function resize(){const pw=canvas.parentElement?canvas.parentElement.offsetWidth:0;const ph=canvas.parentElement?canvas.parentElement.offsetHeight:0;W=canvas.width=Math.max(pw||window.innerWidth||320,2);H=canvas.height=Math.max(ph||window.innerHeight||568,2);cols=W;rows=H;current=new Float32Array(cols*rows);previous=new Float32Array(cols*rows);}
   function drop(x,y,radius,strength){x=Math.round(x);y=Math.round(y);for(let dy=-radius;dy<=radius;dy++){for(let dx=-radius;dx<=radius;dx++){if(dx*dx+dy*dy<=radius*radius){const nx=x+dx,ny=y+dy;if(nx>=0&&nx<cols&&ny>=0&&ny<rows)previous[ny*cols+nx]+=strength;}}}}
   function update(){for(let y=1;y<rows-1;y++){for(let x=1;x<cols-1;x++){const i=y*cols+x;current[i]=(previous[(y-1)*cols+x]+previous[(y+1)*cols+x]+previous[y*cols+(x-1)]+previous[y*cols+(x+1)])/2-current[i];current[i]*=DAMP;}}[current,previous]=[previous,current];}
-  function render(){const imgData=ctx.createImageData(W,H);const data=imgData.data;for(let y=1;y<rows-1;y++){for(let x=1;x<cols-1;x++){const i=y*cols+x;const dx=previous[y*cols+(x+1)]-previous[y*cols+(x-1)];const dy=previous[(y+1)*cols+x]-previous[(y-1)*cols+x];const base=180+Math.round(dx*0.4);const pi=(y*W+x)*4;data[pi]=Math.min(255,Math.max(0,base+40));data[pi+1]=Math.min(255,Math.max(0,base-30));data[pi+2]=Math.min(255,Math.max(0,10));data[pi+3]=Math.min(200,Math.max(0,Math.abs(dx*6+dy*6)));}}ctx.putImageData(imgData,0,0);}
-  function loop(){update();render();requestAnimationFrame(loop);}
+  function render(){if(!W||!H||W<2||H<2)return;try{const imgData=ctx.createImageData(W,H);const data=imgData.data;for(let y=1;y<rows-1;y++){for(let x=1;x<cols-1;x++){const i=y*cols+x;const dx=previous[y*cols+(x+1)]-previous[y*cols+(x-1)];const dy=previous[(y+1)*cols+x]-previous[(y-1)*cols+x];const base=180+Math.round(dx*0.4);const pi=(y*W+x)*4;data[pi]=Math.min(255,Math.max(0,base+40));data[pi+1]=Math.min(255,Math.max(0,base-30));data[pi+2]=Math.min(255,Math.max(0,10));data[pi+3]=Math.min(200,Math.max(0,Math.abs(dx*6+dy*6)));}}ctx.putImageData(imgData,0,0);}catch(e){}}
+  function loop(){if(W>1&&H>1)update();if(W>1&&H>1)render();requestAnimationFrame(loop);}
   function autoDrop(){if(document.getElementById('screen-intro').classList.contains('active')){drop(Math.random()*W,Math.random()*H,Math.random()*18+8,Math.random()*180+80);}setTimeout(autoDrop,DROP_INTERVAL+Math.random()*600);}
   canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect();drop(e.clientX-r.left,e.clientY-r.top,22,220);});
   canvas.addEventListener('touchstart',e=>{const r=canvas.getBoundingClientRect();Array.from(e.touches).forEach(t=>{drop(t.clientX-r.left,t.clientY-r.top,18,180);});},{passive:true});
