@@ -70,6 +70,7 @@
     width: 260px;
     line-height: 1.5;
   ">📲 TAM EKRAN DENEYİMİ İÇİN<br>REHBERİ ANA EKRANA EKLE</button>
+  <div id="app-version-badge" style="font-family:'Lora',serif;font-size:11px;color:rgba(196,154,60,0.45);margin-top:8px;letter-spacing:0.5px;text-align:center;width:260px;">Versiyon: 3.1</div>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -808,6 +809,17 @@
   </div>
 </div>
 
+<!-- ══ EXIT CONFIRM POPUP ══ -->
+<div id="exit-popup" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.78);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#2a1800,#1a0f00);border:1.5px solid rgba(196,154,60,0.45);border-radius:18px;padding:30px 22px 22px;max-width:300px;width:88%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.85);font-family:'Lora',serif;color:#f5e6c8;">
+    <div style="font-size:36px;margin-bottom:12px;">🚪</div>
+    <div id="exit-popup-title" style="font-family:'Cinzel',serif;font-size:12px;color:#c49a3c;letter-spacing:1.5px;margin-bottom:10px;">ÇIKIŞ</div>
+    <div id="exit-popup-msg" style="font-size:13px;line-height:1.75;margin-bottom:22px;color:#d8c8a8;">Tur rehberinden çıkmak istediğinizden emin misiniz?</div>
+    <button id="exit-popup-yes" onclick="doExit()" style="width:100%;padding:12px;background:linear-gradient(135deg,#8b1a1a,#c0392b);color:#fff;border:none;border-radius:10px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-bottom:8px;">✕ EVET, ÇIKIŞ YAP</button>
+    <button id="exit-popup-no" onclick="closeExitPopup()" style="width:100%;padding:10px;background:transparent;color:#a08060;border:1px solid rgba(160,128,96,0.3);border-radius:10px;font-family:'Lora',serif;font-size:12px;cursor:pointer;">Hayır, Devam Edeyim</button>
+  </div>
+</div>
+
 <!-- ══ FIXED LOCATION BUTTON ══ -->
 <button class="btn-location-fixed" id="btn-loc-fixed" onclick="openHaritaPopup()" title="Konumumu Göster" style="display:none;">📍</button>
 
@@ -940,6 +952,52 @@
 
 <!-- ══ FAB BİLGİ BALONU ══ -->
 <div id="fab-info-bubble"></div>
+
+<!-- ══ VEDA EKRANI (EVLIYA ÇELEBİ FAREWELL) ══ -->
+<div id="farewell-overlay" style="display:none;position:fixed;inset:0;z-index:99997;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;flex-direction:column;">
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;max-width:380px;width:92%;padding:16px 20px 24px;animation:farewellFadeIn 0.5s ease;">
+    <!-- Konuşma balonu -->
+    <div id="farewell-bubble" style="
+      background:linear-gradient(160deg,#2a1800,#1a0f00);
+      border:1.5px solid rgba(196,154,60,0.55);
+      border-radius:18px 18px 18px 4px;
+      padding:18px 22px;
+      text-align:center;
+      font-family:'Lora',serif;
+      color:#f5e6c8;
+      font-size:14px;
+      line-height:1.8;
+      margin-bottom:18px;
+      position:relative;
+      box-shadow:0 8px 32px rgba(0,0,0,0.7);
+      width:100%;
+    ">
+      <div style="font-family:'Cinzel',serif;font-size:11px;color:#c49a3c;letter-spacing:1.5px;margin-bottom:10px;">— REHBER EVLİYA —</div>
+      <div id="farewell-text" style="font-style:italic;"></div>
+      <!-- Balonun kuyruğu (aşağı sol köşe) -->
+      <div style="position:absolute;bottom:-14px;left:28px;width:0;height:0;
+        border-left:14px solid transparent;
+        border-right:0 solid transparent;
+        border-top:14px solid rgba(196,154,60,0.55);"></div>
+      <div style="position:absolute;bottom:-11px;left:30px;width:0;height:0;
+        border-left:12px solid transparent;
+        border-right:0 solid transparent;
+        border-top:12px solid #1a0f00;"></div>
+    </div>
+    <!-- Evliya GIF -->
+    <div style="border-radius:50%;overflow:hidden;border:3px solid rgba(196,154,60,0.55);width:140px;height:140px;box-shadow:0 6px 28px rgba(0,0,0,0.6);flex-shrink:0;">
+      <img src="assets/img/evliya.gif" alt="Evliya Çelebi"
+        style="width:100%;height:100%;object-fit:cover;"
+        onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:64px;background:linear-gradient(135deg,#2a1800,#1a0f00);\'>🎭</div>'">
+    </div>
+  </div>
+</div>
+<style>
+@keyframes farewellFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
 
 <!-- ══ KVKK BANNER ══ -->
 <div id="kvkk-banner">
@@ -1848,19 +1906,19 @@ const INTRO_FAB_BUBBLES={
 
 // Menü ve genel buton çevirileri (13 dil)
 const MENU_STRINGS={
-  tr:{home:'Ana Sayfa',exit:'Çıkış',exit_btn:'✕ ÇIKIŞ'},
-  en:{home:'Home',exit:'Exit',exit_btn:'✕ EXIT'},
-  de:{home:'Startseite',exit:'Beenden',exit_btn:'✕ BEENDEN'},
-  fr:{home:'Accueil',exit:'Quitter',exit_btn:'✕ QUITTER'},
-  it:{home:'Home',exit:'Esci',exit_btn:'✕ ESCI'},
-  es:{home:'Inicio',exit:'Salir',exit_btn:'✕ SALIR'},
-  ru:{home:'Главная',exit:'Выход',exit_btn:'✕ ВЫХОД'},
-  ar:{home:'الرئيسية',exit:'خروج',exit_btn:'✕ خروج'},
-  bg:{home:'Начало',exit:'Изход',exit_btn:'✕ ИЗХОД'},
-  el:{home:'Αρχική',exit:'Έξοδος',exit_btn:'✕ ΈΞΟΔΟΣ'},
-  zh:{home:'主页',exit:'退出',exit_btn:'✕ 退出'},
-  ro:{home:'Acasă',exit:'Ieșire',exit_btn:'✕ IEȘIRE'},
-  ja:{home:'ホーム',exit:'終了',exit_btn:'✕ 終了'},
+  tr:{home:'Ana Sayfa',exit:'Çıkış',exit_btn:'✕ ÇIKIŞ',exit_msg:'Tur rehberinden çıkmak istediğinizden emin misiniz?',exit_yes:'EVET, ÇIKIŞ YAP',exit_no:'Hayır, Devam Edeyim'},
+  en:{home:'Home',exit:'Exit',exit_btn:'✕ EXIT',exit_msg:'Are you sure you want to exit the tour guide?',exit_yes:'YES, EXIT',exit_no:'No, Continue'},
+  de:{home:'Startseite',exit:'Beenden',exit_btn:'✕ BEENDEN',exit_msg:'Möchten Sie den Reiseführer wirklich beenden?',exit_yes:'JA, BEENDEN',exit_no:'Nein, Weiter'},
+  fr:{home:'Accueil',exit:'Quitter',exit_btn:'✕ QUITTER',exit_msg:'Êtes-vous sûr de vouloir quitter le guide?',exit_yes:'OUI, QUITTER',exit_no:'Non, Continuer'},
+  it:{home:'Home',exit:'Esci',exit_btn:'✕ ESCI',exit_msg:'Sei sicuro di voler uscire dalla guida?',exit_yes:'SÌ, ESCI',exit_no:'No, Continua'},
+  es:{home:'Inicio',exit:'Salir',exit_btn:'✕ SALIR',exit_msg:'¿Estás seguro de que quieres salir de la guía?',exit_yes:'SÍ, SALIR',exit_no:'No, Continuar'},
+  ru:{home:'Главная',exit:'Выход',exit_btn:'✕ ВЫХОД',exit_msg:'Вы уверены, что хотите выйти из гида?',exit_yes:'ДА, ВЫЙТИ',exit_no:'Нет, Продолжить'},
+  ar:{home:'الرئيسية',exit:'خروج',exit_btn:'✕ خروج',exit_msg:'هل أنت متأكد أنك تريد الخروج من الدليل؟',exit_yes:'نعم، خروج',exit_no:'لا، متابعة'},
+  bg:{home:'Начало',exit:'Изход',exit_btn:'✕ ИЗХОД',exit_msg:'Сигурни ли сте, че искате да излезете от ръководството?',exit_yes:'ДА, ИЗХОД',exit_no:'Не, Продължи'},
+  el:{home:'Αρχική',exit:'Έξοδος',exit_btn:'✕ ΈΞΟΔΟΣ',exit_msg:'Είστε σίγουροι ότι θέλετε να βγείτε από τον οδηγό;',exit_yes:'ΝΑΙ, ΕΞΟΔΟΣ',exit_no:'Όχι, Συνέχεια'},
+  zh:{home:'主页',exit:'退出',exit_btn:'✕ 退出',exit_msg:'您确定要退出导览吗？',exit_yes:'是，退出',exit_no:'否，继续'},
+  ro:{home:'Acasă',exit:'Ieșire',exit_btn:'✕ IEȘIRE',exit_msg:'Sigur doriți să ieșiți din ghid?',exit_yes:'DA, IEȘIRE',exit_no:'Nu, Continuă'},
+  ja:{home:'ホーム',exit:'終了',exit_btn:'✕ 終了',exit_msg:'ガイドを終了してよろしいですか？',exit_yes:'はい、終了',exit_no:'いいえ、続ける'},
 };
 
 const TRANSLATIONS = {
@@ -4881,10 +4939,142 @@ function introSkipLocation(){
 /* ────────────────────────────────────────
    ÇIKIŞ FONKSİYONU
 ──────────────────────────────────────── */
-function exitApp(){
+/* ──────────────────────────────────────────────────────
+   APP VERSION & IMPROVEMENTS
+   Versiyon değiştirirken sw.js ile birlikte burayı da güncelleyin
+──────────────────────────────────────────────────────── */
+const APP_VERSION = '3.1';
+const APP_IMPROVEMENTS = {
+  tr: [
+    '🎭 Evliya Çelebi veda animasyonu eklendi',
+    '📱 Giriş ekranına versiyon numarası eklendi',
+    '✨ Çıkış deneyimi iyileştirildi'
+  ],
+  en: [
+    '🎭 Evliya Çelebi farewell animation added',
+    '📱 Version number added to intro screen',
+    '✨ Exit experience improved'
+  ],
+  de: [
+    '🎭 Evliya Çelebi Abschiedsanimation hinzugefügt',
+    '📱 Versionsnummer zur Einführungsseite hinzugefügt',
+    '✨ Beendigungserfahrung verbessert'
+  ],
+  fr: ['🎭 Animation d\'adieu d\'Evliya Çelebi ajoutée','📱 Numéro de version ajouté','✨ Expérience de sortie améliorée'],
+  it: ['🎭 Animazione addio Evliya Çelebi aggiunta','📱 Numero versione aggiunto','✨ Esperienza uscita migliorata'],
+  es: ['🎭 Animación despedida Evliya Çelebi añadida','📱 Número de versión añadido','✨ Experiencia de salida mejorada'],
+  ru: ['🎭 Анимация прощания Эвлия Челеби добавлена','📱 Добавлен номер версии','✨ Опыт выхода улучшен'],
+  ar: ['🎭 تمت إضافة رسوم متحركة لوداع أوليا چلبي','📱 تمت إضافة رقم الإصدار','✨ تحسين تجربة الخروج'],
+  bg: ['🎭 Добавена анимация за сбогуване','📱 Добавен номер на версия','✨ Подобрено излизане'],
+  el: ['🎭 Προστέθηκε animation αποχαιρετισμού','📱 Αριθμός έκδοσης προστέθηκε','✨ Βελτιωμένη έξοδος'],
+  zh: ['🎭 添加了告别动画','📱 添加了版本号','✨ 改善了退出体验'],
+  ro: ['🎭 Animație de rămas bun adăugată','📱 Număr de versiune adăugat','✨ Experiență de ieșire îmbunătățită'],
+  ja: ['🎭 お別れアニメーションを追加','📱 バージョン番号を追加','✨ 終了体験を改善']
+};
+
+/* ──────────────────────────────────────────────────────
+   FAREWELL (VEDA) MESAJLARI — 13 DİL
+──────────────────────────────────────────────────────── */
+const FAREWELL_MESSAGES = {
+  tr: 'Yüzyılların şifasını taşıyarak gidiniz… Bu kadim mekânı ziyaretiniz şeref ve bereket getirdi. Yolunuz açık olsun, aziz yolcu. 🌿',
+  en: 'May you carry the healing of centuries with you… Your visit to this ancient sanctuary brought honour and blessing. Safe travels, dear traveller. 🌿',
+  de: 'Mögen Sie die Heilung der Jahrhunderte mit sich tragen… Ihr Besuch in dieser alten Stätte brachte Ehre und Segen. Gute Reise, lieber Reisender. 🌿',
+  fr: 'Puissiez-vous emporter la guérison des siècles avec vous… Votre visite en ce lieu ancestral a apporté honneur et bénédiction. Bon voyage, cher voyageur. 🌿',
+  it: 'Portate con voi la guarigione dei secoli… La vostra visita a questo antico santuario ha portato onore e benedizione. Buon viaggio, caro viaggiatore. 🌿',
+  es: 'Que lleves contigo la sanación de los siglos… Tu visita a este santuario ancestral trajo honor y bendición. Buen viaje, querido viajero. 🌿',
+  ru: 'Пусть вы несёте с собой исцеление веков… Ваш визит в это древнее святилище принёс честь и благословение. Счастливого пути, дорогой путник. 🌿',
+  ar: 'أتمنى أن تحمل معك شفاء القرون… زيارتك لهذا المكان العريق جلبت الشرف والبركة. سافر بسلام أيها المسافر الكريم. 🌿',
+  bg: 'Нека носите с вас изцелението на вековете… Посещението ви донесе чест и благословия. Лек ви път, скъпи пътнико. 🌿',
+  el: 'Να πάρετε μαζί σας τη θεραπεία των αιώνων… Η επίσκεψή σας έφερε τιμή και ευλογία. Καλό ταξίδι, αγαπητέ ταξιδιώτη. 🌿',
+  zh: '愿您带走数百年的疗愈之力……您的到访带来了荣耀与祝福。一路平安，亲爱的旅人。🌿',
+  ro: 'Să purtați cu voi vindecarea veacurilor… Vizita dvs. a adus cinste și binecuvântare. Drum bun, drag călător. 🌿',
+  ja: '何世紀もの癒しをお持ち帰りください……あなたのご訪問は名誉と祝福をもたらしました。どうぞお気をつけて、親愛なる旅人よ。🌿'
+};
+
+/* ──────────────────────────────────────────────────────
+   FAREWELL GÖSTER → UYGULAMA KAPAT
+──────────────────────────────────────────────────────── */
+function showFarewell(callback){
+  // Ses durdur
+  ['stop-audio','intro-audio','evliya-intro-audio'].forEach(id=>{
+    const a=document.getElementById(id);
+    if(a&&!a.paused){a.pause();a.currentTime=0;}
+  });
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+  const overlay=document.getElementById('farewell-overlay');
+  const textEl=document.getElementById('farewell-text');
+  if(!overlay||!textEl){if(callback)callback();return;}
+
+  const msg=FAREWELL_MESSAGES[currentLang]||FAREWELL_MESSAGES['tr'];
+  textEl.textContent=msg;
+
+  // Başlık dile göre
+  const titleEl=overlay.querySelector('[style*="Cinzel"]');
+  const titleMap={
+    tr:'— REHBER EVLİYA —', en:'— GUIDE EVLIYA —', de:'— REISEFÜHRER EVLIYA —',
+    fr:'— GUIDE EVLIYA —', it:'— GUIDA EVLIYA —', es:'— GUÍA EVLIYA —',
+    ru:'— ЭКСКУРСОВОД ЭВЛИЯ —', ar:'— الدليل أوليا —', bg:'— ВОДАЧ ЕВЛИЯ —',
+    el:'— ΞΕΝΑΓΟΣ ΕΒΛΙΓΙΆ —', zh:'— 向导埃夫利亚 —', ro:'— GHID EVLIYA —', ja:'— ガイド エヴリヤ —'
+  };
+  if(titleEl) titleEl.textContent=titleMap[currentLang]||'— REHBER EVLİYA —';
+
+  overlay.style.display='flex';
+
+  // 4.5 saniye sonra kapat
+  setTimeout(()=>{
+    overlay.style.opacity='0';
+    overlay.style.transition='opacity 0.6s ease';
+    setTimeout(()=>{
+      overlay.style.display='none';
+      overlay.style.opacity='';
+      overlay.style.transition='';
+      if(callback)callback();
+    },650);
+  },4500);
+}
+
+function _performExit(){
+  finalizeSession();
   try{window.close();}catch(e){}
-  // window.close() bazı tarayıcılarda çalışmaz — history'ye gidilir
-  try{if(window.history.length>1){window.history.go(-(window.history.length-1));}else{window.location.href='about:blank';}}catch(e){}
+  setTimeout(()=>{
+    try{
+      if(window.history.length>1){
+        window.history.go(-(window.history.length-1));
+      } else {
+        window.location.replace('about:blank');
+      }
+    }catch(e){
+      try{window.location.replace('about:blank');}catch(e2){}
+    }
+    setTimeout(()=>{
+      try{window.location.replace('about:blank');}catch(e){}
+    },600);
+  },300);
+}
+
+function exitApp(){
+  closeMenu();
+  const ms=MENU_STRINGS[currentLang]||MENU_STRINGS['tr'];
+  const title=document.getElementById('exit-popup-title');
+  const msg=document.getElementById('exit-popup-msg');
+  const yes=document.getElementById('exit-popup-yes');
+  const no=document.getElementById('exit-popup-no');
+  if(title)title.textContent=ms.exit||'ÇIKIŞ';
+  if(msg)msg.textContent=ms.exit_msg||'Tur rehberinden çıkmak istediğinizden emin misiniz?';
+  if(yes)yes.textContent='✕ '+(ms.exit_yes||'EVET, ÇIKIŞ YAP');
+  if(no)no.textContent=ms.exit_no||'Hayır, Devam Edeyim';
+  const p=document.getElementById('exit-popup');
+  if(p){p.style.display='flex';}
+}
+function closeExitPopup(){
+  const p=document.getElementById('exit-popup');
+  if(p)p.style.display='none';
+}
+function doExit(){
+  closeExitPopup();
+  // Veda animasyonunu göster, sonra uygulamayı kapat
+  showFarewell(_performExit);
 }
 
 function onLocationUpdate(lat,lon){
