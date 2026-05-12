@@ -658,8 +658,15 @@
       <div class="stop-body" style="padding:0;">
         <div class="msg-section-title">📜 Son Mesajlar <span style="font-size:10px;color:var(--stone);">— Gönül Köprüsü'nden sesler</span></div>
         <div id="latest-msgs"><div class="msg-loading">Mesajlar yükleniyor…</div></div>
-        <div id="archive-msgs" style="margin-top:18px;"></div>
-        <div id="pg-wrap" class="msg-pagination"></div>
+
+        <div id="archive-wrap" style="margin-top:18px;">
+          <button id="archive-toggle" class="archive-toggle-btn" onclick="toggleArchive()" style="display:none;">
+            <span id="archive-toggle-label" data-i18n="archive_title">🗂️ Arşiv</span>
+            <span id="archive-toggle-icon" class="archive-toggle-icon">▼</span>
+          </button>
+          <div id="archive-msgs" style="display:none;margin-top:12px;"></div>
+          <div id="pg-wrap" class="msg-pagination" style="display:none;"></div>
+        </div>
       </div>
 
       <div class="stop-nav">
@@ -783,7 +790,7 @@
   <div class="yt-box">
     <iframe id="yt-iframe" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
   </div>
-  <button class="yt-close" onclick="closeYT()">KAPAT VE DEVAM ET →</button>
+  <button class="yt-close" onclick="closeYT()" data-i18n="yt_close">KAPAT VE DEVAM ET →</button>
 </div>
 
 <!-- ══ IMAGE FULLSCREEN ══ -->
@@ -914,11 +921,11 @@
 <div id="loc-permission-popup">
   <div class="loc-perm-box">
     <span class="loc-perm-icon">📍</span>
-    <div class="loc-perm-title">KONUM İZNİ</div>
-    <div class="loc-perm-text">Hangi bölümde olduğunuzu otomatik algılayabilmemiz için <strong>konum iznine</strong> ihtiyacımız var.</div>
+    <div class="loc-perm-title" id="loc-perm-title">KONUM İZNİ</div>
+    <div class="loc-perm-text" id="loc-perm-text">Hangi bölümde olduğunuzu otomatik algılayabilmemiz için <strong>konum iznine</strong> ihtiyacımız var.</div>
     <div class="loc-perm-note">🔒 Konumunuz yalnızca müze içinde geçerlidir. Sayfadan çıkışınızla takip sona erer. <a onclick="openKVKK()">Gizlilik Politikası →</a></div>
-    <button class="loc-perm-btn-ok" onclick="requestLocationPermission(this)">📍 KONUM İZNİ VER</button>
-    <button class="loc-perm-btn-skip" onclick="skipLocationPermission()">Hayır, Konum Paylaşmak İstemiyorum</button>
+    <button class="loc-perm-btn-ok" id="loc-perm-btn-ok" onclick="requestLocationPermission(this)">📍 KONUM İZNİ VER</button>
+    <button class="loc-perm-btn-skip" id="loc-perm-btn-skip" onclick="skipLocationPermission()">Hayır, Konum Paylaşmak İstemiyorum</button>
   </div>
 </div>
 
@@ -1256,7 +1263,7 @@ function getAudioFile(n, lang) {
    STATE
 ──────────────────────────────────────── */
 let currentStop=0,speakerMuted=false,currentLang='tr';
-let allMessages=[],archivePage=1;
+let allMessages=[],archivePage=1,archiveOpen=false;
 const LATEST=10,PER_PAGE=10;
 let fabBubbleTimer=null;
 
@@ -1272,33 +1279,128 @@ function showScreen(name){
   document.getElementById('screen-'+name).classList.add('active');
   const locBtn=document.getElementById('btn-loc-fixed');
   if(locBtn)locBtn.style.display=(name==='tour')?'flex':'none';
-  // FAB: intro'da ASLA gösterme, tour/map/defter ekranında 4sn sonra belir
+  // FAB: intro'da ASLA gösterme
   const fab=document.getElementById('evliya-fab-wrap');
   if(fab){
     if(name==='intro'){
       fab.style.display='none';
       fab.style.opacity='0';
-    } else {
-      // Zaten görünüyorsa dokunma; ilk kez gösteriliyorsa gecikmeli aç
-      if(fab.style.display==='none'){
-        clearTimeout(window._fabShowTimer);
-        window._fabShowTimer=setTimeout(()=>{
-          fab.style.display='flex';
-          setTimeout(()=>{
-            fab.style.opacity='1';
-            // FAB görününce karşılama balonunu da göster
-            const bubble=document.getElementById('fab-info-bubble');
-            if(bubble){
-              const L=INTRO_FAB_BUBBLES[currentLang]||INTRO_FAB_BUBBLES['tr'];
-              bubble.textContent=L;
-              bubble.classList.add('show');
-              setTimeout(()=>bubble.classList.remove('show'),5000);
-            }
-          },50);
-        },4000);
-      }
     }
+    // Tur ekranına geçişte FAB sekansı startTour() içinde yönetiliyor
   }
+}
+
+/* ════════════════════════════════════════════
+   FAB SEKANS YÖNETİCİSİ
+   7sn → etiket+FAB görünür (gif gizli)
+   9sn → gif görünür
+   11sn → balon çıkar
+   15sn → gif+balon kaybolur, sadece etiket kalır
+   Yeni turda sıfırlanır
+════════════════════════════════════════════ */
+function resetFabSequence(){
+  ['_fabT1','_fabT2','_fabT3','_fabT4','_fabT5',
+   '_fabStopT1','_fabStopT2','_fabStopT3','_fabStopT4'].forEach(k=>{clearTimeout(window[k]);window[k]=null;});
+  const fab=document.getElementById('evliya-fab-wrap');
+  if(!fab)return;
+  fab.style.display='none';
+  fab.style.opacity='0';
+  const fabCircle=document.getElementById('evliya-fab');
+  if(fabCircle){fabCircle.style.display='none';fabCircle.style.opacity='0';}
+  const bubble=document.getElementById('fab-info-bubble');
+  if(bubble)bubble.classList.remove('show');
+}
+
+function startFabSequence(){
+  resetFabSequence();
+  const fab=document.getElementById('evliya-fab-wrap');
+  if(!fab)return;
+
+  // T+7sn: sadece "Bana Sor" etiketi belirir
+  window._fabT1=setTimeout(()=>{
+    const fabCircle=document.getElementById('evliya-fab');
+    if(fabCircle){fabCircle.style.display='none';fabCircle.style.opacity='0';}
+    fab.style.display='flex';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{fab.style.opacity='1';}));
+  },7000);
+
+  // T+9sn: Evliya gif dairesi yumuşakça belirir
+  window._fabT2=setTimeout(()=>{
+    const fabCircle=document.getElementById('evliya-fab');
+    if(fabCircle){
+      fabCircle.style.transition='opacity 0.7s ease';
+      fabCircle.style.display='flex';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{fabCircle.style.opacity='1';}));
+    }
+    window._fabT2=null;
+  },9000);
+
+  // T+12sn: konuşma balonu çıkar
+  window._fabT3=setTimeout(()=>{
+    const bubble=document.getElementById('fab-info-bubble');
+    if(bubble){
+      const L=INTRO_FAB_BUBBLES[currentLang]||INTRO_FAB_BUBBLES['tr'];
+      bubble.textContent=L;
+      bubble.classList.add('show');
+    }
+  },12000);
+
+  // T+19sn: balon kaybolur
+  window._fabT4=setTimeout(()=>{
+    const bubble=document.getElementById('fab-info-bubble');
+    if(bubble)bubble.classList.remove('show');
+  },19000);
+
+  // T+20sn: gif kaybolur — sadece "Bana Sor" etiketi kalır
+  window._fabT5=setTimeout(()=>{
+    const fabCircle=document.getElementById('evliya-fab');
+    if(fabCircle){
+      fabCircle.style.opacity='0';
+      setTimeout(()=>{fabCircle.style.display='none';},700);
+    }
+  },20000);
+}
+
+/* Her durak geçişinde gif+balon tekrar göster (label her zaman görünür) */
+function showStopFabHint(n){
+  clearTimeout(window._fabStopT1);clearTimeout(window._fabStopT2);
+  clearTimeout(window._fabStopT3);clearTimeout(window._fabStopT4);
+  const fab=document.getElementById('evliya-fab-wrap');
+  const fabCircle=document.getElementById('evliya-fab');
+  const bubble=document.getElementById('fab-info-bubble');
+  // FAB henüz görünür değilse çıkma
+  if(!fab||fab.style.display==='none'||fab.style.opacity==='0')return;
+  // Dura ait ipucu metnini seç
+  const hints=(typeof FAB_STOP_HINTS_I18N!=='undefined'&&FAB_STOP_HINTS_I18N[currentLang])||
+              (typeof FAB_STOP_HINTS!=='undefined'&&FAB_STOP_HINTS)||null;
+  const hint=hints?hints[n]:null;
+  if(!hint)return;
+  // Mevcut gif+balon'u sıfırla
+  if(fabCircle){fabCircle.style.opacity='0';fabCircle.style.display='none';}
+  if(bubble)bubble.classList.remove('show');
+  // 1.2sn sonra gif çıkar
+  window._fabStopT1=setTimeout(()=>{
+    if(fabCircle){
+      fabCircle.style.transition='opacity 0.7s ease';
+      fabCircle.style.display='flex';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{fabCircle.style.opacity='1';}));
+    }
+  },1200);
+  // 3sn sonra balon çıkar
+  window._fabStopT2=setTimeout(()=>{
+    if(bubble){bubble.textContent=hint;bubble.classList.add('show');}
+  },3000);
+  // 10sn sonra balon kaybolur
+  window._fabStopT3=setTimeout(()=>{
+    if(bubble)bubble.classList.remove('show');
+  },10000);
+  // 11sn sonra gif kaybolur
+  window._fabStopT4=setTimeout(()=>{
+    if(fabCircle){
+      fabCircle.style.opacity='0';
+      setTimeout(()=>{fabCircle.style.display='none';},700);
+    }
+  },11000);
 }
 
 /* ────────────────────────────────────────
@@ -1363,15 +1465,29 @@ function startTour(){
   showScreen('tour');
   document.getElementById('btn-loc-fixed').style.display='flex';
   loadMessages();
+  // FAB sekansını sıfırla ve yeniden başlat (yeni turda her seferinde)
+  resetFabSequence();
+  startFabSequence();
   // Tracking
   TRACKING.sessionId='sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
   TRACKING.startTime=Date.now();TRACKING.active=true;
   createSession();
   // Konum kararı henüz verilmedi mi? Popup'ı hemen göster, karardan sonra tur başlasın
   if(!sessionStorage.getItem('loc-perm-decided')){
-    // Popup'ı göster — karar verilince afterLocationDecision() çağrılacak
     const popup=document.getElementById('loc-permission-popup');
-    if(popup) popup.classList.add('open');
+    if(popup){
+      // Popup açılmadan önce metinleri seçili dile çevir
+      const LS=INTRO_LOC_STRINGS[currentLang]||INTRO_LOC_STRINGS['tr'];
+      const el_t=document.getElementById('loc-perm-title');
+      const el_x=document.getElementById('loc-perm-text');
+      const el_ok=document.getElementById('loc-perm-btn-ok');
+      const el_sk=document.getElementById('loc-perm-btn-skip');
+      if(el_t)el_t.textContent=LS.title;
+      if(el_x)el_x.innerHTML=LS.text;
+      if(el_ok)el_ok.textContent=LS.ok;
+      if(el_sk)el_sk.textContent=LS.skip;
+      popup.classList.add('open');
+    }
   } else {
     // Daha önce karar verilmiş — direkt başlat
     afterLocationDecision();
@@ -1399,8 +1515,8 @@ function goStop(n){
   // FAB balonu: tur başlatıldıktan 4sn sonra FAB zaten görünmüşse hint göster
   // İlk durakta FAB henüz gizli olabilir; showScreen içindeki timer halleder
   clearTimeout(window._fabHintDelayTimer);
-  window._fabHintDelayTimer=setTimeout(()=>showFabHint(n),4000);
-  // Tracking: durak ve currentPage bilgisini güncelle
+  // Her durak geçişinde gif+balon sekansını başlat (FAB görünürse)
+  window._fabHintDelayTimer=setTimeout(()=>showStopFabHint(n),800);
   if(TRACKING.active&&n>TRACKING.lastStop){
     TRACKING.lastStop=n;
     updateSessionField({maxStop:n,lang:currentLang||'tr'});
@@ -1508,7 +1624,18 @@ function closeMenu(keepAudioMuted) {
 
     const onIntro = document.getElementById('screen-intro').classList.contains('active');
     const fab=document.getElementById('evliya-fab-wrap');
-    if(fab&&!onIntro){fab.style.display='flex';fab.style.opacity='1';}
+    if(fab&&!onIntro){
+      fab.style.display='flex';
+      fab.style.opacity='1';
+      // _fabT2===null → 9sn geçti, gif görünür olmalı; değilse gizli kalsın
+      const fabCircle=document.getElementById('evliya-fab');
+      if(fabCircle){
+        if(window._fabT2!==null){
+          fabCircle.style.display='none';
+        }
+        // _fabT2===null ise zaten display:'flex' ayarlı, dokunma
+      }
+    }
 
     if(keepAudioMuted)return;
 
@@ -1760,7 +1887,7 @@ const TRANSLATIONS = {
     s8_main:'Cami İçinde Manevî Yolculuk',s8_sub:'🕌 CAMİ AVLUSU',s8_slogan:'🌌 KUBBE ALTINDA FİNAL',
     s9_main:'Veda Vakti',s9_sub:'🌊 GÖNÜL KÖPRÜSÜNE DAVET',s9_slogan:'✨ BU HİKÂYEDE SİZİN DE İZİNİZ OLSUN',
     s10_main:'🖋️ Gönül Köprüsü',s10_slogan:'"Geçmişin şifası, bugünün kelimeleriyle buluşuyor."',
-    fab_ask:'BANA SOR',exit_btn:'✕ ÇIKIŞ',s10_restart:'🏛️ BAŞA DÖN'
+    fab_ask:'BANA SOR',exit_btn:'✕ ÇIKIŞ',s10_restart:'🏛️ BAŞA DÖN',yt_close:'KAPAT VE DEVAM ET →'
   },
   en:{
     start:'BEGIN THE JOURNEY',intro_title:'Invitation to the Threshold',intro_sub:'A journey beyond time, to the center of healing…',
@@ -1887,7 +2014,7 @@ const TRANSLATIONS = {
     s9_fwd:'WRITE TO THE HEART BRIDGE →',
     s10_body:'We would love to hear the impressions this 500-year journey through our Külliye has left on you. Your words will become stones of this bridge.',
     s10_restart:'🏛️ RETURN TO START',
-    fab_ask:'ASK ME',exit_btn:'✕ EXIT'
+    fab_ask:'ASK ME',exit_btn:'✕ EXIT',yt_close:'CLOSE AND CONTINUE →'
   },
    de:{
     start:'REISE BEGINNEN',intro_title:'Einladung zur Schwelle',intro_sub:'Eine Reise jenseits der Zeit, zum Zentrum der Heilung…',
@@ -2014,7 +2141,7 @@ const TRANSLATIONS = {
     s9_fwd:'AUF DIE HERZBRÜCKE SCHREIBEN →',
     s10_body:'Wir würden gerne hören, welche Eindrücke diese 500-jährige Reise durch unsere Külliye bei Ihnen hinterlassen hat. Ihre Worte werden Steine dieser Brücke.',
     s10_restart:'🏛️ ZUM ANFANG ZURÜCK',
-    fab_ask:'FRAG MICH',exit_btn:'✕ BEENDEN'
+    fab_ask:'FRAG MICH',exit_btn:'✕ BEENDEN',yt_close:'SCHLIESSEN UND WEITER →'
   },
 
   fr:{
@@ -2142,7 +2269,7 @@ const TRANSLATIONS = {
     s9_fwd:'ÉCRIRE AU PONT DU CŒUR →',
     s10_body:'Nous aimerions entendre les impressions que ce voyage de 500 ans à travers notre Külliye a laissées en vous. Vos mots deviendront des pierres de ce pont.',
     s10_restart:'🏛️ RETOUR AU DÉBUT',
-    fab_ask:'DEMANDEZ-MOI',exit_btn:'✕ QUITTER'
+    fab_ask:'DEMANDEZ-MOI',exit_btn:'✕ QUITTER',yt_close:'FERMER ET CONTINUER →'
   },
    it:{
     start:'INIZIA IL VIAGGIO',intro_title:'Invito alla Soglia',intro_sub:'Un viaggio oltre il tempo, verso il centro della guarigione…',
@@ -2269,7 +2396,7 @@ const TRANSLATIONS = {
     s9_fwd:'SCRIVI AL PONTE DEL CUORE →',
     s10_body:'Ci piacerebbe sentire le impressioni che questo viaggio di 500 anni nel nostro Külliye ha lasciato su di te. Le tue parole diventeranno pietre di questo ponte.',
     s10_restart:'🏛️ TORNA ALL\'INIZIO',
-    fab_ask:'CHIEDIMI',exit_btn:'✕ ESCI'
+    fab_ask:'CHIEDIMI',exit_btn:'✕ ESCI',yt_close:'CHIUDI E CONTINUA →'
   },
   es:{
     start:'COMENZAR EL VIAJE',intro_title:'Invitación al Umbral',intro_sub:'Un viaje más allá del tiempo, hacia el centro de la sanación…',
@@ -2396,7 +2523,7 @@ const TRANSLATIONS = {
     s9_fwd:'ESCRIBIR AL PUENTE DEL CORAZÓN →',
     s10_body:'Nos encantaría escuchar las impresiones que este viaje de 500 años por nuestro Külliye ha dejado en ti. Tus palabras se convertirán en piedras de este puente.',
     s10_restart:'🏛️ VOLVER AL INICIO',
-    fab_ask:'PREGÚNTAME',exit_btn:'✕ SALIR'
+    fab_ask:'PREGÚNTAME',exit_btn:'✕ SALIR',yt_close:'CERRAR Y CONTINUAR →'
   },
    ru:{
     start:'НАЧАТЬ ПУТЕШЕСТВИЕ',intro_title:'Приглашение к Порогу',intro_sub:'Путешествие вне времени, к центру исцеления…',
@@ -2523,7 +2650,7 @@ const TRANSLATIONS = {
     s9_fwd:'НАПИСАТЬ НА МОСТ СЕРДЦА →',
     s10_body:'Нам было бы очень интересно узнать, какие впечатления оставило у вас это 500-летнее путешествие по нашему Куллие. Ваши слова станут камнями этого моста.',
     s10_restart:'🏛️ ВЕРНУТЬСЯ К НАЧАЛУ',
-    fab_ask:'СПРОСИ МЕНЯ',exit_btn:'✕ ВЫХОД'
+    fab_ask:'СПРОСИ МЕНЯ',exit_btn:'✕ ВЫХОД',yt_close:'ЗАКРЫТЬ И ПРОДОЛЖИТЬ →'
   },
    ar:{
     start:'ابدأ الرحلة',intro_title:'دعوة إلى العتبة',intro_sub:'رحلة خارج الزمن، إلى مركز الشفاء…',
@@ -2650,7 +2777,7 @@ const TRANSLATIONS = {
     s9_fwd:'الكتابة إلى جسر القلب →',
     s10_body:'يسعدنا سماع الانطباعات التي تركتها رحلة ٥٠٠ عام هذه عبر كليّتنا في نفسك. كلماتك ستصبح حجارة هذا الجسر.',
     s10_restart:'🏛️ العودة إلى البداية',
-    fab_ask:'اسألني',exit_btn:'✕ خروج'
+    fab_ask:'اسألني',exit_btn:'✕ خروج',yt_close:'← إغلاق والمتابعة'
   },
   ro:{
     start:'ÎNCEPE CĂLĂTORIA',intro_title:'Invitație la Prag',intro_sub:'O călătorie dincolo de timp, spre centrul vindecării…',
@@ -2777,7 +2904,7 @@ const TRANSLATIONS = {
     s9_fwd:'SCRIE PE PODUL INIMII →',
     s10_body:'Ne-ar plăcea să auzim impresiile pe care această călătorie de 500 de ani prin complexul nostru Külliye le-a lăsat asupra ta. Cuvintele tale vor deveni pietrele acestui pod.',
     s10_restart:'🏛️ REÎNTOARCERE LA START',
-    fab_ask:'ÎNTREABĂ-MĂ',exit_btn:'✕ IEȘIRE'
+    fab_ask:'ÎNTREABĂ-MĂ',exit_btn:'✕ IEȘIRE',yt_close:'ÎNCHIDE ȘI CONTINUĂ →'
 },
   bg:{
     start:'ЗАПОЧНИ ПЪТУВАНЕТО',intro_title:'Покана към Прага',intro_sub:'Пътуване отвъд времето, към центъра на изцелението…',
@@ -2904,7 +3031,7 @@ const TRANSLATIONS = {
     s9_fwd:'ПИШЕТЕ НА МОСТА НА СЪРЦЕТО →',
     s10_body:'Бихме искали да чуем впечатленията от това 500-годишно пътуване. Думите ви ще станат камъните на този мост.',
     s10_restart:'🏛️ ВЪРНЕТЕ СЕ В НАЧАЛОТО',
-    fab_ask:'ПИТАЙТЕ МЕ',exit_btn:'✕ ИЗХОД'
+    fab_ask:'ПИТАЙТЕ МЕ',exit_btn:'✕ ИЗХОД',yt_close:'ЗАТВОРИ И ПРОДЪЛЖИ →'
   },
   el:{
     start:'ΞΕΚΙΝΉΣΤΕ ΤΟ ΤΑΞΊΔΙ',intro_title:'Πρόσκληση στο Κατώφλι',intro_sub:'Ένα ταξίδι πέρα από τον χρόνο, στο κέντρο της θεραπείας…',
@@ -3032,7 +3159,7 @@ const TRANSLATIONS = {
     s9_fwd:'ΓΡΆΨΤΕ ΣΤΗ ΓΈΦΥΡΑ ΚΑΡΔΙΆΣ →',
     s10_body:'Θα θέλαμε πολύ να ακούσουμε τις εντυπώσεις που άφησε σε σας αυτό το ταξίδι 500 ετών μέσα από το Κυλλιγιέ μας. Οι λέξεις σας θα γίνουν πέτρες αυτής της γέφυρας.',
     s10_restart:'🏛️ ΕΠΙΣΤΡΟΦΉ ΣΤΗΝ ΑΡΧΉ',
-    fab_ask:'ΡΩΤΉΣΤΕ ΜΕ',exit_btn:'✕ ΈΞΟΔΟΣ'
+    fab_ask:'ΡΩΤΉΣΤΕ ΜΕ',exit_btn:'✕ ΈΞΟΔΟΣ',yt_close:'ΚΛΕΙΣΙΜΟ ΚΑΙ ΣΥΝΕΧΕΙΑ →'
   },
  zh:{
     start:'开始旅程',intro_title:'门槛的邀请',intro_sub:'超越时间的旅程，走向疗愈的中心…',
@@ -3159,7 +3286,7 @@ const TRANSLATIONS = {
     s9_fwd:'写信给心桥 →',
     s10_body:'我们非常希望听到这段穿越我们屈利耶500年历史的旅程在您心中留下的印象。您的文字将成为这座桥的石头。',
     s10_restart:'🏛️ 返回起点',
-    fab_ask:'问我',exit_btn:'✕ 退出'
+    fab_ask:'问我',exit_btn:'✕ 退出',yt_close:'关闭并继续 →'
   },
  
    ro:{
@@ -3287,7 +3414,7 @@ const TRANSLATIONS = {
     s9_fwd:'SCRIE PE PODUL INIMII →',
     s10_body:'Ne-ar plăcea să auzim impresiile pe care această călătorie de 500 de ani prin Külliye-ul nostru le-a lăsat asupra dvs. Cuvintele dvs. vor deveni pietrele acestui pod.',
     s10_restart:'🏛️ ÎNTOARCE-TE LA ÎNCEPUT',
-    fab_ask:'ÎNTREABĂ-MĂ',exit_btn:'✕ IEȘIRE'
+    fab_ask:'ÎNTREABĂ-MĂ',exit_btn:'✕ IEȘIRE',yt_close:'ÎNCHIDE ȘI CONTINUĂ →'
   },
   ja:{
     start:'旅を始める',intro_title:'敷居への招待',intro_sub:'時を超えて、癒しの中心へ向かう旅…',
@@ -3414,7 +3541,7 @@ const TRANSLATIONS = {
     s9_fwd:'心の橋に書く →',
     s10_body:'キュッリエを巡るこの500年の旅があなたに残した印象をぜひお聞かせください。あなたの言葉がこの橋の石となります。',
     s10_restart:'🏛️ 最初に戻る',
-    fab_ask:'聞いて',exit_btn:'✕ 終了'
+    fab_ask:'聞いて',exit_btn:'✕ 終了',yt_close:'閉じて続ける →'
   }
 };
 
@@ -3455,6 +3582,16 @@ function applyTranslations(){
   // Intro konum popup dil güncellemesi
   const introLocPopup=document.getElementById('intro-loc-popup');
   if(introLocPopup&&introLocPopup.style.display!=='none'){updateIntroLocPopupLang();}
+  // Tur konum izni popup dil güncellemesi
+  const LS=INTRO_LOC_STRINGS[currentLang]||INTRO_LOC_STRINGS['tr'];
+  const locTitle=document.getElementById('loc-perm-title');
+  const locText=document.getElementById('loc-perm-text');
+  const locBtnOk=document.getElementById('loc-perm-btn-ok');
+  const locBtnSkip=document.getElementById('loc-perm-btn-skip');
+  if(locTitle)locTitle.textContent=LS.title;
+  if(locText)locText.innerHTML=LS.text;
+  if(locBtnOk)locBtnOk.textContent=LS.ok;
+  if(locBtnSkip)locBtnSkip.textContent=LS.skip;
   // Gönül Köprüsü çıkış butonu
   const exitGonul=document.querySelector('.btn-exit-gonul');
   if(exitGonul)exitGonul.textContent=mStr.exit_btn;
@@ -4328,21 +4465,82 @@ function fmtDate(ts){if(!ts)return'';return new Date(ts.seconds*1000).toLocaleDa
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function renderMessages(){
+  /* ── Son 10 mesaj ── */
   const latest=allMessages.slice(0,LATEST);
   const latEl=document.getElementById('latest-msgs');
   if(!latEl)return;
-  latEl.innerHTML=latest.length?latest.map(m=>`<div class="msg-card"><div class="msg-author">👤 ${esc(m.user)}</div><div class="msg-city">📍 ${esc(m.city)}</div><div class="msg-body">${esc(m.text)}</div><div class="msg-date">${fmtDate(m.timestamp)}</div></div>`).join(''):'<div class="msg-loading">Henüz mesaj yok. İlk taşı siz koyun! ✨</div>';
+  const noMsgTxt=t('no_msg')||'Henüz mesaj yok. İlk taşı siz koyun! ✨';
+  latEl.innerHTML=latest.length
+    ?latest.map(m=>`<div class="msg-card"><div class="msg-author">👤 ${esc(m.user)}</div><div class="msg-city">📍 ${esc(m.city)}</div><div class="msg-body">${esc(m.text)}</div><div class="msg-date">${fmtDate(m.timestamp)}</div></div>`).join('')
+    :`<div class="msg-loading">${noMsgTxt}</div>`;
+
+  /* ── Arşiv ── */
   const archive=allMessages.slice(LATEST);
   const archEl=document.getElementById('archive-msgs');
   const pgEl=document.getElementById('pg-wrap');
+  const toggleBtn=document.getElementById('archive-toggle');
   if(!archEl||!pgEl)return;
-  if(!archive.length){archEl.innerHTML='';pgEl.innerHTML='';return;}
+
+  /* Arşiv yoksa toggle'ı gizle, içeriği temizle */
+  if(!archive.length){
+    if(toggleBtn)toggleBtn.style.display='none';
+    archEl.innerHTML='';pgEl.innerHTML='';
+    return;
+  }
+
+  /* Toggle butonu göster */
+  if(toggleBtn)toggleBtn.style.display='flex';
+
+  /* Açık değilse içeriği render etme */
+  if(!archiveOpen){archEl.innerHTML='';pgEl.innerHTML='';return;}
+
+  /* Sayfalama */
   const total=Math.ceil(archive.length/PER_PAGE);
-  if(archivePage>total)archivePage=1;
+  if(archivePage>total)archivePage=total;
+  if(archivePage<1)archivePage=1;
   const slice=archive.slice((archivePage-1)*PER_PAGE,archivePage*PER_PAGE);
-  archEl.innerHTML='<div class="msg-section-title">🗂️ Arşiv</div>'+slice.map(m=>`<div class="msg-card" style="opacity:0.85;"><div class="msg-author">👤 ${esc(m.user)} <span style="font-weight:400;color:var(--stone);font-size:11px;">— ${esc(m.city)}</span></div><div class="msg-body" style="margin-top:6px;">${esc(m.text)}</div><div class="msg-date">${fmtDate(m.timestamp)}</div></div>`).join('');
+
+  archEl.innerHTML=slice.map(m=>`<div class="msg-card" style="opacity:0.85;"><div class="msg-author">👤 ${esc(m.user)} <span style="font-weight:400;color:var(--stone);font-size:11px;">— ${esc(m.city)}</span></div><div class="msg-body" style="margin-top:6px;">${esc(m.text)}</div><div class="msg-date">${fmtDate(m.timestamp)}</div></div>`).join('');
+
+  /* İleri / Geri butonları */
   pgEl.innerHTML='';
-  if(total>1){for(let i=1;i<=total;i++){const b=document.createElement('button');b.textContent=i;b.className='pg-btn'+(i===archivePage?' active':'');b.onclick=()=>{archivePage=i;renderMessages();archEl.scrollIntoView({behavior:'smooth'});};pgEl.appendChild(b);}}
+  if(total>1){
+    const prev=document.createElement('button');
+    prev.className='pg-btn pg-nav'+(archivePage===1?' pg-disabled':'');
+    prev.innerHTML='&#9664;';
+    prev.disabled=archivePage===1;
+    prev.onclick=()=>{archivePage--;renderMessages();archEl.scrollIntoView({behavior:'smooth'});};
+    pgEl.appendChild(prev);
+
+    const info=document.createElement('span');
+    info.className='pg-info';
+    info.textContent=archivePage+' / '+total;
+    pgEl.appendChild(info);
+
+    const next=document.createElement('button');
+    next.className='pg-btn pg-nav'+(archivePage===total?' pg-disabled':'');
+    next.innerHTML='&#9654;';
+    next.disabled=archivePage===total;
+    next.onclick=()=>{archivePage++;renderMessages();archEl.scrollIntoView({behavior:'smooth'});};
+    pgEl.appendChild(next);
+  }
+}
+
+function toggleArchive(){
+  archiveOpen=!archiveOpen;
+  const archEl=document.getElementById('archive-msgs');
+  const pgEl=document.getElementById('pg-wrap');
+  const icon=document.getElementById('archive-toggle-icon');
+  if(archiveOpen){
+    if(icon)icon.textContent='▲';
+    renderMessages(); /* içeriği render et */
+    if(archEl)archEl.style.display='block';
+    if(pgEl)pgEl.style.display='flex';
+  } else {
+    if(icon)icon.textContent='▼';
+    if(archEl){archEl.style.display='none';archEl.innerHTML='';}
+    if(pgEl){pgEl.style.display='none';pgEl.innerHTML='';}
+  }
 }
 
 function loadMessages(){
@@ -4769,14 +4967,14 @@ window.addEventListener('DOMContentLoaded',()=>{
     window._introStarted=true;
     window._introUnlocked=true;
   }).catch(()=>{
-    // Autoplay engellendi — sayaç zaten çalışıyor, ses için ilk dokunuşu bekle
+    // Autoplay engellendi — ilk kullanıcı etkileşiminde çal
     const _iEvents=['touchstart','click','mousedown','pointerdown','keydown'];
     function _onFirstTouch(){
       if(window._introUnlocked)return;
       window._introUnlocked=true;
       _iEvents.forEach(ev=>document.removeEventListener(ev,_onFirstTouch));
+      // Intro ekranı hâlâ aktifse sesi başlat
       if(!document.getElementById('screen-intro').classList.contains('active'))return;
-      if(window._introStarted)return;
       window._introStarted=true;
       introAudio.play().catch(()=>{});
     }
