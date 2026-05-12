@@ -812,7 +812,12 @@
 <!-- ══ EXIT CONFIRM POPUP ══ -->
 <div id="exit-popup" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.78);align-items:center;justify-content:center;">
   <div style="background:linear-gradient(160deg,#2a1800,#1a0f00);border:1.5px solid rgba(196,154,60,0.45);border-radius:18px;padding:30px 22px 22px;max-width:300px;width:88%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.85);font-family:'Lora',serif;color:#f5e6c8;">
-    <div style="font-size:36px;margin-bottom:12px;">🚪</div>
+    <div style="margin-bottom:12px;display:flex;justify-content:center;">
+      <img src="assets/img/evliya.gif" alt="Evliya Çelebi"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+           style="width:80px;height:80px;object-fit:contain;border-radius:50%;border:2px solid rgba(196,154,60,0.35);">
+      <span style="display:none;font-size:36px;line-height:80px;">🚪</span>
+    </div>
     <div id="exit-popup-title" style="font-family:'Cinzel',serif;font-size:12px;color:#c49a3c;letter-spacing:1.5px;margin-bottom:10px;">ÇIKIŞ</div>
     <div id="exit-popup-msg" style="font-size:13px;line-height:1.75;margin-bottom:22px;color:#d8c8a8;">Tur rehberinden çıkmak istediğinizden emin misiniz?</div>
     <button id="exit-popup-yes" onclick="doExit()" style="width:100%;padding:12px;background:linear-gradient(135deg,#8b1a1a,#c0392b);color:#fff;border:none;border-radius:10px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-bottom:8px;">✕ EVET, ÇIKIŞ YAP</button>
@@ -6043,11 +6048,33 @@ document.getElementById('evliya-chat-panel').addEventListener('click',function(e
       'line-height:1.6'
     ].join(';');
 
+    // İyileştirmeleri mevcut dile göre al
+    const _impLang = (typeof currentLang !== 'undefined' && APP_IMPROVEMENTS[currentLang])
+      ? currentLang : 'tr';
+    const _impList = APP_IMPROVEMENTS[_impLang] || APP_IMPROVEMENTS['tr'];
+    const _impItems = _impList.map(i =>
+      `<li style="margin:4px 0;font-size:11px;text-align:left;color:#f0e0a0;">${i}</li>`
+    ).join('');
+
     banner.innerHTML = `
       <div style="font-size:20px;margin-bottom:6px;">🏛️</div>
       <div style="font-weight:600;letter-spacing:0.05em;">Rehber Güncellendi</div>
-      <div style="font-family:Lora,serif;font-size:11px;color:rgba(240,192,64,0.75);margin:6px 0 12px;">
+      <div style="font-family:Lora,serif;font-size:11px;color:rgba(240,192,64,0.75);margin:6px 0 8px;">
         Yeni içerik ve düzeltmeler hazır.
+      </div>
+      <button id="pwa-improvements-toggle" onclick="(function(){
+        var p=document.getElementById('pwa-improvements-panel');
+        var b=document.getElementById('pwa-improvements-toggle');
+        if(p.style.display==='none'){p.style.display='block';b.textContent='▲ İyileştirmeleri Gizle';}
+        else{p.style.display='none';b.textContent='▼ İyileştirmeler';}
+      })()" style="
+        background:transparent;color:rgba(240,192,64,0.65);
+        border:1px solid rgba(196,154,60,0.3);border-radius:20px;
+        padding:5px 16px;font-family:Lora,serif;
+        font-size:11px;cursor:pointer;margin-bottom:10px;
+      ">▼ İyileştirmeler</button>
+      <div id="pwa-improvements-panel" style="display:none;background:rgba(0,0,0,0.3);border-radius:10px;padding:10px 14px;margin-bottom:10px;max-height:140px;overflow-y:auto;">
+        <ul style="margin:0;padding-left:16px;list-style:disc;">${_impItems}</ul>
       </div>
       <button id="pwa-update-btn" style="
         background:linear-gradient(135deg,#b8860b,#d4a017);
