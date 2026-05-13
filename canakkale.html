@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Çanakkale Şehitlikleri Rehberi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #C0152B;
+  --red-dark: #8B0E1E;
+  --red-light: #E8243F;
+  --red-pale: #fde8eb;
+  --white: #FAFAF8;
+  --cream: #F5F0E8;
+  --gold: #C9A84C;
+  --gold-light: #E8C96A;
+  --text-dark: #1A0A0D;
+  --text-mid: #4A2030;
+  --text-light: #8A6070;
+  --border: rgba(192,21,43,0.18);
+  --shadow: 0 4px 24px rgba(192,21,43,0.12);
+  --r: 12px;
+  --green: #2e7d32;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; overflow:hidden; font-family:'Crimson Pro',Georgia,serif; background:var(--cream); color:var(--text-dark); font-size:16px; }
+
+/* SCREENS */
+.screen { position:fixed; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity 0.4s ease; overflow:hidden; }
+.screen.active { opacity:1; pointer-events:all; }
+
+/* FLAG ANIMATION */
+@keyframes flagWave {
+  0%,100% { transform:skewX(0deg) scaleX(1); }
+  25% { transform:skewX(-3deg) scaleX(1.02); }
+  75% { transform:skewX(3deg) scaleX(0.98); }
+}
+@keyframes starPulse {
+  0%,100% { opacity:1; transform:scale(1) translateX(-50%) translateY(-50%); }
+  50% { opacity:0.8; transform:scale(1.05) translateX(-50%) translateY(-50%); }
+}
+@keyframes redPulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(192,21,43,0); }
+  50% { box-shadow:0 0 20px 6px rgba(192,21,43,0.35); }
+}
+@keyframes floatUp {
+  0% { transform:translateY(30px); opacity:0; }
+  100% { transform:translateY(0); opacity:1; }
+}
+@keyframes shimmer {
+  0% { background-position:-200% center; }
+  100% { background-position:200% center; }
+}
+@keyframes ripple {
+  0% { transform:scale(0); opacity:0.6; }
+  100% { transform:scale(3); opacity:0; }
+}
+@keyframes pulse { 0%,100% { transform:scale(1); opacity:0.9; } 50% { transform:scale(1.08); opacity:1; } }
+@keyframes loadAnim { 0% { width:0; margin-left:0; } 50% { width:100%; margin-left:0; } 100% { width:0; margin-left:100%; } }
+@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+
+/* LOADING */
+#loading {
+  position:fixed; inset:0; z-index:2000;
+  background:linear-gradient(160deg,#1A0A0D,#3D0A14);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+  transition:opacity 0.6s;
+}
+#loading.hide { opacity:0; pointer-events:none; }
+.loading-flag {
+  width:80px; height:53px;
+  background:#C0152B;
+  border-radius:2px;
+  display:flex; align-items:center; justify-content:center;
+  animation:flagWave 2s ease-in-out infinite, redPulse 2s ease-in-out infinite;
+  position:relative; overflow:visible;
+  box-shadow:0 0 30px rgba(192,21,43,0.4);
+}
+.loading-flag::before {
+  content:'☽ ★';
+  color:white; font-size:14px;
+  letter-spacing:2px;
+}
+.loading-text { font-family:'Cinzel',serif; color:var(--gold-light); font-size:13px; letter-spacing:0.15em; }
+.loading-bar { width:160px; height:3px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden; }
+.loading-fill { height:100%; background:var(--red); animation:loadAnim 1.5s ease-in-out infinite; }
+
+/* INTRO */
+#s-intro { background:var(--text-dark); align-items:center; justify-content:center; text-align:center; }
+.intro-bg {
+  position:absolute; inset:0;
+  background:linear-gradient(160deg,#1A0A0D 0%,#3D0A14 50%,#1A0A0D 100%);
+}
+.intro-bg::before {
+  content:''; position:absolute; inset:0;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(192,21,43,0.04) 40px,rgba(192,21,43,0.04) 41px),
+    repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(192,21,43,0.04) 40px,rgba(192,21,43,0.04) 41px);
+}
+
+/* Flag SVG animation in intro */
+.intro-flag-wrap {
+  position:absolute; top:0; left:0; right:0; bottom:0; overflow:hidden; pointer-events:none;
+}
+.intro-flag-svg {
+  position:absolute; bottom:-10px; right:-20px; width:200px; opacity:0.08;
+  animation:flagWave 3s ease-in-out infinite;
+}
+.intro-content {
+  position:relative; z-index:2; padding:40px 32px;
+  display:flex; flex-direction:column; align-items:center; gap:20px;
+  animation:floatUp 0.8s ease forwards;
+}
+.intro-flag {
+  width:80px; height:53px; background:var(--red);
+  border-radius:3px; position:relative; overflow:hidden;
+  box-shadow:0 0 40px rgba(192,21,43,0.5);
+  animation:flagWave 3s ease-in-out infinite;
+}
+.intro-flag::before {
+  content:'☽';
+  position:absolute; left:42%; top:50%;
+  transform:translateX(-50%) translateY(-50%);
+  color:white; font-size:18px;
+  animation:starPulse 3s ease-in-out infinite;
+}
+.intro-flag::after {
+  content:'★';
+  position:absolute; left:58%; top:38%;
+  transform:translateX(-50%) translateY(-50%);
+  color:white; font-size:10px;
+  animation:starPulse 3s ease-in-out 0.5s infinite;
+}
+.intro-title { font-family:'Cinzel',serif; color:var(--white); font-size:clamp(22px,6vw,30px); font-weight:700; letter-spacing:0.04em; line-height:1.3; }
+.intro-subtitle { color:var(--gold-light); font-size:15px; font-style:italic; letter-spacing:0.06em; opacity:0.85; }
+.intro-divider { width:80px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+.intro-verse { color:rgba(250,250,248,0.75); font-size:14px; font-style:italic; line-height:1.8; max-width:280px; border-left:2px solid var(--red); padding-left:16px; text-align:left; }
+.btn-primary {
+  background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:var(--white); border:none; padding:14px 40px; border-radius:50px;
+  font-family:'Cinzel',serif; font-size:14px; font-weight:600; letter-spacing:0.12em;
+  cursor:pointer; box-shadow:0 4px 20px rgba(192,21,43,0.4);
+  transition:all 0.2s; text-transform:uppercase;
+  position:relative; overflow:hidden;
+}
+.btn-primary::after {
+  content:''; position:absolute; inset:0; border-radius:50px;
+  background:radial-gradient(circle at center,rgba(255,255,255,0.2),transparent);
+  animation:ripple 2s ease-in-out infinite;
+}
+.btn-primary:active { transform:scale(0.97); }
+
+/* LANG MODAL */
+#lang-modal { position:fixed; inset:0; z-index:500; background:rgba(26,10,13,0.85); display:none; align-items:center; justify-content:center; padding:24px; }
+#lang-modal.open { display:flex; }
+.lang-card { background:var(--cream); border-radius:var(--r); padding:32px 28px; width:100%; max-width:320px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+.lang-card h2 { font-family:'Cinzel',serif; color:var(--red); font-size:18px; margin-bottom:8px; }
+.lang-card p { color:var(--text-light); font-size:14px; margin-bottom:24px; }
+.lang-options { display:flex; gap:12px; justify-content:center; }
+.lang-btn { flex:1; padding:16px 8px; background:var(--white); border:2px solid var(--border); border-radius:var(--r); cursor:pointer; font-family:'Cinzel',serif; font-size:13px; font-weight:600; color:var(--text-dark); transition:all 0.2s; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.lang-btn:active,.lang-btn.sel { border-color:var(--red); background:var(--red-pale); color:var(--red); }
+.lang-btn .flag { font-size:32px; }
+
+/* PERMISSION */
+#s-perm { background:var(--cream); align-items:center; justify-content:center; padding:40px 28px; text-align:center; gap:16px; }
+.perm-anim {
+  width:80px; height:80px; background:var(--red-pale); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:36px; animation:redPulse 2s ease-in-out infinite;
+}
+.perm-title { font-family:'Cinzel',serif; color:var(--red); font-size:22px; }
+.perm-desc { color:var(--text-mid); font-size:15px; line-height:1.7; max-width:300px; }
+
+/* LIST */
+#s-list { background:var(--cream); flex-direction:column; }
+.list-header { background:linear-gradient(135deg,var(--red-dark),var(--red)); padding:14px 16px 12px; flex-shrink:0; }
+.list-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.list-header h1 { font-family:'Cinzel',serif; color:var(--white); font-size:15px; letter-spacing:0.05em; }
+.sel-count { background:rgba(255,255,255,0.2); color:var(--white); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+.list-search { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:24px; padding:8px 16px; color:white; font-size:14px; width:100%; outline:none; }
+.list-search::placeholder { color:rgba(255,255,255,0.6); }
+.list-scroll { flex:1; overflow-y:auto; padding:8px 14px 100px; -webkit-overflow-scrolling:touch; }
+
+/* Place items — flat sorted (no category dividers) */
+.place-item {
+  display:flex; align-items:center; gap:10px;
+  background:var(--white); border:1px solid var(--border); border-radius:var(--r);
+  padding:12px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; position:relative;
+}
+.place-item.visited { border-color:#4CAF50; background:#f0fff4; }
+.place-info-btn { width:38px; height:38px; flex-shrink:0; background:var(--red-pale); border:none; border-radius:8px; color:var(--red); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s; font-weight:700; }
+.place-info-btn:active { background:var(--border); }
+.place-text { flex:1; min-width:0; }
+.place-name { font-weight:600; font-size:14px; color:var(--text-dark); line-height:1.3; }
+.place-meta { display:flex; align-items:center; gap:6px; margin-top:3px; flex-wrap:wrap; }
+.place-dist { font-size:11px; color:var(--text-light); }
+.cat-badge { font-size:10px; padding:2px 7px; border-radius:20px; font-weight:600; letter-spacing:0.04em; white-space:nowrap; }
+.cat-badge.sehitlik { background:#fde8eb; color:var(--red-dark); }
+.cat-badge.yabanci { background:#e8f4fd; color:#185FA5; }
+.cat-badge.kale { background:#faeeda; color:#854F0B; }
+.cat-badge.muze { background:#eaf3de; color:#3B6D11; }
+.cat-badge.diger { background:#f1efe8; color:#5F5E5A; }
+.place-check { width:26px; height:26px; flex-shrink:0; border:2px solid var(--border); border-radius:6px; display:flex; align-items:center; justify-content:center; transition:all 0.2s; background:var(--white); font-size:14px; }
+.place-check.checked { background:var(--red); border-color:var(--red); color:white; }
+.visited-badge { position:absolute; top:8px; right:44px; color:#4CAF50; font-size:14px; font-weight:700; }
+
+.list-footer { position:fixed; bottom:0; left:0; right:0; padding:14px 16px; background:var(--cream); border-top:1px solid var(--border); display:flex; gap:12px; z-index:10; }
+.btn-history { width:48px; height:48px; background:var(--white); border:1.5px solid var(--border); border-radius:var(--r); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.btn-start { flex:1; height:48px; background:linear-gradient(135deg,var(--red),var(--red-dark)); color:var(--white); border:none; border-radius:var(--r); font-family:'Cinzel',serif; font-size:13px; font-weight:700; letter-spacing:0.1em; cursor:pointer; transition:all 0.2s; }
+.btn-start:disabled { opacity:0.4; }
+.btn-start:not(:disabled):active { transform:scale(0.98); }
+
+/* NAV SCREEN */
+#s-nav { background:var(--cream); }
+.nav-header { background:linear-gradient(135deg,var(--red-dark),var(--red)); padding:16px; flex-shrink:0; }
+.nav-header h2 { font-family:'Cinzel',serif; color:var(--white); font-size:16px; margin-bottom:4px; }
+.nav-stop-info { color:rgba(255,255,255,0.8); font-size:13px; }
+.nav-map { flex:1; position:relative; background:#e8e4dc; display:flex; align-items:center; justify-content:center; }
+.nav-map-placeholder { text-align:center; padding:32px; }
+.map-icon { font-size:64px; margin-bottom:16px; animation:pulse 2s ease-in-out infinite; }
+.nav-map-placeholder p { color:var(--text-mid); font-size:14px; line-height:1.8; }
+.arrival-banner {
+  position:absolute; inset:0; background:rgba(26,10,13,0.88);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; gap:12px; padding:32px;
+}
+.arrival-banner.show { display:flex; }
+.arrival-icon { font-size:56px; }
+.arrival-title { font-family:'Cinzel',serif; color:var(--gold-light); font-size:22px; letter-spacing:0.08em; }
+.arrival-name { color:var(--white); font-size:16px; font-style:italic; }
+.nav-footer { background:var(--white); border-top:1px solid var(--border); padding:14px 16px; flex-shrink:0; }
+.nav-progress { text-align:center; margin-bottom:12px; }
+.nav-progress-dots { display:flex; gap:6px; justify-content:center; margin-bottom:6px; }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--border); border:1px solid var(--border); flex-shrink:0; }
+.dot.done { background:var(--green); border-color:var(--green); }
+.dot.current { background:var(--red); border-color:var(--red); animation:redPulse 1.5s ease-in-out infinite; }
+.nav-progress-txt { font-size:12px; color:var(--text-light); }
+.nav-actions { display:flex; gap:8px; }
+.nav-btn { flex:1; height:48px; background:var(--white); border:1.5px solid var(--border); border-radius:var(--r); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; transition:all 0.2s; }
+.nav-btn:active { transform:scale(0.97); background:var(--red-pale); }
+.nav-btn.end { border-color:var(--red); }
+.nb-icon { font-size:20px; }
+.nav-btn span:last-child { font-size:10px; color:var(--text-light); font-family:'Cinzel',serif; }
+
+/* STOP SCREEN */
+#s-stop { background:var(--cream); }
+.stop-header { background:linear-gradient(135deg,var(--red-dark),var(--red)); padding:14px 16px; flex-shrink:0; }
+.stop-header-sub { font-size:11px; color:rgba(255,255,255,0.7); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px; }
+.stop-header h2 { font-family:'Cinzel',serif; color:var(--white); font-size:16px; line-height:1.3; }
+.stop-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.stop-img { height:160px; background:linear-gradient(135deg,var(--red-dark),var(--text-dark)); display:flex; align-items:center; justify-content:center; font-size:72px; }
+.stop-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-bottom:1px solid var(--border); }
+.stop-action-btn { background:var(--white); border:none; border-right:1px solid var(--border); padding:14px 4px 12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; transition:background 0.15s; }
+.stop-action-btn:last-child { border-right:none; }
+.stop-action-btn:active { background:var(--red-pale); }
+.sa-icon { font-size:22px; }
+.sa-label { font-size:10px; color:var(--text-light); font-family:'Cinzel',serif; letter-spacing:0.04em; }
+.stop-desc { padding:16px; font-size:15px; line-height:1.8; color:var(--text-mid); }
+.stop-footer { background:var(--white); border-top:1px solid var(--border); padding:14px 16px; display:flex; gap:10px; flex-shrink:0; }
+.btn-back-nav { width:48px; height:48px; background:var(--white); border:1.5px solid var(--border); border-radius:var(--r); font-size:20px; cursor:pointer; flex-shrink:0; }
+.btn-complete { flex:1; height:48px; background:linear-gradient(135deg,var(--green),#1b5e20); color:white; border:none; border-radius:var(--r); font-family:'Cinzel',serif; font-size:12px; font-weight:700; letter-spacing:0.08em; cursor:pointer; }
+
+/* AUDIO PLAYER */
+.audio-player { background:var(--white); border:1px solid var(--border); margin:0 16px 4px; border-radius:var(--r); padding:12px; display:none; align-items:center; gap:12px; }
+.audio-player.show { display:flex; }
+.audio-play-btn { width:40px; height:40px; background:var(--red); color:white; border:none; border-radius:50%; font-size:16px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.audio-info { flex:1; min-width:0; }
+.audio-track { font-size:11px; color:var(--text-light); margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.audio-progress { height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.audio-progress-fill { height:100%; background:var(--red); transition:width 0.2s; width:0%; }
+.audio-time { font-size:11px; color:var(--text-light); flex-shrink:0; }
+
+/* POPUP */
+#popup { position:fixed; inset:0; z-index:300; background:rgba(26,10,13,0.75); display:none; align-items:flex-end; justify-content:center; }
+#popup.open { display:flex; }
+.popup-card { background:var(--cream); border-radius:var(--r) var(--r) 0 0; width:100%; max-width:480px; padding:20px 20px 32px; position:relative; max-height:80vh; overflow-y:auto; animation:floatUp 0.25s ease; }
+.popup-close { position:absolute; top:14px; right:14px; width:32px; height:32px; background:var(--border); border:none; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+.popup-cat { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--red); margin-bottom:8px; }
+.popup-name { font-family:'Cinzel',serif; font-size:17px; color:var(--text-dark); margin-bottom:12px; line-height:1.3; }
+.popup-img { height:100px; background:linear-gradient(135deg,var(--red-dark),var(--text-dark)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:48px; margin-bottom:12px; }
+.popup-desc { font-size:14px; line-height:1.8; color:var(--text-mid); margin-bottom:12px; }
+.popup-coord { font-size:11px; color:var(--text-light); font-family:monospace; }
+
+/* 360 OVERLAY */
+#tour360-overlay { position:fixed; inset:0; z-index:400; background:#000; display:none; flex-direction:column; }
+#tour360-overlay.open { display:flex; }
+.tour360-header { background:var(--text-dark); padding:12px 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.tour360-header span { color:var(--gold-light); font-family:'Cinzel',serif; font-size:14px; }
+.tour360-close-btn { background:rgba(255,255,255,0.1); border:none; color:white; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:18px; }
+#tour360-frame { flex:1; border:none; width:100%; }
+.tour360-placeholder { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:rgba(255,255,255,0.6); text-align:center; padding:32px; font-size:14px; line-height:1.8; }
+.tour360-placeholder .spin-icon { font-size:64px; animation:spin 4s linear infinite; display:inline-block; }
+.tour360-select { padding:12px 16px; background:rgba(255,255,255,0.05); border-top:1px solid rgba(255,255,255,0.1); display:flex; gap:8px; overflow-x:auto; flex-shrink:0; }
+.tour360-option { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:20px; padding:6px 14px; font-size:12px; cursor:pointer; white-space:nowrap; flex-shrink:0; font-family:'Cinzel',serif; }
+.tour360-option.active { background:var(--red); border-color:var(--red); }
+
+/* GALLERY */
+#gallery-overlay { position:fixed; inset:0; z-index:400; background:rgba(0,0,0,0.92); display:none; flex-direction:column; align-items:center; justify-content:center; }
+#gallery-overlay.open { display:flex; }
+.gallery-close { position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.15); border:none; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; }
+.gallery-img { width:100%; max-width:400px; height:300px; display:flex; align-items:center; justify-content:center; font-size:80px; background:rgba(255,255,255,0.05); border-radius:12px; margin:0 16px; }
+.gallery-counter { color:rgba(255,255,255,0.6); font-size:13px; margin-top:16px; font-family:'Cinzel',serif; }
+.gallery-nav { display:flex; gap:24px; margin-top:20px; }
+.gallery-btn { background:rgba(255,255,255,0.15); border:none; color:white; width:48px; height:48px; border-radius:50%; cursor:pointer; font-size:24px; display:flex; align-items:center; justify-content:center; }
+
+/* HISTORY */
+#history-modal { position:fixed; inset:0; z-index:300; background:rgba(26,10,13,0.75); display:none; align-items:flex-end; justify-content:center; }
+#history-modal.open { display:flex; }
+.history-card { background:var(--cream); border-radius:var(--r) var(--r) 0 0; width:100%; max-width:480px; padding:20px 20px 32px; max-height:70vh; display:flex; flex-direction:column; position:relative; animation:floatUp 0.25s ease; }
+.history-close { position:absolute; top:14px; right:14px; width:32px; height:32px; background:var(--border); border:none; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+.history-title { font-family:'Cinzel',serif; color:var(--red); font-size:16px; margin-bottom:16px; }
+#history-list { flex:1; overflow-y:auto; }
+.history-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); font-size:14px; color:var(--text-mid); }
+.h-badge { width:28px; height:28px; background:var(--red); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+.history-empty { text-align:center; color:var(--text-light); padding:32px; font-style:italic; }
+.btn-clear-history { margin-top:12px; width:100%; padding:12px; background:transparent; border:1.5px solid var(--red); border-radius:var(--r); color:var(--red); font-family:'Cinzel',serif; font-size:12px; font-weight:600; letter-spacing:0.08em; cursor:pointer; }
+
+/* CONFIRM */
+#confirm-modal { position:fixed; inset:0; z-index:500; background:rgba(26,10,13,0.8); display:none; align-items:center; justify-content:center; padding:24px; }
+#confirm-modal.open { display:flex; }
+.confirm-card { background:var(--cream); border-radius:var(--r); padding:28px 24px; width:100%; max-width:300px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.4); animation:floatUp 0.2s ease; }
+.confirm-icon { font-size:40px; margin-bottom:12px; }
+.confirm-title { font-family:'Cinzel',serif; color:var(--red); font-size:17px; margin-bottom:8px; }
+.confirm-desc { color:var(--text-mid); font-size:14px; line-height:1.6; margin-bottom:20px; }
+.confirm-btns { display:flex; gap:10px; }
+.confirm-yes { flex:1; padding:12px; background:var(--red); color:white; border:none; border-radius:var(--r); font-family:'Cinzel',serif; font-size:13px; font-weight:600; cursor:pointer; }
+.confirm-no { flex:1; padding:12px; background:transparent; border:1.5px solid var(--border); color:var(--text-dark); border-radius:var(--r); font-family:'Cinzel',serif; font-size:13px; cursor:pointer; }
+
+/* TOAST */
+#toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(26,10,13,0.9); color:white; padding:10px 20px; border-radius:50px; font-size:13px; z-index:999; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; }
+#toast.show { opacity:1; }
+
+/* Map frame */
+.nav-map-frame { flex:1; border:none; width:100%; display:none; }
+.nav-map-frame.show { display:block; }
+
+/* Flag decorative elements */
+.red-strip { height:3px; background:var(--red); }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="loading-flag"></div>
+  <div class="loading-text" id="loading-text">YÜKLENİYOR</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+</div>
+
+<!-- INTRO -->
+<div id="s-intro" class="screen">
+  <div class="intro-bg"></div>
+  <div class="intro-flag-wrap">
+    <svg class="intro-flag-svg" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="300" height="200" fill="#C0152B"/>
+      <circle cx="110" cy="100" r="60" fill="white"/>
+      <circle cx="130" cy="100" r="48" fill="#C0152B"/>
+      <polygon points="185,80 195,110 162,90 208,90 175,110" fill="white"/>
+    </svg>
+  </div>
+  <div class="intro-content">
+    <div class="intro-flag"></div>
+    <div class="intro-title" id="intro-title">Çanakkale<br>Şehitlikleri</div>
+    <div class="intro-divider"></div>
+    <div class="intro-subtitle" id="intro-sub">İnteraktif Rehber</div>
+    <div class="intro-verse" id="intro-verse">
+      "Dur yolcu! Bilmeden gelip bastığın<br>bu toprak, bir devrin battığı yerdir."
+    </div>
+    <button class="btn-primary" onclick="openLangModal()" id="btn-lang-sel">DİL SEÇ</button>
+  </div>
+</div>
+
+<!-- LANG MODAL -->
+<div id="lang-modal">
+  <div class="lang-card">
+    <h2 id="lm-title">Dil Seçin</h2>
+    <p id="lm-desc">Rehber dili seçiniz</p>
+    <div class="lang-options">
+      <button class="lang-btn" onclick="selectLang('tr')">
+        <span class="flag">🇹🇷</span><span>Türkçe</span>
+      </button>
+      <button class="lang-btn" onclick="selectLang('en')">
+        <span class="flag">🇬🇧</span><span>English</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PERMISSION -->
+<div id="s-perm" class="screen">
+  <div class="perm-anim">📍</div>
+  <div class="perm-title" id="perm-title">Konum İzni</div>
+  <p class="perm-desc" id="perm-desc">Turu sağlıklı bir şekilde gezebilmek ve size en yakın şehitlikleri gösterebilmek için konum bilginize ihtiyaç duyulmaktadır.</p>
+  <button class="btn-primary" onclick="requestLocation()" id="btn-allow">İZİN VER</button>
+</div>
+
+<!-- LIST -->
+<div id="s-list" class="screen">
+  <div class="list-header">
+    <div class="list-header-top">
+      <h1 id="list-title">Ziyaret Yerleri</h1>
+      <div class="sel-count" id="sel-count">0 seçildi</div>
+    </div>
+    <input class="list-search" type="text" id="search-input" placeholder="Ara..." oninput="filterList()">
+  </div>
+  <div class="list-scroll" id="place-list"></div>
+  <div class="list-footer">
+    <button class="btn-history" onclick="openHistory()" title="Geçmiş">📋</button>
+    <button class="btn-start" id="btn-start" onclick="startTour()" disabled>BAŞLA</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div id="s-nav" class="screen">
+  <div class="nav-header">
+    <h2 id="nav-heading">Navigasyon</h2>
+    <div class="nav-stop-info" id="nav-stop-info"></div>
+  </div>
+  <div class="nav-map" id="nav-map">
+    <div class="nav-map-placeholder" id="nav-map-placeholder">
+      <div class="map-icon">🗺️</div>
+      <p id="nav-map-text">Navigasyon başlatılıyor...<br>Yön bulmak için aşağıdaki<br>Navigasyon butonuna basın.</p>
+    </div>
+    <iframe class="nav-map-frame" id="nav-map-frame" allowfullscreen></iframe>
+    <div class="arrival-banner" id="arrival-banner">
+      <div class="arrival-icon">🏛️</div>
+      <div class="arrival-title" id="arrival-title">VARDINIZ</div>
+      <div class="arrival-name" id="arrival-name"></div>
+      <button class="btn-primary" onclick="openStop()" id="btn-open-stop">BAŞLA</button>
+    </div>
+  </div>
+  <div class="nav-footer">
+    <div class="nav-progress">
+      <div class="nav-progress-dots" id="progress-dots"></div>
+      <div class="nav-progress-txt" id="progress-txt"></div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="simulateArrival()">
+        <span class="nb-icon">📍</span>
+        <span id="btn-arrived">Vardım</span>
+      </button>
+      <button class="nav-btn" onclick="openMapsNav()">
+        <span class="nb-icon">🧭</span>
+        <span id="btn-navigate">Navigasyon</span>
+      </button>
+      <button class="nav-btn end" onclick="endTour()">
+        <span class="nb-icon">✖️</span>
+        <span id="btn-end">Turu Bitir</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- STOP DETAIL -->
+<div id="s-stop" class="screen">
+  <div class="stop-header">
+    <div class="stop-header-sub" id="stop-cat"></div>
+    <h2 id="stop-name"></h2>
+  </div>
+  <div class="stop-scroll">
+    <div class="stop-img" id="stop-img">🏛️</div>
+    <div class="stop-actions">
+      <button class="stop-action-btn" onclick="playAudio()">
+        <span class="sa-icon">🔊</span>
+        <span class="sa-label" id="lbl-listen">Sesli Dinle</span>
+      </button>
+      <button class="stop-action-btn" onclick="open360()">
+        <span class="sa-icon">🔄</span>
+        <span class="sa-label" id="lbl-360">360° Tur</span>
+      </button>
+      <button class="stop-action-btn" onclick="openGallery()">
+        <span class="sa-icon">🖼️</span>
+        <span class="sa-label" id="lbl-gallery">Görseller</span>
+      </button>
+      <button class="stop-action-btn" onclick="openMapsStop()">
+        <span class="sa-icon">🗺️</span>
+        <span class="sa-label" id="lbl-map">Haritada Gör</span>
+      </button>
+    </div>
+    <div class="audio-player" id="audio-player">
+      <button class="audio-play-btn" id="audio-play-btn" onclick="toggleAudio()">▶</button>
+      <div class="audio-info">
+        <div class="audio-track" id="audio-track-name"></div>
+        <div class="audio-progress"><div class="audio-progress-fill" id="audio-fill"></div></div>
+      </div>
+      <div class="audio-time" id="audio-time">0:00</div>
+    </div>
+    <div class="stop-desc" id="stop-desc"></div>
+  </div>
+  <div class="stop-footer">
+    <button class="btn-back-nav" onclick="backToNav()">←</button>
+    <button class="btn-complete" onclick="completeStop()" id="btn-complete">DURACI TAMAMLA</button>
+  </div>
+</div>
+
+<!-- POPUP -->
+<div id="popup">
+  <div class="popup-card">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-cat" id="popup-cat"></div>
+    <div class="popup-name" id="popup-name"></div>
+    <div class="popup-img" id="popup-img">🏛️</div>
+    <div class="popup-desc" id="popup-desc"></div>
+    <div class="popup-coord" id="popup-coord"></div>
+  </div>
+</div>
+
+<!-- 360 OVERLAY -->
+<div id="tour360-overlay">
+  <div class="tour360-header">
+    <span id="tour360-title">360° Sanal Tur</span>
+    <button class="tour360-close-btn" onclick="close360()">✕</button>
+  </div>
+  <iframe id="tour360-frame" allowfullscreen allow="vr; xr; accelerometer; gyroscope"></iframe>
+  <div class="tour360-placeholder" id="tour360-placeholder">
+    <span class="spin-icon">🔄</span>
+    <div id="tour360-text">360° tur görüntüleri yükleniyor...<br><br>Dosya: photos/360/[yer-ismi].html</div>
+  </div>
+  <div class="tour360-select" id="tour360-select"></div>
+</div>
+
+<!-- GALLERY -->
+<div id="gallery-overlay">
+  <button class="gallery-close" onclick="closeGallery()">✕</button>
+  <div class="gallery-img" id="gallery-main">🖼️</div>
+  <div class="gallery-counter" id="gallery-counter">1 / 3</div>
+  <div class="gallery-nav">
+    <button class="gallery-btn" onclick="galleryPrev()">‹</button>
+    <button class="gallery-btn" onclick="galleryNext()">›</button>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="history-modal">
+  <div class="history-card">
+    <button class="history-close" onclick="closeHistory()">✕</button>
+    <div class="history-title" id="hist-title">Ziyaret Geçmişi</div>
+    <div id="history-list"></div>
+    <button class="btn-clear-history" onclick="clearHistory()" id="btn-clear-hist">Geçmişi Temizle</button>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div id="confirm-modal">
+  <div class="confirm-card">
+    <div class="confirm-icon" id="confirm-icon">❓</div>
+    <div class="confirm-title" id="confirm-title"></div>
+    <div class="confirm-desc" id="confirm-desc"></div>
+    <div class="confirm-btns">
+      <button class="confirm-yes" id="confirm-yes-btn" onclick="confirmYes()">EVET</button>
+      <button class="confirm-no" onclick="confirmNo()">HAYIR</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// PLACES DATA — 120 locations with coordinates & categories
+// ============================================================
+const PLACES = [
+  {id:1,  cat:"Yabancı Mezarlık ve Anıtlar", name:"Abide Parkı",                                          lat:40.041285, lng:26.174002},
+  {id:2,  cat:"Şehitlikler ve Anıtlar",      name:"Seddülbahir Tabyası",                                  lat:40.042047, lng:26.186213},
+  {id:3,  cat:"Yabancı Mezarlık ve Anıtlar", name:"V Beach Mezarlığı",                                    lat:40.043020, lng:26.189180},
+  {id:4,  cat:"Müzeler",                     name:"Mehmetçik Feneri - Gelibolu Tarihi Su Altı Parkı",     lat:40.044294, lng:26.175388},
+  {id:5,  cat:"Yabancı Mezarlık ve Anıtlar", name:"Cape Helles Anıtı",                                    lat:40.045374, lng:26.179709},
+  {id:6,  cat:"Şehitlikler ve Anıtlar",      name:"Yahya Çavuş Şehitliği ve Anıtı",                      lat:40.045835, lng:26.181858},
+  {id:7,  cat:"Kaleler ve Tabyalar",         name:"Ertuğrul Tabyası",                                     lat:40.045912, lng:26.181868},
+  {id:8,  cat:"Yabancı Mezarlık ve Anıtlar", name:"Doughty-Wylie Mezarı",                                 lat:40.046779, lng:26.189585},
+  {id:9,  cat:"Şehitlikler ve Anıtlar",      name:"Çanakkale Şehitler Abidesi",                           lat:40.051535, lng:26.222337},
+  {id:10, cat:"Diğer Ziyaret Noktaları",     name:"Fransız Topları",                                      lat:40.051815, lng:26.218899},
+  {id:11, cat:"Yabancı Mezarlık ve Anıtlar", name:"Lancashire Landing Mezarlığı",                         lat:40.053414, lng:26.173993},
+  {id:12, cat:"Yabancı Mezarlık ve Anıtlar", name:"Seddülbahir Fransız Askeri Mezarlığı",                 lat:40.056950, lng:26.210070},
+  {id:13, cat:"Yabancı Mezarlık ve Anıtlar", name:"Fransız Savaş Mezarlığı ve Anıtı",                     lat:40.058054, lng:26.210546},
+  {id:14, cat:"Yabancı Mezarlık ve Anıtlar", name:"Skew Bridge Mezarlığı",                                lat:40.059709, lng:26.199131},
+  {id:15, cat:"Şehitlikler ve Anıtlar",      name:"17. Alay Komutanı Binbaşı Hüseyin Hilmi Bey Anıtı",   lat:40.066575, lng:26.231221},
+  {id:16, cat:"Yabancı Mezarlık ve Anıtlar", name:"Pink Farm Mezarlığı",                                  lat:40.072653, lng:26.189851},
+  {id:17, cat:"Yabancı Mezarlık ve Anıtlar", name:"Redoubt Mezarlığı",                                    lat:40.077857, lng:26.214516},
+  {id:18, cat:"Yabancı Mezarlık ve Anıtlar", name:"Twelve Tree Copse Mezarlığı ve Yeni Zelanda Anıtı",   lat:40.087544, lng:26.215235},
+  {id:19, cat:"Şehitlikler ve Anıtlar",      name:"Mareşal Fevzi Çakmak Anıtı",                           lat:40.087789, lng:26.249793},
+  {id:20, cat:"Şehitlikler ve Anıtlar",      name:"Sarıtepe Şehitliği",                                   lat:40.095301, lng:26.209152},
+  {id:21, cat:"Şehitlikler ve Anıtlar",      name:"Alçıtepe Şehitliği",                                   lat:40.096327, lng:26.232372},
+  {id:22, cat:"Diğer Ziyaret Noktaları",     name:"Alçıtepe Bakı Terası",                                 lat:40.096932, lng:26.252142},
+  {id:23, cat:"Müzeler",                     name:"Alçıtepe 1915 Siper ve Hilal-i Ahmer Hastanesi",       lat:40.097119, lng:26.227096},
+  {id:24, cat:"Şehitlikler ve Anıtlar",      name:"Son Ok Anıtı",                                         lat:40.098205, lng:26.222531},
+  {id:25, cat:"Şehitlikler ve Anıtlar",      name:"Sargıyeri Şehitliği",                                  lat:40.101712, lng:26.221149},
+  {id:26, cat:"Şehitlikler ve Anıtlar",      name:"Zığındere Nuri Yamut Anıtı",                           lat:40.101788, lng:26.211743},
+  {id:27, cat:"Şehitlikler ve Anıtlar",      name:"Soğanlıdere Hava Saldırısı Şehitliği",                 lat:40.112010, lng:26.305330},
+  {id:28, cat:"Şehitlikler ve Anıtlar",      name:"Soğanlıdere Şehitliği",                                lat:40.116536, lng:26.304488},
+  {id:29, cat:"Şehitlikler ve Anıtlar",      name:"Mülazım-ı Sani Mustafa Efendi Şehitliği",              lat:40.122221, lng:26.261042},
+  {id:30, cat:"Şehitlikler ve Anıtlar",      name:"Şahindere Şehitliği",                                  lat:40.122228, lng:26.261052},
+  {id:31, cat:"Şehitlikler ve Anıtlar",      name:"Havuzlar Şehitliği ve Anıtı",                          lat:40.132322, lng:26.355885},
+  {id:32, cat:"Şehitlikler ve Anıtlar",      name:"Gözetleme Tepe Şehitliği",                             lat:40.136046, lng:26.233817},
+  {id:33, cat:"Yabancı Mezarlık ve Anıtlar", name:"Green Hill Mezarlığı",                                 lat:40.136046, lng:26.233817},
+  {id:34, cat:"Müzeler",                     name:"Anadolu Hamidiye Tabyası Çanakkale Savaşları Müzesi",  lat:40.136493, lng:26.404497},
+  {id:35, cat:"Kaleler ve Tabyalar",         name:"Anadolu Hamidiye Tabyası",                             lat:40.138566, lng:26.404352},
+  {id:36, cat:"Şehitlikler ve Anıtlar",      name:"Seyit Onbaşı Heykeli",                                 lat:40.140839, lng:26.375191},
+  {id:37, cat:"Kaleler ve Tabyalar",         name:"Rumeli Mecidiye Tabyası ve Şehitliği",                 lat:40.141532, lng:26.375610},
+  {id:38, cat:"Kaleler ve Tabyalar",         name:"Rumeli Hamidiye Tabyası",                               lat:40.142829, lng:26.377707},
+  {id:39, cat:"Müzeler",                     name:"Namazgah Tabyası Müzesi",                               lat:40.145142, lng:26.379472},
+  {id:40, cat:"Kaleler ve Tabyalar",         name:"Namazgâh Tabyası",                                     lat:40.145371, lng:26.379579},
+  {id:41, cat:"Müzeler",                     name:"Kilitbahir Kale Müzesi",                                lat:40.146552, lng:26.380411},
+  {id:42, cat:"Kaleler ve Tabyalar",         name:"Kilitbahir Kalesi",                                     lat:40.146554, lng:26.380381},
+  {id:43, cat:"Diğer Ziyaret Noktaları",     name:"1915 Çanakkale Savaşları Araştırma Merkezi",            lat:40.152494, lng:26.406474},
+  {id:44, cat:"Şehitlikler ve Anıtlar",      name:"Dur Yolcu Yazısı",                                     lat:40.155803, lng:26.376897},
+  {id:45, cat:"Kaleler ve Tabyalar",         name:"Değirmenburnu Tabyası",                                 lat:40.157252, lng:26.376806},
+  {id:46, cat:"Şehitlikler ve Anıtlar",      name:"İstihkâm Yüzbaşı Tahir Bey Anıtı",                    lat:40.157295, lng:26.376784},
+  {id:47, cat:"Şehitlikler ve Anıtlar",      name:"Ağadere Hastane Şehitliği",                            lat:40.159510, lng:26.374630},
+  {id:48, cat:"Kaleler ve Tabyalar",         name:"Çamburnu (Kakavan) Tabyası",                            lat:40.165668, lng:26.369691},
+  {id:49, cat:"Şehitlikler ve Anıtlar",      name:"İsimsiz Topçu Yüzbaşı Şehitliği",                     lat:40.169399, lng:26.369212},
+  {id:50, cat:"Şehitlikler ve Anıtlar",      name:"Eceabat İsimsiz Yüzbaşı Şehitliği",                   lat:40.170676, lng:26.367627},
+  {id:51, cat:"Kaleler ve Tabyalar",         name:"Çamburnu Kalesi",                                      lat:40.170717, lng:26.367657},
+  {id:52, cat:"Şehitlikler ve Anıtlar",      name:"Tarihe Saygı Anıtı ve Parkı",                          lat:40.183661, lng:26.359897},
+  {id:53, cat:"Müzeler",                     name:"Çanakkale Destanı Tanıtım Merkezi Simülasyonu",         lat:40.206984, lng:26.280965},
+  {id:54, cat:"Müzeler",                     name:"Çanakkale Destanı Tanıtım Merkezi",                    lat:40.207045, lng:26.280968},
+  {id:55, cat:"Kaleler ve Tabyalar",         name:"Bigalı Kalesi",                                        lat:40.212935, lng:26.388130},
+  {id:56, cat:"Şehitlikler ve Anıtlar",      name:"Süngübayırı Şehitliği",                                lat:40.216473, lng:26.282770},
+  {id:57, cat:"Şehitlikler ve Anıtlar",      name:"Albayrak Şehitliği",                                   lat:40.216734, lng:26.283009},
+  {id:58, cat:"Şehitlikler ve Anıtlar",      name:"Mehmetçiğe Derin Saygı Anıtı",                        lat:40.219830, lng:26.284715},
+  {id:59, cat:"Şehitlikler ve Anıtlar",      name:"Kocadere Hastane Şehitliği",                           lat:40.224890, lng:26.318425},
+  {id:60, cat:"Şehitlikler ve Anıtlar",      name:"Karayörük Deresi Şehitliği",                           lat:40.226665, lng:26.289956},
+  {id:61, cat:"Yabancı Mezarlık ve Anıtlar", name:"Shell Green Mezarlığı",                                lat:40.227401, lng:26.277570},
+  {id:62, cat:"Şehitlikler ve Anıtlar",      name:"Kanlısırt Kitabesi",                                   lat:40.228903, lng:26.290935},
+  {id:63, cat:"Yabancı Mezarlık ve Anıtlar", name:"Lone Pine Mezarlığı ve Anıtı",                         lat:40.230672, lng:26.287193},
+  {id:64, cat:"Yabancı Mezarlık ve Anıtlar", name:"Johnston's Jolly Mezarlığı",                           lat:40.232689, lng:26.287231},
+  {id:65, cat:"Yabancı Mezarlık ve Anıtlar", name:"Beach Mezarlığı",                                      lat:40.232794, lng:26.277336},
+  {id:66, cat:"Şehitlikler ve Anıtlar",      name:"Küçük Arıburnu ve 27. Alay Kitabesi",                  lat:40.233007, lng:26.277376},
+  {id:67, cat:"Şehitlikler ve Anıtlar",      name:"Çataldere Şehitliği ve Anıtı",                         lat:40.233029, lng:26.293859},
+  {id:68, cat:"Şehitlikler ve Anıtlar",      name:"Yarbay Hüseyin Avni Bey Şehitliği",                   lat:40.233050, lng:26.293848},
+  {id:69, cat:"Yabancı Mezarlık ve Anıtlar", name:"Shrapnel Valley Mezarlığı",                            lat:40.233080, lng:26.277387},
+  {id:70, cat:"Diğer Ziyaret Noktaları",     name:"Kırmızısırt Siperleri",                                lat:40.233141, lng:26.287971},
+  {id:71, cat:"Yabancı Mezarlık ve Anıtlar", name:"Plugge's Plateau Mezarlığı",                           lat:40.233211, lng:26.277395},
+  {id:72, cat:"Şehitlikler ve Anıtlar",      name:"Akbaş Şehitliği ve Anıtı",                             lat:40.233389, lng:26.436815},
+  {id:73, cat:"Yabancı Mezarlık ve Anıtlar", name:"4th Battalion Parade Ground Mezarlığı",                lat:40.233977, lng:26.287934},
+  {id:74, cat:"Yabancı Mezarlık ve Anıtlar", name:"Courtney's and Steel's Post Mezarlığı",                lat:40.235247, lng:26.289157},
+  {id:75, cat:"Şehitlikler ve Anıtlar",      name:"Kemalyeri Kitabesi",                                   lat:40.235619, lng:26.304649},
+  {id:76, cat:"Müzeler",                     name:"Bigalı Köyü Atatürk Evi ve Müzesi",                    lat:40.236749, lng:26.358776},
+  {id:77, cat:"Şehitlikler ve Anıtlar",      name:"Yüzbaşı Mehmet Şehitliği",                             lat:40.237855, lng:26.291667},
+  {id:78, cat:"Yabancı Mezarlık ve Anıtlar", name:"Quinn's Post Mezarlığı",                               lat:40.238076, lng:26.291791},
+  {id:79, cat:"Şehitlikler ve Anıtlar",      name:"Anzak Koyu Kitabesi",                                  lat:40.239002, lng:26.278004},
+  {id:80, cat:"Yabancı Mezarlık ve Anıtlar", name:"Arıburnu Mezarlığı",                                   lat:40.239002, lng:26.278004},
+  {id:81, cat:"Şehitlikler ve Anıtlar",      name:"Kesikdere Şehitliği",                                  lat:40.239204, lng:26.292448},
+  {id:82, cat:"Şehitlikler ve Anıtlar",      name:"57. Piyade Alayı Şehitliği",                           lat:40.239309, lng:26.292450},
+  {id:83, cat:"Diğer Ziyaret Noktaları",     name:"Anzak Koyu",                                           lat:40.240522, lng:26.281153},
+  {id:84, cat:"Diğer Ziyaret Noktaları",     name:"Arıburnu Yarları ve Yükseksırt",                       lat:40.241389, lng:26.288368},
+  {id:85, cat:"Yabancı Mezarlık ve Anıtlar", name:"Walker's Ridge Mezarlığı",                             lat:40.241485, lng:26.288494},
+  {id:86, cat:"Yabancı Mezarlık ve Anıtlar", name:"The Nek Mezarlığı",                                    lat:40.242304, lng:26.290380},
+  {id:87, cat:"Şehitlikler ve Anıtlar",      name:"Mehmet Çavuş Anıtı",                                   lat:40.242384, lng:26.290723},
+  {id:88, cat:"Yabancı Mezarlık ve Anıtlar", name:"Baby 700 Mezarlığı",                                   lat:40.242749, lng:26.293722},
+  {id:89, cat:"Diğer Ziyaret Noktaları",     name:"Mesudiye Topu",                                        lat:40.243641, lng:26.294344},
+  {id:90, cat:"Şehitlikler ve Anıtlar",      name:"Kılıçbayırı Şehitliği",                                lat:40.243735, lng:26.294446},
+  {id:91, cat:"Yabancı Mezarlık ve Anıtlar", name:"Canterbury Mezarlığı",                                 lat:40.244444, lng:26.282738},
+  {id:92, cat:"Şehitlikler ve Anıtlar",      name:"Kılıçdere Şehitliği",                                  lat:40.245860, lng:26.297461},
+  {id:93, cat:"Diğer Ziyaret Noktaları",     name:"Düztepe Siperleri",                                    lat:40.245955, lng:26.298966},
+  {id:94, cat:"Şehitlikler ve Anıtlar",      name:"Talat Göktepe Anıtı",                                  lat:40.247085, lng:26.302157},
+  {id:95, cat:"Şehitlikler ve Anıtlar",      name:"Suyatağı",                                             lat:40.250002, lng:26.310005},
+  {id:96, cat:"Şehitlikler ve Anıtlar",      name:"Üsteğmen Nazif Çakmak Anıtı",                         lat:40.250560, lng:26.308608},
+  {id:97, cat:"Yabancı Mezarlık ve Anıtlar", name:"Yeni Zelanda Ulusal Anıtı ve Mezarlığı",               lat:40.250601, lng:26.308576},
+  {id:98, cat:"Diğer Ziyaret Noktaları",     name:"Kocaçimentepe Bakı Terası",                            lat:40.250630, lng:26.308576},
+  {id:99, cat:"Yabancı Mezarlık ve Anıtlar", name:"The Farm Mezarlığı",                                   lat:40.250639, lng:26.308549},
+  {id:100,cat:"Şehitlikler ve Anıtlar",      name:"Atatürk'ün Saatinin Parçalandığı Yer",                 lat:40.250655, lng:26.308581},
+  {id:101,cat:"Şehitlikler ve Anıtlar",      name:"Conkbayırı Atatürk Zafer Anıtı",                       lat:40.250658, lng:26.308544},
+  {id:102,cat:"Şehitlikler ve Anıtlar",      name:"Conkbayırı Mehmetçik Kitabeleri",                      lat:40.250658, lng:26.308544},
+  {id:103,cat:"Yabancı Mezarlık ve Anıtlar", name:"Outpost Mezarlığı",                                    lat:40.252137, lng:26.280976},
+  {id:104,cat:"Yabancı Mezarlık ve Anıtlar", name:"New Zealand No.2 Outpost Mezarlığı",                   lat:40.253153, lng:26.280493},
+  {id:105,cat:"Yabancı Mezarlık ve Anıtlar", name:"Embarkation Pier Mezarlığı",                           lat:40.254761, lng:26.280281},
+  {id:106,cat:"Yabancı Mezarlık ve Anıtlar", name:"7th Field Ambulance Mezarlığı",                        lat:40.261367, lng:26.279300},
+  {id:107,cat:"Şehitlikler ve Anıtlar",      name:"Damakçılık Bayırı Kitabesi",                           lat:40.267132, lng:26.278452},
+  {id:108,cat:"Yabancı Mezarlık ve Anıtlar", name:"Hill 60 Mezarlığı ve Yeni Zelanda Anıtı",              lat:40.273190, lng:26.290000},
+  {id:109,cat:"Şehitlikler ve Anıtlar",      name:"Üsteğmen Hasan Tahsin ve Alay Müftüsü Şehitliği",     lat:40.282575, lng:26.324302},
+  {id:110,cat:"Şehitlikler ve Anıtlar",      name:"Üsteğmen Halid Efendi ve Teğmen Ali Rıza Efendi Şehitliği",lat:40.282652,lng:26.324119},
+  {id:111,cat:"Şehitlikler ve Anıtlar",      name:"Büyük Anafarta Köy Şehitliği",                         lat:40.282781, lng:26.323808},
+  {id:112,cat:"Şehitlikler ve Anıtlar",      name:"Yarbay Halid Bey ve Yarbay Ziya Bey Şehitliği",        lat:40.283078, lng:26.323060},
+  {id:113,cat:"Yabancı Mezarlık ve Anıtlar", name:"Lala Baba Mezarlığı",                                  lat:40.290354, lng:26.240367},
+  {id:114,cat:"Şehitlikler ve Anıtlar",      name:"Çamlıtekke Anafartalar Grup Komutanlığı Karargâhı",    lat:40.291540, lng:26.350300},
+  {id:115,cat:"Şehitlikler ve Anıtlar",      name:"Yusufçuktepe Kitabeleri",                              lat:40.297534, lng:26.292300},
+  {id:116,cat:"Diğer Ziyaret Noktaları",     name:"Küçük Anafarta Topları",                               lat:40.301049, lng:26.320989},
+  {id:117,cat:"Yabancı Mezarlık ve Anıtlar", name:"Hill 10 Mezarlığı",                                    lat:40.312696, lng:26.252437},
+  {id:118,cat:"Şehitlikler ve Anıtlar",      name:"Büyük Kemikli Kitabesi",                               lat:40.317667, lng:26.219256},
+  {id:119,cat:"Yabancı Mezarlık ve Anıtlar", name:"Azmak Mezarlığı",                                      lat:40.320778, lng:26.271459},
+  {id:120,cat:"Şehitlikler ve Anıtlar",      name:"Kireçtepe Jandarma Anıtı, Şehitliği ve Kitabesi",      lat:40.347307, lng:26.295511}
+];
+
+// 360 Tour URLs from canakkaletarihialan.gov.tr
+const TOURS_360 = {
+  9:   [{label:"Şehitler Abidesi", url:"https://canakkaletarihialan.gov.tr/tr/ziyaret/sehitlikveanitlar/canakkale-sehitler-abidesi"}],
+  36:  [{label:"Seyit Onbaşı", url:"https://canakkaletarihialan.gov.tr/tr/ziyaret/sehitlikveanitlar/seyit-onbasi-heykeli"}],
+  63:  [{label:"Lone Pine", url:"https://canakkaletarihialan.gov.tr/tr/ziyaret/mezarliklar-ve-anitlar/lone-pine-mezarligi-ve-aniti"}],
+  101: [{label:"Conkbayırı", url:"https://canakkaletarihialan.gov.tr/tr/ziyaret/sehitlikveanitlar/conkbayiri-ataturk-zafer-aniti"}],
+  54:  [{label:"Tanıtım Merkezi", url:"https://canakkaletarihialan.gov.tr/tr/ziyaret/muzeler/canakkale-destani-tanitim-merkezi"}],
+  42:  [{label:"Kilitbahir Kalesi", url:"https://canakkaletarihialan.gov.tr/tr/ziyaret/kaleler-ve-tabyalar/kilitbahir-kalesi"}],
+};
+
+const CAT_ICONS = {
+  "Şehitlikler ve Anıtlar": "🏛️",
+  "Yabancı Mezarlık ve Anıtlar": "⚔️",
+  "Kaleler ve Tabyalar": "🏰",
+  "Müzeler": "🏺",
+  "Diğer Ziyaret Noktaları": "📍"
+};
+
+const CAT_CLASS = {
+  "Şehitlikler ve Anıtlar": "sehitlik",
+  "Yabancı Mezarlık ve Anıtlar": "yabanci",
+  "Kaleler ve Tabyalar": "kale",
+  "Müzeler": "muze",
+  "Diğer Ziyaret Noktaları": "diger"
+};
+
+const DESCRIPTIONS = {
+  tr: {
+    default: (p) => `${p.name}, Çanakkale Savaşları'nın (1915-1916) yaşandığı Gelibolu Yarımadası'nda yer almaktadır. Birinci Dünya Savaşı'nın en çetin muharebelerinden birine ev sahipliği yapan bu topraklar, şanlı bir direniş ve büyük fedakarlığın simgesidir.`,
+    9:  "Çanakkale Şehitler Abidesi, Birinci Dünya Savaşı'nda hayatını kaybeden Türk şehitlerinin anısına inşa edilmiştir. 1954-1960 yılları arasında inşa edilen anıt, 42 metre yüksekliğiyle Gelibolu Yarımadası'nın en önemli simgelerinden biridir.",
+    101:"Conkbayırı, 1915 yılında Mustafa Kemal'in tarihi komuta ettiği stratejik tepe. Atatürk'ün 'Size ölmeyi emrediyorum!' hitabıyla tarihe geçen bu yerde, Türk askerinin eşsiz fedakarlığı sergilenmiştir.",
+    100:"Atatürk, 10 Ağustos 1915 sabahı Conkbayırı'ndaki muharebe sırasında saat 07:30'da saatine isabet eden şarapnel parçasından kurtulmuştur. Saati kalbine giden mermiyi durdurmuş, bu mucizevi kurtuluş tarihe geçmiştir.",
+    63: "Lone Pine (Yalnız Çam), Avustralya ve Yeni Zelanda askerlerinin Ağustos 1915'te Türk siperleri üzerine yaptıkları saldırıyla tarihe geçen bölgedir. Burada yatan Avustralyalı askerler için inşa edilen mezarlık, en çok ziyaret edilen yabancı mezarlıkların başında gelmektedir.",
+    44: "Namık Kemal'in 'Vatan Mersiyesi'nden ilham alınarak yazılan meşhur 'Dur Yolcu' dörtlüğü bu taşa nakşedilmiştir. Şehitliklerin ruhunu en iyi özetleyen bu kitabe, ziyaretçileri derinden etkiler.",
+    36: "Seyit Ali Çabuk (Seyit Onbaşı), 18 Mart 1915 Boğaz Muharebesi'nde, arkadaşları yorulduğunda omuzlamak zorunda kaldığı 215 kilogramlık top mermisini tek başına taşıyan efsanevi Türk topçusudur."
+  },
+  en: {
+    default: (p) => `${p.name} is located on the Gallipoli Peninsula where the Battles of Çanakkale (1915-1916) took place. These lands, which hosted one of the fiercest battles of World War I, are a symbol of glorious resistance and great sacrifice.`,
+    9:  "The Çanakkale Martyrs' Memorial was built in memory of Turkish soldiers who lost their lives in World War I. Constructed between 1954-1960, the monument stands 42 meters tall and is one of the most important landmarks of the Gallipoli Peninsula.",
+    101:"Conkbayırı is the strategic hill where Mustafa Kemal commanded historic defensive operations in 1915. Atatürk's famous order 'I am not ordering you to attack, I am ordering you to die!' was given at this very location.",
+    63: "Lone Pine is the site famous for the Australian and New Zealand assault on Turkish trenches in August 1915. The cemetery built for the Australian soldiers buried here is one of the most visited foreign cemeteries.",
+    44: "The famous 'Dur Yolcu' (Stop Traveler) inscription, inspired by Namık Kemal's poem, is engraved on this stone. This epitaph, which best summarizes the spirit of the martyrs' cemeteries, deeply moves all visitors.",
+    36: "Seyit Ali Çabuk (Corporal Seyit), during the Battle of March 18, 1915, single-handedly carried a 215-kilogram artillery shell when his companions grew tired, becoming a legendary figure of Turkish resistance."
+  }
+};
+
+// ============================================================
+// I18N
+// ============================================================
+const T = {
+  tr: {
+    intro_title:"Çanakkale\nŞehitlikleri", intro_sub:"İnteraktif Rehber",
+    intro_verse:'"Dur yolcu! Bilmeden gelip bastığın\nbu toprak, bir devrin battığı yerdir."',
+    btn_lang:"DİL SEÇ", perm_title:"Konum İzni",
+    perm_desc:"Turu sağlıklı bir şekilde gezebilmek ve size en yakın şehitlikleri gösterebilmek için konum bilginize ihtiyaç duyulmaktadır.",
+    btn_allow:"İZİN VER", list_title:"Ziyaret Yerleri",
+    sel_count:(n)=>`${n} seçildi`, search_ph:"Yer ara...", btn_start:"TURU BAŞLAT",
+    dist_km:(d)=>d>=1?`${d.toFixed(1)} km`:`${Math.round(d*1000)} m`,
+    nav_heading:"Navigasyon", nav_stop:(i,t)=>`Durak ${i+1} / ${t}`,
+    btn_arrived:"Vardım", btn_navigate:"Navigasyon", btn_end:"Turu Bitir",
+    arrival_title:"VARDINIZ", btn_open_stop:"BAŞLA",
+    lbl_listen:"Sesli Dinle", lbl_360:"360° Tur", lbl_gallery:"Görseller", lbl_map:"Haritada Gör",
+    btn_complete:"DURACI TAMAMLA",
+    confirm_next_title:"Sıradaki Durağa", confirm_next_desc:"Rota devam etsin mi?",
+    confirm_end_title:"Turu Bitir", confirm_end_desc:"Turu bitirmek istediğinize emin misiniz?",
+    confirm_clear_title:"Geçmişi Temizle", confirm_clear_desc:"Tüm ziyaret geçmişi silinecek. Emin misiniz?",
+    yes:"EVET", no:"HAYIR",
+    toast_visited:"Durak ziyaret edilenler listesine eklendi ✓",
+    toast_min_sel:"Lütfen en az 1 yer seçin",
+    hist_title:"Ziyaret Geçmişi", btn_clear_hist:"Geçmişi Temizle", hist_empty:"Henüz ziyaret edilen yer yok.",
+    nav_map_text:"Navigasyon başlatılıyor...\nHedefe yönlendirme için\nHaritalar uygulaması açılacak.",
+    audio_placeholder:"Sesli anlatım dosyası:\naudio/[yer-ismi].mp3",
+    tour360_placeholder:"360° tur görüntüleri:\nphotos/360/[yer-ismi].html",
+    tour_complete:"Tur tamamlandı 🌿",
+    history_cleared:"Geçmiş temizlendi.",
+    all_done:"Tüm duraklar tamamlandı! Turu bitirmek istiyor musunuz?"
+  },
+  en: {
+    intro_title:"Çanakkale\nMartyr Sites", intro_sub:"Interactive Guide",
+    intro_verse:'"Stop traveler! The ground you tread\nunknowingly is where an era set."',
+    btn_lang:"SELECT LANGUAGE", perm_title:"Location Permission",
+    perm_desc:"Your location is needed to properly navigate the tour and show you the nearest memorial sites.",
+    btn_allow:"ALLOW", list_title:"Memorial Sites",
+    sel_count:(n)=>`${n} selected`, search_ph:"Search places...", btn_start:"START TOUR",
+    dist_km:(d)=>d>=1?`${d.toFixed(1)} km`:`${Math.round(d*1000)} m`,
+    nav_heading:"Navigation", nav_stop:(i,t)=>`Stop ${i+1} / ${t}`,
+    btn_arrived:"Arrived", btn_navigate:"Navigate", btn_end:"End Tour",
+    arrival_title:"YOU HAVE ARRIVED", btn_open_stop:"BEGIN",
+    lbl_listen:"Audio Guide", lbl_360:"360° Tour", lbl_gallery:"Gallery", lbl_map:"View on Map",
+    btn_complete:"COMPLETE STOP",
+    confirm_next_title:"Next Stop", confirm_next_desc:"Continue to the next stop?",
+    confirm_end_title:"End Tour", confirm_end_desc:"Are you sure you want to end the tour?",
+    confirm_clear_title:"Clear History", confirm_clear_desc:"All visit history will be deleted. Are you sure?",
+    yes:"YES", no:"NO",
+    toast_visited:"Stop added to visited list ✓",
+    toast_min_sel:"Please select at least 1 place",
+    hist_title:"Visit History", btn_clear_hist:"Clear History", hist_empty:"No places visited yet.",
+    nav_map_text:"Starting navigation...\nMaps application will open\nto guide you to the destination.",
+    audio_placeholder:"Audio file:\naudio/[place-name].mp3",
+    tour360_placeholder:"360° tour file:\nphotos/360/[place-name].html",
+    tour_complete:"Tour completed 🌿",
+    history_cleared:"History cleared.",
+    all_done:"All stops completed! Would you like to end the tour?"
+  }
+};
+
+function t(key,...args) {
+  const val = T[lang][key];
+  if (typeof val==='function') return val(...args);
+  return val||key;
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let lang='tr', userLat=null, userLng=null;
+let selectedIds=new Set(), tourRoute=[], currentStopIndex=0;
+let visitedIds=new Set(), currentPlaceId=null;
+let audioEl=null, audioPlaying=false;
+let galleryIdx=0, galleryTotal=3;
+let confirmCallback=null, sortedPlaces=[];
+
+// ============================================================
+// UTILS
+// ============================================================
+function distKm(lat1,lon1,lat2,lon2) {
+  const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showToast(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+function slugify(str) {
+  return str.toLowerCase()
+    .replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ı/g,'i')
+    .replace(/ö/g,'o').replace(/ü/g,'u').replace(/ç/g,'c')
+    .replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').slice(0,40);
+}
+function getDesc(p) {
+  const d=DESCRIPTIONS[lang];
+  return d[p.id]||d.default(p);
+}
+function loadVisited() {
+  try { visitedIds=new Set(JSON.parse(localStorage.getItem('visited_canakkale')||'[]')); }
+  catch(e) { visitedIds=new Set(); }
+}
+function saveVisited() { localStorage.setItem('visited_canakkale',JSON.stringify([...visitedIds])); }
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load',()=>{
+  loadVisited();
+  setTimeout(()=>{
+    document.getElementById('loading').classList.add('hide');
+    showScreen('s-intro');
+  },1600);
+});
+
+// ============================================================
+// LANG & PERMISSION
+// ============================================================
+function openLangModal() { document.getElementById('lang-modal').classList.add('open'); }
+function selectLang(l) {
+  lang=l; document.getElementById('lang-modal').classList.remove('open');
+  applyLang(); showScreen('s-perm');
+}
+function applyLang() {
+  document.documentElement.lang=lang;
+  const ids={
+    'perm-title':'perm_title','perm-desc':'perm_desc','btn-allow':'btn_allow',
+    'list-title':'list_title','btn-start':'btn_start','nav-heading':'nav_heading',
+    'btn-arrived':'btn_arrived','btn-navigate':'btn_navigate','btn-end':'btn_end',
+    'arrival-title':'arrival_title','btn-open-stop':'btn_open_stop',
+    'lbl-listen':'lbl_listen','lbl-360':'lbl_360','lbl-gallery':'lbl_gallery',
+    'lbl-map':'lbl_map','btn-complete':'btn_complete','hist-title':'hist_title',
+    'btn-clear-hist':'btn_clear_hist','confirm-yes-btn':'yes',
+    'search-input':null, 'btn-lang-sel':'btn_lang','tour360-title':'lbl_360'
+  };
+  Object.entries(ids).forEach(([id,key])=>{
+    const el=document.getElementById(id); if(!el||!key) return;
+    if(el.tagName==='INPUT') el.placeholder=t(key);
+    else el.textContent=t(key);
+  });
+  if(document.getElementById('search-input'))
+    document.getElementById('search-input').placeholder=t('search_ph');
+}
+
+function requestLocation() {
+  if (!navigator.geolocation) { fallbackLocation(); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => { userLat=pos.coords.latitude; userLng=pos.coords.longitude; buildList(); showScreen('s-list'); },
+    () => fallbackLocation(),
+    {enableHighAccuracy:true, timeout:8000}
+  );
+}
+function fallbackLocation() { userLat=40.21; userLng=26.30; buildList(); showScreen('s-list'); }
+
+// ============================================================
+// PLACE LIST — flat distance sort, category badge inline
+// ============================================================
+function buildList() {
+  sortedPlaces=PLACES.map(p=>({...p,dist:distKm(userLat,userLng,p.lat,p.lng)}))
+    .sort((a,b)=>a.dist-b.dist);
+  renderList(sortedPlaces);
+  updateSelCount();
+}
+
+function renderList(places) {
+  const container=document.getElementById('place-list');
+  container.innerHTML='';
+  places.forEach(p=>{
+    const isChecked=selectedIds.has(p.id);
+    const isVisited=visitedIds.has(p.id);
+    const distStr=t('dist_km',p.dist);
+    const catCls=CAT_CLASS[p.cat]||'diger';
+    const item=document.createElement('div');
+    item.className='place-item'+(isVisited?' visited':'');
+    item.dataset.id=p.id;
+    item.innerHTML=`
+      <button class="place-info-btn" onclick="openPopup(${p.id},event)">ℹ</button>
+      <div class="place-text">
+        <div class="place-name">${p.name}</div>
+        <div class="place-meta">
+          <span class="place-dist">📍 ${distStr}</span>
+          <span class="cat-badge ${catCls}">${CAT_ICONS[p.cat]||''} ${p.cat}</span>
+        </div>
+      </div>
+      ${isVisited?'<span class="visited-badge">✓</span>':''}
+      <div class="place-check ${isChecked?'checked':''}" onclick="toggleCheck(${p.id},this)">${isChecked?'✓':''}</div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function filterList() {
+  const q=document.getElementById('search-input').value.toLowerCase().trim();
+  if(!q) { renderList(sortedPlaces); return; }
+  renderList(sortedPlaces.filter(p=>p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)));
+}
+
+function toggleCheck(id,el) {
+  if(selectedIds.has(id)) { selectedIds.delete(id); el.classList.remove('checked'); el.textContent=''; }
+  else { selectedIds.add(id); el.classList.add('checked'); el.textContent='✓'; }
+  updateSelCount();
+}
+function updateSelCount() {
+  const n=selectedIds.size;
+  document.getElementById('sel-count').textContent=t('sel_count',n);
+  const btn=document.getElementById('btn-start');
+  btn.disabled=n===0; btn.style.opacity=n===0?'0.4':'1';
+}
+
+// ============================================================
+// POPUP
+// ============================================================
+function openPopup(id,e) {
+  if(e) e.stopPropagation();
+  const p=PLACES.find(x=>x.id===id); if(!p) return;
+  document.getElementById('popup-cat').textContent=(CAT_ICONS[p.cat]||'📍')+' '+p.cat;
+  document.getElementById('popup-name').textContent=p.name;
+  document.getElementById('popup-img').innerHTML=CAT_ICONS[p.cat]||'🏛️';
+  document.getElementById('popup-desc').textContent=getDesc(p);
+  document.getElementById('popup-coord').textContent=`${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+  document.getElementById('popup').classList.add('open');
+}
+function closePopup() { document.getElementById('popup').classList.remove('open'); }
+
+// ============================================================
+// TOUR START — navigate immediately
+// ============================================================
+function startTour() {
+  if(selectedIds.size===0) { showToast(t('toast_min_sel')); return; }
+  tourRoute=sortedPlaces.filter(p=>selectedIds.has(p.id));
+  currentStopIndex=0;
+  goToNavScreen();
+}
+
+function goToNavScreen() {
+  showScreen('s-nav');
+  document.getElementById('arrival-banner').classList.remove('show');
+  const p=tourRoute[currentStopIndex];
+  document.getElementById('nav-stop-info').textContent=`${p.name} — ${t('nav_stop',currentStopIndex,tourRoute.length)}`;
+  updateProgressDots();
+  // Auto-open Google Maps navigation
+  setTimeout(()=>openMapsNav(),500);
+}
+
+function updateProgressDots() {
+  const dots=document.getElementById('progress-dots');
+  dots.innerHTML='';
+  tourRoute.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<currentStopIndex?' done':i===currentStopIndex?' current':'');
+    dots.appendChild(d);
+  });
+  document.getElementById('progress-txt').textContent=`${currentStopIndex+1}/${tourRoute.length}`;
+}
+
+function openMapsNav() {
+  const p=tourRoute[currentStopIndex];
+  const url=`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}&travelmode=walking`;
+  window.open(url,'_blank');
+}
+function openMapsStop() {
+  if(!currentPlaceId) return;
+  const p=PLACES.find(x=>x.id===currentPlaceId); if(!p) return;
+  window.open(`https://maps.google.com/?q=${p.lat},${p.lng}`,'_blank');
+}
+function simulateArrival() {
+  const p=tourRoute[currentStopIndex];
+  document.getElementById('arrival-name').textContent=p.name;
+  document.getElementById('arrival-banner').classList.add('show');
+}
+function openStop() {
+  const p=tourRoute[currentStopIndex];
+  currentPlaceId=p.id;
+  document.getElementById('stop-cat').textContent=(CAT_ICONS[p.cat]||'📍')+' '+p.cat;
+  document.getElementById('stop-name').textContent=p.name;
+  document.getElementById('stop-img').innerHTML=CAT_ICONS[p.cat]||'🏛️';
+  document.getElementById('stop-desc').textContent=getDesc(p);
+  document.getElementById('audio-player').classList.remove('show');
+  document.getElementById('audio-track-name').textContent=`audio/${slugify(p.name)}.mp3`;
+  stopAudio();
+  showScreen('s-stop');
+}
+function backToNav() {
+  document.getElementById('arrival-banner').classList.remove('show');
+  showScreen('s-nav');
+}
+
+// ============================================================
+// AUDIO — real HTML5 audio
+// ============================================================
+function playAudio() {
+  const player=document.getElementById('audio-player');
+  player.classList.add('show');
+  const p=PLACES.find(x=>x.id===currentPlaceId); if(!p) return;
+  const src=`audio/${slugify(p.name)}.mp3`;
+  if(!audioEl) { audioEl=new Audio(); }
+  if(audioEl.src!==location.origin+'/'+src && !audioEl.src.endsWith(src)) {
+    audioEl.src=src;
+    audioEl.ontimeupdate=updateAudioProgress;
+    audioEl.onended=()=>{ audioPlaying=false; document.getElementById('audio-play-btn').textContent='▶'; };
+  }
+  if(!audioPlaying) toggleAudio();
+}
+function toggleAudio() {
+  if(!audioEl) { playAudio(); return; }
+  audioPlaying=!audioPlaying;
+  document.getElementById('audio-play-btn').textContent=audioPlaying?'⏸':'▶';
+  if(audioPlaying) audioEl.play().catch(()=>{
+    // File not found fallback — simulate
+    simulateAudio();
+  });
+  else audioEl.pause();
+}
+function updateAudioProgress() {
+  if(!audioEl||!audioEl.duration) return;
+  const pct=(audioEl.currentTime/audioEl.duration)*100;
+  document.getElementById('audio-fill').style.width=pct+'%';
+  const cur=Math.floor(audioEl.currentTime);
+  document.getElementById('audio-time').textContent=`${Math.floor(cur/60)}:${String(cur%60).padStart(2,'0')}`;
+}
+let simTimer=null, simProgress=0;
+function simulateAudio() {
+  simProgress=0;
+  simTimer=setInterval(()=>{
+    simProgress=Math.min(simProgress+0.3,100);
+    document.getElementById('audio-fill').style.width=simProgress+'%';
+    if(simProgress>=100){ clearInterval(simTimer); stopAudio(); }
+  },150);
+}
+function stopAudio() {
+  audioPlaying=false;
+  clearInterval(simTimer); simProgress=0;
+  if(audioEl) { audioEl.pause(); audioEl.currentTime=0; }
+  document.getElementById('audio-play-btn').textContent='▶';
+  document.getElementById('audio-fill').style.width='0%';
+  document.getElementById('audio-time').textContent='0:00';
+}
+
+// ============================================================
+// GALLERY
+// ============================================================
+function openGallery() { galleryIdx=0; galleryTotal=3; updateGallery(); document.getElementById('gallery-overlay').classList.add('open'); }
+function closeGallery() { document.getElementById('gallery-overlay').classList.remove('open'); }
+function updateGallery() {
+  const p=PLACES.find(x=>x.id===currentPlaceId);
+  // Real image path: img/[slug]/[n].webp
+  document.getElementById('gallery-main').innerHTML=CAT_ICONS[p?.cat]||'🖼️';
+  document.getElementById('gallery-counter').textContent=`${galleryIdx+1} / ${galleryTotal}`;
+}
+function galleryPrev() { galleryIdx=Math.max(0,galleryIdx-1); updateGallery(); }
+function galleryNext() { galleryIdx=Math.min(galleryTotal-1,galleryIdx+1); updateGallery(); }
+
+// ============================================================
+// 360 TOUR
+// ============================================================
+function open360() {
+  const overlay=document.getElementById('tour360-overlay');
+  overlay.classList.add('open');
+  const p=PLACES.find(x=>x.id===currentPlaceId); if(!p) return;
+  const frame=document.getElementById('tour360-frame');
+  const placeholder=document.getElementById('tour360-placeholder');
+  const select=document.getElementById('tour360-select');
+  select.innerHTML='';
+  const tours=TOURS_360[p.id];
+  if(tours && tours.length>0) {
+    placeholder.style.display='none';
+    frame.style.display='block';
+    // Build selector buttons
+    tours.forEach((item,i)=>{
+      const btn=document.createElement('button');
+      btn.className='tour360-option'+(i===0?' active':'');
+      btn.textContent=item.label;
+      btn.onclick=()=>{
+        document.querySelectorAll('.tour360-option').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        frame.src=item.url;
+      };
+      select.appendChild(btn);
+    });
+    frame.src=tours[0].url;
+  } else {
+    frame.style.display='none';
+    placeholder.style.display='flex';
+    const slug=slugify(p.name);
+    document.getElementById('tour360-text').innerHTML=
+      `360° sanal tur mevcut değil.<br><br><small style="opacity:0.6">Beklenen dosya: photos/360/${slug}.html</small>`;
+    // Try local file
+    frame.src=`photos/360/${slug}.html`;
+    frame.onload=()=>{ placeholder.style.display='none'; frame.style.display='block'; };
+    frame.onerror=()=>{ frame.style.display='none'; placeholder.style.display='flex'; };
+  }
+}
+function close360() {
+  document.getElementById('tour360-overlay').classList.remove('open');
+  document.getElementById('tour360-frame').src='about:blank';
+}
+
+// ============================================================
+// COMPLETE STOP
+// ============================================================
+function completeStop() {
+  const p=tourRoute[currentStopIndex];
+  visitedIds.add(p.id); saveVisited(); stopAudio();
+  showToast(t('toast_visited'));
+  // Refresh list visited states
+  if(currentStopIndex>=tourRoute.length-1) {
+    showConfirm('🏁',t('confirm_end_title'),t('all_done'),()=>finishTour());
+    return;
+  }
+  showConfirm('🧭',t('confirm_next_title'),t('confirm_next_desc'),()=>{
+    currentStopIndex++;
+    goToNavScreen();
+  });
+}
+function endTour() { showConfirm('✖️',t('confirm_end_title'),t('confirm_end_desc'),()=>finishTour()); }
+function finishTour() {
+  stopAudio(); selectedIds.clear(); tourRoute=[]; currentStopIndex=0;
+  buildList(); showScreen('s-list');
+  showToast(t('tour_complete'));
+}
+
+// ============================================================
+// HISTORY
+// ============================================================
+function openHistory() {
+  const list=document.getElementById('history-list');
+  list.innerHTML='';
+  if(visitedIds.size===0) {
+    list.innerHTML=`<div class="history-empty">${t('hist_empty')}</div>`;
+  } else {
+    let i=1;
+    visitedIds.forEach(id=>{
+      const p=PLACES.find(x=>x.id===id); if(!p) return;
+      const item=document.createElement('div');
+      item.className='history-item';
+      item.innerHTML=`<div class="h-badge">${i++}</div><div>${p.name}</div>`;
+      list.appendChild(item);
+    });
+  }
+  document.getElementById('history-modal').classList.add('open');
+}
+function closeHistory() { document.getElementById('history-modal').classList.remove('open'); }
+function clearHistory() {
+  closeHistory();
+  showConfirm('🗑️',t('confirm_clear_title'),t('confirm_clear_desc'),()=>{
+    visitedIds.clear(); saveVisited(); buildList();
+    showToast(t('history_cleared'));
+  });
+}
+
+// ============================================================
+// CONFIRM
+// ============================================================
+function showConfirm(icon,title,desc,onYes) {
+  document.getElementById('confirm-icon').textContent=icon;
+  document.getElementById('confirm-title').textContent=title;
+  document.getElementById('confirm-desc').textContent=desc;
+  document.getElementById('confirm-yes-btn').textContent=t('yes');
+  confirmCallback=onYes;
+  document.getElementById('confirm-modal').classList.add('open');
+}
+function confirmYes() { document.getElementById('confirm-modal').classList.remove('open'); if(confirmCallback){confirmCallback();confirmCallback=null;} }
+function confirmNo() { document.getElementById('confirm-modal').classList.remove('open'); confirmCallback=null; }
+
+// Close modals on backdrop
+['popup','history-modal','confirm-modal','gallery-overlay'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('click',function(e){
+    if(e.target===this){
+      if(id==='popup') closePopup();
+      else if(id==='history-modal') closeHistory();
+      else if(id==='confirm-modal') confirmNo();
+      else if(id==='gallery-overlay') closeGallery();
+    }
+  });
+});
+</script>
+</body>
+</html>
