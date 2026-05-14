@@ -77,6 +77,57 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .loading-dot:nth-child(2){animation-delay:0.25s;}
 .loading-dot:nth-child(3){animation-delay:0.5s;}
 
+/* Loading alt yazılar */
+@keyframes loadingTextReveal{
+  0%{opacity:0;letter-spacing:0.5em;}
+  60%{opacity:1;letter-spacing:0.22em;}
+  100%{opacity:1;letter-spacing:0.18em;}
+}
+@keyframes loadingGlow{
+  0%,100%{text-shadow:0 0 8px rgba(192,21,43,0.3),0 0 20px rgba(192,21,43,0.1);}
+  50%{text-shadow:0 0 16px rgba(192,21,43,0.7),0 0 40px rgba(192,21,43,0.3),0 0 60px rgba(192,21,43,0.1);}
+}
+@keyframes loadingVerseSlide{
+  0%{opacity:0;transform:translateY(10px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+.loading-dur-yolcu{
+  font-family:'Cinzel',serif;
+  font-size:clamp(11px,3.2vw,15px);
+  color:var(--text-light);
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  margin-top:4px;
+  animation:loadingVerseSlide 0.8s 0.3s ease both;
+}
+.loading-gecilmez{
+  font-family:'Cinzel',serif;
+  font-size:clamp(18px,5.5vw,28px);
+  font-weight:700;
+  color:var(--red);
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  animation:loadingTextReveal 1.2s 0.5s ease both, loadingGlow 2.5s 1.7s ease-in-out infinite;
+  text-shadow:0 0 12px rgba(192,21,43,0.35);
+}
+.loading-verse{
+  font-family:'Crimson Pro',Georgia,serif;
+  font-size:clamp(11px,3vw,13px);
+  color:var(--text-light);
+  font-style:italic;
+  letter-spacing:0.04em;
+  text-align:center;
+  line-height:1.7;
+  max-width:290px;
+  padding:0 16px;
+  border-top:1px solid rgba(192,21,43,0.15);
+  padding-top:10px;
+  margin-top:2px;
+  animation:loadingVerseSlide 0.8s 1s ease both;
+  opacity:0;
+  animation-fill-mode:both;
+}
+
 /* PARTICLES */
 .particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
 .particle{position:absolute;border-radius:50%;opacity:0;animation:particleFly linear infinite;}
@@ -784,6 +835,11 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <div class="loading-dot"></div>
     <div class="loading-dot"></div>
     <div class="loading-dot"></div>
+  </div>
+  <div class="loading-dur-yolcu">Dur Yolcu!</div>
+  <div class="loading-gecilmez">Çanakkale Geçilmez!</div>
+  <div class="loading-verse">
+    "Bilmeden Gelip Bastığın Bu Toprak,<br>Bir Devrin Battığı Yerdir."
   </div>
 </div>
 
