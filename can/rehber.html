@@ -239,17 +239,88 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .lang-btn .flag{font-size:32px;}
 
 /* ======= PERMISSION ======= */
-#s-perm{background:var(--text-dark);align-items:center;justify-content:center;padding:40px 28px;text-align:center;gap:20px;}
+#s-perm{background:var(--text-dark);align-items:center;justify-content:flex-start;padding:0;text-align:center;overflow:hidden;}
 .perm-ribbon{position:absolute;top:0;left:0;right:0;}
-.radar{width:140px;height:140px;position:relative;margin-bottom:8px;}
+.perm-top{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;padding:32px 28px 16px;width:100%;}
+.radar{width:110px;height:110px;position:relative;margin-bottom:0;}
 .radar-ring{position:absolute;border-radius:50%;border:1px solid rgba(192,21,43,0.4);animation:radarExpand 2s ease-out infinite;}
 .radar-ring:nth-child(1){inset:0;animation-delay:0s;}
 .radar-ring:nth-child(2){inset:20px;animation-delay:0.5s;}
 .radar-ring:nth-child(3){inset:40px;animation-delay:1s;}
 .radar-ring:nth-child(4){inset:60px;animation-delay:1.5s;}
 .radar-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:var(--red);border-radius:50%;box-shadow:0 0 20px var(--red);}
-.perm-title{font-family:'Cinzel',serif;color:var(--white);font-size:22px;}
-.perm-desc{color:rgba(255,255,255,0.65);font-size:15px;line-height:1.7;max-width:300px;}
+.perm-title{font-family:'Cinzel',serif;color:var(--white);font-size:22px;margin:0;}
+.perm-desc{color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;max-width:300px;margin:0;}
+
+/* KVKK BOX */
+.perm-kvkk-wrap{flex:1;overflow-y:auto;width:100%;padding:0 16px 8px;-webkit-overflow-scrolling:touch;}
+.perm-kvkk-box{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(192,21,43,0.25);
+  border-radius:10px;
+  padding:14px;
+  text-align:left;
+  max-height:200px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(192,21,43,0.4) transparent;
+}
+.perm-kvkk-box::-webkit-scrollbar{width:3px;}
+.perm-kvkk-box::-webkit-scrollbar-track{background:transparent;}
+.perm-kvkk-box::-webkit-scrollbar-thumb{background:rgba(192,21,43,0.4);border-radius:2px;}
+.perm-kvkk-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.perm-kvkk-text{color:rgba(255,255,255,0.55);font-size:12px;line-height:1.7;}
+.perm-kvkk-text a{color:var(--gold-light);text-decoration:underline;}
+
+/* PERM FOOTER */
+.perm-footer{
+  flex:0 0 auto;
+  width:100%;
+  padding:12px 16px 20px;
+  background:rgba(26,10,13,0.95);
+  border-top:1px solid rgba(192,21,43,0.2);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.perm-accept-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 12px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(192,21,43,0.2);
+  border-radius:8px;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.perm-accept-row:active{background:rgba(192,21,43,0.12);}
+.perm-accept-check{
+  width:22px;height:22px;flex-shrink:0;
+  border:2px solid rgba(192,21,43,0.6);border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:1px;transition:all 0.2s;background:transparent;
+  font-size:14px;color:transparent;
+}
+.perm-accept-check.checked{background:var(--red);border-color:var(--red);color:white;}
+.perm-accept-label{color:rgba(255,255,255,0.7);font-size:12.5px;line-height:1.5;flex:1;}
+.perm-accept-label a{color:var(--gold-light);text-decoration:underline;}
+.perm-btn-row{display:flex;gap:8px;align-items:stretch;}
+.btn-allow-perm{
+  flex:1;background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:var(--white);border:none;padding:13px 20px;border-radius:50px;
+  font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:0.1em;
+  cursor:pointer;transition:all 0.2s;text-transform:uppercase;position:relative;overflow:hidden;
+  opacity:0.35;pointer-events:none;
+}
+.btn-allow-perm.enabled{opacity:1;pointer-events:all;}
+.btn-allow-perm.enabled::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:shimmer 3s ease-in-out infinite;}
+.btn-skip-perm{
+  background:transparent;border:1.5px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.6);padding:13px 16px;border-radius:50px;
+  font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:0.08em;
+  cursor:pointer;transition:all 0.2s;text-transform:uppercase;white-space:nowrap;
+}
+.btn-skip-perm:active{background:rgba(255,255,255,0.08);}
 
 /* ======= LIST ======= */
 #s-list{background:var(--cream);flex-direction:column;}
@@ -284,6 +355,14 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .place-check.checked{background:var(--red);border-color:var(--red);color:white;}
 .visited-badge{position:absolute;top:8px;right:44px;color:#4CAF50;font-size:14px;font-weight:700;}
 .list-footer{position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:var(--cream);border-top:1px solid var(--border);display:flex;gap:8px;z-index:10;}
+/* Footer geri tuşu - sağ alta footer'a entegre */
+.footer-back-btn{
+  width:44px;height:48px;background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all 0.2s;color:var(--text-dark);
+}
+.footer-back-btn:active{background:var(--red-pale);border-color:var(--red);}
 .btn-history{width:44px;height:48px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
 .btn-history:active{background:var(--red-pale);}
 .btn-mapall{height:48px;background:var(--white);border:1.5px solid var(--red);border-radius:var(--r);color:var(--red);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:0.06em;cursor:pointer;padding:0 12px;transition:all 0.2s;flex-shrink:0;}
@@ -302,7 +381,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .map-legend span{display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,0.8);}
 .map-legend .dot-v{width:10px;height:10px;background:#4CAF50;border-radius:50%;}
 .map-legend .dot-u{width:10px;height:10px;background:var(--red);border-radius:50%;}
-#leaflet-map{flex:1;}
+#leaflet-map{flex:1;margin-bottom:64px;}
 
 /* ======= NAV ======= */
 #s-nav{background:var(--cream);}
@@ -369,7 +448,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .btn-mode::after{content:'';position:absolute;inset:0;border-radius:14px;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(192,21,43,0.3),transparent 70%);transition:opacity 0.3s;pointer-events:none;}
 .btn-mode:hover::after{opacity:1;}
 /* ======= PRESET CHOOSER ======= */
-#s-preset-chooser{background:var(--text-dark);align-items:center;justify-content:center;padding:40px 28px;text-align:center;gap:20px;flex-direction:column;}
+#s-preset-chooser{background:var(--text-dark);align-items:center;justify-content:flex-start;padding:40px 28px 80px;text-align:center;gap:20px;flex-direction:column;overflow-y:auto;}
 .preset-back{position:absolute;top:20px;left:20px;width:36px;height:36px;background:rgba(255,255,255,0.1);border:none;color:white;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
 .preset-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:20px;letter-spacing:0.05em;}
 .preset-desc{color:rgba(255,255,255,0.6);font-size:13px;max-width:280px;line-height:1.6;}
@@ -648,7 +727,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 
 /* ======= SEYIT ONBASI BUTTON ======= */
 #seyit-btn{
-  position:fixed;bottom:70px;right:12px;z-index:900;
+  position:fixed;bottom:140px;right:12px;z-index:900;
   background:linear-gradient(135deg,var(--red-dark),var(--red));
   color:white;border:none;border-radius:50px;
   padding:7px 11px;font-family:'Cinzel',serif;font-size:9px;font-weight:600;
@@ -664,7 +743,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 #seyit-btn .seyit-txt span:first-child{font-size:7px;opacity:0.8;}
 
 /* TOAST */
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,10,13,0.92);color:white;padding:10px 20px;border-radius:50px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+#toast{position:fixed;bottom:160px;left:50%;transform:translateX(-50%);background:rgba(26,10,13,0.92);color:white;padding:10px 20px;border-radius:50px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
 #toast.show{opacity:1;}
 
 /* ======= GLOBAL AUDIO SPEAKER ======= */
@@ -678,7 +757,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   100%{transform:scale(1);}
 }
 #global-speaker{
-  position:fixed;bottom:70px;left:12px;z-index:9500;
+  position:fixed;bottom:140px;left:12px;z-index:9500;
   width:34px;height:34px;
   background:linear-gradient(135deg,var(--red),var(--red-dark));
   color:white;border:2px solid rgba(255,255,255,0.3);
@@ -914,20 +993,62 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <!-- PERMISSION -->
 <div id="s-perm" class="screen">
   <div class="ribbon perm-ribbon"></div>
-  <div class="radar">
-    <div class="radar-ring"></div>
-    <div class="radar-ring"></div>
-    <div class="radar-ring"></div>
-    <div class="radar-ring"></div>
-    <div class="radar-center"></div>
+
+  <!-- ÜSTTE: İkon + Başlık + Açıklama -->
+  <div class="perm-top">
+    <div class="radar">
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-center"></div>
+    </div>
+    <div class="perm-title" id="perm-title">Konum İzni</div>
+    <div style="display:flex;justify-content:center;">
+      <img src="img/logo.svg" alt="Logo" style="width:44px;height:44px;object-fit:contain;opacity:0.85;filter:brightness(5);"
+        onerror="this.style.display='none';">
+    </div>
+    <p class="perm-desc" id="perm-desc">Size en yakın şehitlikleri gösterebilmek ve turu başlatabilmek için konum bilginize ihtiyaç duyulmaktadır.</p>
   </div>
-  <div class="perm-title" id="perm-title">Konum İzni</div>
-  <div style="margin:-8px 0 4px;display:flex;justify-content:center;">
-    <img src="img/logo.svg" alt="Logo" style="width:48px;height:48px;object-fit:contain;opacity:0.85;filter:brightness(5);"
-      onerror="this.style.display='none';">
+
+  <!-- KVKK METNİ -->
+  <div class="perm-kvkk-wrap">
+    <div class="perm-kvkk-box">
+      <div class="perm-kvkk-title">📋 KVKK Aydınlatma Metni &amp; Gizlilik Politikası</div>
+      <div class="perm-kvkk-text">
+        <strong style="color:rgba(255,255,255,0.8);">Kişisel Verilerin Korunması (KVKK)</strong><br>
+        6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında veri sorumlusu sıfatıyla hareket eden Çanakkale Tarihi Alan Başkanlığı, konum verilerinizi yalnızca uygulama içi rehberlik hizmetleri amacıyla işlemektedir.<br><br>
+        <strong style="color:rgba(255,255,255,0.8);">İşlenen Veriler</strong><br>
+        • Anlık konum bilgisi (enlem/boylam)<br>
+        • Uygulama oturumu süresince geçici olarak tutulur<br>
+        • Üçüncü kişilerle paylaşılmaz, sunucuya gönderilmez<br><br>
+        <strong style="color:rgba(255,255,255,0.8);">Veri İşleme Amacı</strong><br>
+        Size en yakın şehitlik ve ziyaret noktalarını sıralamak, tur rotasını optimize etmek ve navigasyon desteği sağlamak amacıyla kullanılmaktadır. Konum verisi yalnızca cihazınızda işlenir.<br><br>
+        <strong style="color:rgba(255,255,255,0.8);">Haklarınız</strong><br>
+        KVKK'nın 11. maddesi uyarınca verilerinize erişim, düzeltme ve silme haklarına sahipsiniz. Talepleriniz için: <a href="mailto:kvkk@canakkaletarihialan.gov.tr">kvkk@canakkaletarihialan.gov.tr</a><br><br>
+        <strong style="color:rgba(255,255,255,0.8);">Gizlilik Politikası</strong><br>
+        Bu uygulama, kullanıcı mahremiyetini esas alarak tasarlanmıştır. Konum izni vermeniz durumunda bile verileriniz harici sunuculara iletilmez. Gizlilik politikamızın tamamını okumak için: <a href="https://canakkaletarihialan.gov.tr/tr/gizlilik" target="_blank">canakkaletarihialan.gov.tr/gizlilik</a>
+      </div>
+    </div>
   </div>
-  <p class="perm-desc" id="perm-desc">Size en yakın şehitlikleri gösterebilmek ve turu başlatabilmek için konum bilginize ihtiyaç duyulmaktadır.</p>
-  <button class="btn-primary" onclick="requestLocation()" id="btn-allow">📍 İZİN VER</button>
+
+  <!-- ALT FOOTER: Onay + Butonlar -->
+  <div class="perm-footer">
+    <!-- Kabul Satırı -->
+    <div class="perm-accept-row" onclick="togglePermAccept()">
+      <div class="perm-accept-check" id="perm-check">✓</div>
+      <div class="perm-accept-label">
+        <a href="#" onclick="event.stopPropagation()">KVKK Aydınlatma Metni</a> ve
+        <a href="#" onclick="event.stopPropagation()">Gizlilik Politikası</a>'nı
+        okudum, konum bilgimin işlenmesini kabul ediyorum.
+      </div>
+    </div>
+    <!-- Butonlar -->
+    <div class="perm-btn-row">
+      <button class="btn-allow-perm" id="btn-allow" onclick="requestLocation()">📍 İZİN VER</button>
+      <button class="btn-skip-perm" onclick="skipLocation()">Konumsuz Devam</button>
+    </div>
+  </div>
 </div>
 
 
@@ -995,7 +1116,6 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <!-- PRESET CHOOSER -->
 <div id="s-preset-chooser" class="screen">
   <div class="ribbon perm-ribbon"></div>
-  <button class="preset-back" onclick="showScreen('s-mode-chooser')">←</button>
   <div class="preset-title">Hazır Tur Rotaları</div>
   <div class="mode-subtitle">Konumunuza en yakın duraktan başlayan, gün bazlı optimize edilmiş rotalar</div>
   <div class="day-cards">
@@ -1024,20 +1144,23 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
       <div class="dc-arrow">›</div>
     </div>
   </div>
+  <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:rgba(26,10,13,0.97);border-top:1px solid rgba(192,21,43,0.25);display:flex;justify-content:flex-start;z-index:10;">
+    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);color:white;">←</button>
+  </div>
 </div>
 
 <!-- PRESET ROUTE DETAIL -->
 <div id="s-preset-route" class="screen">
   <div class="preset-route-header">
-    <button class="preset-route-back" onclick="showScreen('s-preset-chooser')">←</button>
     <div class="preset-route-header-info">
       <h2 id="preset-route-title">Tur Rotanız</h2>
       <p id="preset-route-sub">Konumunuza göre optimize edildi</p>
     </div>
   </div>
   <div class="preset-route-scroll" id="preset-route-scroll"></div>
-  <div class="preset-footer">
+  <div class="preset-footer" style="display:flex;gap:8px;">
     <button class="btn-start-preset" onclick="startPresetTour()">🧭 TURU BAŞLAT</button>
+    <button class="footer-back-btn" onclick="showScreen('s-preset-chooser')" title="Geri">←</button>
   </div>
 </div>
 
@@ -1046,7 +1169,6 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <div id="s-map-select" class="screen">
   <div id="msel-map"></div>
   <div class="msel-header">
-    <button class="msel-back" onclick="showScreen('s-mode-chooser')">←</button>
     <div class="msel-title">Haritadan Yer Seç</div>
     <div class="msel-count-badge" id="msel-count">0</div>
   </div>
@@ -1058,9 +1180,12 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <div class="msel-chips" id="msel-chips">
       <div class="msel-empty" id="msel-empty">Haritada bir yere dokunun…</div>
     </div>
-    <button class="btn-build-route" id="btn-build-route" onclick="buildMapSelectRoute()" disabled>
-      🧭 ROTA OLUŞTUR
-    </button>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-build-route" id="btn-build-route" onclick="buildMapSelectRoute()" disabled>
+        🧭 ROTA OLUŞTUR
+      </button>
+      <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);color:white;">←</button>
+    </div>
   </div>
 </div>
 
@@ -1074,7 +1199,6 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
       <img src="img/logo.svg" alt="Logo" style="height:28px;object-fit:contain;filter:brightness(5);" onerror="this.style.display='none'">
       <h1 id="list-title">Ziyaret Yerleri</h1>
       <div class="sel-count" id="sel-count">0 seçildi</div>
-      <button onclick="showScreen('s-mode-chooser')" style="width:34px;height:34px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:8px;color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="Ana Sayfa">←</button>
     </div>
     <input class="list-search" type="text" id="search-input" placeholder="Yer ara..." oninput="filterList()">
   </div>
@@ -1083,13 +1207,13 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <button class="btn-history" onclick="openHistory()" title="Geçmiş">📋</button>
     <button class="btn-mapall" onclick="mapFromScreen='s-list';openMapAll()">🗺️ HARİTA</button>
     <button class="btn-start" id="btn-start" onclick="startTour()" disabled>TURU BAŞLAT</button>
+    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Ana Sayfa">←</button>
   </div>
 </div>
 
 <!-- MAP SCREEN -->
 <div id="s-map" class="screen">
   <div class="map-header">
-    <button class="map-header-back" onclick="goBackFromMap()">←</button>
     <h2>Tüm Yerler</h2>
     <div class="map-legend">
       <span><span class="dot-v"></span>Ziyaret</span>
@@ -1097,12 +1221,15 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     </div>
   </div>
   <div id="leaflet-map"></div>
+  <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:var(--cream);border-top:1px solid var(--border);display:flex;justify-content:flex-start;align-items:center;gap:10px;z-index:10;">
+    <button class="footer-back-btn" onclick="goBackFromMap()" title="Geri">←</button>
+    <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--text-light);letter-spacing:0.05em;">Harita Görünümü</span>
+  </div>
 </div>
 
 <!-- ROUTE PREVIEW -->
 <div id="s-route" class="screen">
   <div class="route-header">
-    <button class="route-header-back" onclick="showScreen('s-list')">←</button>
     <div class="route-header-info">
       <h2>🗺️ Tur Rotanız</h2>
       <p id="route-summary">Duraklar haritada gösteriliyor</p>
@@ -1123,6 +1250,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
         <span>🧭</span>
         <span>TURU BAŞLAT</span>
       </button>
+      <button class="footer-back-btn" onclick="showScreen('s-list')" title="Geri">←</button>
     </div>
   </div>
 </div>
@@ -1131,7 +1259,6 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <div id="s-nav" class="screen">
   <div class="nav-header">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
-      <button onclick="showConfirm('←','Geri Dön','Giriş sayfasına dönmek istediğinize emin misiniz? Tur duraklanacak.',()=>showScreen(\'s-mode-chooser\'))" style="width:30px;height:30px;background:rgba(255,255,255,0.15);border:none;color:white;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">←</button>
       <h2 id="nav-heading" style="flex:1;">Navigasyon</h2>
     </div>
     <div class="nav-stop-info" id="nav-stop-info"></div>
@@ -1167,6 +1294,10 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
       <button class="nav-btn end" onclick="endTour()">
         <span class="nb-icon">✖️</span>
         <span id="btn-end">Turu Bitir</span>
+      </button>
+      <button class="nav-btn" onclick="showConfirm('←','Geri Dön','Giriş sayfasına dönmek istediğinize emin misiniz? Tur duraklanacak.',()=>showScreen('s-mode-chooser'))">
+        <span class="nb-icon">←</span>
+        <span>Geri</span>
       </button>
     </div>
   </div>
@@ -1928,6 +2059,26 @@ function fallbackLocation(){
   if(appStarted) return;
   appStarted=true;
   userLat=40.21;userLng=26.30;buildList();showScreen('s-mode-chooser');
+}
+function togglePermAccept(){
+  const check=document.getElementById('perm-check');
+  const btn=document.getElementById('btn-allow');
+  check.classList.toggle('checked');
+  if(check.classList.contains('checked')){
+    btn.classList.add('enabled');
+  } else {
+    btn.classList.remove('enabled');
+  }
+}
+function skipLocation(){
+  // Konumsuz devam — varsayılan merkez konum, doğrudan mod seçiciye
+  if(!appStarted){
+    appStarted=true;
+    userLat=null; userLng=null;
+    buildList();
+  }
+  showScreen('s-mode-chooser');
+  showToast('📍 Konumsuz devam ediliyor');
 }
 
 // ============================================================
