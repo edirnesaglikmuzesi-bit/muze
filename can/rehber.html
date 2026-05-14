@@ -859,26 +859,26 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 /* Bottom selection tray */
 .msel-tray{
   position:absolute;bottom:0;left:0;right:0;z-index:1000;
-  background:linear-gradient(0deg,rgba(26,10,13,0.97) 0%,rgba(26,10,13,0.8) 100%);
+  background:var(--cream);
   padding:10px 12px 14px;
-  border-top:1px solid rgba(192,21,43,0.3);
+  border-top:1px solid var(--border);
   transition:transform 0.3s ease;
 }
 .msel-tray-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.msel-tray-label{font-family:'Cinzel',serif;color:rgba(255,255,255,0.65);font-size:11px;letter-spacing:0.08em;flex:1;}
-.msel-clear-btn{background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);font-size:11px;padding:4px 10px;border-radius:12px;cursor:pointer;font-family:'Cinzel',serif;}
+.msel-tray-label{font-family:'Cinzel',serif;color:var(--text-light);font-size:11px;letter-spacing:0.08em;flex:1;}
+.msel-clear-btn{background:rgba(192,21,43,0.1);border:1px solid var(--border);color:var(--red);font-size:11px;padding:4px 10px;border-radius:12px;cursor:pointer;font-family:'Cinzel',serif;}
 .msel-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;min-height:28px;align-items:center;margin-bottom:10px;}
 .msel-chips::-webkit-scrollbar{display:none;}
 .msel-chip{
   display:flex;align-items:center;gap:5px;
-  background:rgba(192,21,43,0.3);border:1px solid rgba(192,21,43,0.5);
-  color:white;font-size:11px;padding:4px 8px 4px 10px;
+  background:var(--red-pale);border:1px solid rgba(192,21,43,0.35);
+  color:var(--red-dark);font-size:11px;padding:4px 8px 4px 10px;
   border-radius:20px;white-space:nowrap;flex-shrink:0;cursor:pointer;
   transition:background 0.15s;
 }
-.msel-chip:active{background:rgba(192,21,43,0.6);}
+.msel-chip:active{background:rgba(192,21,43,0.2);}
 .msel-chip-x{font-size:12px;opacity:0.6;}
-.msel-empty{color:rgba(255,255,255,0.3);font-size:12px;font-style:italic;}
+.msel-empty{color:var(--text-light);font-size:12px;font-style:italic;}
 .btn-build-route{
   width:100%;height:46px;
   background:linear-gradient(135deg,var(--red),var(--red-dark));
@@ -1144,8 +1144,8 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
       <div class="dc-arrow">›</div>
     </div>
   </div>
-  <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:rgba(26,10,13,0.97);border-top:1px solid rgba(192,21,43,0.25);display:flex;justify-content:flex-start;z-index:10;">
-    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);color:white;">←</button>
+  <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:var(--cream);border-top:1px solid var(--border);display:flex;justify-content:flex-end;z-index:10;">
+    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri">←</button>
   </div>
 </div>
 
@@ -1158,9 +1158,9 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     </div>
   </div>
   <div class="preset-route-scroll" id="preset-route-scroll"></div>
-  <div class="preset-footer" style="display:flex;gap:8px;">
-    <button class="btn-start-preset" onclick="startPresetTour()">🧭 TURU BAŞLAT</button>
-    <button class="footer-back-btn" onclick="showScreen('s-preset-chooser')" title="Geri">←</button>
+  <div class="preset-footer" style="display:flex;gap:8px;align-items:center;">
+    <button class="btn-start-preset" onclick="startPresetTour()" style="flex:1;">🧭 TURU BAŞLAT</button>
+    <button class="footer-back-btn" onclick="showScreen('s-preset-chooser')" title="Geri" style="flex-shrink:0;">←</button>
   </div>
 </div>
 
@@ -1180,11 +1180,11 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <div class="msel-chips" id="msel-chips">
       <div class="msel-empty" id="msel-empty">Haritada bir yere dokunun…</div>
     </div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn-build-route" id="btn-build-route" onclick="buildMapSelectRoute()" disabled>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn-build-route" id="btn-build-route" onclick="buildMapSelectRoute()" disabled style="flex:1;">
         🧭 ROTA OLUŞTUR
       </button>
-      <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);color:white;">←</button>
+      <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri" style="flex-shrink:0;">←</button>
     </div>
   </div>
 </div>
@@ -1193,10 +1193,6 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <div id="s-list" class="screen">
   <div class="list-header">
     <div class="list-header-top">
-      <button class="menu-btn" onclick="openMenu()" style="flex-shrink:0;">
-        <span></span><span></span><span></span>
-      </button>
-      <img src="img/logo.svg" alt="Logo" style="height:28px;object-fit:contain;filter:brightness(5);" onerror="this.style.display='none'">
       <h1 id="list-title">Ziyaret Yerleri</h1>
       <div class="sel-count" id="sel-count">0 seçildi</div>
     </div>
@@ -1206,8 +1202,9 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   <div class="list-footer">
     <button class="btn-history" onclick="openHistory()" title="Geçmiş">📋</button>
     <button class="btn-mapall" onclick="mapFromScreen='s-list';openMapAll()">🗺️ HARİTA</button>
+    <button class="btn-mapall" onclick="openVisitedMap()" style="background:var(--green);border-color:var(--green);" title="Ziyaret edilenleri haritada gör">✅ ZİYARET</button>
     <button class="btn-start" id="btn-start" onclick="startTour()" disabled>TURU BAŞLAT</button>
-    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Ana Sayfa">←</button>
+    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Ana Sayfa" style="margin-left:auto;">←</button>
   </div>
 </div>
 
@@ -1221,9 +1218,9 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     </div>
   </div>
   <div id="leaflet-map"></div>
-  <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:var(--cream);border-top:1px solid var(--border);display:flex;justify-content:flex-start;align-items:center;gap:10px;z-index:10;">
-    <button class="footer-back-btn" onclick="goBackFromMap()" title="Geri">←</button>
+  <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:var(--cream);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:10;">
     <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--text-light);letter-spacing:0.05em;">Harita Görünümü</span>
+    <button class="footer-back-btn" onclick="goBackFromMap()" title="Geri">←</button>
   </div>
 </div>
 
@@ -2438,7 +2435,57 @@ function openMapFromHome(){
   mapFromScreen = 's-mode-chooser';
   openMapAll();
 }
+
+function openVisitedMap(){
+  if(visitedIds.size===0){showToast('Henüz ziyaret edilen yer yok.');return;}
+  mapFromScreen = 's-list';
+  showScreen('s-map');
+  // Update map header title
+  const mapHeader = document.querySelector('#s-map .map-header h2');
+  if(mapHeader) mapHeader.textContent = '✅ Ziyaret Edilenler';
+  if(!leafletMap){
+    leafletMap=L.map('leaflet-map').setView([40.18,26.32],11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      attribution:'© OpenStreetMap',maxZoom:19
+    }).addTo(leafletMap);
+  }
+  Object.values(leafletMarkers).forEach(m=>m.remove());
+  leafletMarkers={};
+  const visitedPlaces = PLACES.filter(p=>visitedIds.has(p.id));
+  if(visitedPlaces.length===0){showToast('Ziyaret edilen yer bulunamadı.');goBackFromMap();return;}
+  visitedPlaces.forEach(p=>{
+    const icon=L.divIcon({
+      className:'',
+      html:`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:16px;height:16px;background:#4CAF50;border:2px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.35);cursor:pointer;flex-shrink:0;"></div>
+        <div style="background:rgba(26,10,13,0.85);color:white;font-size:9px;font-family:'Cinzel',serif;padding:1px 5px;border-radius:3px;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;line-height:1.3;">${p.name}</div>
+      </div>`,
+      iconSize:[120,34],iconAnchor:[60,7]
+    });
+    const marker=L.marker([p.lat,p.lng],{icon}).addTo(leafletMap);
+    const _ex=PLACE_EXTRA[p.id]||PLACE_EXTRA._def;
+    marker.bindPopup(`
+      <div style="font-family:'Cinzel',serif;min-width:180px;max-width:240px;">
+        <div style="font-size:11px;font-weight:700;color:#2e7d32;margin-bottom:3px;">✅ ZİYARET EDİLDİ</div>
+        <div style="font-size:13px;font-weight:700;color:#1A0A0D;margin-bottom:6px;line-height:1.3;">${p.name}</div>
+        ${_ex.highlight?`<div style="font-size:11px;color:#4A2030;line-height:1.5;margin-bottom:7px;border-left:2px solid #4CAF50;padding-left:7px;font-style:italic;">${_ex.highlight}</div>`:''}
+        <div style="font-size:10px;color:#8A6070;">⏱ ${_ex.visitTime}</div>
+      </div>
+    `,{maxWidth:260});
+    leafletMarkers[p.id]=marker;
+  });
+  // Fit map to visited places
+  const bounds=L.latLngBounds(visitedPlaces.map(p=>[p.lat,p.lng]));
+  leafletMap.fitBounds(bounds,{padding:[40,40]});
+  setTimeout(()=>{leafletMap.invalidateSize();},150);
+  // Restore header on back
+  const origHeader = 'Tüm Yerler';
+  const _origMapHeader = document.querySelector('#s-map .map-header h2');
+  if(_origMapHeader) _origMapHeader._origText = _origMapHeader.textContent;
+}
 function goBackFromMap(){
+  const mapHeader = document.querySelector('#s-map .map-header h2');
+  if(mapHeader) mapHeader.textContent = 'Tüm Yerler';
   showScreen(mapFromScreen);
 }
 
