@@ -765,6 +765,9 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 </head>
 <body>
 
+<!-- BACKGROUND MUSIC (muted autoplay trick) -->
+<audio id="bg-music-el" src="audio/intro.mp3" loop muted playsinline preload="auto"></audio>
+
 <!-- PARTICLES -->
 <div class="particles" id="particles"></div>
 
@@ -2649,19 +2652,46 @@ function backToNav(){
 function startGlobalAudio(){
   if(globalAudioStarted) return;
   globalAudioStarted=true;
+  // HTML audio elementini kullan (muted autoplay destekler)
   if(!globalAudio){
-    globalAudio=new Audio('audio/intro.mp3');
-    globalAudio.loop=true;
+    globalAudio=document.getElementById('bg-music-el');
+    if(!globalAudio){
+      globalAudio=new Audio('audio/intro.mp3');
+      globalAudio.loop=true;
+    }
     globalAudio.volume=0.55;
   }
-  if(!globalMuted){
-    globalAudio.play().catch(()=>{
-      // Autoplay blocked — will start on first user interaction
-      document.addEventListener('click',()=>{
-        if(!globalMuted && globalAudio.paused) globalAudio.play().catch(()=>{});
-      },{once:true});
+  if(globalMuted) return;
+
+  // Adım 1: muted=true ile autoplay başlat (tarayıcı politikasını aşar)
+  globalAudio.muted=true;
+  const playPromise=globalAudio.play();
+  if(playPromise!==undefined){
+    playPromise.then(()=>{
+      // Başarılı — muted kaldır ve yumuşak fade-in
+      setTimeout(()=>{
+        globalAudio.muted=false;
+        globalAudio.volume=0;
+        let v=0;
+        const fade=setInterval(()=>{
+          v=Math.min(v+0.04,0.55);
+          globalAudio.volume=v;
+          if(v>=0.55) clearInterval(fade);
+        },60);
+      },100);
+      updateSpeakerUI(true);
+    }).catch(()=>{
+      // Tamamen bloklandı — ilk dokunuşta başlat
+      globalAudio.muted=false;
+      globalAudio.volume=0.55;
+      const go=()=>{
+        if(!globalMuted){ globalAudio.play().catch(()=>{}); updateSpeakerUI(true); }
+        document.removeEventListener('click',go);
+        document.removeEventListener('touchstart',go);
+      };
+      document.addEventListener('click',go,{once:true});
+      document.addEventListener('touchstart',go,{once:true});
     });
-    updateSpeakerUI(true);
   }
 }
 function toggleGlobalAudio(){
