@@ -604,7 +604,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   background:white;border:1px solid var(--border);border-radius:10px;
   padding:10px 12px;margin-bottom:7px;
   animation:staggerIn 0.4s ease both;
-  cursor:grab;user-select:none;touch-action:none;
+  cursor:grab;user-select:none;touch-action:pan-y;
   transition:box-shadow 0.15s, transform 0.15s, border-color 0.15s;
   position:relative;
 }
@@ -644,7 +644,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   text-transform:uppercase;color:var(--red);
   padding:8px 0 6px;border-bottom:2px solid var(--red);margin-bottom:10px;
   display:flex;align-items:center;gap:8px;
-  cursor:grab;user-select:none;touch-action:none;
+  cursor:grab;user-select:none;touch-action:pan-y;
 }
 .day-section-title:active{cursor:grabbing;}
 .day-section.day-dragging > .day-section-title{opacity:0.5;}
@@ -1730,8 +1730,8 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <div class="nav-stop-info" id="nav-stop-info"></div>
   </div>
   <div class="nav-map-toggle-bar">
-    <button class="nav-map-toggle-btn active" id="btn-toggle-leaflet" onclick="switchNavMap('leaflet')">🗺️ Harita</button>
-    <button class="nav-map-toggle-btn" id="btn-toggle-gmaps" onclick="switchNavMap('gmaps')">🧭 Yol Tarifi</button>
+    <button class="nav-map-toggle-btn" id="btn-toggle-leaflet" onclick="switchNavMap('leaflet')">🗺️ Harita</button>
+    <button class="nav-map-toggle-btn active" id="btn-toggle-gmaps" onclick="switchNavMap('gmaps')">🧭 Yol Tarifi</button>
   </div>
   <div class="nav-map" id="nav-map">
     <div class="nav-map-placeholder" id="nav-map-placeholder" style="display:none;">
@@ -2986,7 +2986,7 @@ function initPresetDrag(scroll) {
       moveGhost(startX, startY);
     }, 120);
 
-    e.preventDefault();
+    // handle'a basıldığında scroll'u engelleme — sadece gerçek drag'de engellenecek
   }
 
   function onMove(e) {
@@ -3001,6 +3001,7 @@ function initPresetDrag(scroll) {
       createGhost(dragEl);
     }
     if (!dragging) return;
+    // Sadece gerçek drag sırasında scroll'u engelle
     if (e.cancelable) e.preventDefault();
     moveGhost(cx, cy);
 
@@ -3047,7 +3048,7 @@ function initPresetDrag(scroll) {
     lastOver = null; dragEl = null;
   }
 
-  scroll.addEventListener('touchstart', e => onDown(e), { passive: false });
+  scroll.addEventListener('touchstart', e => onDown(e), { passive: true });
   scroll.addEventListener('touchmove',  e => onMove(e), { passive: false });
   scroll.addEventListener('touchend',   () => onUp());
   scroll.addEventListener('mousedown',  e => onDown(e));
@@ -3718,8 +3719,8 @@ function initNavLeafletMap(){
   const mapEl=document.getElementById('nav-leaflet-map');
   mapEl.style.display='block';
   document.getElementById('nav-map-frame').classList.remove('show');
-  document.getElementById('btn-toggle-leaflet').classList.add('active');
-  document.getElementById('btn-toggle-gmaps').classList.remove('active');
+  document.getElementById('btn-toggle-leaflet').classList.remove('active');
+  document.getElementById('btn-toggle-gmaps').classList.add('active');
 
   if(!navLeafletMap){
     navLeafletMap=L.map('nav-leaflet-map').setView([40.18,26.32],11);
