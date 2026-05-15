@@ -835,7 +835,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 #popup{position:fixed;inset:0;z-index:300;background:rgba(26,10,13,0.75);display:none;align-items:flex-end;justify-content:center;}
 #popup.open{display:flex;}
 .popup-card{background:var(--cream);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px 20px 32px;position:relative;max-height:80vh;overflow-y:auto;animation:floatUp 0.25s ease;}
-.popup-close{position:absolute;top:14px;right:14px;width:32px;height:32px;background:var(--border);border:none;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.popup-close{position:absolute;top:3px;right:50px;width:32px;height:32px;background:var(--border);border:none;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
 .popup-cat{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--red);margin-bottom:8px;}
 .popup-name{font-family:'Cinzel',serif;font-size:17px;color:var(--text-dark);margin-bottom:12px;line-height:1.3;}
 .popup-img{height:80px;background:linear-gradient(135deg,var(--red-dark),var(--text-dark));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:42px;margin-bottom:12px;}
@@ -846,37 +846,39 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 /* ======= SANAL TUR OVERLAY ======= */
 #sanaltur-overlay{position:fixed;inset:0;z-index:400;background:#000;display:none;flex-direction:column;}
 #sanaltur-overlay.open{display:flex;}
-.sanaltur-header{background:linear-gradient(135deg,var(--text-dark),#2A1A1D);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sanaltur-header{background:linear-gradient(135deg,var(--text-dark),#2A1A1D);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;}
 .sanaltur-header span{color:var(--gold-light);font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.06em;}
-.sanaltur-close-btn{background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;}
+.sanaltur-close-btn{position:absolute;top:5px;right:calc(16px + 50px);background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
 #sanaltur-frame{flex:1;border:none;width:100%;}
 .sanaltur-placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:rgba(255,255,255,0.65);text-align:center;padding:32px;font-size:14px;line-height:1.8;}
 .sanaltur-placeholder .spin-icon{font-size:56px;animation:spin 4s linear infinite;display:inline-block;}
-.sanaltur-actions{padding:12px 16px;background:rgba(255,255,255,0.04);border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;flex-shrink:0;}
-.sanaltur-ext-btn{flex:1;padding:12px;background:radial-gradient(circle at 36% 28%, #e8404a 0%, #C0152B 30%, #7a0810 60%, #2a0006 85%, #0e0002 100%);border:none;color:white;border-radius:8px;font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.06em;cursor:pointer;box-shadow:0 6px 20px rgba(192,21,43,0.55), 0 2px 8px rgba(0,0,0,0.4), inset 0 2px 5px rgba(255,160,140,0.22), inset 0 -3px 6px rgba(0,0,0,0.50);}
+.sanaltur-actions{padding:14px 16px;background:var(--white);border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;}
+.sanaltur-ext-btn{flex:1;height:48px;background:radial-gradient(circle at 36% 28%, #e8404a 0%, #C0152B 30%, #7a0810 60%, #2a0006 85%, #0e0002 100%);border:none;color:white;border-radius:var(--r);font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.06em;cursor:pointer;box-shadow:0 8px 28px rgba(192,21,43,0.65), 0 3px 10px rgba(0,0,0,0.5), inset 0 3px 7px rgba(255,160,140,0.30), inset 0 -4px 8px rgba(0,0,0,0.60);display:flex;align-items:center;justify-content:center;gap:6px;}
 
 /* ======= GALLERY ======= */
-#gallery-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.92);display:none;flex-direction:column;align-items:center;justify-content:center;}
+#gallery-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.92);display:none;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:40px;}
 #gallery-overlay.open{display:flex;}
-.gallery-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;}
+.gallery-close{display:none;}
 .gallery-img{width:100%;max-width:400px;height:300px;display:flex;align-items:center;justify-content:center;font-size:80px;background:rgba(255,255,255,0.05);border-radius:12px;margin:0 16px;}
 .gallery-counter{color:rgba(255,255,255,0.6);font-size:13px;margin-top:16px;font-family:'Cinzel',serif;}
 .gallery-nav{display:flex;gap:24px;margin-top:20px;}
 .gallery-btn{background:rgba(255,255,255,0.15);border:none;color:white;width:48px;height:48px;border-radius:50%;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;}
+.gallery-footer{width:100%;padding:14px 16px;background:var(--white);border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;margin-top:auto;justify-content:flex-end;}
 
 /* VIDEO OVERLAY */
-#video-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.92);display:none;flex-direction:column;align-items:center;justify-content:center;}
+#video-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.92);display:none;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:60px;}
 #video-overlay.open{display:flex;}
-.video-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;}
+.video-close{display:none;}
 .video-placeholder{display:flex;flex-direction:column;align-items:center;gap:16px;color:rgba(255,255,255,0.7);text-align:center;padding:32px;font-size:14px;}
 .video-placeholder .vid-icon{font-size:64px;}
-.video-ext-btn{padding:12px 24px;background:radial-gradient(circle at 36% 28%, #e8404a 0%, #C0152B 30%, #7a0810 60%, #2a0006 85%, #0e0002 100%);border:none;color:white;border-radius:8px;font-family:'Cinzel',serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;box-shadow:0 6px 20px rgba(192,21,43,0.55), 0 2px 8px rgba(0,0,0,0.4), inset 0 2px 5px rgba(255,160,140,0.22), inset 0 -3px 6px rgba(0,0,0,0.50);}
+.video-ext-btn{padding:0 24px;height:48px;background:radial-gradient(circle at 36% 28%, #e8404a 0%, #C0152B 30%, #7a0810 60%, #2a0006 85%, #0e0002 100%);border:none;color:white;border-radius:var(--r);font-family:'Cinzel',serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;box-shadow:0 8px 28px rgba(192,21,43,0.65), 0 3px 10px rgba(0,0,0,0.5), inset 0 3px 7px rgba(255,160,140,0.30), inset 0 -4px 8px rgba(0,0,0,0.60);}
+.video-footer{width:100%;padding:14px 16px;background:var(--white);border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;margin-top:auto;justify-content:flex-end;}
 
 /* ======= HISTORY ======= */
 #history-modal{position:fixed;inset:0;z-index:300;background:rgba(26,10,13,0.75);display:none;align-items:flex-end;justify-content:center;}
 #history-modal.open{display:flex;}
 .history-card{background:var(--cream);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px 20px 32px;max-height:70vh;display:flex;flex-direction:column;position:relative;animation:floatUp 0.25s ease;}
-.history-close{position:absolute;top:14px;right:14px;width:32px;height:32px;background:var(--border);border:none;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.history-close{position:absolute;top:3px;right:50px;width:32px;height:32px;background:var(--border);border:none;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
 .history-title{font-family:'Cinzel',serif;color:var(--red);font-size:16px;margin-bottom:16px;}
 #history-list{flex:1;overflow-y:auto;}
 .history-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text-mid);}
@@ -1017,7 +1019,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   border-top:1px solid rgba(192,21,43,0.3);
 }
 .weather-close{
-  position:absolute;top:14px;right:14px;
+  position:absolute;top:3px;right:50px;
   width:32px;height:32px;background:rgba(255,255,255,0.1);
   border:none;color:rgba(255,255,255,0.8);border-radius:50%;
   cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
@@ -1070,7 +1072,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   overflow:hidden;
 }
 .nearby-close{
-  position:absolute;top:14px;right:14px;
+  position:absolute;top:3px;right:50px;
   width:32px;height:32px;background:var(--border);
   border:none;border-radius:50%;cursor:pointer;font-size:16px;
   display:flex;align-items:center;justify-content:center;
@@ -1111,6 +1113,18 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 }
 .nearby-announce.show{opacity:1;}
 
+@keyframes stopMapPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(192,21,43,0.8),0 0 0 0 rgba(192,21,43,0.4);transform:scale(1);}
+  50%{box-shadow:0 0 0 8px rgba(192,21,43,0),0 0 0 16px rgba(192,21,43,0);transform:scale(1.15);}
+}
+@keyframes stopMapGlow{
+  0%,100%{text-shadow:0 0 6px rgba(255,80,80,0.6),0 0 12px rgba(255,80,80,0.3);}
+  50%{text-shadow:0 0 12px rgba(255,80,80,1),0 0 24px rgba(255,80,80,0.7),0 0 36px rgba(255,80,80,0.3);}
+}
+@keyframes stopMapRing{
+  0%{transform:scale(0.6);opacity:0.9;}
+  100%{transform:scale(2.5);opacity:0;}
+}
 @keyframes nearbyFlash{
   0%,100%{opacity:1;}
   40%{opacity:0.15;}
@@ -1673,10 +1687,10 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   </div>
   <div class="list-scroll" id="place-list"></div>
   <div class="list-footer">
+    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Ana Sayfa">←</button>
     <button class="btn-history" onclick="openHistory()" title="Geçmiş">📋</button>
     <button class="btn-mapall" onclick="mapFromScreen='s-list';openMapAll()">🗺️ HARİTA</button>
     <button class="btn-start" id="btn-start" onclick="startTour()" disabled>TURU BAŞLAT</button>
-    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Ana Sayfa" style="margin-left:auto;">←</button>
   </div>
 </div>
 
@@ -1764,7 +1778,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
         <span class="nb-icon">✖️</span>
         <span id="btn-end">Turu Bitir</span>
       </button>
-      <button class="nav-btn" onclick="showConfirm('←','Geri Dön','Giriş sayfasına dönmek istediğinize emin misiniz? Tur duraklanacak.',()=>showScreen(routePrevScreen||'s-mode-chooser'))">
+      <button class="nav-btn nav-btn-back-right" onclick="showConfirm('←','Geri Dön','Giriş sayfasına dönmek istediğinize emin misiniz? Tur duraklanacak.',()=>showScreen(routePrevScreen||'s-mode-chooser'))">
         <span class="nb-icon">←</span>
         <span>Geri</span>
       </button>
@@ -1824,8 +1838,8 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <div class="stop-desc" id="stop-desc"></div>
   </div>
   <div class="stop-footer">
-    <button class="btn-back-nav" onclick="backToNav()">←</button>
     <button class="btn-complete" onclick="completeStop()" id="btn-complete">DURACI TAMAMLA</button>
+    <button class="btn-back-nav" onclick="backToNav()">←</button>
   </div>
 </div>
 
@@ -1846,7 +1860,6 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <div id="sanaltur-overlay">
   <div class="sanaltur-header">
     <span id="sanaltur-title">🌐 Sanal Tur — Street View</span>
-    <button class="sanaltur-close-btn" onclick="closeSanalTur()">✕</button>
   </div>
   <iframe id="sanaltur-frame" allowfullscreen allow="accelerometer; gyroscope; vr; xr"></iframe>
   <div class="sanaltur-placeholder" id="sanaltur-placeholder" style="display:none;">
@@ -1855,28 +1868,33 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   </div>
   <div class="sanaltur-actions">
     <button class="sanaltur-ext-btn" onclick="openSanalTurExternal()">🗺️ Google Maps'te Aç</button>
+    <button class="btn-back-nav" onclick="closeSanalTur()">←</button>
   </div>
 </div>
 
 <!-- GALLERY -->
 <div id="gallery-overlay">
-  <button class="gallery-close" onclick="closeGallery()">✕</button>
   <div class="gallery-img" id="gallery-main">🖼️</div>
   <div class="gallery-counter" id="gallery-counter">1 / 3</div>
   <div class="gallery-nav">
     <button class="gallery-btn" onclick="galleryPrev()">‹</button>
     <button class="gallery-btn" onclick="galleryNext()">›</button>
   </div>
+  <div class="gallery-footer">
+    <button class="btn-back-nav" onclick="closeGallery()">←</button>
+  </div>
 </div>
 
 <!-- VIDEO OVERLAY -->
 <div id="video-overlay">
-  <button class="video-close" onclick="closeVideo()">✕</button>
   <div class="video-placeholder">
     <div class="vid-icon">🎥</div>
     <p id="video-place-name" style="font-family:'Cinzel',serif;font-size:14px;color:rgba(255,255,255,0.9);"></p>
     <p>Bu yer için video içeriği<br>hazırlanmaktadır.</p>
     <button class="video-ext-btn" onclick="openVideoExternal()">▶ YouTube'da Ara</button>
+  </div>
+  <div class="video-footer">
+    <button class="btn-back-nav" onclick="closeVideo()">←</button>
   </div>
 </div>
 
@@ -3957,7 +3975,128 @@ function openMapsNav(){
   const url=`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}&travelmode=walking`;
   window.open(url,'_blank');
 }
+let stopLeafletMap=null, stopLeafletMarkers=[];
+
 function openMapsStop(){
+  if(!currentPlaceId) return;
+  const p=PLACES.find(x=>x.id===currentPlaceId);if(!p) return;
+
+  // Overlay'i göster
+  const overlay=document.getElementById('stop-map-overlay');
+  const panel=document.getElementById('stop-map-panel');
+  const backdrop=document.getElementById('stop-map-backdrop');
+  overlay.style.display='flex';
+  // Animasyonlu açılış
+  requestAnimationFrame(()=>{
+    backdrop.style.opacity='1';
+    panel.style.transform='translateY(0)';
+  });
+
+  // Başlık güncelle
+  document.getElementById('stop-map-title').textContent=p.name;
+  document.getElementById('stop-map-legend-active').textContent=p.name.length>22?p.name.slice(0,22)+'…':p.name;
+
+  // Harita init
+  setTimeout(()=>{
+    const mapEl=document.getElementById('stop-leaflet-map');
+    if(!stopLeafletMap){
+      stopLeafletMap=L.map(mapEl,{zoomControl:true,attributionControl:false}).setView([p.lat,p.lng],15);
+    } else {
+      stopLeafletMap.setView([p.lat,p.lng],15);
+    }
+
+    // Uydu katmanı (Esri World Imagery)
+    // Önce tüm tile layer'ları temizle
+    stopLeafletMap.eachLayer(layer=>{
+      if(layer instanceof L.TileLayer) stopLeafletMap.removeLayer(layer);
+    });
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+      maxZoom:19,attribution:'© Esri'
+    }).addTo(stopLeafletMap);
+
+    // Etiket katmanı (yer isimleri)
+    L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{
+      maxZoom:19,opacity:0.85
+    }).addTo(stopLeafletMap);
+
+    // Eski marker'ları temizle
+    stopLeafletMarkers.forEach(m=>m.remove());
+    stopLeafletMarkers=[];
+
+    // Diğer tüm yerleri küçük gri nokta olarak ekle
+    PLACES.forEach(pp=>{
+      if(pp.id===p.id) return; // aktif yeri atla, aşağıda özel ekleyeceğiz
+      const isVisited=visitedIds.has(pp.id);
+      const dotBg=isVisited
+        ? 'radial-gradient(circle at 35% 30%,#66bb6a,#2e7d32 60%,#1b5e20)'
+        : 'radial-gradient(circle at 35% 30%,#e8404a,#C0152B 55%,#7a0810)';
+      const icon=L.divIcon({
+        className:'',
+        html:`<div style="display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;">
+          <div style="width:9px;height:9px;background:${dotBg};border:1.5px solid rgba(255,255,255,0.85);border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.5);flex-shrink:0;"></div>
+          <div style="background:rgba(0,0,0,0.72);color:rgba(255,255,255,0.85);font-size:8px;font-family:'Cinzel',serif;padding:1px 4px;border-radius:2px;white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;line-height:1.3;">${pp.name}</div>
+        </div>`,
+        iconSize:[100,28],iconAnchor:[50,6]
+      });
+      const m=L.marker([pp.lat,pp.lng],{icon}).addTo(stopLeafletMap);
+      m.bindPopup(`<div style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:#1A0A0D;">${pp.name}</div><div style="font-size:10px;color:#8A6070;">${pp.cat}</div>`,{maxWidth:180});
+      stopLeafletMarkers.push(m);
+    });
+
+    // Aktif yeri kırmızı animasyonlu parıldayan marker olarak ekle
+    const activeIcon=L.divIcon({
+      className:'',
+      html:`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;">
+        <!-- Yayılan halkalar -->
+        <div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;border:2px solid rgba(192,21,43,0.8);animation:stopMapRing 1.6s ease-out infinite;pointer-events:none;"></div>
+        <div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;border:2px solid rgba(192,21,43,0.5);animation:stopMapRing 1.6s 0.55s ease-out infinite;pointer-events:none;"></div>
+        <!-- Ana nokta -->
+        <div style="width:22px;height:22px;background:radial-gradient(circle at 35% 30%,#ff4455,#C0152B 45%,#7a0810);border:2.5px solid white;border-radius:50%;box-shadow:0 0 0 0 rgba(192,21,43,0.8);animation:stopMapPulse 1.5s ease-in-out infinite;flex-shrink:0;z-index:1;position:relative;"></div>
+        <!-- İsim etiketi -->
+        <div style="background:rgba(192,21,43,0.95);color:white;font-size:10px;font-family:'Cinzel',serif;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;line-height:1.4;animation:stopMapGlow 1.5s ease-in-out infinite;box-shadow:0 2px 8px rgba(192,21,43,0.6);letter-spacing:0.04em;text-shadow:0 1px 3px rgba(0,0,0,0.5);">${p.name}</div>
+      </div>`,
+      iconSize:[160,54],iconAnchor:[80,14]
+    });
+    const activeM=L.marker([p.lat,p.lng],{icon:activeIcon,zIndexOffset:2000}).addTo(stopLeafletMap);
+    activeM.bindPopup(`
+      <div style="font-family:'Cinzel',serif;min-width:160px;">
+        <div style="font-size:10px;font-weight:700;color:#C0152B;margin-bottom:3px;">📍 ŞU AN BURADASINIZ</div>
+        <div style="font-size:13px;font-weight:700;color:#1A0A0D;line-height:1.3;">${p.name}</div>
+        <div style="font-size:10px;color:#8A6070;margin-top:3px;">${p.cat}</div>
+      </div>
+    `,{maxWidth:220}).openPopup();
+    stopLeafletMarkers.push(activeM);
+
+    // Kullanıcı konumu varsa göster
+    if(window.userLat!==null&&window.userLat!==undefined){
+      const uIcon=L.divIcon({
+        className:'',
+        html:`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="font-size:20px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));">🧍</div>
+          <div style="background:#1565C0;color:white;font-size:9px;font-family:'Cinzel',serif;padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.3;">Siz</div>
+        </div>`,
+        iconSize:[46,38],iconAnchor:[23,26]
+      });
+      const uM=L.marker([window.userLat,window.userLng],{icon:uIcon,zIndexOffset:1500}).addTo(stopLeafletMap);
+      stopLeafletMarkers.push(uM);
+    }
+
+    stopLeafletMap.invalidateSize();
+    setTimeout(()=>stopLeafletMap.invalidateSize(),200);
+    setTimeout(()=>stopLeafletMap.invalidateSize(),500);
+  },120);
+}
+
+function closeStopMap(){
+  const overlay=document.getElementById('stop-map-overlay');
+  const panel=document.getElementById('stop-map-panel');
+  const backdrop=document.getElementById('stop-map-backdrop');
+  backdrop.style.opacity='0';
+  panel.style.transform='translateY(100%)';
+  setTimeout(()=>{ overlay.style.display='none'; },380);
+}
+
+function openStopMapExternal(){
   if(!currentPlaceId) return;
   const p=PLACES.find(x=>x.id===currentPlaceId);if(!p) return;
   window.open(`https://maps.google.com/?q=${p.lat},${p.lng}`,'_blank');
@@ -4622,6 +4761,112 @@ function showExitScreen(){
   });
 });
 </script>
+
+<!-- STOP MAP OVERLAY (Uydu Harita) -->
+<div id="stop-map-overlay" style="
+  position:fixed;inset:0;z-index:1500;
+  background:rgba(26,10,13,0.0);
+  display:none;flex-direction:column;
+  animation:none;
+">
+  <div style="
+    position:absolute;inset:0;
+    background:rgba(26,10,13,0.85);
+    opacity:0;transition:opacity 0.3s;
+  " id="stop-map-backdrop" onclick="closeStopMap()"></div>
+  <div style="
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    transform:translateY(100%);
+    transition:transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+    background:#0a0a0a;
+  " id="stop-map-panel">
+    <!-- Header -->
+    <div style="
+      background:linear-gradient(135deg,var(--red-dark),var(--red));
+      padding:12px 16px;flex-shrink:0;
+      display:flex;align-items:center;gap:10px;
+      position:relative;z-index:2;
+    ">
+      <div style="flex:1;">
+        <div id="stop-map-title" style="
+          font-family:'Cinzel',serif;
+          color:white;font-size:14px;font-weight:700;
+          letter-spacing:0.04em;line-height:1.3;
+        ">Haritada Gör</div>
+        <div style="color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.06em;margin-top:1px;">
+          🛰️ Uydu Görüntüsü
+        </div>
+      </div>
+    </div>
+    <!-- Map container -->
+    <div id="stop-leaflet-map" style="flex:1;width:100%;min-height:0;"></div>
+    <!-- Footer -->
+    <div style="flex-shrink:0;display:flex;flex-direction:column;">
+      <!-- Üst satır: legend (koyu arka plan) -->
+      <div style="
+        background:rgba(12,3,5,0.97);
+        border-top:1px solid rgba(192,21,43,0.35);
+        padding:8px 14px 8px;
+        display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      ">
+        <!-- Aktif yer: parlayan kırmızı nokta + isim -->
+        <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0;">
+          <div style="position:relative;width:14px;height:14px;flex-shrink:0;">
+            <div style="position:absolute;inset:0;border-radius:50%;background:rgba(192,21,43,0.4);animation:stopMapRing 1.6s ease-out infinite;"></div>
+            <div style="position:absolute;inset:0;border-radius:50%;background:rgba(192,21,43,0.25);animation:stopMapRing 1.6s 0.55s ease-out infinite;"></div>
+            <div style="position:absolute;inset:2px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff4455,#C0152B 50%,#7a0810);border:1.5px solid rgba(255,255,255,0.9);animation:stopMapPulse 1.5s ease-in-out infinite;"></div>
+          </div>
+          <span style="color:white;font-size:11px;font-family:'Cinzel',serif;font-weight:700;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;animation:stopMapGlow 1.5s ease-in-out infinite;" id="stop-map-legend-active">Şu an</span>
+        </div>
+        <div style="width:1px;height:14px;background:rgba(255,255,255,0.12);flex-shrink:0;"></div>
+        <!-- Ziyaret edilen: yeşil nokta -->
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+          <div style="width:10px;height:10px;background:radial-gradient(circle at 35% 30%,#66bb6a,#2e7d32 60%,#1b5e20);border:1.5px solid rgba(255,255,255,0.8);border-radius:50%;flex-shrink:0;"></div>
+          <span style="color:rgba(255,255,255,0.6);font-size:10px;font-family:'Cinzel',serif;">Ziyaret Edildi</span>
+        </div>
+        <div style="width:1px;height:14px;background:rgba(255,255,255,0.12);flex-shrink:0;"></div>
+        <!-- Diğer yerler: kırmızı düz nokta -->
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+          <div style="width:10px;height:10px;background:radial-gradient(circle at 35% 30%,#e8404a,#C0152B 55%,#7a0810);border:1.5px solid rgba(255,255,255,0.7);border-radius:50%;flex-shrink:0;"></div>
+          <span style="color:rgba(255,255,255,0.5);font-size:10px;font-family:'Cinzel',serif;">Diğer Yerler</span>
+        </div>
+      </div>
+      <!-- Alt satır: butonlar (stop-footer teması) -->
+      <div style="
+        background:var(--white);
+        border-top:1px solid var(--border);
+        padding:14px 16px;
+        display:flex;align-items:center;gap:10px;
+      ">
+        <!-- Google Maps butonu (sol) -->
+        <button onclick="openStopMapExternal()" style="
+          flex:1;
+          height:48px;
+          background:radial-gradient(circle at 36% 28%,#4a90d9 0%,#1a5fa8 35%,#0d3a6e 65%,#061e3a 100%);
+          box-shadow:0 8px 28px rgba(26,95,168,0.65),0 3px 10px rgba(0,0,0,0.5),inset 0 3px 7px rgba(120,180,255,0.25),inset 0 -4px 8px rgba(0,0,0,0.60);
+          border:none;color:white;border-radius:var(--r);cursor:pointer;
+          font-size:12px;font-family:'Cinzel',serif;font-weight:700;
+          letter-spacing:0.05em;
+          display:flex;align-items:center;justify-content:center;gap:6px;
+        ">
+          <span style="font-size:14px;">🗺️</span> Google Maps'te Gör
+        </button>
+        <!-- Geri butonu (sağ) -->
+        <button onclick="closeStopMap()" style="
+          width:48px;height:48px;flex-shrink:0;
+          background:radial-gradient(circle at 36% 28%, rgba(255,255,255,0.92) 0%, rgba(240,234,226,0.85) 40%, rgba(220,210,195,0.75) 75%, rgba(180,165,140,0.60) 100%);
+          border:1.5px solid var(--border);color:var(--text-dark);border-radius:var(--r);cursor:pointer;
+          font-size:20px;font-family:'Cinzel',serif;font-weight:700;
+          display:flex;align-items:center;justify-content:center;
+          box-shadow:0 3px 10px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.75), inset 0 -2px 4px rgba(0,0,0,0.12);
+        ">
+          ←
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ROTA SIRALAMA POPUP -->
 <div id="route-sort-overlay">
