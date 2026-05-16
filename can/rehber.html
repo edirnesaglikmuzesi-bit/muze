@@ -1539,9 +1539,9 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <audio id="bg-music-el" src="audio/intro.mp3" loop muted playsinline preload="auto"></audio>
 
 <!-- SFX sesleri -->
-<audio id="sfx-bomb"    src="audio/bomb.mp3"          preload="auto" playsinline></audio>
-<audio id="sfx-bomb2"   src="audio/seyitonbasiai.mp3"         preload="auto" playsinline></audio>
-<audio id="sfx-seyit"   src="audio/bomb2.mp3"  preload="auto" playsinline></audio>
+<audio id="sfx-bomb"    src="img/bomp.mp3"            preload="auto" playsinline></audio>
+<audio id="sfx-bomb2"   src="img/bomp2.mp3"           preload="auto" playsinline></audio>
+<audio id="sfx-seyit"   src="img/seyitonbasiai.mp3"   preload="auto" playsinline></audio>
 
 <!-- PARTICLES -->
 <div class="particles" id="particles"></div>
@@ -2112,11 +2112,11 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     </button>
     <button class="seyitonbasi-menu-item em-ask-img" id="em-ask" onclick="evliyaAsk()">
       <div class="seyit-bubble" id="seyit-bubble"><span class="bubble-text">Bana Sor ✨</span></div>
-      <img src="img/seyitonbasiai.png" alt="Seyit Onbaşı" draggable="false" style="width:70px;height:148px;object-fit:contain;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7)) drop-shadow(0 0 5px rgba(201,168,76,0.4));">
+      <img src="seyitonbasiai.png" alt="Seyit Onbaşı" draggable="false" style="width:70px;height:148px;object-fit:contain;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7)) drop-shadow(0 0 5px rgba(201,168,76,0.4));">
     </button>
   </div>
   <button id="seyit-btn" title="Seyit Onbaşı">
-    <img src="img/seyitonbasi.png" id="evliya-main-icon" alt="Seyit Onbaşı" draggable="false">
+    <img src="seyitonbasi.png" id="evliya-main-icon" alt="Seyit Onbaşı" draggable="false">
   </button>
 </div>
 
@@ -4925,10 +4925,10 @@ function toggleEvliyaMenu(force){
   evliyaMenuOpen = force !== undefined ? force : !evliyaMenuOpen;
   const btn = document.getElementById('seyit-btn');
   if(evliyaMenuOpen){
+    playSfx('sfx-bomb2');  // Yelpaze açılış sesi
     openFanMenu();
     btn.classList.add('menu-open');
   } else {
-    playSfx('sfx-bomb2');  // Yelpaze kapanış sesi
     closeFanMenu();
     btn.classList.remove('menu-open');
   }
@@ -4989,11 +4989,6 @@ function openFanMenu(){
       item.style.opacity         = '1';
       item.style.transform       = `translate(-50%,-50%) translate(${fx}px,${fy}px) scale(1)`;
       item.style.pointerEvents   = 'all';
-
-      // em-ask (Seyit Onbaşı figürü) göründüğünde sesini çal
-      if(item.id === 'em-ask'){
-        setTimeout(()=>playSfx('sfx-seyit'), i * 65);
-      }
     }));
   });
   // Balonu göster
@@ -5018,6 +5013,7 @@ function closeFanMenu(){
 }
 
 function evliyaAsk(){
+  playSfx('sfx-seyit');      // Seyit Onbaşı butonu sesi
   toggleEvliyaMenu(false);
   showToast('⚔️ Seyit Onbaşı yakında aktif olacak!');
 }
