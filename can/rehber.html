@@ -1538,6 +1538,11 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <!-- BACKGROUND MUSIC (muted autoplay trick) -->
 <audio id="bg-music-el" src="audio/intro.mp3" loop muted playsinline preload="auto"></audio>
 
+<!-- SFX sesleri -->
+<audio id="sfx-bomb"    src="audio/bomb.mp3"          preload="auto" playsinline></audio>
+<audio id="sfx-bomb2"   src="audio/bomb2.mp3"         preload="auto" playsinline></audio>
+<audio id="sfx-seyit"   src="audio/seyitonbasiai.mp3"  preload="auto" playsinline></audio>
+
 <!-- PARTICLES -->
 <div class="particles" id="particles"></div>
 
@@ -2107,11 +2112,11 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     </button>
     <button class="seyitonbasi-menu-item em-ask-img" id="em-ask" onclick="evliyaAsk()">
       <div class="seyit-bubble" id="seyit-bubble"><span class="bubble-text">Bana Sor ✨</span></div>
-      <img src="img/seyitonbasiai.png" alt="Seyit Onbaşı" draggable="false" style="width:70px;height:148px;object-fit:contain;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7)) drop-shadow(0 0 5px rgba(201,168,76,0.4));">
+      <img src="seyitonbasiai.png" alt="Seyit Onbaşı" draggable="false" style="width:70px;height:148px;object-fit:contain;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7)) drop-shadow(0 0 5px rgba(201,168,76,0.4));">
     </button>
   </div>
   <button id="seyit-btn" title="Seyit Onbaşı">
-    <img src="img/seyitonbasi.png" id="evliya-main-icon" alt="Seyit Onbaşı" draggable="false">
+    <img src="seyitonbasi.png" id="evliya-main-icon" alt="Seyit Onbaşı" draggable="false">
   </button>
 </div>
 
@@ -4900,6 +4905,18 @@ function confirmNo(){document.getElementById('confirm-modal').classList.remove('
 // ============================================================
 // EVLİYA ÇELEBİ — ASSISTİVETOUCH MENU
 // ============================================================
+// ============================================================
+// SFX UTILITY
+// ============================================================
+function playSfx(id){
+  try{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.currentTime=0;
+    el.play().catch(()=>{});
+  }catch(e){}
+}
+
 let evliyaMenuOpen = false;
 let evliyaLongPressTimer = null;
 let evliyaMoved = false;
@@ -4911,6 +4928,7 @@ function toggleEvliyaMenu(force){
     openFanMenu();
     btn.classList.add('menu-open');
   } else {
+    playSfx('sfx-bomb2');  // Yelpaze kapanış sesi
     closeFanMenu();
     btn.classList.remove('menu-open');
   }
@@ -4971,6 +4989,11 @@ function openFanMenu(){
       item.style.opacity         = '1';
       item.style.transform       = `translate(-50%,-50%) translate(${fx}px,${fy}px) scale(1)`;
       item.style.pointerEvents   = 'all';
+
+      // em-ask (Seyit Onbaşı figürü) göründüğünde sesini çal
+      if(item.id === 'em-ask'){
+        setTimeout(()=>playSfx('sfx-seyit'), i * 65);
+      }
     }));
   });
   // Balonu göster
@@ -5202,9 +5225,8 @@ function showExitScreen(){
   const wrap = document.getElementById('seyitonbasi-wrap');
   const EDGE = 14;
   const THRESHOLD = 6;
-  let active=false, moved=false, lpFired=false;
+  let active=false, moved=false;
   let startX=0, startY=0, origLeft=0, origTop=0;
-  let lpTimer=null;
 
   function getLeft(){ return parseFloat(wrap.style.left) || wrap.getBoundingClientRect().left; }
   function getTop(){  return parseFloat(wrap.style.top)  || wrap.getBoundingClientRect().top;  }
@@ -5230,24 +5252,26 @@ function showExitScreen(){
     origTop  = getTop();
     startX=cx; startY=cy;
     active=true; moved=false;
-    lpFired=false;
-    lpTimer = setTimeout(()=>{ if(!moved){ lpFired=true; toggleEvliyaMenu(true); } }, 500);
+    playSfx('sfx-bomb');   // Dokunma sesi
   }
   function onMove(cx, cy){
     if(!active) return;
     const dx=cx-startX, dy=cy-startY;
     if(!moved && Math.abs(dx)+Math.abs(dy)>THRESHOLD){
       moved=true;
-      clearTimeout(lpTimer);
-      toggleEvliyaMenu(false);
     }
     if(moved) setPos(origLeft+dx, origTop+dy);
   }
   function onUp(){
     if(!active) return;
-    active=false; clearTimeout(lpTimer);
-    if(moved){ snap(); }
-    else if(!lpFired){ toggleEvliyaMenu(!evliyaMenuOpen); }
+    active=false;
+    if(moved){
+      snap();
+    } else {
+      // Tek dokunuş: aç/kapat
+      toggleEvliyaMenu(!evliyaMenuOpen);
+    }
+    moved=false;
   }
 
   // Touch
