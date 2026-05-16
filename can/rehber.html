@@ -975,6 +975,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   user-select:none;
   -webkit-user-select:none;
   will-change:left,top;
+  overflow:visible;
 }
 .seyitonbasi-menu{
   position:absolute;
@@ -1021,9 +1022,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 }
 /* Konuşma balonu */
 .seyit-bubble{
-  position:absolute;
-  bottom:calc(116px + 8px);
-  left:50%;
+  position:fixed;
   transform:translateX(-50%) scale(0.6);
   transform-origin:bottom center;
   background:linear-gradient(135deg,#fffde7,#fff8c5);
@@ -5081,9 +5080,23 @@ function openFanMenu(){
       item.style.pointerEvents   = 'all';
     }));
   });
-  // Balonu göster
+  // Balonu göster — fixed pozisyonu wrap'ın üstüne göre hesapla
   const bubble = document.getElementById('seyit-bubble');
-  if(bubble){ bubble.classList.remove('show'); void bubble.offsetWidth; bubble.classList.add('show'); }
+  if(bubble){
+    const wrapRect = wrap.getBoundingClientRect();
+    // em-ask butonunun pozisyonunu bul
+    const emAsk = document.getElementById('em-ask');
+    let bubbleLeft = wrapRect.left + wrapRect.width / 2;
+    let bubbleBottom = window.innerHeight - wrapRect.top + 10;
+    if(emAsk){
+      // em-ask henüz animasyon öncesi; wrap'ın yaklaşık üstüne koy
+    }
+    bubble.style.left = bubbleLeft + 'px';
+    bubble.style.bottom = bubbleBottom + 'px';
+    bubble.classList.remove('show');
+    void bubble.offsetWidth;
+    bubble.classList.add('show');
+  }
 }
 
 function closeFanMenu(){
@@ -5103,9 +5116,101 @@ function closeFanMenu(){
 }
 
 function evliyaAsk(){
-  playSfx('sfx-seyit');      // Seyit Onbaşı butonu sesi
+  playSfx('sfx-seyit');
   toggleEvliyaMenu(false);
-  showToast('⚔️ Seyit Onbaşı yakında aktif olacak!');
+  showSeyitComingSoon();
+}
+
+function showSeyitComingSoon(){
+  // Zaten varsa kaldır
+  const old = document.getElementById('seyit-coming-soon');
+  if(old) old.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'seyit-coming-soon';
+  overlay.style.cssText = `
+    position:fixed;inset:0;z-index:1800;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(10,3,5,0.82);
+    padding:24px;
+    animation:fadeInOverlay 0.3s ease;
+  `;
+  overlay.innerHTML = `
+    <style>
+      @keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
+      @keyframes comingSoonPop{0%{opacity:0;transform:scale(0.8) translateY(20px);}60%{transform:scale(1.03) translateY(-3px);}100%{opacity:1;transform:scale(1) translateY(0);}}
+      @keyframes seyitGlow{0%,100%{text-shadow:0 0 10px rgba(201,168,76,0.4);}50%{text-shadow:0 0 24px rgba(201,168,76,0.9),0 0 40px rgba(201,168,76,0.4);}}
+      @keyframes seyitImgFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+    </style>
+    <div style="
+      background:linear-gradient(160deg,#1A0A0D 0%,#2d0e18 60%,#1A0A0D 100%);
+      border:1.5px solid rgba(201,168,76,0.35);
+      border-radius:24px;
+      padding:32px 28px 28px;
+      max-width:320px;width:100%;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(201,168,76,0.1);
+      animation:comingSoonPop 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      position:relative;
+      overflow:hidden;
+    ">
+      <!-- Dekoratif çizgiler -->
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.6),transparent);"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
+      <!-- Seyit görseli -->
+      <div style="margin-bottom:16px;animation:seyitImgFloat 2.5s ease-in-out infinite;">
+        <img src="img/seyitonbasiai.png" alt="Seyit Onbaşı"
+          style="width:80px;height:auto;object-fit:contain;
+          filter:drop-shadow(0 4px 14px rgba(0,0,0,0.8)) drop-shadow(0 0 10px rgba(201,168,76,0.5));">
+      </div>
+      <!-- Başlık -->
+      <div style="
+        font-family:'Cinzel',serif;
+        font-size:15px;font-weight:700;
+        color:var(--gold-light,#E8C96A);
+        letter-spacing:0.08em;
+        line-height:1.4;
+        margin-bottom:10px;
+        animation:seyitGlow 2.5s ease-in-out infinite;
+      ">Seyit Onbaşı<br>Tur Rehberi</div>
+      <!-- Rozet -->
+      <div style="
+        display:inline-flex;align-items:center;gap:6px;
+        background:rgba(192,21,43,0.18);
+        border:1px solid rgba(192,21,43,0.4);
+        border-radius:50px;
+        padding:5px 14px;
+        margin-bottom:14px;
+      ">
+        <span style="font-size:12px;">⚔️</span>
+        <span style="font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:0.12em;color:rgba(255,255,255,0.85);text-transform:uppercase;">Çok Yakında Aktif Olacak</span>
+      </div>
+      <!-- Açıklama -->
+      <div style="
+        color:rgba(255,255,255,0.55);
+        font-size:13px;
+        line-height:1.7;
+        font-style:italic;
+        margin-bottom:22px;
+        border-top:1px solid rgba(201,168,76,0.15);
+        padding-top:14px;
+      ">Yapay zeka destekli Seyit Onbaşı rehberi<br>yakında bu alanda sizlerle olacak.</div>
+      <!-- Kapat butonu -->
+      <button onclick="document.getElementById('seyit-coming-soon').remove()" style="
+        background:radial-gradient(circle at 36% 28%,#e8404a 0%,#C0152B 30%,#7a0810 60%,#2a0006 100%);
+        color:white;border:none;
+        padding:12px 32px;border-radius:50px;
+        font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.1em;
+        cursor:pointer;
+        box-shadow:0 6px 20px rgba(192,21,43,0.6),inset 0 2px 5px rgba(255,140,120,0.25),inset 0 -3px 6px rgba(0,0,0,0.5);
+        touch-action:manipulation;
+      ">TAMAM ⚔️</button>
+    </div>
+  `;
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) overlay.remove();
+  });
+  document.body.appendChild(overlay);
 }
 
 function evliya112(){
