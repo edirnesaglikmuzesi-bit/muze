@@ -310,8 +310,8 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 
 /* ======= PERMISSION ======= */
 #s-perm{background:var(--text-dark);align-items:center;justify-content:flex-start;padding:0;text-align:center;overflow:hidden;}
-.perm-ribbon{position:absolute;top:0;left:0;right:0;}
-.perm-top{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;padding:32px 28px 16px;width:100%;}
+.perm-ribbon{position:absolute;top:0;left:0;right:0;z-index:2;}
+.perm-top{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;padding:32px 28px 16px;width:100%;position:relative;z-index:2;}
 .radar{width:110px;height:110px;position:relative;margin-bottom:0;}
 .radar-ring{position:absolute;border-radius:50%;border:1px solid rgba(192,21,43,0.4);animation:radarExpand 2s ease-out infinite;}
 .radar-ring:nth-child(1){inset:0;animation-delay:0s;}
@@ -378,7 +378,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 /* Merkezi onay alanı */
 .perm-center-accept{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:20px 24px;gap:20px;
+  padding:20px 24px;gap:20px;position:relative;z-index:2;
 }
 .perm-accept-card{
   width:100%;max-width:360px;
@@ -416,6 +416,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   display:flex;
   flex-direction:column;
   gap:10px;
+  position:relative;z-index:2;
 }
 .perm-accept-row{display:none;}
 .perm-accept-label{color:rgba(255,255,255,0.7);font-size:12.5px;line-height:1.5;flex:1;}
@@ -480,7 +481,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   width:44px;height:48px;
   background:radial-gradient(circle at 36% 28%, rgba(255,255,255,0.92) 0%, rgba(240,234,226,0.85) 40%, rgba(220,210,195,0.75) 75%, rgba(180,165,140,0.60) 100%);
   border:1.5px solid var(--border);
-  border-radius:var(--r);font-size:18px;cursor:pointer;
+  border-radius:var(--r);cursor:pointer;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
   transition:all 0.2s;color:var(--text-dark);
   box-shadow:0 3px 10px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.75), inset 0 -2px 4px rgba(0,0,0,0.12);
@@ -819,7 +820,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .stop-desc .bold-highlight{font-weight:700;color:var(--text-dark);}
 .stop-info-box .stop-info-text{text-align:justify;font-weight:600;color:var(--red-dark);font-size:14px;line-height:1.6;}
 .stop-footer{background:var(--white);border-top:1px solid var(--border);padding:14px 16px;display:flex;gap:10px;flex-shrink:0;}
-.btn-back-nav{width:48px;height:48px;background:radial-gradient(circle at 36% 28%, rgba(255,255,255,0.92) 0%, rgba(240,234,226,0.85) 40%, rgba(220,210,195,0.75) 75%, rgba(180,165,140,0.60) 100%);border:1.5px solid var(--border);border-radius:var(--r);font-size:20px;cursor:pointer;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.75), inset 0 -2px 4px rgba(0,0,0,0.12);}
+.btn-back-nav{width:48px;height:48px;background:radial-gradient(circle at 36% 28%, rgba(255,255,255,0.92) 0%, rgba(240,234,226,0.85) 40%, rgba(220,210,195,0.75) 75%, rgba(180,165,140,0.60) 100%);border:1.5px solid var(--border);border-radius:var(--r);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-dark);box-shadow:0 3px 10px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.75), inset 0 -2px 4px rgba(0,0,0,0.12);}
 .btn-complete{flex:1;height:48px;background:radial-gradient(circle at 36% 28%, #4caf50 0%, #2e7d32 30%, #1b5e20 60%, #0a2e0e 85%, #030f05 100%);color:white;border:none;border-radius:var(--r);font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.08em;cursor:pointer;box-shadow:0 8px 28px rgba(46,125,50,0.65), 0 3px 10px rgba(0,0,0,0.5), inset 0 3px 7px rgba(160,255,160,0.20), inset 0 -4px 8px rgba(0,0,0,0.60);}
 
 /* AUDIO PLAYER */
@@ -888,7 +889,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .btn-clear-history{margin-top:12px;width:100%;padding:12px;background:radial-gradient(circle at 36% 28%, rgba(224,50,60,0.18) 0%, rgba(192,21,43,0.10) 40%, rgba(100,0,10,0.06) 75%, transparent 100%);border:1.5px solid rgba(192,21,43,0.45);border-radius:var(--r);color:var(--red);font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.08em;cursor:pointer;box-shadow:inset 0 1px 3px rgba(255,120,100,0.12), inset 0 -2px 4px rgba(0,0,0,0.12);}
 
 /* ======= CONFIRM ======= */
-#confirm-modal{position:fixed;inset:0;z-index:500;background:rgba(26,10,13,0.8);display:none;align-items:center;justify-content:center;padding:24px;}
+#confirm-modal{position:fixed;inset:0;z-index:2100;background:rgba(26,10,13,0.8);display:none;align-items:center;justify-content:center;padding:24px;}
 #confirm-modal.open{display:flex;}
 .confirm-card{background:var(--cream);border-radius:var(--r);padding:28px 24px;width:100%;max-width:300px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:floatUp 0.2s ease;}
 .confirm-icon{font-size:40px;margin-bottom:12px;}
@@ -980,6 +981,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   top:50%;left:50%;
   width:0;height:0;
   pointer-events:none;
+  overflow:visible;
 }
 .seyitonbasi-menu-item{
   position:absolute;
@@ -1012,15 +1014,15 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   border:none !important;
   box-shadow:none !important;
   padding:0;
-  width:70px !important;
-  height:148px !important;
-  border-radius:0 !important;
+  width:58px !important;
+  height:58px !important;
+  border-radius:50% !important;
   overflow:visible !important;
 }
 /* Konuşma balonu */
 .seyit-bubble{
   position:absolute;
-  bottom:calc(100% + 10px);
+  bottom:calc(116px + 8px);
   left:50%;
   transform:translateX(-50%) scale(0.6);
   transform-origin:bottom center;
@@ -1037,7 +1039,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   box-shadow:0 4px 16px rgba(0,0,0,0.35), 0 0 8px rgba(201,168,76,0.3);
   opacity:0;
   pointer-events:none;
-  z-index:10;
+  z-index:9999;
 }
 /* Balonu kuyruk üçgeni */
 .seyit-bubble::after{
@@ -1534,6 +1536,10 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 </style>
 </head>
 <body>
+<!-- Tek paylaşılan arka plan videosu — JS ile intro/perm içine taşınır -->
+<div id="bg-video-wrap" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
+  <video id="bg-video-shared" autoplay muted loop playsinline src="img/intro.mp4" style="width:100%;height:100%;object-fit:cover;opacity:0.55;"></video>
+</div>
 
 <!-- BACKGROUND MUSIC (muted autoplay trick) -->
 <audio id="bg-music-el" src="audio/intro.mp3" loop muted playsinline preload="auto"></audio>
@@ -1552,29 +1558,56 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 <div id="gps-badge"><div class="gps-dot"></div><span id="gps-badge-text">GPS</span><span class="gps-live-label" id="gps-live-label">CANLI</span></div>
 
 <div id="loading">
-  <div class="loading-year" id="loading-year">1915</div>
-  <div class="loading-label">Tarihten Günümüze</div>
-  <div class="loading-progress"><div class="loading-progress-fill" id="lpfill"></div></div>
-  <div class="loading-dots">
+  <img src="img/seyitonbasiai.png" alt="" draggable="false" style="
+    position:absolute;
+    bottom:0; left:50%;
+    transform:translateX(-50%);
+    height:80vh;
+    width:auto;
+    object-fit:contain;
+    opacity:0.07;
+    pointer-events:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    filter:grayscale(1) brightness(0.85);
+    z-index:0;
+  ">
+  <div class="loading-year" id="loading-year" style="position:relative;z-index:1;">1915</div>
+  <div class="loading-label" style="position:relative;z-index:1;">Tarihten Günümüze</div>
+  <div class="loading-progress" style="position:relative;z-index:1;"><div class="loading-progress-fill" id="lpfill"></div></div>
+  <div class="loading-dots" style="position:relative;z-index:1;">
     <div class="loading-dot"></div>
     <div class="loading-dot"></div>
     <div class="loading-dot"></div>
   </div>
-  <div class="loading-dur-yolcu">Dur Yolcu!</div>
-  <div class="loading-gecilmez">Çanakkale Geçilmez!</div>
-  <div class="loading-verse">
+  <div class="loading-dur-yolcu" style="position:relative;z-index:1;">Dur Yolcu!</div>
+  <div class="loading-gecilmez" style="position:relative;z-index:1;">Çanakkale Geçilmez!</div>
+  <div class="loading-verse" style="position:relative;z-index:1;">
     "Bilmeden Gelip Bastığın Bu Toprak,<br>Bir Devrin Battığı Yerdir."
   </div>
 </div>
 
 <!-- INTRO -->
 <div id="s-intro" class="screen">
-  <div class="intro-video-wrap">
-    <video id="intro-video" autoplay muted loop playsinline src="img/intro.mp4"></video>
-  </div>
+  <div id="intro-video-slot"></div>
   <div class="intro-overlay"></div>
   <div class="ribbon intro-rib"></div>
   <div class="ribbon intro-rib2"></div>
+  <!-- Filigran -->
+  <img src="img/seyitonbasiai.png" alt="" draggable="false" style="
+    position:absolute;
+    bottom:0; left:50%;
+    transform:translateX(-50%);
+    height:80vh;
+    width:auto;
+    object-fit:contain;
+    opacity:0.07;
+    pointer-events:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    filter:grayscale(1) sepia(1) hue-rotate(320deg) saturate(3) brightness(0.6);
+    z-index:1;
+  ">
   <div class="intro-content">
     <img class="intro-logo" src="img/logo.svg" alt="Logo"
       onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex';">
@@ -1637,6 +1670,23 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 
 <!-- PERMISSION -->
 <div id="s-perm" class="screen">
+  <div id="perm-video-slot"></div>
+  <div class="intro-overlay" style="z-index:0;"></div>
+  <!-- Filigran -->
+  <img src="img/seyitonbasiai.png" alt="" draggable="false" style="
+    position:absolute;
+    bottom:0; left:50%;
+    transform:translateX(-50%);
+    height:80vh;
+    width:auto;
+    object-fit:contain;
+    opacity:0.07;
+    pointer-events:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    filter:grayscale(1) sepia(1) hue-rotate(320deg) saturate(3) brightness(0.6);
+    z-index:1;
+  ">
   <div class="ribbon perm-ribbon"></div>
 
   <!-- ÜSTTE: İkon + Başlık + Açıklama -->
@@ -1783,7 +1833,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     </div>
   </div>
   <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:var(--cream);border-top:1px solid var(--border);display:flex;justify-content:flex-end;z-index:10;">
-    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri">←</button>
+    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </div>
 
@@ -1800,7 +1850,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   <div class="preset-footer" id="preset-footer">
     <div id="preset-day-btns" style="display:flex;flex-direction:column;gap:7px;width:100%;"></div>
     <div style="display:flex;justify-content:flex-end;margin-top:4px;">
-      <button class="footer-back-btn" onclick="showScreen('s-preset-chooser')" title="Geri">←</button>
+      <button class="footer-back-btn" onclick="showScreen('s-preset-chooser')" title="Geri"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     </div>
   </div>
 </div>
@@ -1825,7 +1875,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
       <button class="btn-build-route" id="btn-build-route" onclick="buildMapSelectRoute()" disabled style="flex:1;">
         🧭 ROTA OLUŞTUR
       </button>
-      <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri" style="flex-shrink:0;">←</button>
+      <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Geri" style="flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     </div>
   </div>
 </div>
@@ -1841,10 +1891,10 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   </div>
   <div class="list-scroll" id="place-list"></div>
   <div class="list-footer">
-    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Ana Sayfa">←</button>
     <button class="btn-history" onclick="openHistory()" title="Geçmiş">📋</button>
     <button class="btn-mapall" onclick="mapFromScreen='s-list';openMapAll()">🗺️ HARİTA</button>
     <button class="btn-start" id="btn-start" onclick="startTour()" disabled>TURU BAŞLAT</button>
+    <button class="footer-back-btn" onclick="showScreen('s-mode-chooser')" title="Ana Sayfa"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </div>
 
@@ -1860,7 +1910,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   <div id="leaflet-map"></div>
   <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px 14px;background:var(--cream);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:10;">
     <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--text-light);letter-spacing:0.05em;">Harita Görünümü</span>
-    <button class="footer-back-btn" onclick="goBackFromMap()" title="Geri">←</button>
+    <button class="footer-back-btn" onclick="goBackFromMap()" title="Geri"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </div>
 
@@ -1887,7 +1937,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
         <span>🧭</span>
         <span>TURU BAŞLAT</span>
       </button>
-      <button class="footer-back-btn" onclick="showScreen(routePrevScreen||'s-list')" title="Geri">←</button>
+      <button class="footer-back-btn" onclick="showScreen(routePrevScreen||'s-list')" title="Geri"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     </div>
   </div>
 </div>
@@ -1933,7 +1983,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
         <span id="btn-end">Turu Bitir</span>
       </button>
       <button class="nav-btn nav-btn-back-right" onclick="showConfirm('←','Geri Dön','Giriş sayfasına dönmek istediğinize emin misiniz? Tur duraklanacak.',()=>showScreen(routePrevScreen||'s-mode-chooser'))">
-        <span class="nb-icon">←</span>
+        <span class="nb-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
         <span>Geri</span>
       </button>
     </div>
@@ -1993,7 +2043,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   </div>
   <div class="stop-footer">
     <button class="btn-complete" onclick="completeStop()" id="btn-complete">DURAĞI TAMAMLA</button>
-    <button class="btn-back-nav" onclick="backToNav()">←</button>
+    <button class="btn-back-nav" onclick="backToNav()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </div>
 
@@ -2022,7 +2072,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   </div>
   <div class="sanaltur-actions">
     <button class="sanaltur-ext-btn" onclick="openSanalTurExternal()">🗺️ Google Maps'te Aç</button>
-    <button class="btn-back-nav" onclick="closeSanalTur()">←</button>
+    <button class="btn-back-nav" onclick="closeSanalTur()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </div>
 
@@ -2035,7 +2085,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <button class="gallery-btn" onclick="galleryNext()">›</button>
   </div>
   <div class="gallery-footer">
-    <button class="btn-back-nav" onclick="closeGallery()">←</button>
+    <button class="btn-back-nav" onclick="closeGallery()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </div>
 
@@ -2048,7 +2098,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <button class="video-ext-btn" onclick="openVideoExternal()">▶ YouTube'da Ara</button>
   </div>
   <div class="video-footer">
-    <button class="btn-back-nav" onclick="closeVideo()">←</button>
+    <button class="btn-back-nav" onclick="closeVideo()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 </div>
 
@@ -2112,7 +2162,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     </button>
     <button class="seyitonbasi-menu-item em-ask-img" id="em-ask" onclick="evliyaAsk()">
       <div class="seyit-bubble" id="seyit-bubble"><span class="bubble-text">Bana Sor ✨</span></div>
-      <img src="img/seyitonbasiai.png" alt="Seyit Onbaşı" draggable="false" style="width:70px;height:148px;object-fit:contain;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7)) drop-shadow(0 0 5px rgba(201,168,76,0.4));">
+      <img src="img/seyitonbasiai.png" alt="Seyit Onbaşı" draggable="false" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:58px;height:116px;object-fit:contain;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7)) drop-shadow(0 0 5px rgba(201,168,76,0.4));">
     </button>
   </div>
   <button id="seyit-btn" title="Seyit Onbaşı">
@@ -2835,6 +2885,25 @@ function showScreen(id){
   // Geçiş animasyonu bittikten sonra pointer-events'i aç
   setTimeout(()=>{ target.style.pointerEvents=''; }, 420);
 
+  // Paylaşılan arka plan videosu — aktif ekranın slotuna taşı
+  const bgWrap = document.getElementById('bg-video-wrap');
+  if(bgWrap){
+    const slot = document.getElementById(
+      id==='s-intro' ? 'intro-video-slot' :
+      id==='s-perm'  ? 'perm-video-slot'  : null
+    );
+    if(slot){
+      slot.appendChild(bgWrap);
+      const v = document.getElementById('bg-video-shared');
+      if(v && v.paused) v.play().catch(()=>{});
+    } else {
+      // Diğer ekranlarda body'e gizle
+      document.body.appendChild(bgWrap);
+      bgWrap.style.display = 'none';
+    }
+    bgWrap.style.display = slot ? '' : 'none';
+  }
+
   // Mode chooser butonlarını her açılışta yeniden canlandır
   if(id==='s-mode-chooser'){
     document.querySelectorAll('.btn-mode').forEach((btn,i)=>{
@@ -2884,6 +2953,9 @@ window.addEventListener('load',()=>{
   loadVisited();
   createParticles();
   buildMenu();
+  // Video wrap başlangıçta gizli — showScreen ile intro'ya taşınacak
+  const bgWrap = document.getElementById('bg-video-wrap');
+  if(bgWrap) bgWrap.style.display='none';
   // GPS burada BAŞLATILMIYOR — dil seçimi → izin ekranı → "İzin Ver" butonundan başlatılır
   setTimeout(()=>startLoadingAnim(),300);
 });
@@ -3466,7 +3538,14 @@ function syncPresetGroupsFromDOM(scroll) {
   presetGroups.forEach(g => g.items.forEach(it => presetRoute.push(it)));
 }
 
+let _presetDragAbort = null;
+
 function initPresetDrag(scroll) {
+  // Önceki listener'ları temizle
+  if (_presetDragAbort) _presetDragAbort.abort();
+  _presetDragAbort = new AbortController();
+  const sig = { signal: _presetDragAbort.signal };
+
   let dragEl = null;
   let startX = 0, startY = 0;
   let ghost = null;
@@ -3585,12 +3664,12 @@ function initPresetDrag(scroll) {
     lastOver = null; dragEl = null;
   }
 
-  scroll.addEventListener('touchstart', e => onDown(e), { passive: true });
-  scroll.addEventListener('touchmove',  e => onMove(e), { passive: false });
-  scroll.addEventListener('touchend',   () => onUp());
-  scroll.addEventListener('mousedown',  e => onDown(e));
-  window.addEventListener('mousemove',  e => { if (pressing) onMove(e); });
-  window.addEventListener('mouseup',    () => onUp());
+  scroll.addEventListener('touchstart', e => onDown(e), { passive: true, ...sig });
+  scroll.addEventListener('touchmove',  e => onMove(e), { passive: false, ...sig });
+  scroll.addEventListener('touchend',   () => onUp(), sig);
+  scroll.addEventListener('mousedown',  e => onDown(e), sig);
+  window.addEventListener('mousemove',  e => { if (pressing) onMove(e); }, sig);
+  window.addEventListener('mouseup',    () => onUp(), sig);
 }
 
 function startPresetDayTour(gi) {
@@ -4085,6 +4164,17 @@ function openRouteSort(){
 }
 function closeRouteSort(){
   document.getElementById('route-sort-overlay').classList.remove('open');
+}
+function clearRouteSort(){
+  showConfirm('🗑️','Rotayı Temizle','Tüm seçili yerler ve rota sıfırlansın mı?', ()=>{
+    selectedIds.clear();
+    tourRoute=[];
+    currentStopIndex=0;
+    buildList();
+    closeRouteSort();
+    showScreen('s-list');
+    showToast('Rota temizlendi 🗑️');
+  });
 }
 function resetRouteSort(){
   const selected=sortedPlaces.filter(p=>selectedIds.has(p.id) && !p.isCrossingStop);
@@ -5410,7 +5500,7 @@ function showExitScreen(){
           display:flex;align-items:center;justify-content:center;
           box-shadow:0 3px 10px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.75), inset 0 -2px 4px rgba(0,0,0,0.12);
         ">
-          ←
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
       </div>
     </div>
@@ -5464,6 +5554,7 @@ function showExitScreen(){
   <div class="rsort-card">
     <div class="rsort-header">
       <div class="rsort-title">🗺️ Rota Sıralaması</div>
+      <button class="rsort-close" onclick="clearRouteSort()" title="Rotayı Temizle" style="background:radial-gradient(circle at 36% 28%,#e8404a 0%,#C0152B 30%,#7a0810 60%,#2a0006 100%);box-shadow:0 4px 14px rgba(192,21,43,0.5),inset 0 2px 5px rgba(255,140,120,0.25),inset 0 -3px 6px rgba(0,0,0,0.5);margin-right:6px;width:auto;padding:0 12px;font-size:11px;letter-spacing:0.05em;">🗑️ ROTAYI TEMİZLE</button>
       <button class="rsort-close" onclick="closeRouteSort()">✕</button>
     </div>
     <div class="rsort-hint">☰ Çizgili tutamaçtan sürükleyerek sırayı değiştirin</div>
