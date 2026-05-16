@@ -458,6 +458,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   animation:staggerIn 0.4s ease both;
 }
 .place-item.visited{border-color:#4CAF50;background:#f0fff4;}
+.place-item.anatolian-highlight{border-left:3px solid #C9A84C;background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(255,255,255,1));}
 .place-info-btn{width:38px;height:38px;flex-shrink:0;background:var(--red-pale);border:none;border-radius:8px;color:var(--red);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;font-weight:700;}
 .place-info-btn:active{background:var(--border);}
 .place-text{flex:1;min-width:0;}
@@ -909,18 +910,18 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 #seyit-btn{
   position:relative;
   width:58px;height:58px;
-  background:radial-gradient(circle at 36% 28%, #c8a84e 0%, #7a4e0e 38%, #3a1e02 68%, #1a0a00 100%);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  border:1.5px solid rgba(201,168,76,0.55);
-  border-radius:50%;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  box-shadow:0 8px 28px rgba(0,0,0,0.75), 0 3px 10px rgba(0,0,0,0.5), inset 0 3px 6px rgba(255,220,100,0.28), inset 0 -3px 6px rgba(0,0,0,0.6);
+  background:none;
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:none;
+  padding:0;
   transition:transform 0.15s, opacity 0.3s;
   user-select:none;
   touch-action:none;
 }
-/* Outer pulse rings */
+/* Outer pulse rings — resmin etrafında parlama */
 #seyit-btn::before{
   content:'';
   position:absolute;inset:-8px;border-radius:50%;
@@ -936,15 +937,19 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   pointer-events:none;
 }
 #seyit-btn:active{transform:scale(0.88);opacity:0.85;}
-#seyit-btn .seyit-icon{font-size:20px;line-height:1;display:block;}
-#seyit-btn .seyit-txt{display:flex;flex-direction:column;align-items:center;line-height:1.15;}
-#seyit-btn .seyit-txt span:first-child{
-  font-family:'Cinzel',serif;font-size:5.5px;letter-spacing:0.04em;
-  color:rgba(255,255,255,0.65);text-transform:uppercase;
+/* Resmin kendisi buton */
+#seyit-btn img{
+  width:58px;height:58px;
+  object-fit:contain;
+  display:block;
+  pointer-events:none;
+  user-select:none;-webkit-user-select:none;
+  -webkit-user-drag:none;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,0.7)) drop-shadow(0 0 6px rgba(201,168,76,0.35));
+  transition:filter 0.2s, transform 0.15s;
 }
-#seyit-btn .seyit-txt span:last-child{
-  font-family:'Cinzel',serif;font-size:6px;font-weight:700;letter-spacing:0.05em;
-  color:rgba(255,255,255,0.9);text-transform:uppercase;
+#seyit-btn.menu-open img{
+  filter:drop-shadow(0 0 12px rgba(255,200,80,0.9)) drop-shadow(0 4px 10px rgba(0,0,0,0.7));
 }
 /* Dragging state */
 #seyit-btn.dragging{opacity:0.75;transform:scale(1.08);transition:opacity 0.1s;}
@@ -1001,6 +1006,150 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   box-shadow:0 8px 28px rgba(192,21,43,0.65), 0 3px 8px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,160,120,0.22), inset 0 -3px 6px rgba(0,0,0,0.55);
 }
 .seyitonbasi-menu-item.em-emergency .em-label{color:rgba(255,210,200,0.95);}
+/* Seyit Onbaşı menü butonu — sadece png görsel */
+.seyitonbasi-menu-item.em-ask-img{
+  background:none !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0;
+  width:70px !important;
+  height:148px !important;
+  border-radius:0 !important;
+  overflow:visible !important;
+}
+/* Konuşma balonu */
+.seyit-bubble{
+  position:absolute;
+  bottom:calc(100% + 10px);
+  left:50%;
+  transform:translateX(-50%) scale(0.6);
+  transform-origin:bottom center;
+  background:linear-gradient(135deg,#fffde7,#fff8c5);
+  border:1.5px solid rgba(201,168,76,0.7);
+  border-radius:14px;
+  padding:7px 13px;
+  white-space:nowrap;
+  font-family:'Cinzel',serif;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  color:#5a3a00;
+  box-shadow:0 4px 16px rgba(0,0,0,0.35), 0 0 8px rgba(201,168,76,0.3);
+  opacity:0;
+  pointer-events:none;
+  z-index:10;
+}
+/* Balonu kuyruk üçgeni */
+.seyit-bubble::after{
+  content:'';
+  position:absolute;
+  top:100%;left:50%;
+  transform:translateX(-50%);
+  border:7px solid transparent;
+  border-top-color:#fff8c5;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+}
+.seyit-bubble::before{
+  content:'';
+  position:absolute;
+  top:100%;left:50%;
+  transform:translateX(-50%);
+  border:8px solid transparent;
+  border-top-color:rgba(201,168,76,0.7);
+  margin-top:1px;
+}
+/* Yazı animasyonu */
+@keyframes bubblePop{
+  0%{opacity:0;transform:translateX(-50%) scale(0.5);}
+  60%{transform:translateX(-50%) scale(1.08);}
+  100%{opacity:1;transform:translateX(-50%) scale(1);}
+}
+@keyframes bubbleTextBlink{
+  0%,100%{opacity:1;}
+  50%{opacity:0.5;}
+}
+@keyframes bubbleFloat{
+  0%,100%{transform:translateX(-50%) translateY(0) scale(1);}
+  50%{transform:translateX(-50%) translateY(-4px) scale(1);}
+}
+.seyit-bubble.show{
+  animation:bubblePop 0.4s 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards,
+            bubbleFloat 2.2s 0.65s ease-in-out infinite;
+}
+.seyit-bubble .bubble-text{
+  display:inline-block;
+  animation:none;
+}
+.seyit-bubble.show .bubble-text{
+  animation:bubbleTextBlink 2s 0.65s ease-in-out infinite;
+}
+
+/* ======= ANADOLU YAKASI GEÇİŞ SEÇİM POPUP ======= */
+#crossing-overlay{
+  position:fixed;inset:0;z-index:1400;
+  background:rgba(10,3,5,0.88);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;
+}
+#crossing-overlay.open{display:flex;}
+.crossing-card{
+  background:linear-gradient(160deg,#1A0A0D,#2d0e18);
+  border-radius:20px;
+  width:100%;max-width:400px;
+  border:1.5px solid rgba(192,21,43,0.4);
+  box-shadow:0 24px 60px rgba(0,0,0,0.6), 0 0 40px rgba(192,21,43,0.12);
+  animation:floatUp 0.32s cubic-bezier(0.25,0.46,0.45,0.94);
+  overflow:hidden;
+}
+.crossing-header{
+  background:linear-gradient(135deg,#8B0E1E,#C0152B);
+  padding:16px 18px 14px;
+  text-align:center;
+}
+.crossing-header-icon{font-size:28px;margin-bottom:6px;}
+.crossing-header-title{
+  font-family:'Cinzel',serif;color:white;
+  font-size:14px;font-weight:700;letter-spacing:0.06em;
+  line-height:1.4;
+}
+.crossing-header-sub{
+  color:rgba(255,255,255,0.75);font-size:11px;
+  margin-top:5px;line-height:1.5;font-style:italic;
+}
+.crossing-body{padding:14px 14px 18px;}
+.crossing-body-label{
+  font-family:'Cinzel',serif;color:rgba(255,255,255,0.5);
+  font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  text-align:center;margin-bottom:10px;
+}
+.crossing-btn{
+  width:100%;margin-bottom:8px;
+  padding:13px 14px;
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(201,168,76,0.2);
+  border-radius:12px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  transition:all 0.18s;
+  touch-action:manipulation;
+}
+.crossing-btn:active,.crossing-btn.sel{
+  background:rgba(192,21,43,0.2);
+  border-color:rgba(192,21,43,0.7);
+}
+.crossing-btn-icon{
+  font-size:22px;flex-shrink:0;width:32px;text-align:center;
+}
+.crossing-btn-info{flex:1;text-align:left;}
+.crossing-btn-name{
+  font-family:'Cinzel',serif;color:rgba(255,255,255,0.9);
+  font-size:12px;font-weight:700;letter-spacing:0.04em;
+  line-height:1.3;
+}
+.crossing-btn-coord{
+  color:rgba(255,255,255,0.38);font-size:9px;
+  margin-top:2px;letter-spacing:0.02em;
+}
+.crossing-btn:last-child{margin-bottom:0;}
 
 /* ======= WEATHER POPUP ======= */
 #weather-overlay{
@@ -1548,28 +1697,28 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   <div class="mode-divider"></div>
   <div class="mode-subtitle">Gezinizi nasıl planlamak istersiniz?</div>
   <div class="mode-buttons">
-    <button class="btn-mode primary" onclick="showScreen('s-preset-chooser')">
+    <button class="btn-mode primary" onclick="requireCrossingThenGo(()=>showScreen('s-preset-chooser'))">
       <span class="mode-icon">🗓️</span>
       <div>
         <div class="mode-label">Hazır Rotalar</div>
         <div class="mode-desc">1, 2 veya 3 günlük hazır tur planları</div>
       </div>
     </button>
-    <button class="btn-mode secondary" onclick="showScreen('s-list')">
+    <button class="btn-mode secondary" onclick="requireCrossingThenGo(()=>showScreen('s-list'))">
       <span class="mode-icon">📍</span>
       <div>
         <div class="mode-label">Konuma Göre Rota</div>
         <div class="mode-desc">Tüm yerler — size en yakından başlar</div>
       </div>
     </button>
-    <button class="btn-mode secondary" onclick="openMapFromHome()">
+    <button class="btn-mode secondary" onclick="requireCrossingThenGo(()=>openMapFromHome())">
       <span class="mode-icon">🗺️</span>
       <div>
         <div class="mode-label">Harita</div>
         <div class="mode-desc">Tüm ziyaret yerlerini haritada gör</div>
       </div>
     </button>
-    <button class="btn-mode secondary" onclick="openMapSelect()">
+    <button class="btn-mode secondary" onclick="requireCrossingThenGo(()=>openMapSelect())">
       <span class="mode-icon">✅</span>
       <div>
         <div class="mode-label">Haritadan Seç</div>
@@ -1956,17 +2105,13 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
       <span class="em-icon">📍</span>
       <span class="em-label">Yakın-<br>dakiler</span>
     </button>
-    <button class="seyitonbasi-menu-item" id="em-ask" onclick="evliyaAsk()">
-      <span class="em-icon">⚔️</span>
-      <span class="em-label">Seyit<br>Onbaşı</span>
+    <button class="seyitonbasi-menu-item em-ask-img" id="em-ask" onclick="evliyaAsk()">
+      <div class="seyit-bubble" id="seyit-bubble"><span class="bubble-text">Bana Sor ✨</span></div>
+      <img src="img/seyitonbasiai.png" alt="Seyit Onbaşı" draggable="false" style="width:70px;height:148px;object-fit:contain;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7)) drop-shadow(0 0 5px rgba(201,168,76,0.4));">
     </button>
   </div>
   <button id="seyit-btn" title="Seyit Onbaşı">
-    <span class="seyit-icon" id="evliya-main-icon">⚔️</span>
-    <div class="seyit-txt">
-      <span>SEYİT</span>
-      <span>ONBAŞI</span>
-    </div>
+    <img src="img/seyitonbasi.png" id="evliya-main-icon" alt="Seyit Onbaşı" draggable="false">
   </button>
 </div>
 
@@ -2129,6 +2274,14 @@ const PLACES = [
   {id:120,cat:"Şehitlikler ve Anıtlar",      name:"Kireçtepe Jandarma Anıtı, Şehitliği ve Kitabesi",      lat:40.347307,lng:26.295511},
   {id:121,cat:"Şehitlikler ve Anıtlar",      name:"Kanlıdere Şehitliği",                                   lat:40.087660,lng:26.238410}
 ];
+
+// ============================================================
+// ANADOLU YAKASI YERLERİ — bu ID'ler boğazın doğu yakasında
+// ============================================================
+const ANATOLIAN_PLACE_IDS = new Set([34, 35, 43]);
+// id:34 → Anadolu Hamidiye Tabyası Çanakkale Savaşları Müzesi
+// id:35 → Anadolu Hamidiye Tabyası
+// id:43 → 1915 Çanakkale Savaşları Araştırma Merkezi
 
 const PLACE_EXTRA = {
   9:  {visitTime:"45–60 dakika", highlight:"Gelibolu Yarımadası'nın en önemli simgesi. 42 metre yüksekliğiyle tüm şehitlerimizin anısına dikilmiş muhteşem anıt."},
@@ -2455,18 +2608,18 @@ function distKm(lat1,lon1,lat2,lon2){
 // Boğaz merkez hattı yaklaşık koordinatlar (G→K yönünde)
 // ============================================================
 const DARDANELLES_LINE = [
-  [40.043, 26.194],
-  [40.060, 26.198],
-  [40.078, 26.207],
-  [40.096, 26.226],
-  [40.118, 26.293],
-  [40.133, 26.391],
-  [40.149, 26.408],
-  [40.175, 26.414],
-  [40.210, 26.437],
-  [40.262, 26.485],
-  [40.336, 26.557],
-  [40.415, 26.662]
+  [40.043, 26.185],
+  [40.078, 26.200],
+  [40.096, 26.218],
+  [40.118, 26.270],
+  [40.133, 26.360],
+  [40.149, 26.393],
+  [40.175, 26.395],
+  [40.210, 26.420],
+  [40.262, 26.470],
+  [40.336, 26.540],
+  [40.380, 26.620],
+  [40.415, 26.716]
 ];
 
 // İki doğru parçasının kesişip kesişmediğini kontrol eder (cross-product yöntemi)
@@ -2496,48 +2649,176 @@ function distKmFerry(lat1, lon1, lat2, lon2) {
   return crossesDardanelles(lat1, lon1, lat2, lon2) ? base + FERRY_PENALTY_KM : base;
 }
 
+// Boğaz hattında verilen enleme karşılık gelen boylamı interpolasyonla hesapla
+function _dardanellesLngAtLat(lat) {
+  if (lat <= DARDANELLES_LINE[0][0]) return DARDANELLES_LINE[0][1];
+  if (lat >= DARDANELLES_LINE[DARDANELLES_LINE.length-1][0]) return DARDANELLES_LINE[DARDANELLES_LINE.length-1][1];
+  for (let i = 0; i < DARDANELLES_LINE.length-1; i++) {
+    const [lat1, lng1] = DARDANELLES_LINE[i];
+    const [lat2, lng2] = DARDANELLES_LINE[i+1];
+    if (lat >= lat1 && lat <= lat2) {
+      const t = (lat - lat1) / (lat2 - lat1);
+      return lng1 + t * (lng2 - lng1);
+    }
+  }
+  return DARDANELLES_LINE[DARDANELLES_LINE.length-1][1];
+}
+
 // Kullanıcının Anadolu yakasında mı olduğunu döndürür
+// Anadolu yakası = boğaz merkez hattının doğusunda (daha büyük boylam)
 function isOnAnatolianSide(lat, lng) {
   if (!lat || !lng) return false;
-  // Anadolu yakası: boğazın doğu yakası. Referans nokta olarak Çanakkale feribot iskelesi
-  // Basit test: Kilitbahir (Avrupa, 26.380) ile Çanakkale (Anadolu, 26.415) arası
-  // crossesDardanelles kullanarak —köşegen noktadan boğazın ötesine geçilip geçilmediğine bak
-  return crossesDardanelles(lat, lng, 40.05, 26.05);
+  return lng > _dardanellesLngAtLat(lat);
 }
 
 // ============================================================
-// GEÇİŞ NOKTALARI
-// Anadolu yakasından Avrupa yakasına geçiş için 2 seçenek:
-//   1. Çanakkale Feribotu  (güney/batı Anadolu)
-//   2. 1915 Çanakkale Köprüsü — Lapseki  (kuzey/doğu Anadolu)
+// GEÇİŞ NOKTALARI — 4 seçenek
 // ============================================================
-const CROSSING = {
-  ferry: {
-    label: 'Çanakkale Feribotu',
+const CROSSINGS = {
+  kilitbahir: {
+    id: 'kilitbahir',
+    label: 'Çanakkale-Kilitbahir Feribotu',
+    shortLabel: 'Kilitbahir Feribotu',
     emoji: '⛴️',
-    anatolian : { lat: 40.1520, lng: 26.4072 }, // Çanakkale feribot iskelesi
-    european  : { lat: 40.1475, lng: 26.3745 }  // Kilitbahir / Eceabat tarafı
+    icon: '⛴️',
+    anatolian : { lat: 40.1520, lng: 26.4072 }, // Çanakkale feribot iskelesi (Anadolu)
+    european  : { lat: 40.150427, lng: 26.378786 }, // Kilitbahir iskelesi (Avrupa)
+    europeanEntry: { lat: 40.150427, lng: 26.378786 },  // Kilitbahir feribot iskelesi
+    stopName: 'Kilitbahir Feribot İskelesi'
   },
-  bridge: {
-    label: '1915 Çanakkale Köprüsü',
+  eceabat: {
+    id: 'eceabat',
+    label: 'Çanakkale-Eceabat Feribotu',
+    shortLabel: 'Eceabat Feribotu',
+    emoji: '⛴️',
+    icon: '⛴️',
+    anatolian : { lat: 40.1520, lng: 26.4072 }, // Çanakkale feribot iskelesi (Anadolu)
+    european  : { lat: 40.184205, lng: 26.359746 }, // Eceabat feribot iskelesi (Avrupa)
+    europeanEntry: { lat: 40.184205, lng: 26.359746 },
+    stopName: 'Eceabat Feribot İskelesi'
+  },
+  gelibolu: {
+    id: 'gelibolu',
+    label: 'Lapseki-Gelibolu Feribotu',
+    shortLabel: 'Gelibolu Feribotu',
+    emoji: '⛴️',
+    icon: '⛴️',
+    anatolian : { lat: 40.3575, lng: 26.7620 }, // Lapseki feribot iskelesi (Anadolu)
+    european  : { lat: 40.405580, lng: 26.669994 }, // Gelibolu feribot iskelesi (Avrupa)
+    europeanEntry: { lat: 40.405580, lng: 26.669994 },
+    stopName: 'Gelibolu Feribot İskelesi'
+  },
+  kopru: {
+    id: 'kopru',
+    label: 'Çanakkale 18 Mart Köprüsü',
+    shortLabel: '18 Mart Köprüsü',
     emoji: '🌉',
-    anatolian : { lat: 40.3490, lng: 26.6920 }, // Lapseki köprü girişi
-    european  : { lat: 40.4130, lng: 26.6580 }  // Gelibolu köprü çıkışı
+    icon: '🌉',
+    anatolian : { lat: 40.3493, lng: 26.6680 }, // Köprü Anadolu girişi
+    european  : { lat: 40.349304, lng: 26.617674 }, // Köprü Avrupa çıkışı
+    europeanEntry: { lat: 40.349304, lng: 26.617674 },
+    stopName: 'Çanakkale Köprüsü (Avrupa Çıkışı)'
   }
 };
 
-/**
- * Kullanıcı Anadolu yakasındaysa hangi geçişi kullanacağını hesaplar.
- * @returns { type:'ferry'|'bridge', label, emoji, european:{lat,lng} }
- *          veya null (Avrupa yakasındaysa)
- */
-function resolveAnatolianCrossing(userLat, userLng) {
-  if (!isOnAnatolianSide(userLat, userLng)) return null;
-  const dFerry  = distKm(userLat, userLng, CROSSING.ferry.anatolian.lat,  CROSSING.ferry.anatolian.lng);
-  const dBridge = distKm(userLat, userLng, CROSSING.bridge.anatolian.lat, CROSSING.bridge.anatolian.lng);
+// Kullanıcının seçtiği geçiş (Anadolu yakasındaysa doldurulur)
+let selectedCrossing = null;
+
+// Geriye uyumluluk — eski CROSSING referanslarını korumak için
+const CROSSING = {
+  ferry:  { label:'Çanakkale Feribotu', emoji:'⛴️', anatolian:{lat:40.1520,lng:26.4072}, european:{lat:40.1475,lng:26.3745} },
+  bridge: { label:'1915 Çanakkale Köprüsü', emoji:'🌉', anatolian:{lat:40.3490,lng:26.6920}, european:{lat:40.4130,lng:26.6580} }
+};
+
+function resolveAnatolianCrossing(lat, lng) {
+  if (!isOnAnatolianSide(lat, lng)) return null;
+  // Kullanıcı seçtiyse onu döndür
+  if (selectedCrossing) {
+    return {
+      type: selectedCrossing.id,
+      label: selectedCrossing.shortLabel,
+      emoji: selectedCrossing.emoji,
+      european: selectedCrossing.europeanEntry,
+      stopName: selectedCrossing.stopName
+    };
+  }
+  // Seçim yapılmadıysa en yakın feribotu döndür (fallback)
+  const dFerry  = distKm(lat, lng, CROSSING.ferry.anatolian.lat,  CROSSING.ferry.anatolian.lng);
+  const dBridge = distKm(lat, lng, CROSSING.bridge.anatolian.lat, CROSSING.bridge.anatolian.lng);
   const c = dFerry <= dBridge ? CROSSING.ferry : CROSSING.bridge;
   return { type: dFerry <= dBridge ? 'ferry' : 'bridge', ...c };
 }
+// ============================================================
+// ANADOLU YAKASI GEÇİŞ SEÇİMİ
+// ============================================================
+let _pendingCrossingAction = null; // hangi ekrana gidileceği
+
+// Her buton tıklamasında Anadolu yakasındaysa MUTLAKA crossing seçtir
+// (önceki seçimi korur ama popup'ta değiştirme şansı verir)
+function requireCrossingThenGo(action) {
+  const sLat = userLat || 40.21, sLng = userLng || 26.30;
+  if (!isOnAnatolianSide(sLat, sLng)) {
+    // Avrupa yakası — direkt devam
+    action();
+    return;
+  }
+  // Anadolu yakası — her seferinde crossing popup aç
+  _pendingCrossingAction = action;
+  // Önceki seçimi görsel olarak işaretle (varsa)
+  document.querySelectorAll('.crossing-btn').forEach(b => {
+    b.classList.remove('sel');
+    if (selectedCrossing && b.getAttribute('onclick') && b.getAttribute('onclick').includes(selectedCrossing.id)) {
+      b.classList.add('sel');
+    }
+  });
+  document.getElementById('crossing-overlay').classList.add('open');
+}
+
+function checkAnatolianAndProceed(action) {
+  const sLat = userLat || 40.21, sLng = userLng || 26.30;
+  if (isOnAnatolianSide(sLat, sLng) && !selectedCrossing) {
+    _pendingCrossingAction = action;
+    document.querySelectorAll('.crossing-btn').forEach(b => b.classList.remove('sel'));
+    document.getElementById('crossing-overlay').classList.add('open');
+    return true;
+  }
+  return false;
+}
+
+function selectCrossing(id) {
+  selectedCrossing = CROSSINGS[id];
+  // Seçili butonu id'ye göre vurgula (event.currentTarget kullanma — setTimeout'ta geçersiz olur)
+  document.querySelectorAll('.crossing-btn').forEach(b => {
+    b.classList.remove('sel');
+    const oc = b.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1 || oc.indexOf('"' + id + '"') !== -1) {
+      b.classList.add('sel');
+    }
+  });
+  // pendingAction'ı hemen sakla, setTimeout içinde _pendingCrossingAction sıfırlanmış olabilir
+  const pendingAction = _pendingCrossingAction;
+  _pendingCrossingAction = null;
+  setTimeout(function() {
+    document.getElementById('crossing-overlay').classList.remove('open');
+    buildList();
+    if (pendingAction) pendingAction();
+  }, 320);
+}
+
+// Geçiş durağını sanal PLACE objesi olarak döndür
+function getCrossingStopPlace() {
+  if (!selectedCrossing) return null;
+  return {
+    id: 'crossing_stop',
+    name: selectedCrossing.stopName,
+    lat: selectedCrossing.europeanEntry.lat,
+    lng: selectedCrossing.europeanEntry.lng,
+    cat: 'Geçiş Noktası',
+    isCrossingStop: true,
+    emoji: selectedCrossing.emoji
+  };
+}
+
 function showScreen(id){
   // Önce tüm ekranları kapat
   document.querySelectorAll('.screen').forEach(s=>{
@@ -2629,10 +2910,9 @@ function initGPS(){
         appStarted=true;
         buildList();
         showScreen('s-mode-chooser');
-        // Anadolu yakası tespiti — hangi geçişi kullanacağını bildir
-        const _cr = resolveAnatolianCrossing(userLat, userLng);
-        if(_cr){
-          setTimeout(()=>showToast(`${_cr.emoji} Anadolu yakasındasınız — rota ${_cr.label} üzerinden planlandı`),1200);
+        // Anadolu yakası tespiti — geçiş seçilmemişse bildir (seçim rotaya girildiğinde sorulacak)
+        if(isOnAnatolianSide(userLat, userLng) && !selectedCrossing){
+          setTimeout(()=>showToast('🗺️ Anadolu yakasındasınız — rota oluşturma sırasında geçiş noktasını seçmeniz istenecek'),1200);
         }
       }
       // Keep user markers on open maps updated
@@ -2806,7 +3086,40 @@ function skipLocation(){
 // NEAREST-NEIGHBOR TOUR SORT
 // ============================================================
 function buildNearestNeighborRoute(selected, startLat, startLng){
-  // Greedy nearest-neighbor starting from user position
+  const sLat = userLat || 40.21, sLng = userLng || 26.30;
+  const crossingStop = getCrossingStopPlace();
+
+  if (crossingStop && isOnAnatolianSide(sLat, sLng) && selectedCrossing) {
+    // ── ANADOLU YAKASI MANTAĞI ──────────────────────────────────
+    // 1) Seçili yerler arasında Anadolu yakasındakileri ayır
+    const anatolianSel = selected.filter(p => ANATOLIAN_PLACE_IDS.has(p.id));
+    const europeanSel  = selected.filter(p => !ANATOLIAN_PLACE_IDS.has(p.id) && !p.isCrossingStop);
+
+    // 2) Anadolu yerlerini kullanıcıya gerçek mesafeye göre sırala (feribot cezası yok)
+    anatolianSel.sort((a, b) => distKm(sLat, sLng, a.lat, a.lng) - distKm(sLat, sLng, b.lat, b.lng));
+
+    // 3) Avrupa yerlerini geçiş çıkışından nearest-neighbor ile sırala
+    const effLat = selectedCrossing.europeanEntry.lat;
+    const effLng = selectedCrossing.europeanEntry.lng;
+    let remaining = [...europeanSel];
+    const europeanRoute = [];
+    let curLat = effLat, curLng = effLng;
+    while (remaining.length > 0) {
+      let bestIdx = 0, bestDist = Infinity;
+      remaining.forEach((p, i) => {
+        const d = distKm(curLat, curLng, p.lat, p.lng);
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+      });
+      const next = remaining.splice(bestIdx, 1)[0];
+      europeanRoute.push(next);
+      curLat = next.lat; curLng = next.lng;
+    }
+
+    // 4) Tam rota: Anadolu durağı(ları) → Geçiş → Avrupa durağı(ları)
+    return [...anatolianSel, crossingStop, ...europeanRoute];
+  }
+
+  // ── STANDART MANTIK (Avrupa yakası veya geçiş seçilmemiş) ──
   let remaining=[...selected];
   const route=[];
   let curLat=startLat, curLng=startLng;
@@ -2838,12 +3151,14 @@ let presetRoute = []; // flat array of {place, day} for the selected tour
 function buildPresetRoute(numDays) {
   const plan = TOUR_PLANS[numDays];
   if (!plan) return;
+  // Anadolu yakasındaysa ve geçiş seçilmediyse popup aç
+  if(checkAnatolianAndProceed(()=>buildPresetRoute(numDays))) return;
   const sLat = userLat || 40.21, sLng = userLng || 26.30;
 
   // Anadolu yakasındaysa sanal giriş noktasını belirle
-  const crossing = resolveAnatolianCrossing(sLat, sLng);
-  const effLat = crossing ? crossing.european.lat : sLat;
-  const effLng = crossing ? crossing.european.lng : sLng;
+  const isAnatolian = isOnAnatolianSide(sLat, sLng) && selectedCrossing;
+  const effLat = isAnatolian ? selectedCrossing.europeanEntry.lat : sLat;
+  const effLng = isAnatolian ? selectedCrossing.europeanEntry.lng : sLng;
 
   // 1. Collect all places across all days with their day index
   const allDayPlaces = [];
@@ -2854,64 +3169,116 @@ function buildPresetRoute(numDays) {
     });
   });
 
-  // 2. Find nearest place to effective entry point across entire plan
-  let nearestIdx = 0, nearestDist = Infinity;
-  allDayPlaces.forEach((item, i) => {
-    const d = distKmFerry(effLat, effLng, item.place.lat, item.place.lng);
-    if (d < nearestDist) { nearestDist = d; nearestIdx = i; }
-  });
-  const startDayIdx = allDayPlaces[nearestIdx].dayIdx;
-  const firstPlace = allDayPlaces[nearestIdx].place;
+  if (isAnatolian) {
+    // ── ANADOLU YAKASI PRESET MANTAĞI ────────────────────────
+    // Anadolu yerlerini önce sırala, sonra geçiş, sonra Avrupa
+    const anatolianItems = allDayPlaces.filter(it => ANATOLIAN_PLACE_IDS.has(it.place.id));
+    const europeanItems  = allDayPlaces.filter(it => !ANATOLIAN_PLACE_IDS.has(it.place.id));
 
-  // 3. Reorder days: startDay first, then the rest in original order
-  const dayOrder = [startDayIdx];
-  plan.days.forEach((_, i) => { if (i !== startDayIdx) dayOrder.push(i); });
+    // Anadolu yerlerini kullanıcı mesafesine göre sırala
+    anatolianItems.sort((a, b) =>
+      distKm(sLat, sLng, a.place.lat, a.place.lng) - distKm(sLat, sLng, b.place.lat, b.place.lng)
+    );
 
-  // 4. Build route day by day using nearest-neighbor within each day
-  presetRoute = [];
-  let prevLat = effLat, prevLng = effLng;
-
-  dayOrder.forEach(dayIdx => {
-    const day = plan.days[dayIdx];
-    const dayLabel = day.label;
-    // For startDay, ensure firstPlace comes first
-    let remaining = day.ids
-      .map(id => PLACES.find(x => x.id === id))
-      .filter(Boolean);
-
-    if (dayIdx === startDayIdx) {
-      // Remove firstPlace, it goes first
-      remaining = remaining.filter(p => p.id !== firstPlace.id);
-      // Nearest-neighbor from firstPlace
-      const chain = [{ place: firstPlace, dayIdx, dayLabel }];
-      prevLat = firstPlace.lat; prevLng = firstPlace.lng;
-      while (remaining.length > 0) {
-        let bI = 0, bD = Infinity;
-        remaining.forEach((p, i) => {
-          const d = distKmFerry(prevLat, prevLng, p.lat, p.lng);
-          if (d < bD) { bD = d; bI = i; }
-        });
-        const next = remaining.splice(bI, 1)[0];
-        chain.push({ place: next, dayIdx, dayLabel });
-        prevLat = next.lat; prevLng = next.lng;
-      }
-      presetRoute.push(...chain);
-    } else {
-      // Nearest-neighbor from last stop of previous day
-      while (remaining.length > 0) {
-        let bI = 0, bD = Infinity;
-        remaining.forEach((p, i) => {
-          const d = distKmFerry(prevLat, prevLng, p.lat, p.lng);
-          if (d < bD) { bD = d; bI = i; }
-        });
-        const next = remaining.splice(bI, 1)[0];
-        presetRoute.push({ place: next, dayIdx, dayLabel });
-        prevLat = next.lat; prevLng = next.lng;
-      }
+    // Avrupa yerlerini geçiş çıkışından nearest-neighbor
+    let remaining = [...europeanItems];
+    const europeanChain = [];
+    let curLat = effLat, curLng = effLng;
+    while (remaining.length > 0) {
+      let bI = 0, bD = Infinity;
+      remaining.forEach((it, i) => {
+        const d = distKm(curLat, curLng, it.place.lat, it.place.lng);
+        if (d < bD) { bD = d; bI = i; }
+      });
+      const next = remaining.splice(bI, 1)[0];
+      europeanChain.push(next);
+      curLat = next.place.lat; curLng = next.place.lng;
     }
-  });
 
-  // 5. Render
+    // dayLabel & dayIdx atama — Anadolu yerler için ilk günün label'ını kullan
+    const firstDayLabel = plan.days[0]?.label || 'Gün 1';
+    presetRoute = [
+      ...anatolianItems.map(it => ({ ...it, dayLabel: it.dayIdx !== undefined ? plan.days[it.dayIdx]?.label || firstDayLabel : firstDayLabel })),
+      ...europeanChain.map(it => ({ ...it, dayLabel: plan.days[it.dayIdx]?.label || firstDayLabel }))
+    ];
+
+    // Geçiş durağını Anadolu→Avrupa araya ekle
+    const crossingStop = getCrossingStopPlace();
+    if (crossingStop) {
+      const insertIdx = anatolianItems.length;
+      const crossingDayLabel = presetRoute[insertIdx]?.dayLabel || firstDayLabel;
+      const crossingDayIdx   = presetRoute[insertIdx]?.dayIdx ?? 0;
+      presetRoute.splice(insertIdx, 0, {
+        place: crossingStop,
+        dayIdx: crossingDayIdx,
+        dayLabel: crossingDayLabel,
+        isCrossingStop: true
+      });
+    }
+
+  } else {
+    // ── STANDART PRESET MANTAĞI ──────────────────────────────
+    // 2. Find nearest place to effective entry point across entire plan
+    let nearestIdx = 0, nearestDist = Infinity;
+    allDayPlaces.forEach((item, i) => {
+      const d = distKmFerry(effLat, effLng, item.place.lat, item.place.lng);
+      if (d < nearestDist) { nearestDist = d; nearestIdx = i; }
+    });
+    const startDayIdx = allDayPlaces[nearestIdx].dayIdx;
+    const firstPlace = allDayPlaces[nearestIdx].place;
+
+    // 3. Reorder days: startDay first, then the rest in original order
+    const dayOrder = [startDayIdx];
+    plan.days.forEach((_, i) => { if (i !== startDayIdx) dayOrder.push(i); });
+
+    // 4. Build route day by day using nearest-neighbor within each day
+    presetRoute = [];
+    let prevLat = effLat, prevLng = effLng;
+
+    dayOrder.forEach(dayIdx => {
+      const day = plan.days[dayIdx];
+      const dayLabel = day.label;
+      let remaining = day.ids
+        .map(id => PLACES.find(x => x.id === id))
+        .filter(Boolean);
+
+      if (dayIdx === startDayIdx) {
+        remaining = remaining.filter(p => p.id !== firstPlace.id);
+        const chain = [{ place: firstPlace, dayIdx, dayLabel }];
+        prevLat = firstPlace.lat; prevLng = firstPlace.lng;
+        while (remaining.length > 0) {
+          let bI = 0, bD = Infinity;
+          remaining.forEach((p, i) => {
+            const d = distKmFerry(prevLat, prevLng, p.lat, p.lng);
+            if (d < bD) { bD = d; bI = i; }
+          });
+          const next = remaining.splice(bI, 1)[0];
+          chain.push({ place: next, dayIdx, dayLabel });
+          prevLat = next.lat; prevLng = next.lng;
+        }
+        presetRoute.push(...chain);
+      } else {
+        while (remaining.length > 0) {
+          let bI = 0, bD = Infinity;
+          remaining.forEach((p, i) => {
+            const d = distKmFerry(prevLat, prevLng, p.lat, p.lng);
+            if (d < bD) { bD = d; bI = i; }
+          });
+          const next = remaining.splice(bI, 1)[0];
+          presetRoute.push({ place: next, dayIdx, dayLabel });
+          prevLat = next.lat; prevLng = next.lng;
+        }
+      }
+    });
+
+    // 5. Anadolu yakasındaysa geçiş durağını en başa ekle
+    const crossingStop = getCrossingStopPlace();
+    if (crossingStop) {
+      presetRoute.unshift({ place: crossingStop, dayIdx: presetRoute[0]?.dayIdx ?? 0, dayLabel: presetRoute[0]?.dayLabel ?? 'Gün 1', isCrossingStop: true });
+    }
+  }
+
+  // 6. Render
   renderPresetRoute(plan, numDays);
   showScreen('s-preset-route');
 }
@@ -2951,14 +3318,21 @@ function renderPresetRoute(plan, numDays) {
 function renderPresetGroups(scroll) {
   scroll.innerHTML = '';
   const sLat = userLat || 40.21, sLng = userLng || 26.30;
+  const _isAnatUser = isOnAnatolianSide(sLat, sLng) && selectedCrossing;
   let globalStop = 0;
+
+  // Anadolu yakası için sabit mesafeler — bir kez hesapla
+  const distToAnatolianPort = _isAnatUser
+    ? distKm(sLat, sLng, selectedCrossing.anatolian.lat, selectedCrossing.anatolian.lng)
+    : 0;
+  const effLat = _isAnatUser ? selectedCrossing.europeanEntry.lat : sLat;
+  const effLng = _isAnatUser ? selectedCrossing.europeanEntry.lng : sLng;
 
   presetGroups.forEach((group, gi) => {
     const section = document.createElement('div');
     section.className = 'day-section';
     section.dataset.gi = gi;
 
-    // Başlık — sadece bilgi, sürükleme yok
     const titleDiv = document.createElement('div');
     titleDiv.className = 'day-section-title';
     titleDiv.dataset.gi = gi;
@@ -2968,21 +3342,50 @@ function renderPresetGroups(scroll) {
     group.items.forEach((item, li) => {
       globalStop++;
       const p = item.place;
-      const dist = distKmFerry(sLat, sLng, p.lat, p.lng);
-      const distStr = dist >= 1 ? `${dist.toFixed(1)} km` : `${Math.round(dist * 1000)} m`;
-      const _crosses = crossesDardanelles(sLat, sLng, p.lat, p.lng);
-      const _cr2 = _crosses ? resolveAnatolianCrossing(sLat, sLng) : null;
-      const ferryIcon = _crosses ? (_cr2 ? _cr2.emoji+' ' : '⛴️ ') : '📍 ';
+      const isCrossing = item.isCrossingStop || p.isCrossingStop;
+      const isAnatolianPlace = ANATOLIAN_PLACE_IDS.has(p.id);
+
+      let dist, distStr, ferryIcon;
+
+      if (_isAnatUser) {
+        if (isCrossing) {
+          // Crossing durağı: kullanıcı → Anadolu iskelesi
+          dist = distToAnatolianPort;
+          distStr = dist >= 1 ? `${dist.toFixed(1)} km` : `${Math.round(dist * 1000)} m`;
+          ferryIcon = (selectedCrossing.emoji || '⛴️') + ' ';
+        } else if (isAnatolianPlace) {
+          // Anadolu yerleri: kullanıcıdan doğrudan
+          dist = distKm(sLat, sLng, p.lat, p.lng);
+          distStr = dist >= 1 ? `${dist.toFixed(1)} km` : `${Math.round(dist * 1000)} m`;
+          ferryIcon = '🗺️ ';
+        } else {
+          // Avrupa yerleri: kullanıcı → Anadolu iskelesi + Avrupa iskelesi → yer
+          dist = distToAnatolianPort + distKm(effLat, effLng, p.lat, p.lng);
+          distStr = dist >= 1 ? `${dist.toFixed(1)} km` : `${Math.round(dist * 1000)} m`;
+          ferryIcon = (selectedCrossing.emoji || '⛴️') + ' ';
+        }
+      } else {
+        // Avrupa yakası kullanıcısı: direkt mesafe
+        dist = distKm(sLat, sLng, p.lat, p.lng);
+        distStr = dist >= 1 ? `${dist.toFixed(1)} km` : `${Math.round(dist * 1000)} m`;
+        ferryIcon = '📍 ';
+      }
+
       const stopEl = document.createElement('div');
-      stopEl.className = 'preset-stop-item';
+      stopEl.className = 'preset-stop-item' + (isCrossing ? ' crossing-stop-item' : '');
       stopEl.dataset.gi = gi;
       stopEl.dataset.li = li;
+      if (isCrossing) {
+        stopEl.style.cssText = 'background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.05));border-left:3px solid rgba(201,168,76,0.6);';
+      } else if (isAnatolianPlace && _isAnatUser) {
+        stopEl.style.cssText = 'background:linear-gradient(135deg,rgba(201,168,76,0.07),rgba(255,255,255,1));border-left:3px solid rgba(201,168,76,0.35);';
+      }
       stopEl.innerHTML = `
         <span class="preset-stop-handle">☰</span>
-        <div class="preset-stop-num">${globalStop}</div>
+        <div class="preset-stop-num" style="${isCrossing?'background:linear-gradient(135deg,#c9a84c,#7a5a10);color:white;':isAnatolianPlace&&_isAnatUser?'background:rgba(201,168,76,0.25);color:#7a5a10;':''}">${globalStop}</div>
         <div class="preset-stop-info">
-          <div class="preset-stop-name">${p.name}</div>
-          <div class="preset-stop-cat">${CAT_ICONS[p.cat] || ''} ${p.cat}</div>
+          <div class="preset-stop-name">${isCrossing?`${selectedCrossing?.emoji||'⛴️'} `:isAnatolianPlace&&_isAnatUser?'🗺️ ':''}${p.name}</div>
+          <div class="preset-stop-cat">${isCrossing?'🚢 Boğaz Geçiş Noktası':isAnatolianPlace&&_isAnatUser?'📍 Anadolu Yakası Durağı':(CAT_ICONS[p.cat] || '') + ' ' + p.cat}</div>
         </div>
         <div class="preset-stop-dist">${ferryIcon}${distStr}</div>
       `;
@@ -3188,6 +3591,8 @@ function initPresetDrag(scroll) {
 function startPresetDayTour(gi) {
   const group = presetGroups[gi];
   if (!group || !group.items.length) return;
+  // Anadolu yakasındaysa ve geçiş seçilmediyse popup aç
+  if(checkAnatolianAndProceed(()=>startPresetDayTour(gi))) return;
   selectedIds = new Set(group.items.map(r => r.place.id));
   tourRoute = group.items.map(r => ({ ...r.place }));
   currentStopIndex = 0;
@@ -3308,12 +3713,13 @@ function clearMapSelection(){
 
 function buildMapSelectRoute(){
   if(mselSelectedIds.size===0) return;
+  // Anadolu yakasındaysa ve geçiş seçilmediyse popup aç
+  if(checkAnatolianAndProceed(()=>buildMapSelectRoute())) return;
   const sLat=userLat||40.21, sLng=userLng||26.30;
-  const crossing = resolveAnatolianCrossing(sLat, sLng);
-  const effLat = crossing ? crossing.european.lat : sLat;
-  const effLng = crossing ? crossing.european.lng : sLng;
+  const effLat = selectedCrossing ? selectedCrossing.europeanEntry.lat : sLat;
+  const effLng = selectedCrossing ? selectedCrossing.europeanEntry.lng : sLng;
   const selected=PLACES.filter(p=>mselSelectedIds.has(p.id));
-  tourRoute=buildNearestNeighborRoute(selected,effLat,effLng);
+  tourRoute=buildNearestNeighborRoute(selected, effLat, effLng);
   selectedIds=new Set(mselSelectedIds);
   currentStopIndex=0;
   routePrevScreen='s-map-select';
@@ -3324,46 +3730,116 @@ function buildList(){
   const sLat=userLat||40.21, sLng=userLng||26.30;
 
   // Anadolu yakasındaysa sanal giriş noktasını belirle
-  const crossing = resolveAnatolianCrossing(sLat, sLng);
-  const effLat = crossing ? crossing.european.lat : sLat;
-  const effLng = crossing ? crossing.european.lng : sLng;
+  const isAnatolian = isOnAnatolianSide(sLat, sLng) && selectedCrossing;
+  const effLat = isAnatolian ? selectedCrossing.europeanEntry.lat : sLat;
+  const effLng = isAnatolian ? selectedCrossing.europeanEntry.lng : sLng;
 
-  let remaining=PLACES.map(p=>({...p}));
-  const chain=[];
-  let curLat=effLat, curLng=effLng;
-  while(remaining.length>0){
-    let bestIdx=0, bestDist=Infinity;
-    remaining.forEach((p,i)=>{
-      const d=distKmFerry(curLat,curLng,p.lat,p.lng);
-      if(d<bestDist){bestDist=d;bestIdx=i;}
-    });
-    const next=remaining.splice(bestIdx,1)[0];
-    // dist göstergesi: kullanıcı konumundan feribot dahil uzaklık
-    next.dist=distKmFerry(sLat,sLng,next.lat,next.lng);
-    next.ferryNeeded=crossesDardanelles(sLat,sLng,next.lat,next.lng);
-    chain.push(next);
-    curLat=next.lat; curLng=next.lng;
+  if (isAnatolian) {
+    // ── ANADOLU YAKASI LİSTESİ ──────────────────────────────
+    // Geçiş durağı: konumdan Anadolu iskelesine mesafe
+    const crossingDistToAnatolian = distKm(sLat, sLng, selectedCrossing.anatolian.lat, selectedCrossing.anatolian.lng);
+    const crossingStop = {
+      ...getCrossingStopPlace(),
+      dist: crossingDistToAnatolian,
+      ferryNeeded: false,
+      isCrossingStop: true
+    };
+
+    // Anadolu yakasındaki yerleri kullanıcıya gerçek mesafeye göre sırala
+    const anatolianPlaces = PLACES
+      .filter(p => ANATOLIAN_PLACE_IDS.has(p.id))
+      .map(p => ({...p, dist: distKm(sLat, sLng, p.lat, p.lng), ferryNeeded: false}))
+      .sort((a, b) => a.dist - b.dist);
+
+    // Avrupa yakasındaki yerleri geçiş çıkışından nearest-neighbor ile sırala
+    let remaining = PLACES.filter(p => !ANATOLIAN_PLACE_IDS.has(p.id)).map(p=>({...p}));
+    const chain = [];
+    let curLat = effLat, curLng = effLng;
+    while (remaining.length > 0) {
+      let bestIdx = 0, bestDist = Infinity;
+      remaining.forEach((p, i) => {
+        const d = distKm(curLat, curLng, p.lat, p.lng);
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+      });
+      const next = remaining.splice(bestIdx, 1)[0];
+      // Toplam mesafe: konumdan Anadolu iskelesine + iskeleden yere
+      next.dist = crossingDistToAnatolian + distKm(effLat, effLng, next.lat, next.lng);
+      next.ferryNeeded = true;
+      chain.push(next);
+      curLat = next.lat; curLng = next.lng;
+    }
+    // Sıralama: Geçiş noktası (1.) → Anadolu yerleri → Avrupa yerleri
+    sortedPlaces = [crossingStop, ...anatolianPlaces, ...chain];
+  } else {
+    // ── STANDART LİSTE ──────────────────────────────────────
+    let remaining=PLACES.map(p=>({...p}));
+    const chain=[];
+    let curLat=effLat, curLng=effLng;
+    while(remaining.length>0){
+      let bestIdx=0, bestDist=Infinity;
+      remaining.forEach((p,i)=>{
+        const d=distKmFerry(curLat,curLng,p.lat,p.lng);
+        if(d<bestDist){bestDist=d;bestIdx=i;}
+      });
+      const next=remaining.splice(bestIdx,1)[0];
+      next.dist=distKmFerry(sLat,sLng,next.lat,next.lng);
+      next.ferryNeeded=crossesDardanelles(sLat,sLng,next.lat,next.lng);
+      chain.push(next);
+      curLat=next.lat; curLng=next.lng;
+    }
+    sortedPlaces=chain;
   }
-  sortedPlaces=chain;
-  renderList(sortedPlaces);updateSelCount();
+
+  renderList(sortedPlaces);
+  updateSelCount();
 }
 
 function renderList(places){
   const container=document.getElementById('place-list');
   container.innerHTML='';
-  // Kullanıcı konumu (renderList her yerden çağrılabilir, global değişkenden al)
   const sLat=userLat||40.21, sLng=userLng||26.30;
-  const _activeCrossing = resolveAnatolianCrossing(sLat, sLng);
+  const _isAnatolianUser = isOnAnatolianSide(sLat, sLng) && selectedCrossing;
   places.forEach((p,i)=>{
+    const isCrossingStop = p.isCrossingStop;
     const isChecked=selectedIds.has(p.id);
     const isVisited=visitedIds.has(p.id);
     const distStr=p.dist>=1?`${p.dist.toFixed(1)} km`:`${Math.round(p.dist*1000)} m`;
-    const _crEmoji = _activeCrossing ? _activeCrossing.emoji : '⛴️';
-    const _crLabel = _activeCrossing ? _activeCrossing.label : 'Geçiş';
-    const ferryTag=p.ferryNeeded?`<span class="cat-badge diger" title="${_crLabel} gerekli">${_crEmoji} ${_crLabel}</span>`:'';
+    const isAnatolianPlace = ANATOLIAN_PLACE_IDS.has(p.id);
+
+    // ── GEÇİŞ NOKTASI KARTI (1. sıra, seçilemez) ────────────
+    if (isCrossingStop) {
+      const item=document.createElement('div');
+      item.className='place-item crossing-list-item';
+      item.style.cssText='background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1.5px solid rgba(201,168,76,0.55);border-radius:12px;margin-bottom:4px;';
+      item.style.animationDelay='0s';
+      item.innerHTML=`
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#c9a84c,#7a5a10);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">
+          ${selectedCrossing.emoji}
+        </div>
+        <div class="place-text">
+          <div class="place-name" style="color:#7a5a10;font-weight:700;">1. DURAK — ${p.name}</div>
+          <div class="place-meta">
+            <span class="place-dist" style="color:#c9a84c;">📍 ${distStr}</span>
+            <span class="cat-badge" style="background:rgba(201,168,76,0.2);color:#7a5a10;border:1px solid rgba(201,168,76,0.4);">🚢 Boğaz Geçiş Noktası</span>
+          </div>
+          <div style="font-size:10px;color:#8a6a20;margin-top:3px;font-style:italic;">Rotanıza otomatik eklenir — konumunuzdan bu noktaya mesafe</div>
+        </div>
+        <div style="font-size:20px;flex-shrink:0;opacity:0.5;">🔒</div>
+      `;
+      container.appendChild(item);
+      return;
+    }
+
+    // ── NORMAL YER KARTI ─────────────────────────────────────
+    let ferryTag = '';
+    if (_isAnatolianUser && isAnatolianPlace) {
+      ferryTag = `<span class="cat-badge muze" title="Anadolu Yakası">🗺️ Anadolu Yakası</span>`;
+    } else if (p.ferryNeeded) {
+      ferryTag = `<span class="cat-badge diger" title="${selectedCrossing?.shortLabel||'Geçiş'} dahil">${selectedCrossing?.emoji||'⛴️'} ${selectedCrossing?.shortLabel||'Geçiş'} dahil</span>`;
+    }
     const catCls=CAT_CLASS[p.cat]||'diger';
     const item=document.createElement('div');
-    item.className='place-item'+(isVisited?' visited':'');
+    item.className='place-item'+(isVisited?' visited':'')+(isAnatolianPlace&&_isAnatolianUser?' anatolian-highlight':'');
     item.dataset.id=p.id;
     item.style.animationDelay=(i*0.04)+'s';
     item.innerHTML=`
@@ -3580,12 +4056,13 @@ function closePopup(){document.getElementById('popup').classList.remove('open');
 // ============================================================
 function startTour(){
   if(selectedIds.size===0){showToast('Lütfen en az 1 yer seçin');return;}
-  const selected=sortedPlaces.filter(p=>selectedIds.has(p.id));
+  // Anadolu yakasındaysa ve geçiş seçilmediyse popup aç
+  if(checkAnatolianAndProceed(()=>startTour())) return;
+  // crossing stop sortedPlaces'te var ama buildNearestNeighborRoute kendi ekliyor — filtrele
+  const selected=sortedPlaces.filter(p=>selectedIds.has(p.id) && !p.isCrossingStop);
   const sLat=userLat||40.21, sLng=userLng||26.30;
-  const crossing = resolveAnatolianCrossing(sLat, sLng);
-  const effLat = crossing ? crossing.european.lat : sLat;
-  const effLng = crossing ? crossing.european.lng : sLng;
-  // Otomatik sıralama önce hazırla
+  const effLat = selectedCrossing ? selectedCrossing.europeanEntry.lat : sLat;
+  const effLng = selectedCrossing ? selectedCrossing.europeanEntry.lng : sLng;
   tourRoute=buildNearestNeighborRoute(selected, effLat, effLng);
   currentStopIndex=0;
   routePrevScreen='s-list';
@@ -3605,11 +4082,10 @@ function closeRouteSort(){
   document.getElementById('route-sort-overlay').classList.remove('open');
 }
 function resetRouteSort(){
-  const selected=sortedPlaces.filter(p=>selectedIds.has(p.id));
+  const selected=sortedPlaces.filter(p=>selectedIds.has(p.id) && !p.isCrossingStop);
   const sLat=userLat||40.21, sLng=userLng||26.30;
-  const crossing = resolveAnatolianCrossing(sLat, sLng);
-  const effLat = crossing ? crossing.european.lat : sLat;
-  const effLng = crossing ? crossing.european.lng : sLng;
+  const effLat = selectedCrossing ? selectedCrossing.europeanEntry.lat : sLat;
+  const effLng = selectedCrossing ? selectedCrossing.europeanEntry.lng : sLng;
   tourRoute=buildNearestNeighborRoute(selected,effLat,effLng);
   renderRsortList();
   showToast('↺ Otomatik sıralamaya döndü');
@@ -3621,23 +4097,40 @@ function applyRouteSort(){
 
 function renderRsortList(){
   const sLat=userLat||40.21, sLng=userLng||26.30;
+  const _isAnatUser = isOnAnatolianSide(sLat, sLng) && selectedCrossing;
   const list=document.getElementById('rsort-list');
   list.innerHTML='';
   tourRoute.forEach((p,i)=>{
-    const d=distKmFerry(sLat,sLng,p.lat,p.lng);
-    const distStr=d>=1?d.toFixed(1)+' km':Math.round(d*1000)+' m';
-    const _crosses2=crossesDardanelles(sLat,sLng,p.lat,p.lng);
-    const _cr4=_crosses2?resolveAnatolianCrossing(sLat,sLng):null;
-    const ferryIcon=_crosses2?(_cr4?_cr4.emoji+' ':'⛴️ '):'📍 ';
+    const isCrossing = p.isCrossingStop;
+    const isAnatolianPlace = ANATOLIAN_PLACE_IDS.has(p.id);
+    let d, distStr, ferryIcon;
+    if (isAnatolianPlace && _isAnatUser) {
+      // Anadolu yerlerine gerçek mesafe (feribot cezası yok)
+      d = distKm(sLat, sLng, p.lat, p.lng);
+      distStr = d>=1?d.toFixed(1)+' km':Math.round(d*1000)+' m';
+      ferryIcon = '🗺️ ';
+    } else if (isCrossing) {
+      d = distKm(sLat, sLng, p.lat, p.lng);
+      distStr = d>=1?d.toFixed(1)+' km':Math.round(d*1000)+' m';
+      ferryIcon = selectedCrossing?.emoji+' ' || '⛴️ ';
+    } else {
+      d=distKmFerry(sLat,sLng,p.lat,p.lng);
+      distStr=d>=1?d.toFixed(1)+' km':Math.round(d*1000)+' m';
+      const _crosses2=crossesDardanelles(sLat,sLng,p.lat,p.lng);
+      const _cr4=_crosses2?resolveAnatolianCrossing(sLat,sLng):null;
+      ferryIcon=_crosses2?(_cr4?_cr4.emoji+' ':'⛴️ '):'📍 ';
+    }
     const item=document.createElement('div');
     item.className='rsort-item';
+    if(isCrossing) item.style.cssText='background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border-left:3px solid rgba(201,168,76,0.5);';
+    else if(isAnatolianPlace&&_isAnatUser) item.style.cssText='background:linear-gradient(135deg,rgba(201,168,76,0.07),rgba(255,255,255,1));border-left:3px solid rgba(201,168,76,0.4);';
     item.draggable=true;
     item.dataset.idx=i;
     item.innerHTML=`
-      <div class="rsort-num">${i+1}</div>
+      <div class="rsort-num" style="${isCrossing?'background:linear-gradient(135deg,#c9a84c,#7a5a10);':isAnatolianPlace&&_isAnatUser?'background:linear-gradient(135deg,#C9A84C88,#7a5a1055);color:#7a5a10;':''}">${i+1}</div>
       <div class="rsort-info">
-        <div class="rsort-name">${p.name}</div>
-        <div class="rsort-cat">${p.cat}</div>
+        <div class="rsort-name">${isCrossing?(selectedCrossing?.emoji||'⛴️')+' ':isAnatolianPlace&&_isAnatUser?'🗺️ ':''} ${p.name}</div>
+        <div class="rsort-cat">${isCrossing?'🚢 Boğaz Geçiş Noktası':isAnatolianPlace&&_isAnatUser?'📍 Anadolu Yakası Durağı':p.cat}</div>
       </div>
       <div class="rsort-dist">${ferryIcon}${distStr}</div>
       <div class="rsort-handle">☰</div>
@@ -3795,26 +4288,30 @@ function showRoutePreview(){
     const isFirst=(i===0);
     const isLast=(i===tourRoute.length-1);
     const isVisited=visitedIds.has(p.id);
-    const bg=isVisited?'#4CAF50':isFirst?'#C0152B':'#8B0E1E';
+    const isCrossing=p.isCrossingStop;
+    const isAnatolianPlace=ANATOLIAN_PLACE_IDS.has(p.id);
+    const bg=isCrossing?'#C9A84C':isAnatolianPlace?'#C9A84C':isVisited?'#4CAF50':isFirst?'#C0152B':'#8B0E1E';
     const size=isFirst?26:22;
-    const labelBg=isFirst?'rgba(192,21,43,0.95)':isVisited?'rgba(46,125,50,0.9)':'rgba(26,10,13,0.85)';
+    const labelBg=isCrossing?'rgba(180,140,40,0.95)':isAnatolianPlace?'rgba(150,115,30,0.92)':isFirst?'rgba(192,21,43,0.95)':isVisited?'rgba(46,125,50,0.9)':'rgba(26,10,13,0.85)';
     const icon=L.divIcon({
       className:'',
       html:`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-        <div style="width:${size}px;height:${size}px;background:${bg};border:${isFirst?3:2}px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;${isFirst?'animation:redPulse 2s ease-in-out infinite;':''}">
-          <span style="color:white;font-size:${isFirst?11:10}px;font-weight:700;font-family:'Cinzel',serif;line-height:1;">${isVisited?'✓':num}</span>
+        <div style="width:${size}px;height:${size}px;background:${bg};border:${isFirst?3:2}px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;${isFirst&&!isCrossing&&!isAnatolianPlace?'animation:redPulse 2s ease-in-out infinite;':''}${(isCrossing||isAnatolianPlace)?'animation:redPulse 2s ease-in-out infinite;':''}">
+          <span style="color:white;font-size:${isFirst?11:10}px;font-weight:700;font-family:'Cinzel',serif;line-height:1;">${isCrossing?(selectedCrossing?.emoji||'⛴️'):isAnatolianPlace?'🗺️':isVisited?'✓':num}</span>
         </div>
-        <div style="background:${labelBg};color:white;font-size:9px;font-family:'Cinzel',serif;padding:2px 6px;border-radius:3px;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,0.3);">${isFirst?'▶ ':isLast?'⏹ ':''}${p.name}</div>
+        <div style="background:${labelBg};color:white;font-size:9px;font-family:'Cinzel',serif;padding:2px 6px;border-radius:3px;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,0.3);">${isCrossing?'⚓ ':isAnatolianPlace?'🗺️ ':isFirst?'▶ ':isLast?'⏹ ':''}${p.name}</div>
       </div>`,
       iconSize:[140,40],iconAnchor:[70,13]
     });
     const m=L.marker([p.lat,p.lng],{icon,zIndexOffset:isFirst?500:100}).addTo(routeLeafletMap);
     m.bindPopup(`
       <div style="font-family:'Cinzel',serif;min-width:150px;">
-        <div style="font-size:11px;color:${isFirst?'#C0152B':isVisited?'#2e7d32':'#8B0E1E'};font-weight:700;margin-bottom:2px;">
-          ${CAT_ICONS[p.cat]||'📍'} ${isFirst?'▶ İLK DURAK':isLast?'⏹ SON DURAK':num+'. DURAK'}${isVisited?' ✓':''}
+        <div style="font-size:11px;color:${isCrossing?'#8a6000':isAnatolianPlace?'#7a5a10':isFirst?'#C0152B':isVisited?'#2e7d32':'#8B0E1E'};font-weight:700;margin-bottom:2px;">
+          ${isCrossing?(selectedCrossing?.emoji||'⛴️')+' GEÇİŞ NOKTASI':isAnatolianPlace?'🗺️ ANADOLU YAKASI DURAĞI':CAT_ICONS[p.cat]||'📍'} ${isCrossing?'BOĞAZ GEÇİŞİ':isAnatolianPlace?num+'. DURAK':isFirst?'▶ İLK DURAK':isLast?'⏹ SON DURAK':num+'. DURAK'}${isVisited?' ✓':''}
         </div>
         <div style="font-size:13px;font-weight:600;color:#1A0A0D;">${p.name}</div>
+        ${isCrossing?`<div style="font-size:10px;color:#888;margin-top:4px;">Buradan sonra Avrupa yakasına geçiş</div>`:''}
+        ${isAnatolianPlace?`<div style="font-size:10px;color:#7a5a10;margin-top:4px;">📍 Anadolu Yakası — Boğaz geçişinden önce</div>`:''}
       </div>
     `);
     if(isFirst) m.openPopup();
@@ -3837,10 +4334,28 @@ function showRoutePreview(){
     });
     routeUserMarker=L.marker([userLat,userLng],{icon:uIcon,zIndexOffset:1000}).addTo(routeLeafletMap);
     const firstStop=tourRoute[0];
-    const toFirst=L.polyline([[userLat,userLng],[firstStop.lat,firstStop.lng]],{
-      color:'#1565C0',weight:2,opacity:0.6,dashArray:'5,8'
-    }).addTo(routeLeafletMap);
-    routeMarkers.push(toFirst);
+    const _sLat = userLat, _sLng = userLng;
+    const _isAnat = isOnAnatolianSide(_sLat, _sLng) && selectedCrossing;
+
+    if(_isAnat && ANATOLIAN_PLACE_IDS.has(firstStop.id)){
+      // Anadolu yakası + ilk durak Anadolu yeriyse: kullanıcı → Anadolu durak (mavi)
+      const toFirst=L.polyline([[userLat,userLng],[firstStop.lat,firstStop.lng]],{
+        color:'#1565C0',weight:2,opacity:0.65,dashArray:'5,8'
+      }).addTo(routeLeafletMap);
+      routeMarkers.push(toFirst);
+    } else if(firstStop.isCrossingStop){
+      // İlk durak geçiş noktasıysa: kullanıcı → geçiş (altın sarısı)
+      const toFerry=L.polyline([[userLat,userLng],[firstStop.lat,firstStop.lng]],{
+        color:'#C9A84C',weight:2.5,opacity:0.8,dashArray:'5,7'
+      }).addTo(routeLeafletMap);
+      routeMarkers.push(toFerry);
+    } else {
+      // Normal: kullanıcı → ilk durak (mavi)
+      const toFirst=L.polyline([[userLat,userLng],[firstStop.lat,firstStop.lng]],{
+        color:'#1565C0',weight:2,opacity:0.6,dashArray:'5,8'
+      }).addTo(routeLeafletMap);
+      routeMarkers.push(toFirst);
+    }
     routeLeafletMap.fitBounds(bounds.extend([userLat,userLng]),{padding:[40,40]});
   }
 
@@ -3858,7 +4373,10 @@ function goToNavScreen(){
   showScreen('s-nav');
   document.getElementById('arrival-banner').classList.remove('show');
   const p=tourRoute[currentStopIndex];
-  document.getElementById('nav-stop-info').textContent=`${p.name} — Durak ${currentStopIndex+1}/${tourRoute.length}`;
+  const isCrossing=p.isCrossingStop;
+  const isAnatolianPlace=ANATOLIAN_PLACE_IDS.has(p.id);
+  const stopIcon=isCrossing?(selectedCrossing?.emoji||'⛴️'):isAnatolianPlace?'🗺️':'📍';
+  document.getElementById('nav-stop-info').textContent=`${stopIcon} ${p.name} — Durak ${currentStopIndex+1}/${tourRoute.length}`;
   updateProgressDots();
   // Auto-open in-page nav map
   initNavLeafletMap();
@@ -3887,19 +4405,21 @@ function initNavLeafletMap(){
   tourRoute.forEach((p,i)=>{
     const isCurrent=(i===currentStopIndex);
     const isDone=(i<currentStopIndex);
-    const color=isDone?'#4CAF50':isCurrent?'#C0152B':'#888';
+    const isCrossing=p.isCrossingStop;
+    const isAnatolianPlace=ANATOLIAN_PLACE_IDS.has(p.id);
+    const color=isCrossing?'#C9A84C':isAnatolianPlace?'#C9A84C':isDone?'#4CAF50':isCurrent?'#C0152B':'#888';
     const size=isCurrent?20:14;
     const icon=L.divIcon({
       className:'',
       html:`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
         <div style="width:${size}px;height:${size}px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.4);${isCurrent?'animation:redPulse 1.5s ease-in-out infinite;':''}"></div>
-        <div style="background:${isCurrent?'rgba(192,21,43,0.9)':'rgba(26,10,13,0.75)'};color:white;font-size:9px;font-family:'Cinzel',serif;padding:1px 5px;border-radius:3px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;line-height:1.3;">${i+1}. ${p.name}</div>
+        <div style="background:${isCrossing||isAnatolianPlace?'rgba(180,140,40,0.9)':isCurrent?'rgba(192,21,43,0.9)':'rgba(26,10,13,0.75)'};color:white;font-size:9px;font-family:'Cinzel',serif;padding:1px 5px;border-radius:3px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;line-height:1.3;">${isCrossing?(selectedCrossing?.emoji||'⛴️')+' ':isAnatolianPlace?'🗺️ ':''}${i+1}. ${p.name}</div>
       </div>`,
       iconSize:[130,36],iconAnchor:[65,10]
     });
     const m=L.marker([p.lat,p.lng],{icon}).addTo(navLeafletMap);
     if(isCurrent){
-      m.bindPopup(`<div style="font-family:'Cinzel',serif;font-size:13px;color:#C0152B;font-weight:700;">📍 Hedef: ${p.name}</div>`).openPopup();
+      m.bindPopup(`<div style="font-family:'Cinzel',serif;font-size:13px;color:${isCrossing||isAnatolianPlace?'#8a6000':'#C0152B'};font-weight:700;">${isCrossing?(selectedCrossing?.emoji||'⛴️')+' Geçiş Noktası':isAnatolianPlace?'🗺️ Anadolu Yakası Durağı':'📍 Hedef'}: ${p.name}</div>`).openPopup();
       navLeafletMap.setView([p.lat,p.lng],14);
     }
     navMarkers.push(m);
@@ -4386,13 +4906,13 @@ let evliyaMoved = false;
 
 function toggleEvliyaMenu(force){
   evliyaMenuOpen = force !== undefined ? force : !evliyaMenuOpen;
-  const icon = document.getElementById('evliya-main-icon');
+  const btn = document.getElementById('seyit-btn');
   if(evliyaMenuOpen){
     openFanMenu();
-    icon.textContent = '✕';
+    btn.classList.add('menu-open');
   } else {
     closeFanMenu();
-    icon.textContent = '⚔️';
+    btn.classList.remove('menu-open');
   }
 }
 
@@ -4416,10 +4936,10 @@ function openFanMenu(){
   const onBottom = cy > sh * 0.5;
 
   let baseAngle;                         // derece, CSS koordinat sistemi
-  if (onBottom && onRight)  baseAngle = 225;  // sol-üst
-  else if (onBottom)        baseAngle = 315;  // sağ-üst
-  else if (onRight)         baseAngle = 135;  // sol-alt
-  else                      baseAngle = 45;   // sağ-alt
+  if (onBottom && onRight)  baseAngle = 225 - 20;  // sol-üst  | sağda → -20 (saat yönü tersi)
+  else if (onBottom)        baseAngle = 315 + 20;  // sağ-üst  | solda → +20 (saat yönü)
+  else if (onRight)         baseAngle = 135 - 20;  // sol-alt  | sağda → -20 (saat yönü tersi)
+  else                      baseAngle = 45  + 20;  // sağ-alt  | solda → +20 (saat yönü)
 
   const RADIUS = 115;  // butondan uzaklık (px)
   const SPREAD = 120;  // yelpaze açısı (derece)
@@ -4434,7 +4954,9 @@ function openFanMenu(){
 
     // Bir sonraki frame'de konuma animasyonla geç
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      const t        = n > 1 ? i / (n - 1) : 0.5;
+      // Solda iken sırayı tersine çevir → em-ask (i=3) en üste gelsin
+      const idx = onRight ? i : (n - 1 - i);
+      const t        = n > 1 ? idx / (n - 1) : 0.5;
       const angleDeg = baseAngle - SPREAD / 2 + t * SPREAD;
       const rad      = angleDeg * Math.PI / 180;
       const fx       = Math.round(Math.cos(rad) * RADIUS);
@@ -4451,12 +4973,18 @@ function openFanMenu(){
       item.style.pointerEvents   = 'all';
     }));
   });
+  // Balonu göster
+  const bubble = document.getElementById('seyit-bubble');
+  if(bubble){ bubble.classList.remove('show'); void bubble.offsetWidth; bubble.classList.add('show'); }
 }
 
 function closeFanMenu(){
   const menu  = document.getElementById('seyitonbasi-menu');
   const items = menu.querySelectorAll('.seyitonbasi-menu-item');
   menu.classList.remove('open');
+  // Balonu gizle
+  const bubble = document.getElementById('seyit-bubble');
+  if(bubble) bubble.classList.remove('show');
   items.forEach(item => {
     item.style.transitionDelay = '0s';
     item.style.transition      = 'transform 0.22s ease-in, opacity 0.18s ease';
@@ -4674,7 +5202,7 @@ function showExitScreen(){
   const wrap = document.getElementById('seyitonbasi-wrap');
   const EDGE = 14;
   const THRESHOLD = 6;
-  let active=false, moved=false;
+  let active=false, moved=false, lpFired=false;
   let startX=0, startY=0, origLeft=0, origTop=0;
   let lpTimer=null;
 
@@ -4702,7 +5230,8 @@ function showExitScreen(){
     origTop  = getTop();
     startX=cx; startY=cy;
     active=true; moved=false;
-    lpTimer = setTimeout(()=>{ if(!moved) toggleEvliyaMenu(true); }, 500);
+    lpFired=false;
+    lpTimer = setTimeout(()=>{ if(!moved){ lpFired=true; toggleEvliyaMenu(true); } }, 500);
   }
   function onMove(cx, cy){
     if(!active) return;
@@ -4718,7 +5247,7 @@ function showExitScreen(){
     if(!active) return;
     active=false; clearTimeout(lpTimer);
     if(moved){ snap(); }
-    else { toggleEvliyaMenu(!evliyaMenuOpen); }
+    else if(!lpFired){ toggleEvliyaMenu(!evliyaMenuOpen); }
   }
 
   // Touch
@@ -4868,7 +5397,49 @@ function showExitScreen(){
   </div>
 </div>
 
-<!-- ROTA SIRALAMA POPUP -->
+<!-- ANADOLU YAKASI GEÇİŞ SEÇİM POPUP -->
+<div id="crossing-overlay">
+  <div class="crossing-card">
+    <div class="crossing-header">
+      <div class="crossing-header-icon">🗺️</div>
+      <div class="crossing-header-title">Konumunuz Anadolu Yakasında<br>Tespit Edilmiştir</div>
+      <div class="crossing-header-sub">Rota planınızın doğru hesaplanabilmesi için<br>lütfen Çanakkale Boğazı geçiş güzergahını seçiniz.</div>
+    </div>
+    <div class="crossing-body">
+      <div class="crossing-body-label">Geçiş Noktası Seçin</div>
+      <button class="crossing-btn" onclick="selectCrossing('kilitbahir')">
+        <div class="crossing-btn-icon">⛴️</div>
+        <div class="crossing-btn-info">
+          <div class="crossing-btn-name">Çanakkale → Kilitbahir Feribotu</div>
+          <div class="crossing-btn-coord">40.1504°N 26.3788°E</div>
+        </div>
+      </button>
+      <button class="crossing-btn" onclick="selectCrossing('eceabat')">
+        <div class="crossing-btn-icon">⛴️</div>
+        <div class="crossing-btn-info">
+          <div class="crossing-btn-name">Çanakkale → Eceabat Feribotu</div>
+          <div class="crossing-btn-coord">40.1842°N 26.3597°E</div>
+        </div>
+      </button>
+      <button class="crossing-btn" onclick="selectCrossing('gelibolu')">
+        <div class="crossing-btn-icon">⛴️</div>
+        <div class="crossing-btn-info">
+          <div class="crossing-btn-name">Lapseki → Gelibolu Feribotu</div>
+          <div class="crossing-btn-coord">40.4056°N 26.6700°E</div>
+        </div>
+      </button>
+      <button class="crossing-btn" onclick="selectCrossing('kopru')">
+        <div class="crossing-btn-icon">🌉</div>
+        <div class="crossing-btn-info">
+          <div class="crossing-btn-name">Çanakkale 18 Mart Köprüsü</div>
+          <div class="crossing-btn-coord">40.3493°N 26.6177°E</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <div id="route-sort-overlay">
   <div class="rsort-card">
     <div class="rsort-header">
