@@ -11,41 +11,21 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
-/* ══════════ RESET & ROOT ══════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#070504;
-  --bg2:#0f0a05;
-  --bg3:#1a1005;
-  --bg4:#231608;
-  --gold:#c49a3c;
-  --gold2:#e8c66a;
-  --gold3:#8b5e1a;
-  --stone:#a08060;
-  --stone2:#7a6040;
-  --cream:#f5e6c8;
-  --cream2:#d4b896;
-  --border:rgba(196,154,60,0.18);
-  --border2:rgba(196,154,60,0.35);
-  --red:#e05555;
-  --green:#55b87a;
-  --blue:#5599e0;
-  --purple:#9b72cf;
-  --sidebar:240px;
-  --topbar:60px;
+  --bg:#070504;--bg2:#0f0a05;--bg3:#1a1005;--bg4:#231608;
+  --gold:#c49a3c;--gold2:#e8c66a;--gold3:#8b5e1a;
+  --stone:#a08060;--stone2:#7a6040;
+  --cream:#f5e6c8;--cream2:#d4b896;
+  --border:rgba(196,154,60,0.18);--border2:rgba(196,154,60,0.35);
+  --red:#e05555;--green:#55b87a;--blue:#5599e0;--purple:#9b72cf;
+  --sidebar:240px;--topbar:60px;
 }
-
 html{height:100%;overflow:hidden;}
 body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',serif;display:flex;flex-direction:column;overflow:hidden;}
 
-/* ══════════ TOPBAR ══════════ */
-#topbar{
-  height:var(--topbar);flex-shrink:0;
-  background:linear-gradient(90deg,#0f0a05,#1a1005);
-  border-bottom:1px solid var(--border2);
-  display:flex;align-items:center;padding:0 24px;gap:16px;
-  position:relative;z-index:100;
-}
+/* TOPBAR */
+#topbar{height:var(--topbar);flex-shrink:0;background:linear-gradient(90deg,#0f0a05,#1a1005);border-bottom:1px solid var(--border2);display:flex;align-items:center;padding:0 24px;gap:16px;position:relative;z-index:100;}
 .topbar-logo{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:2px;line-height:1.4;}
 .topbar-logo small{display:block;font-size:9px;color:var(--stone);letter-spacing:1px;}
 .topbar-sep{flex:1;}
@@ -56,61 +36,38 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
 #conn-dot.error{background:var(--red);}
 #live-count-badge{background:rgba(196,154,60,0.12);border:1px solid var(--border2);border-radius:20px;padding:4px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:1px;}
 
-/* ══════════ BODY LAYOUT ══════════ */
+/* LAYOUT */
 #app{display:flex;flex:1;overflow:hidden;}
 
-/* ══════════ SIDEBAR ══════════ */
-#sidebar{
-  width:var(--sidebar);flex-shrink:0;
-  background:linear-gradient(180deg,#0f0a05,#070504);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;overflow-y:auto;
-  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
-}
+/* SIDEBAR */
+#sidebar{width:var(--sidebar);flex-shrink:0;background:linear-gradient(180deg,#0f0a05,#070504);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 .nav-section{padding:20px 0 6px 18px;font-family:'Cinzel',serif;font-size:9px;color:var(--stone2);letter-spacing:2px;}
-.nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 18px;cursor:pointer;transition:all 0.2s;
-  border-left:3px solid transparent;
-  font-size:12px;color:var(--stone);
-  text-decoration:none;
-}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;font-size:12px;color:var(--stone);text-decoration:none;}
 .nav-item:hover{background:rgba(196,154,60,0.06);color:var(--cream2);border-left-color:var(--gold3);}
 .nav-item.active{background:rgba(196,154,60,0.1);color:var(--gold);border-left-color:var(--gold);}
 .nav-item .ni-icon{font-size:16px;width:20px;text-align:center;}
-.nav-item .ni-label{font-family:'Lora',serif;}
 
-/* ══════════ MAIN CONTENT ══════════ */
-#main{flex:1;overflow-y:auto;display:flex;flex-direction:column;background:var(--bg);}
-.panel{display:none;flex:1;flex-direction:column;padding:24px;gap:20px;overflow-y:auto;}
+/* MAIN */
+#main{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;background:var(--bg);}
+.panel{display:none;flex:1;flex-direction:column;padding:24px;gap:20px;overflow-y:auto;overflow-x:hidden;}
 .panel.active{display:flex;}
 
-/* ══════════ PANEL HEADER ══════════ */
-.panel-header{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+/* PANEL HEADER */
+.panel-header{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap;}
 .panel-title{font-family:'Cinzel',serif;font-size:16px;color:var(--gold);letter-spacing:1.5px;}
 .panel-subtitle{font-size:12px;color:var(--stone);margin-top:2px;}
-.panel-header-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);}
+.panel-header-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);min-width:40px;}
 
-/* ══════════ CARDS ══════════ */
+/* CARDS */
 .cards-row{display:flex;gap:14px;flex-wrap:wrap;}
-.stat-card{
-  flex:1;min-width:160px;
-  background:linear-gradient(135deg,#131005,#1a1205);
-  border:1px solid var(--border);border-radius:12px;
-  padding:18px 20px;position:relative;overflow:hidden;
-  transition:border-color 0.2s;
-}
+.stat-card{flex:1;min-width:140px;background:linear-gradient(135deg,#131005,#1a1205);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color 0.2s;}
 .stat-card:hover{border-color:var(--border2);}
-.stat-card::before{
-  content:'';position:absolute;top:0;right:0;width:60px;height:60px;
-  border-radius:0 12px 0 60px;opacity:0.06;
-}
+.stat-card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 12px 0 60px;opacity:0.06;}
 .stat-card.gold::before{background:var(--gold);}
 .stat-card.green::before{background:var(--green);}
 .stat-card.blue::before{background:var(--blue);}
 .stat-card.red::before{background:var(--red);}
 .stat-card.purple::before{background:var(--purple);}
-
 .sc-label{font-size:10px;color:var(--stone);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;}
 .sc-value{font-family:'JetBrains Mono',monospace;font-size:28px;color:var(--gold);margin:6px 0 2px;font-weight:500;}
 .sc-value.green{color:var(--green);}
@@ -120,37 +77,22 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
 .sc-sub{font-size:11px;color:var(--stone2);}
 .sc-icon{position:absolute;top:16px;right:16px;font-size:20px;opacity:0.6;}
 
-/* ══════════ SECTIONS ══════════ */
-.section{
-  background:linear-gradient(135deg,#0f0a05,#131005);
-  border:1px solid var(--border);border-radius:12px;
-  overflow:hidden;
-}
-.section-head{
-  padding:14px 18px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;
-}
+/* SECTIONS */
+.section{background:linear-gradient(135deg,#0f0a05,#131005);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.section-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .section-title{font-family:'Cinzel',serif;font-size:12px;color:var(--gold);letter-spacing:1px;}
 .section-badge{background:rgba(196,154,60,0.1);border:1px solid var(--border);border-radius:10px;padding:2px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--stone);}
 .section-body{padding:16px 18px;}
 
-/* ══════════ MAP ══════════ */
-#live-map,#heatmap-container,#route-map{
-  height:440px;border-radius:8px;overflow:hidden;
-  background:#0a0800;
-}
-#heatmap-canvas{width:100%;height:100%;}
+/* MAP — büyütüldü */
+#live-map{height:520px;border-radius:8px;overflow:hidden;background:#0a0800;}
+#heatmap-container{height:480px;border-radius:8px;overflow:hidden;background:#0a0800;}
+#route-map{height:480px;border-radius:8px;overflow:hidden;background:#0a0800;}
 
-/* ══════════ ZONE BARS ══════════ */
-.zone-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.zone-bar-name{font-size:11px;color:var(--cream2);width:150px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.zone-bar-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;}
-.zone-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold3),var(--gold));transition:width 0.8s ease;}
-.zone-bar-val{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--stone);width:70px;text-align:right;}
-
-/* ══════════ TABLE ══════════ */
-.data-table{width:100%;border-collapse:collapse;font-size:12px;}
-.data-table th{font-family:'Cinzel',serif;font-size:9px;color:var(--stone);letter-spacing:1px;text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);}
+/* TABLE — yatay scroll eklendi */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;min-width:600px;}
+.data-table th{font-family:'Cinzel',serif;font-size:9px;color:var(--stone);letter-spacing:1px;text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
 .data-table td{padding:9px 10px;border-bottom:1px solid rgba(196,154,60,0.06);color:var(--cream2);vertical-align:top;}
 .data-table tr:last-child td{border-bottom:none;}
 .data-table tr:hover td{background:rgba(196,154,60,0.04);}
@@ -162,94 +104,36 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
 .badge-blue{background:rgba(85,153,224,0.15);color:var(--blue);border:1px solid rgba(85,153,224,0.3);}
 .badge-purple{background:rgba(155,114,207,0.15);color:var(--purple);border:1px solid rgba(155,114,207,0.3);}
 
-/* ══════════ LOGIN SCREEN ══════════ */
-#login-screen{
-  position:fixed;inset:0;z-index:999;
-  background:linear-gradient(160deg,#0f0a05,#070504);
-  display:flex;align-items:center;justify-content:center;
-}
-.login-box{
-  background:linear-gradient(160deg,#1a1005,#0f0a05);
-  border:1px solid var(--border2);border-radius:16px;
-  padding:40px 36px;width:340px;text-align:center;
-}
+/* LOGIN */
+#login-screen{position:fixed;inset:0;z-index:999;background:linear-gradient(160deg,#0f0a05,#070504);display:flex;align-items:center;justify-content:center;}
+.login-box{background:linear-gradient(160deg,#1a1005,#0f0a05);border:1px solid var(--border2);border-radius:16px;padding:40px 36px;width:340px;text-align:center;}
 .login-logo{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:24px;line-height:1.6;}
 .login-logo span{display:block;font-size:22px;margin-bottom:8px;}
-.login-input{
-  width:100%;padding:12px 14px;margin-bottom:12px;
-  background:rgba(196,154,60,0.05);
-  border:1px solid var(--border);border-radius:8px;
-  color:var(--cream);font-family:'Lora',serif;font-size:13px;
-  outline:none;transition:border-color 0.2s;
-}
+.login-input{width:100%;padding:12px 14px;margin-bottom:12px;background:rgba(196,154,60,0.05);border:1px solid var(--border);border-radius:8px;color:var(--cream);font-family:'Lora',serif;font-size:13px;outline:none;transition:border-color 0.2s;}
 .login-input:focus{border-color:var(--gold);}
-.login-btn{
-  width:100%;padding:13px;
-  background:linear-gradient(135deg,#8b5e1a,#c49a3c);
-  color:#0f0a05;border:none;border-radius:8px;
-  font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;
-  cursor:pointer;font-weight:700;transition:opacity 0.2s;
-}
+.login-btn{width:100%;padding:13px;background:linear-gradient(135deg,#8b5e1a,#c49a3c);color:#0f0a05;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;font-weight:700;transition:opacity 0.2s;}
 .login-btn:hover{opacity:0.9;}
 #login-err{font-size:11px;color:var(--red);margin-top:8px;min-height:16px;}
 .login-sub{font-size:10px;color:var(--stone2);margin-top:16px;line-height:1.6;}
 
-/* ══════════ SCROLLBAR ══════════ */
+/* SCROLLBAR */
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-/* ══════════ DEVICE PIES ══════════ */
-.pie-wrap{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;}
-.pie-legend{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
-.legend-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--cream2);}
-.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+/* ZONE BARS */
+.zone-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.zone-bar-name{font-size:11px;color:var(--cream2);width:150px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.zone-bar-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;}
+.zone-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold3),var(--gold));transition:width 0.8s ease;}
+.zone-bar-val{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--stone);width:80px;text-align:right;flex-shrink:0;}
 
-/* ══════════ STOP ACCORDION ══════════ */
-.stop-group{margin-bottom:10px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
-.stop-group-head{
-  padding:10px 14px;background:rgba(196,154,60,0.05);
-  cursor:pointer;display:flex;align-items:center;gap:10px;
-  font-family:'Cinzel',serif;font-size:11px;color:var(--gold);
-  user-select:none;transition:background 0.2s;
-}
-.stop-group-head:hover{background:rgba(196,154,60,0.1);}
-.stop-group-head .sg-arrow{margin-left:auto;transition:transform 0.25s;font-size:10px;}
-.stop-group-head.open .sg-arrow{transform:rotate(180deg);}
-.stop-group-body{display:none;padding:10px 14px;}
-.stop-group-body.open{display:block;}
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
-.btn-stat{
-  display:flex;align-items:center;gap:6px;
-  background:rgba(196,154,60,0.05);border:1px solid var(--border);
-  border-radius:6px;padding:6px 10px;font-size:11px;color:var(--cream2);
-  transition:border-color 0.2s;
-}
-.btn-stat:hover{border-color:var(--border2);}
-.btn-stat-count{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);font-weight:500;}
-.btn-stat-name{font-size:10px;color:var(--stone);}
-
-/* ══════════ DAILY CHART ══════════ */
-.chart-bars{display:flex;align-items:flex-end;gap:3px;height:100px;padding:0 4px;}
-.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
-.chart-bar{width:100%;background:linear-gradient(0deg,var(--gold3),var(--gold));border-radius:2px 2px 0 0;transition:height 0.6s ease;min-height:2px;}
-.chart-bar-label{font-size:8px;color:var(--stone2);white-space:nowrap;}
-.chart-bar-val{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--stone);margin-top:2px;}
-
-/* ══════════ LIVE VISITOR MARKER ══════════ */
-.live-visitor-icon{
-  width:20px;height:20px;border-radius:50%;
-  background:rgba(85,184,122,0.9);border:2px solid white;
-  box-shadow:0 0 8px rgba(85,184,122,0.7);
-  animation:pulse-green 2s infinite;
-}
-@keyframes pulse-green{
-  0%,100%{box-shadow:0 0 4px rgba(85,184,122,0.5);}
-  50%{box-shadow:0 0 12px rgba(85,184,122,0.9);}
-}
+/* LIVE VISITOR MARKER */
+.live-visitor-icon{width:22px;height:22px;border-radius:50%;background:rgba(85,184,122,0.9);border:2px solid white;box-shadow:0 0 8px rgba(85,184,122,0.7);animation:pulse-green 2s infinite;}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 4px rgba(85,184,122,0.5);}50%{box-shadow:0 0 14px rgba(85,184,122,0.9);}}
 .visitor-popup{font-family:'Cinzel',serif;font-size:10px;color:#1a0f00;text-align:center;line-height:1.5;}
 
-/* ══════════ LANG FLAGS ══════════ */
+/* LANG FLAGS */
 .lang-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .lang-flag{font-size:16px;width:24px;}
 .lang-name{font-size:11px;color:var(--cream2);width:90px;}
@@ -257,54 +141,62 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
 .lang-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),#7bc4e8);transition:width 0.8s;}
 .lang-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--stone);width:40px;text-align:right;}
 
-/* ══════════ GRID 2 ══════════ */
+/* GRID */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
 @media(max-width:900px){.grid2{grid-template-columns:1fr;}.grid3{grid-template-columns:1fr;}}
 
-/* ══════════ REFRESH BTN ══════════ */
-.btn-refresh{
-  background:rgba(196,154,60,0.08);border:1px solid var(--border);
-  color:var(--gold);border-radius:8px;padding:7px 16px;
-  font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;
-  cursor:pointer;transition:all 0.2s;margin-left:auto;
-}
+/* REFRESH BTN */
+.btn-refresh{background:rgba(196,154,60,0.08);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:7px 16px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;margin-left:auto;}
 .btn-refresh:hover{background:rgba(196,154,60,0.16);border-color:var(--border2);}
 
-/* ══════════ EMPTY STATE ══════════ */
-.empty-state{
-  padding:30px;text-align:center;
-  color:var(--stone);font-size:12px;line-height:1.8;
-}
+/* STOP ACCORDION */
+.stop-group{margin-bottom:10px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.stop-group-head{padding:10px 14px;background:rgba(196,154,60,0.05);cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Cinzel',serif;font-size:11px;color:var(--gold);user-select:none;transition:background 0.2s;}
+.stop-group-head:hover{background:rgba(196,154,60,0.1);}
+.stop-group-head .sg-arrow{margin-left:auto;transition:transform 0.25s;font-size:10px;}
+.stop-group-head.open .sg-arrow{transform:rotate(180deg);}
+.stop-group-body{display:none;padding:10px 14px;}
+.stop-group-body.open{display:block;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+.btn-stat{display:flex;align-items:center;gap:6px;background:rgba(196,154,60,0.05);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--cream2);transition:border-color 0.2s;}
+.btn-stat:hover{border-color:var(--border2);}
+.btn-stat-count{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);font-weight:500;}
+.btn-stat-name{font-size:10px;color:var(--stone);}
+
+/* DAILY CHART */
+.chart-bars{display:flex;align-items:flex-end;gap:3px;height:100px;padding:0 4px;}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.chart-bar{width:100%;background:linear-gradient(0deg,var(--gold3),var(--gold));border-radius:2px 2px 0 0;transition:height 0.6s ease;min-height:2px;}
+.chart-bar-label{font-size:8px;color:var(--stone2);white-space:nowrap;}
+.chart-bar-val{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--stone);margin-top:2px;}
+
+/* EMPTY STATE */
+.empty-state{padding:30px;text-align:center;color:var(--stone);font-size:12px;line-height:1.8;}
 .empty-state .es-icon{font-size:32px;margin-bottom:10px;}
 
-/* ══════════ TOAST ══════════ */
-#toast{
-  position:fixed;bottom:24px;right:24px;z-index:9999;
-  background:linear-gradient(135deg,#1a1005,#2e1c08);
-  border:1px solid var(--gold3);border-radius:10px;
-  padding:12px 20px;font-size:12px;color:var(--cream);
-  font-family:'Lora',serif;opacity:0;transform:translateY(8px);
-  transition:all 0.3s;pointer-events:none;
-}
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:linear-gradient(135deg,#1a1005,#2e1c08);border:1px solid var(--gold3);border-radius:10px;padding:12px 20px;font-size:12px;color:var(--cream);font-family:'Lora',serif;opacity:0;transform:translateY(8px);transition:all 0.3s;pointer-events:none;}
 #toast.show{opacity:1;transform:translateY(0);}
 
-/* ══════════ LOADING ══════════ */
-.loading{
-  display:flex;align-items:center;gap:8px;
-  color:var(--stone);font-size:11px;padding:12px 0;
-}
-.loading::before{
-  content:'';width:14px;height:14px;border-radius:50%;
-  border:2px solid var(--border);border-top-color:var(--gold);
-  animation:spin 0.8s linear infinite;flex-shrink:0;
-}
+/* LOADING */
+.loading{display:flex;align-items:center;gap:8px;color:var(--stone);font-size:11px;padding:12px 0;}
+.loading::before{content:'';width:14px;height:14px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--gold);animation:spin 0.8s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg);}}
+
+/* UYARI BALONU — aktif ziyaretçi yoksa */
+.info-banner{background:rgba(196,154,60,0.06);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:11px;color:var(--stone);line-height:1.7;}
+.info-banner strong{color:var(--gold);}
+
+/* MAP LEGEND */
+.map-legend{display:flex;gap:16px;flex-wrap:wrap;padding:10px 0 0;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--cream2);}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
 </style>
 </head>
 <body>
 
-<!-- ══════════ LOGIN ══════════ -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
@@ -319,7 +211,7 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
   </div>
 </div>
 
-<!-- ══════════ TOPBAR ══════════ -->
+<!-- TOPBAR -->
 <div id="topbar">
   <div class="topbar-logo">
     🏛️ YÖNETİM PANELİ
@@ -331,46 +223,38 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
   <div id="live-clock">--:--:--</div>
 </div>
 
-<!-- ══════════ APP ══════════ -->
+<!-- APP -->
 <div id="app">
   <!-- SIDEBAR -->
   <div id="sidebar">
     <div class="nav-section">GENEL BAKIŞ</div>
-    <div class="nav-item active" onclick="showPanel('dashboard')"><span class="ni-icon">📊</span><span class="ni-label">Gösterge Paneli</span></div>
-
+    <div class="nav-item active" onclick="showPanel('dashboard',this)"><span class="ni-icon">📊</span><span class="ni-label">Gösterge Paneli</span></div>
     <div class="nav-section">CANLI TAKİP</div>
-    <div class="nav-item" onclick="showPanel('live-map')"><span class="ni-icon">🗺️</span><span class="ni-label">Canlı Harita</span></div>
-    <div class="nav-item" onclick="showPanel('live-visitors')"><span class="ni-icon">👥</span><span class="ni-label">Aktif Ziyaretçiler</span></div>
-
+    <div class="nav-item" onclick="showPanel('live-map',this)"><span class="ni-icon">🗺️</span><span class="ni-label">Canlı Harita</span></div>
+    <div class="nav-item" onclick="showPanel('live-visitors',this)"><span class="ni-icon">👥</span><span class="ni-label">Aktif Ziyaretçiler</span></div>
     <div class="nav-section">BÖLGE ANALİZİ</div>
-    <div class="nav-item" onclick="showPanel('zone-stats')"><span class="ni-icon">📍</span><span class="ni-label">Bölge İstatistikleri</span></div>
-    <div class="nav-item" onclick="showPanel('heatmap')"><span class="ni-icon">🔥</span><span class="ni-label">Isı Haritası</span></div>
-    <div class="nav-item" onclick="showPanel('routes')"><span class="ni-icon">🧭</span><span class="ni-label">Rota Haritası</span></div>
-
+    <div class="nav-item" onclick="showPanel('zone-stats',this)"><span class="ni-icon">📍</span><span class="ni-label">Bölge İstatistikleri</span></div>
+    <div class="nav-item" onclick="showPanel('heatmap',this)"><span class="ni-icon">🔥</span><span class="ni-label">Isı Haritası</span></div>
+    <div class="nav-item" onclick="showPanel('routes',this)"><span class="ni-icon">🧭</span><span class="ni-label">Rota Haritası</span></div>
     <div class="nav-section">ZİYARETÇİ ANALİZİ</div>
-    <div class="nav-item" onclick="showPanel('sessions')"><span class="ni-icon">⏱️</span><span class="ni-label">Oturum Süreleri</span></div>
-    <div class="nav-item" onclick="showPanel('devices')"><span class="ni-icon">📱</span><span class="ni-label">Cihaz & Erişim</span></div>
-    <div class="nav-item" onclick="showPanel('languages')"><span class="ni-icon">🌐</span><span class="ni-label">Dil İstatistikleri</span></div>
-
+    <div class="nav-item" onclick="showPanel('sessions',this)"><span class="ni-icon">⏱️</span><span class="ni-label">Oturum Süreleri</span></div>
+    <div class="nav-item" onclick="showPanel('devices',this)"><span class="ni-icon">📱</span><span class="ni-label">Cihaz & Erişim</span></div>
+    <div class="nav-item" onclick="showPanel('languages',this)"><span class="ni-icon">🌐</span><span class="ni-label">Dil İstatistikleri</span></div>
     <div class="nav-section">İÇERİK ANALİZİ</div>
-    <div class="nav-item" onclick="showPanel('buttons')"><span class="ni-icon">🖱️</span><span class="ni-label">Buton Tıklamaları</span></div>
-    <div class="nav-item" onclick="showPanel('guestbook')"><span class="ni-icon">📖</span><span class="ni-label">Gönül Defteri</span></div>
+    <div class="nav-item" onclick="showPanel('buttons',this)"><span class="ni-icon">🖱️</span><span class="ni-label">Buton Tıklamaları</span></div>
+    <div class="nav-item" onclick="showPanel('guestbook',this)"><span class="ni-icon">📖</span><span class="ni-label">Gönül Defteri</span></div>
   </div>
 
   <!-- MAIN -->
   <div id="main">
 
-    <!-- ═══ PANEL: DASHBOARD ═══ -->
+    <!-- ═══ DASHBOARD ═══ -->
     <div class="panel active" id="panel-dashboard">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">📊 GÖSTERGE PANELİ</div>
-          <div class="panel-subtitle">Genel istatistikler — gerçek zamanlı</div>
-        </div>
+        <div><div class="panel-title">📊 GÖSTERGE PANELİ</div><div class="panel-subtitle">Genel istatistikler — gerçek zamanlı</div></div>
         <div class="panel-header-line"></div>
         <button class="btn-refresh" onclick="loadAll()">↻ YENİLE</button>
       </div>
-
       <div class="cards-row">
         <div class="stat-card gold"><div class="sc-icon">📅</div><div class="sc-label">BUGÜN</div><div class="sc-value" id="d-today">—</div><div class="sc-sub">ziyaretçi oturumu</div></div>
         <div class="stat-card green"><div class="sc-icon">🟢</div><div class="sc-label">CANLI</div><div class="sc-value green" id="d-live">—</div><div class="sc-sub">aktif ziyaretçi</div></div>
@@ -378,41 +262,20 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
         <div class="stat-card purple"><div class="sc-icon">📖</div><div class="sc-label">DEFTER</div><div class="sc-value purple" id="d-guestbook">—</div><div class="sc-sub">yorum sayısı</div></div>
         <div class="stat-card gold"><div class="sc-icon">📱</div><div class="sc-label">TOPLAM</div><div class="sc-value" id="d-total">—</div><div class="sc-sub">tüm zamanlar</div></div>
       </div>
-
       <div class="grid2">
-        <div class="section">
-          <div class="section-head">
-            <div class="section-title">📅 SON 7 GÜN — ZİYARETÇİ</div>
-          </div>
-          <div class="section-body">
-            <div class="chart-bars" id="daily-chart"><div class="loading">Yükleniyor…</div></div>
-          </div>
-        </div>
-        <div class="section">
-          <div class="section-head"><div class="section-title">📍 EN POPÜLER BÖLGELER</div></div>
-          <div class="section-body" id="top-zones"><div class="loading">Yükleniyor…</div></div>
-        </div>
+        <div class="section"><div class="section-head"><div class="section-title">📅 SON 7 GÜN — ZİYARETÇİ</div></div><div class="section-body"><div class="chart-bars" id="daily-chart"><div class="loading">Yükleniyor…</div></div></div></div>
+        <div class="section"><div class="section-head"><div class="section-title">📍 EN POPÜLER BÖLGELER</div></div><div class="section-body" id="top-zones"><div class="loading">Yükleniyor…</div></div></div>
       </div>
-
       <div class="grid2">
-        <div class="section">
-          <div class="section-head"><div class="section-title">🌐 DİL DAĞILIMI</div></div>
-          <div class="section-body" id="dash-langs"><div class="loading">Yükleniyor…</div></div>
-        </div>
-        <div class="section">
-          <div class="section-head"><div class="section-title">📱 CİHAZ TÜRÜ</div></div>
-          <div class="section-body" id="dash-devices"><div class="loading">Yükleniyor…</div></div>
-        </div>
+        <div class="section"><div class="section-head"><div class="section-title">🌐 DİL DAĞILIMI</div></div><div class="section-body" id="dash-langs"><div class="loading">Yükleniyor…</div></div></div>
+        <div class="section"><div class="section-head"><div class="section-title">📱 CİHAZ TÜRÜ</div></div><div class="section-body" id="dash-devices"><div class="loading">Yükleniyor…</div></div></div>
       </div>
     </div>
 
-    <!-- ═══ PANEL: LIVE MAP ═══ -->
+    <!-- ═══ LIVE MAP ═══ -->
     <div class="panel" id="panel-live-map">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">🗺️ CANLI ZİYARETÇİ HARİTASI</div>
-          <div class="panel-subtitle">Poligon bölgeleri ve anlık ziyaretçi konumları</div>
-        </div>
+        <div><div class="panel-title">🗺️ CANLI ZİYARETÇİ HARİTASI</div><div class="panel-subtitle">Yalnızca son 30 dakika içinde güncellenen ziyaretçiler gösterilir</div></div>
         <div class="panel-header-line"></div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);">● CANLI</div>
       </div>
@@ -423,232 +286,170 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
         </div>
         <div class="section-body" style="padding:12px;">
           <div id="live-map"></div>
+          <div class="map-legend" id="map-legend"></div>
         </div>
       </div>
       <div class="section">
-        <div class="section-head"><div class="section-title">👥 CANLI ZİYARETÇİ LİSTESİ</div></div>
+        <div class="section-head"><div class="section-title">👥 CANLI ZİYARETÇİ LİSTESİ</div><div class="section-badge" id="live-list-info">son 30 dk</div></div>
         <div class="section-body">
-          <table class="data-table">
-            <thead><tr><th>ZİYARETÇİ ID</th><th>BÖLGE</th><th>DURAK</th><th>DİL</th><th>SÜRE</th><th>SON GÜNCELLEME</th></tr></thead>
-            <tbody id="live-table-body"><tr><td colspan="6"><div class="loading">Yükleniyor…</div></td></tr></tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>ZİYARETÇİ ID</th><th>BÖLGE</th><th>DURAK</th><th>DİL</th><th>SÜRE</th><th>SON GÜNCELLEME</th></tr></thead>
+              <tbody id="live-table-body"><tr><td colspan="6"><div class="loading">Yükleniyor…</div></td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ PANEL: LIVE VISITORS ═══ -->
+    <!-- ═══ LIVE VISITORS ═══ -->
     <div class="panel" id="panel-live-visitors">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">👥 AKTİF ZİYARETÇİLER</div>
-          <div class="panel-subtitle">Cihaz türü, durak ve dil bilgisi ile anlık liste</div>
-        </div>
+        <div><div class="panel-title">👥 AKTİF ZİYARETÇİLER</div><div class="panel-subtitle">Son 30 dakika içinde güncellenen oturumlar</div></div>
         <div class="panel-header-line"></div>
       </div>
       <div class="cards-row">
         <div class="stat-card green"><div class="sc-icon">👥</div><div class="sc-label">AKTİF</div><div class="sc-value green" id="lv-active">—</div><div class="sc-sub">bağlı ziyaretçi</div></div>
-        <div class="stat-card blue"><div class="sc-icon">📱</div><div class="sc-label">MOBIL</div><div class="sc-value blue" id="lv-mobile">—</div><div class="sc-sub">mobil cihaz</div></div>
+        <div class="stat-card blue"><div class="sc-icon">📱</div><div class="sc-label">MOBİL</div><div class="sc-value blue" id="lv-mobile">—</div><div class="sc-sub">mobil cihaz</div></div>
         <div class="stat-card gold"><div class="sc-icon">💻</div><div class="sc-label">MASAÜSTÜ</div><div class="sc-value" id="lv-desktop">—</div><div class="sc-sub">masaüstü</div></div>
         <div class="stat-card purple"><div class="sc-icon">📍</div><div class="sc-label">KONUM İZİNLİ</div><div class="sc-value purple" id="lv-loc">—</div><div class="sc-sub">konum paylaşıyor</div></div>
       </div>
       <div class="section">
         <div class="section-head"><div class="section-title">📋 BAĞLI ZİYARETÇİ LİSTESİ</div></div>
         <div class="section-body">
-          <table class="data-table">
-            <thead><tr><th>SESSION</th><th>CİHAZ</th><th>DİL</th><th>DURAK</th><th>BÖLGE</th><th>BAŞLANGIC</th></tr></thead>
-            <tbody id="live-visitors-body"><tr><td colspan="6"><div class="loading">Yükleniyor…</div></td></tr></tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>SESSION</th><th>CİHAZ</th><th>DİL</th><th>DURAK</th><th>BÖLGE</th><th>BAŞLANGIÇ</th></tr></thead>
+              <tbody id="live-visitors-body"><tr><td colspan="6"><div class="loading">Yükleniyor…</div></td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ PANEL: ZONE STATS ═══ -->
+    <!-- ═══ ZONE STATS ═══ -->
     <div class="panel" id="panel-zone-stats">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">📍 BÖLGE İSTATİSTİKLERİ</div>
-          <div class="panel-subtitle">Hangi bölgede ne kadar süre kalındı, kaç kişi girdi</div>
-        </div>
+        <div><div class="panel-title">📍 BÖLGE İSTATİSTİKLERİ</div><div class="panel-subtitle">Hangi bölgede ne kadar süre kalındı</div></div>
         <div class="panel-header-line"></div>
         <button class="btn-refresh" onclick="loadZoneStats()">↻ YENİLE</button>
       </div>
-
-      <div class="section">
-        <div class="section-head"><div class="section-title">📊 BÖLGE ZİYARET SAYILARI</div></div>
-        <div class="section-body" id="zone-bars"><div class="loading">Yükleniyor…</div></div>
-      </div>
-
+      <div class="section"><div class="section-head"><div class="section-title">📊 BÖLGE ZİYARET SAYILARI</div></div><div class="section-body" id="zone-bars"><div class="loading">Yükleniyor…</div></div></div>
       <div class="section">
         <div class="section-head"><div class="section-title">⏱️ ORTALAMA KALMA SÜRELERİ</div></div>
         <div class="section-body">
-          <table class="data-table" id="zone-table">
-            <thead><tr><th>BÖLGE</th><th>TOPLAM ZİYARET</th><th>ORT. SÜRE (dk)</th><th>EN UZUN SÜRE</th><th>DURUM</th></tr></thead>
-            <tbody id="zone-table-body"><tr><td colspan="5"><div class="loading">Yükleniyor…</div></td></tr></tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>BÖLGE</th><th>TOPLAM ZİYARET</th><th>ORT. SÜRE (dk)</th><th>EN UZUN SÜRE</th><th>DURUM</th></tr></thead>
+              <tbody id="zone-table-body"><tr><td colspan="5"><div class="loading">Yükleniyor…</div></td></tr></tbody>
+            </table>
+          </div>
         </div>
-      </div>
-
-      <div class="section">
-        <div class="section-head"><div class="section-title">📅 GÜNLÜK BÖLGE KULLANIMI</div></div>
-        <div class="section-body" id="zone-daily"><div class="loading">Yükleniyor…</div></div>
       </div>
     </div>
 
-    <!-- ═══ PANEL: HEATMAP ═══ -->
+    <!-- ═══ HEATMAP ═══ -->
     <div class="panel" id="panel-heatmap">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">🔥 ISI HARİTASI</div>
-          <div class="panel-subtitle">Ziyaretçi yoğunluğu haritası — bölgelere göre</div>
-        </div>
+        <div><div class="panel-title">🔥 ISI HARİTASI</div><div class="panel-subtitle">Ziyaretçi yoğunluğu haritası</div></div>
         <div class="panel-header-line"></div>
       </div>
-      <div class="section">
-        <div class="section-head"><div class="section-title">🗺️ YOĞUNLUK HARİTASI</div></div>
-        <div class="section-body" style="padding:12px;">
-          <div id="heatmap-container"></div>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-head"><div class="section-title">📊 BÖLGE YOĞUNLUK SKORU</div></div>
-        <div class="section-body" id="heatmap-legend"><div class="loading">Yükleniyor…</div></div>
-      </div>
+      <div class="section"><div class="section-head"><div class="section-title">🗺️ YOĞUNLUK HARİTASI</div></div><div class="section-body" style="padding:12px;"><div id="heatmap-container"></div></div></div>
+      <div class="section"><div class="section-head"><div class="section-title">📊 BÖLGE YOĞUNLUK SKORU</div></div><div class="section-body" id="heatmap-legend"><div class="loading">Yükleniyor…</div></div></div>
     </div>
 
-    <!-- ═══ PANEL: ROUTES ═══ -->
+    <!-- ═══ ROUTES ═══ -->
     <div class="panel" id="panel-routes">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">🧭 ROTA ANALİZİ</div>
-          <div class="panel-subtitle">Ziyaretçilerin külliyede izledikleri rotalar</div>
-        </div>
+        <div><div class="panel-title">🧭 ROTA ANALİZİ</div><div class="panel-subtitle">Ziyaretçilerin külliyede izledikleri rotalar</div></div>
         <div class="panel-header-line"></div>
       </div>
-      <div class="section">
-        <div class="section-head"><div class="section-title">🗺️ ROTA HARİTASI</div></div>
-        <div class="section-body" style="padding:12px;">
-          <div id="route-map"></div>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-head"><div class="section-title">🔀 EN SIK ROTALAR</div></div>
-        <div class="section-body" id="route-flows">
-          <div class="loading">Oturum verileri analiz ediliyor…</div>
-        </div>
-      </div>
+      <div class="section"><div class="section-head"><div class="section-title">🗺️ ROTA HARİTASI</div></div><div class="section-body" style="padding:12px;"><div id="route-map"></div></div></div>
+      <div class="section"><div class="section-head"><div class="section-title">🔀 EN SIK ROTALAR</div></div><div class="section-body" id="route-flows"><div class="loading">Oturum verileri analiz ediliyor…</div></div></div>
     </div>
 
-    <!-- ═══ PANEL: SESSIONS ═══ -->
+    <!-- ═══ SESSIONS ═══ -->
     <div class="panel" id="panel-sessions">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">⏱️ OTURUM SÜRELERİ</div>
-          <div class="panel-subtitle">Ziyaretçilerin rehberde geçirdikleri süreler</div>
-        </div>
+        <div><div class="panel-title">⏱️ OTURUM SÜRELERİ</div><div class="panel-subtitle">Ziyaretçilerin rehberde geçirdikleri süreler</div></div>
         <div class="panel-header-line"></div>
         <button class="btn-refresh" onclick="loadSessions()">↻ YENİLE</button>
       </div>
-
       <div class="cards-row">
         <div class="stat-card gold"><div class="sc-label">ORT. SÜRE</div><div class="sc-value" id="s-avg">—</div><div class="sc-sub">dakika</div></div>
         <div class="stat-card blue"><div class="sc-label">EN UZUN</div><div class="sc-value blue" id="s-max">—</div><div class="sc-sub">dakika</div></div>
         <div class="stat-card green"><div class="sc-label">ORT. DURAK</div><div class="sc-value green" id="s-stop">—</div><div class="sc-sub">son durak</div></div>
         <div class="stat-card purple"><div class="sc-label">KONUM İZİNLİ</div><div class="sc-value purple" id="s-loc">—</div><div class="sc-sub">ziyaretçi</div></div>
       </div>
-
       <div class="section">
         <div class="section-head"><div class="section-title">📋 SON OTURUMLAR</div></div>
         <div class="section-body">
-          <table class="data-table">
-            <thead><tr><th>SESSION ID</th><th>BAŞLANGIC</th><th>SÜRE (DK)</th><th>SON DURAK</th><th>DİL</th><th>KONUM</th><th>DURUM</th></tr></thead>
-            <tbody id="sessions-body"><tr><td colspan="7"><div class="loading">Yükleniyor…</div></td></tr></tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>SESSION ID</th><th>BAŞLANGIÇ</th><th>SÜRE (DK)</th><th>SON DURAK</th><th>DİL</th><th>KONUM</th><th>DURUM</th></tr></thead>
+              <tbody id="sessions-body"><tr><td colspan="7"><div class="loading">Yükleniyor…</div></td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
-
-      <div class="section">
-        <div class="section-head"><div class="section-title">📊 SÜRE DAĞILIMI</div></div>
-        <div class="section-body" id="duration-dist"><div class="loading">Yükleniyor…</div></div>
-      </div>
+      <div class="section"><div class="section-head"><div class="section-title">📊 SÜRE DAĞILIMI</div></div><div class="section-body" id="duration-dist"><div class="loading">Yükleniyor…</div></div></div>
     </div>
 
-    <!-- ═══ PANEL: DEVICES ═══ -->
+    <!-- ═══ DEVICES ═══ -->
     <div class="panel" id="panel-devices">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">📱 CİHAZ & ERİŞİM ANALİZİ</div>
-          <div class="panel-subtitle">QR kodu, web ve cihaz türü istatistikleri</div>
-        </div>
+        <div><div class="panel-title">📱 CİHAZ & ERİŞİM ANALİZİ</div><div class="panel-subtitle">QR kodu, web ve cihaz türü istatistikleri</div></div>
         <div class="panel-header-line"></div>
+        <button class="btn-refresh" onclick="loadDevices()">↻ YENİLE</button>
       </div>
-
       <div class="cards-row">
         <div class="stat-card gold"><div class="sc-icon">📱</div><div class="sc-label">MOBİL</div><div class="sc-value" id="dev-mobile">—</div><div class="sc-sub">mobil oturum</div></div>
         <div class="stat-card blue"><div class="sc-icon">💻</div><div class="sc-label">MASAÜSTÜ</div><div class="sc-value blue" id="dev-desktop">—</div><div class="sc-sub">masaüstü oturum</div></div>
         <div class="stat-card green"><div class="sc-icon">📟</div><div class="sc-label">TABLET</div><div class="sc-value green" id="dev-tablet">—</div><div class="sc-sub">tablet oturum</div></div>
         <div class="stat-card purple"><div class="sc-icon">📲</div><div class="sc-label">PWA</div><div class="sc-value purple" id="dev-pwa">—</div><div class="sc-sub">ana ekrana eklendi</div></div>
       </div>
-
       <div class="grid2">
-        <div class="section">
-          <div class="section-head"><div class="section-title">🌐 ERİŞİM TÜRÜ</div></div>
-          <div class="section-body" id="access-type">
-            <div class="loading">Yükleniyor…</div>
-          </div>
-        </div>
-        <div class="section">
-          <div class="section-head"><div class="section-title">📱 İŞLETİM SİSTEMİ</div></div>
-          <div class="section-body" id="os-dist">
-            <div class="loading">Yükleniyor…</div>
-          </div>
-        </div>
+        <div class="section"><div class="section-head"><div class="section-title">🌐 ERİŞİM TÜRÜ</div></div><div class="section-body" id="access-type"><div class="loading">Yükleniyor…</div></div></div>
+        <div class="section"><div class="section-head"><div class="section-title">📱 İŞLETİM SİSTEMİ</div></div><div class="section-body" id="os-dist"><div class="loading">Yükleniyor…</div></div></div>
       </div>
-
       <div class="section">
         <div class="section-head"><div class="section-title">📋 CİHAZ DETAYLARI — SON OTURUMLAR</div></div>
         <div class="section-body">
-          <table class="data-table">
-            <thead><tr><th>TARİH</th><th>CİHAZ TÜRÜ</th><th>İŞLETİM SİSTEMİ</th><th>TARAYICI</th><th>SÜRE (DK)</th><th>DURUM</th></tr></thead>
-            <tbody id="device-table-body"><tr><td colspan="6"><div class="loading">Yükleniyor…</div></td></tr></tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>TARİH</th><th>CİHAZ TÜRÜ</th><th>İŞLETİM SİSTEMİ</th><th>TARAYICI</th><th>SÜRE (DK)</th><th>DURUM</th></tr></thead>
+              <tbody id="device-table-body"><tr><td colspan="6"><div class="loading">Yükleniyor…</div></td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ PANEL: LANGUAGES ═══ -->
+    <!-- ═══ LANGUAGES ═══ -->
     <div class="panel" id="panel-languages">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">🌐 DİL İSTATİSTİKLERİ</div>
-          <div class="panel-subtitle">Hangi dil sayfası kaç kez kullanıldı</div>
-        </div>
+        <div><div class="panel-title">🌐 DİL İSTATİSTİKLERİ</div><div class="panel-subtitle">Hangi dil sayfası kaç kez kullanıldı</div></div>
         <div class="panel-header-line"></div>
         <button class="btn-refresh" onclick="loadLanguages()">↻ YENİLE</button>
       </div>
-
-      <div class="section">
-        <div class="section-head"><div class="section-title">🌍 DİL KULLANIM ORANLARI</div></div>
-        <div class="section-body" id="lang-bars-detail"><div class="loading">Yükleniyor…</div></div>
-      </div>
-
+      <div class="section"><div class="section-head"><div class="section-title">🌍 DİL KULLANIM ORANLARI</div></div><div class="section-body" id="lang-bars-detail"><div class="loading">Yükleniyor…</div></div></div>
       <div class="section">
         <div class="section-head"><div class="section-title">📋 DİL DETAY TABLOSU</div></div>
         <div class="section-body">
-          <table class="data-table">
-            <thead><tr><th>DİL</th><th>KOD</th><th>OTURUM SAYISI</th><th>ORT. SÜRE (DK)</th><th>ORAN</th></tr></thead>
-            <tbody id="lang-table-body"><tr><td colspan="5"><div class="loading">Yükleniyor…</div></td></tr></tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>DİL</th><th>KOD</th><th>OTURUM SAYISI</th><th>ORT. SÜRE (DK)</th><th>ORAN</th></tr></thead>
+              <tbody id="lang-table-body"><tr><td colspan="5"><div class="loading">Yükleniyor…</div></td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ PANEL: BUTTONS ═══ -->
+    <!-- ═══ BUTTONS ═══ -->
     <div class="panel" id="panel-buttons">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">🖱️ BUTON TIKLAMALARI</div>
-          <div class="panel-subtitle">Durak bazında buton tıklama istatistikleri</div>
-        </div>
+        <div><div class="panel-title">🖱️ BUTON TIKLAMALARI</div><div class="panel-subtitle">Durak bazında buton tıklama istatistikleri</div></div>
         <div class="panel-header-line"></div>
         <button class="btn-refresh" onclick="loadButtonStats()">↻ YENİLE</button>
       </div>
@@ -662,35 +463,29 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
       <div class="section">
         <div class="section-head"><div class="section-title">🏆 EN ÇOK TIKLANAN BUTONLAR</div></div>
         <div class="section-body">
-          <table class="data-table">
-            <thead><tr><th>SIRA</th><th>BUTON</th><th>DURAK</th><th>TIKLAMA</th></tr></thead>
-            <tbody id="top-buttons-body"><tr><td colspan="4"><div class="loading">Yükleniyor…</div></td></tr></tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>SIRA</th><th>BUTON</th><th>DURAK</th><th>TIKLAMA</th></tr></thead>
+              <tbody id="top-buttons-body"><tr><td colspan="4"><div class="loading">Yükleniyor…</div></td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ PANEL: GUESTBOOK ═══ -->
+    <!-- ═══ GUESTBOOK ═══ -->
     <div class="panel" id="panel-guestbook">
       <div class="panel-header">
-        <div>
-          <div class="panel-title">📖 GÖNÜL DEFTERİ</div>
-          <div class="panel-subtitle">Ziyaretçi yorumları ve istatistikler</div>
-        </div>
+        <div><div class="panel-title">📖 GÖNÜL DEFTERİ</div><div class="panel-subtitle">Ziyaretçi yorumları ve istatistikler</div></div>
         <div class="panel-header-line"></div>
         <button class="btn-refresh" onclick="loadGuestbook()">↻ YENİLE</button>
       </div>
-
       <div class="cards-row">
         <div class="stat-card gold"><div class="sc-icon">📖</div><div class="sc-label">TOPLAM YORUM</div><div class="sc-value" id="gb-total">—</div><div class="sc-sub">ziyaretçi yorumu</div></div>
         <div class="stat-card blue"><div class="sc-icon">📅</div><div class="sc-label">BUGÜN</div><div class="sc-value blue" id="gb-today">—</div><div class="sc-sub">bugünkü yorum</div></div>
         <div class="stat-card green"><div class="sc-icon">🌍</div><div class="sc-label">ŞEHİR</div><div class="sc-value green" id="gb-cities">—</div><div class="sc-sub">farklı şehir</div></div>
       </div>
-
-      <div class="section">
-        <div class="section-head"><div class="section-title">💬 SON YORUMLAR</div></div>
-        <div class="section-body" id="guestbook-list"><div class="loading">Yükleniyor…</div></div>
-      </div>
+      <div class="section"><div class="section-head"><div class="section-title">💬 SON YORUMLAR</div></div><div class="section-body" id="guestbook-list"><div class="loading">Yükleniyor…</div></div></div>
     </div>
 
   </div><!-- /main -->
@@ -700,11 +495,10 @@ body{height:100%;background:var(--bg);color:var(--cream);font-family:'Lora',seri
 
 <script>
 // ══════════════════════════════════════════════════════════
-//  ADMIN PANEL — Sultan II. Bayezid Külliyesi Sağlık Müzesi
-//  Firebase'den gerçek zamanlı veri çeker
+//  ADMIN PANEL — Sultan II. Bayezid Külliyesi
 // ══════════════════════════════════════════════════════════
 
-// ── Firebase Config — kendi projenizin değerleriyle değiştirin ──
+// ── Firebase Config ──
 const FB_CONFIG = {
   apiKey: "AIzaSyDXbfeuczA_aOJcB7YegqrGK29yaWHD-PM",
   authDomain: "edirnesaglikmuze.firebaseapp.com",
@@ -714,10 +508,12 @@ const FB_CONFIG = {
   appId: "1:707402210781:web:fb65c71ca2557575e4aa34"
 };
 
-// ── Admin Parola (basit istemci tarafı koruma) ──
 const ADMIN_PASSWORD = "bayezid2025";
 
-// ── Bölge Tanımları (rehber.html'den alındı) ──
+// Canlı ziyaretçi eşiği: son 30 dakika
+const LIVE_THRESHOLD_MS = 30 * 60 * 1000;
+
+// ── Bölge Tanımları ──
 const ZONES = [
   {id:'camii',name:'Cami',color:'#c49a3c',coords:[[41.685501,26.544305],[41.685300,26.544541],[41.685481,26.544812],[41.685677,26.544568]]},
   {id:'tabhane-sol',name:'Sol Tabhane',color:'#5599e0',coords:[[41.685679,26.544572],[41.685534,26.544753],[41.685725,26.545021],[41.685859,26.544853]]},
@@ -732,42 +528,33 @@ const ZONES = [
   {id:'imarethane',name:'İmarethane',color:'#b8d455',coords:[[41.686296,26.544321],[41.685726,26.545024],[41.685909,26.545302],[41.686471,26.544608]]}
 ];
 
-// Durak bazlı buton listesi (rehber.html'deki tüm butonlar)
+// ── Buton tanımları (rehber.html ile eşleşen) ──
 const STOP_BUTTONS = [
-  {stop:0,name:'Müze Girişi',buttons:['ZAMANDA YOLCULUĞA BAŞLA →']},
-  {stop:1,name:'Darüşşifa Girişi',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
-  {stop:2,name:'Birinci Avlu',buttons:['◀ GERİ','İLERİ →','📽️ VİDEO İZLE','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
-  {stop:3,name:'Darüşşifa Ortası',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
-  {stop:4,name:'İkinci Avlu',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
-  {stop:5,name:'Poliklinik Odaları',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
-  {stop:6,name:'Tıp Medresesi',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
+  {stop:0,name:'Müze Girişi',buttons:['ZAMANDA YOLCULUĞA BAŞLA →','YOLCULUĞA BAŞLA']},
+  {stop:1,name:'Darüşşifa 1. Avlu',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle','SUNUMU İZLE ▶']},
+  {stop:2,name:'Darüşşifa 2. Avlu',buttons:['◀ GERİ','İLERİ →','📽️ VİDEO İZLE','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
+  {stop:3,name:'Şifahane',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
+  {stop:4,name:'Medrese',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
+  {stop:5,name:'Büyük Avlu',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
+  {stop:6,name:'İmarethane',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
   {stop:7,name:'Cami Avlusu',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
   {stop:8,name:'Cami İçi',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
-  {stop:9,name:'İmarethane',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
-  {stop:10,name:'Gönül Köprüsü',buttons:['◀ GERİ','GÖNDER 📜','ARŞİV ▼']},
-  {stop:'global',name:'Genel (Her Durumda)',buttons:['☰ Menü','🔊 Ses','🌐 Dil Seç','📍 Konumum','🗺️ Harita','💬 Evliya Çelebi','📲 Ana Ekrana Ekle','YOLCULUĞA BAŞLA','↻ YENİLE']}
+  {stop:9,name:'Gönül Köprüsü Davet',buttons:['◀ GERİ','İLERİ →','🖼️ FOTOĞRAFI BÜYÜT','🎵 Sesi Dinle']},
+  {stop:10,name:'Gönül Köprüsü',buttons:['◀ GERİ','GÖNDER 📜','ARŞİV ▼','🏛️ BAŞA DÖN']},
+  {stop:'global',name:'Genel (Her Durumda)',buttons:['☰ Menü','🔊 Ses','🌐 Dil Seç','📍 Konumum','🗺️ Harita','💬 Evliya Çelebi','📲 Ana Ekrana Ekle','↻ YENİLE']}
 ];
 
 const LANG_META = {
-  tr:{flag:'🇹🇷',name:'Türkçe'},
-  en:{flag:'🇬🇧',name:'İngilizce'},
-  de:{flag:'🇩🇪',name:'Almanca'},
-  fr:{flag:'🇫🇷',name:'Fransızca'},
-  it:{flag:'🇮🇹',name:'İtalyanca'},
-  es:{flag:'🇪🇸',name:'İspanyolca'},
-  ru:{flag:'🇷🇺',name:'Rusça'},
-  ar:{flag:'🇸🇦',name:'Arapça'},
-  bg:{flag:'🇧🇬',name:'Bulgarca'},
-  el:{flag:'🇬🇷',name:'Yunanca'},
-  zh:{flag:'🇨🇳',name:'Çince'},
-  ro:{flag:'🇷🇴',name:'Romence'},
-  ja:{flag:'🇯🇵',name:'Japonca'},
-  fa:{flag:'🇮🇷',name:'Farsça'}
+  tr:{flag:'🇹🇷',name:'Türkçe'},en:{flag:'🇬🇧',name:'İngilizce'},de:{flag:'🇩🇪',name:'Almanca'},
+  fr:{flag:'🇫🇷',name:'Fransızca'},it:{flag:'🇮🇹',name:'İtalyanca'},es:{flag:'🇪🇸',name:'İspanyolca'},
+  ru:{flag:'🇷🇺',name:'Rusça'},ar:{flag:'🇸🇦',name:'Arapça'},bg:{flag:'🇧🇬',name:'Bulgarca'},
+  el:{flag:'🇬🇷',name:'Yunanca'},zh:{flag:'🇨🇳',name:'Çince'},ro:{flag:'🇷🇴',name:'Romence'},
+  ja:{flag:'🇯🇵',name:'Japonca'},fa:{flag:'🇮🇷',name:'Farsça'}
 };
 
 let db = null;
 let liveMap = null, routeMap = null, heatMap = null;
-let liveUnsubscribers = [];
+let liveMarkers = [];
 let allSessions = [];
 let zoneStatsCache = {};
 let btnStatsCache = {};
@@ -786,9 +573,8 @@ function doLogin(){
 document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 // ══════════ CLOCK ══════════
-setInterval(()=>{
-  document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('tr-TR');
-},1000);
+setInterval(()=>{document.getElementById('live-clock').textContent=new Date().toLocaleTimeString('tr-TR');},1000);
+document.getElementById('live-clock').textContent=new Date().toLocaleTimeString('tr-TR');
 
 // ══════════ FIREBASE INIT ══════════
 function initFirebase(){
@@ -798,7 +584,7 @@ function initFirebase(){
     setConn(true);
     loadAll();
     startLiveListeners();
-    initAllMaps();
+    setTimeout(initAllMaps, 400);
   } catch(e){
     setConn(false);
     showToast('Firebase bağlantı hatası: '+e.message);
@@ -806,18 +592,18 @@ function initFirebase(){
 }
 
 function setConn(ok){
-  const dot = document.getElementById('conn-dot');
-  const label = document.getElementById('conn-label');
+  const dot=document.getElementById('conn-dot');
+  const label=document.getElementById('conn-label');
   dot.className = ok ? 'live' : 'error';
   label.textContent = ok ? 'Bağlı' : 'Bağlantı Hatası';
 }
 
 // ══════════ PANEL NAV ══════════
-function showPanel(id){
+function showPanel(id, el){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if(el) el.classList.add('active');
   // lazy load
   if(id==='zone-stats') loadZoneStats();
   if(id==='sessions') loadSessions();
@@ -825,45 +611,27 @@ function showPanel(id){
   if(id==='languages') loadLanguages();
   if(id==='buttons') loadButtonStats();
   if(id==='guestbook') loadGuestbook();
-  if(id==='heatmap') loadHeatmap();
-  if(id==='routes') loadRoutes();
-  if(id==='live-map') { if(liveMap) liveMap.invalidateSize(); }
-  if(id==='routes') { if(routeMap) routeMap.invalidateSize(); }
-  if(id==='heatmap') { if(heatMap) heatMap.invalidateSize(); }
+  if(id==='heatmap') { loadHeatmap(); setTimeout(()=>{if(heatMap)heatMap.invalidateSize();},300); }
+  if(id==='routes') { loadRoutes(); setTimeout(()=>{if(routeMap)routeMap.invalidateSize();},300); }
+  if(id==='live-map') { setTimeout(()=>{if(liveMap)liveMap.invalidateSize();},300); }
 }
 
 // ══════════ LOAD ALL ══════════
-async function loadAll(){
-  if(!db) return;
-  loadDashboard();
-}
+async function loadAll(){if(!db)return; await loadDashboard();}
 
 // ══════════ MAPS INIT ══════════
 function initAllMaps(){
-  setTimeout(()=>{
-    initLiveMap();
-    initRouteMap();
-    initHeatMap();
-  }, 400);
+  initLiveMap();
+  initRouteMap();
+  initHeatMap();
 }
 
 function createBaseMap(elementId){
-  const map = L.map(elementId, {
-    center:[41.6856,26.5435],zoom:18,
-    zoomControl:true,attributionControl:false
-  });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-    maxZoom:22,opacity:0.9
-  }).addTo(map);
-  // Poligonları çiz
+  const map = L.map(elementId,{center:[41.6856,26.5435],zoom:18,zoomControl:true,attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:22,opacity:0.9}).addTo(map);
   ZONES.forEach(z=>{
-    const poly = L.polygon(z.coords,{
-      color:z.color,weight:2,opacity:0.9,
-      fillColor:z.color,fillOpacity:0.18
-    }).addTo(map);
-    poly.bindTooltip(`<b style="font-family:'Cinzel',serif;font-size:10px;">${z.name}</b>`,{
-      permanent:true,direction:'center',className:'zone-tooltip'
-    });
+    const poly = L.polygon(z.coords,{color:z.color,weight:2,opacity:0.9,fillColor:z.color,fillOpacity:0.18}).addTo(map);
+    poly.bindTooltip(`<b style="font-family:'Cinzel',serif;font-size:10px;">${z.name}</b>`,{permanent:true,direction:'center',className:'zone-tooltip'});
   });
   return map;
 }
@@ -871,31 +639,35 @@ function createBaseMap(elementId){
 function initLiveMap(){
   if(liveMap) return;
   liveMap = createBaseMap('live-map');
+  // Legend oluştur
+  const legendEl = document.getElementById('map-legend');
+  if(legendEl){
+    legendEl.innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:#55b87a;box-shadow:0 0 6px #55b87a;"></div><span>Aktif ziyaretçi (son 30dk)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#c49a3c;border:2px solid #8b5e1a;"></div><span>Bölge sınırları</span></div>
+    `;
+  }
 }
 
-function initRouteMap(){
-  if(routeMap) return;
-  routeMap = createBaseMap('route-map');
-}
-
-function initHeatMap(){
-  if(heatMap) return;
-  heatMap = createBaseMap('heatmap-container');
-}
+function initRouteMap(){if(routeMap)return; routeMap=createBaseMap('route-map');}
+function initHeatMap(){if(heatMap)return; heatMap=createBaseMap('heatmap-container');}
 
 // ══════════ LIVE LISTENERS ══════════
 function startLiveListeners(){
   if(!db) return;
-
-  // Aktif ziyaretçiler (visitor_locations)
-  const unsub1 = db.collection('visitor_locations')
-    .onSnapshot(snap=>{
-      const visitors = [];
-      snap.forEach(doc=>visitors.push({id:doc.id,...doc.data()}));
-      updateLiveVisitors(visitors);
-    }, e=>console.warn('Live listener error:',e));
-
-  liveUnsubscribers.push(unsub1);
+  db.collection('visitor_locations').onSnapshot(snap=>{
+    const now = Date.now();
+    const visitors = [];
+    snap.forEach(doc=>{
+      const d = {id:doc.id,...doc.data()};
+      // Zaman filtresi: son 30 dakika
+      const lastSeen = d.lastSeen ? d.lastSeen.seconds*1000 : 0;
+      if((now - lastSeen) <= LIVE_THRESHOLD_MS){
+        visitors.push(d);
+      }
+    });
+    updateLiveVisitors(visitors);
+  }, e=>console.warn('Live listener error:',e));
 }
 
 function updateLiveVisitors(visitors){
@@ -905,7 +677,6 @@ function updateLiveVisitors(visitors){
   document.getElementById('map-visitor-count').textContent = count+' aktif';
   document.getElementById('live-count-badge').textContent = count+' aktif ziyaretçi';
 
-  // Mobile/desktop split
   const mob = visitors.filter(v=>isMobile(v.userAgent||'')).length;
   const desk = count - mob;
   const locOn = visitors.filter(v=>v.zone).length;
@@ -913,66 +684,108 @@ function updateLiveVisitors(visitors){
   document.getElementById('lv-desktop').textContent = desk;
   document.getElementById('lv-loc').textContent = locOn;
 
-  // Live table
+  const emptyRow = `<tr><td colspan="6" style="text-align:center;color:var(--stone);padding:24px;">
+    <div style="font-size:24px;margin-bottom:8px;">👥</div>
+    Şu an aktif ziyaretçi yok<br>
+    <small style="font-size:10px;color:var(--stone2);">Son 30 dakika içinde güncelleme gelmedi</small>
+  </td></tr>`;
+
+  // Live table (harita paneli)
   const tbody = document.getElementById('live-table-body');
-  const tbody2 = document.getElementById('live-visitors-body');
-  if(!visitors.length){
-    const emptyRow = `<tr><td colspan="6" style="text-align:center;color:var(--stone);padding:20px;">Şu an aktif ziyaretçi yok</td></tr>`;
-    tbody.innerHTML = emptyRow; tbody2.innerHTML = emptyRow; return;
+  if(!visitors.length){ tbody.innerHTML=emptyRow; }
+  else {
+    tbody.innerHTML = visitors.map(v=>{
+      const zone = ZONES.find(z=>z.id===v.zone);
+      const startMs = v.startTime ? v.startTime.seconds*1000 : null;
+      const elapsed = startMs ? Math.round((Date.now()-startMs)/60000) : '—';
+      const lastSeen = v.lastSeen ? timeSince(v.lastSeen.seconds*1000) : '—';
+      return `<tr>
+        <td class="td-mono">${v.id.slice(0,12)}…</td>
+        <td>${zone?`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${zone.color};margin-right:5px;vertical-align:middle;"></span>${zone.name}`:'—'}</td>
+        <td><span class="badge badge-gold">Durak ${v.stop??v.currentPage??0}</span></td>
+        <td>${LANG_META[v.lang]?LANG_META[v.lang].flag+' '+LANG_META[v.lang].name:v.lang||'—'}</td>
+        <td class="td-mono">${elapsed} dk</td>
+        <td class="td-mono">${lastSeen}</td>
+      </tr>`;
+    }).join('');
   }
 
-  tbody.innerHTML = visitors.map(v=>{
-    const zone = ZONES.find(z=>z.id===v.zone);
-    const elapsed = v.startTime ? Math.round((Date.now()-v.startTime.seconds*1000)/60000) : '—';
-    const lastSeen = v.lastSeen ? timeSince(v.lastSeen.seconds*1000) : '—';
-    return `<tr>
-      <td class="td-mono">${v.id.slice(0,10)}…</td>
-      <td>${zone?`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${zone.color};margin-right:5px;"></span>${zone.name}`:'Bilinmiyor'}</td>
-      <td><span class="badge badge-gold">Durak ${v.stop||0}</span></td>
-      <td>${LANG_META[v.lang]?LANG_META[v.lang].flag+' '+LANG_META[v.lang].name:v.lang||'—'}</td>
-      <td class="td-mono">${elapsed} dk</td>
-      <td class="td-mono">${lastSeen}</td>
-    </tr>`;
-  }).join('');
+  // Live visitors table
+  const tbody2 = document.getElementById('live-visitors-body');
+  if(!visitors.length){ tbody2.innerHTML=emptyRow; }
+  else {
+    tbody2.innerHTML = visitors.map(v=>{
+      const zone = ZONES.find(z=>z.id===v.zone);
+      const dt = detectDevice(v.userAgent||'');
+      const startMs = v.startTime ? v.startTime.seconds*1000 : null;
+      return `<tr>
+        <td class="td-mono">${v.id.slice(0,12)}…</td>
+        <td><span class="badge badge-blue">${dt.type}</span></td>
+        <td>${LANG_META[v.lang]?LANG_META[v.lang].flag:''} ${v.lang||'—'}</td>
+        <td><span class="badge badge-gold">Durak ${v.stop??v.currentPage??0}</span></td>
+        <td>${zone?`<span style="color:${zone.color};">● ${zone.name}</span>`:'—'}</td>
+        <td class="td-mono">${startMs?new Date(startMs).toLocaleTimeString('tr-TR'):'—'}</td>
+      </tr>`;
+    }).join('');
+  }
 
-  tbody2.innerHTML = visitors.map(v=>{
-    const zone = ZONES.find(z=>z.id===v.zone);
-    const dt = detectDevice(v.userAgent||'');
-    return `<tr>
-      <td class="td-mono">${v.id.slice(0,10)}…</td>
-      <td><span class="badge badge-blue">${dt.type}</span></td>
-      <td>${LANG_META[v.lang]?LANG_META[v.lang].flag:''} ${v.lang||'—'}</td>
-      <td><span class="badge badge-gold">Durak ${v.stop||0}</span></td>
-      <td>${zone?`<span style="color:${zone.color};">● ${zone.name}</span>`:'—'}</td>
-      <td class="td-mono">${v.startTime?new Date(v.startTime.seconds*1000).toLocaleTimeString('tr-TR'):'—'}</td>
-    </tr>`;
-  }).join('');
-
-  // Update live map markers
+  // Harita marker'larını güncelle
   updateLiveMapMarkers(visitors);
 }
 
 function updateLiveMapMarkers(visitors){
   if(!liveMap) return;
-  // Clear old markers
-  liveMap.eachLayer(layer=>{
-    if(layer._isVisitorMarker) liveMap.removeLayer(layer);
-  });
+  // Eski marker'ları temizle
+  liveMarkers.forEach(m=>{try{liveMap.removeLayer(m);}catch(e){}});
+  liveMarkers = [];
+
+  if(!visitors.length) return;
+
   visitors.forEach(v=>{
-    const zone = ZONES.find(z=>z.id===v.zone);
-    if(!zone) return;
-    // Place marker near center of zone
-    const center = L.polygon(zone.coords).getBounds().getCenter();
-    const jitter = (Math.random()-0.5)*0.00005;
-    const marker = L.marker([center.lat+jitter, center.lng+jitter],{
+    // Konum bilgisi: GPS koordinatları varsa kullan, yoksa bölge merkezini kullan
+    let lat, lon;
+    if(v.latitude && v.longitude){
+      lat = v.latitude; lon = v.longitude;
+    } else if(v.zone){
+      const zone = ZONES.find(z=>z.id===v.zone);
+      if(zone){
+        const center = L.polygon(zone.coords).getBounds().getCenter();
+        lat = center.lat + (Math.random()-0.5)*0.00006;
+        lon = center.lng + (Math.random()-0.5)*0.00006;
+      }
+    } else {
+      // Durak numarasına göre yaklaşık bölge
+      const stopZoneMap = {0:'giris-avlu',1:'darussifa-1',2:'darussifa-2',3:'darussifa',4:'medrese',5:'buyuk-avlu',6:'imarethane',7:'camii-avlu',8:'camii',9:'camii',10:'camii-avlu'};
+      const stop = v.stop??v.currentPage??0;
+      const zoneId = stopZoneMap[stop] || 'giris-avlu';
+      const zone = ZONES.find(z=>z.id===zoneId);
+      if(zone){
+        const center = L.polygon(zone.coords).getBounds().getCenter();
+        lat = center.lat + (Math.random()-0.5)*0.00006;
+        lon = center.lng + (Math.random()-0.5)*0.00006;
+      }
+    }
+    if(!lat) return;
+
+    const marker = L.marker([lat, lon],{
       icon: L.divIcon({
         className:'',
         html:'<div class="live-visitor-icon"></div>',
-        iconSize:[20,20],iconAnchor:[10,10]
-      })
+        iconSize:[22,22],iconAnchor:[11,11]
+      }),
+      zIndexOffset: 1000
     }).addTo(liveMap);
-    marker._isVisitorMarker = true;
-    marker.bindPopup(`<div class="visitor-popup">Durak ${v.stop||0}<br>${LANG_META[v.lang]?LANG_META[v.lang].flag:''} ${v.lang||'—'}</div>`);
+
+    const zone = ZONES.find(z=>z.id===v.zone);
+    const stop = v.stop??v.currentPage??0;
+    const lang = LANG_META[v.lang]?LANG_META[v.lang].flag+' '+LANG_META[v.lang].name:(v.lang||'—');
+    marker.bindPopup(`<div class="visitor-popup">
+      <b>Durak ${stop}</b><br>
+      ${zone?zone.name:'—'}<br>
+      ${lang}
+    </div>`);
+
+    liveMarkers.push(marker);
   });
 }
 
@@ -980,23 +793,17 @@ function updateLiveMapMarkers(visitors){
 async function loadDashboard(){
   if(!db) return;
   try{
-    // Today's visitors
     const todayStart = new Date(); todayStart.setHours(0,0,0,0);
     const todaySnap = await db.collection('visitor_sessions')
-      .where('startTime','>=',firebase.firestore.Timestamp.fromDate(todayStart))
-      .get();
-    const todayCount = todaySnap.size;
-    document.getElementById('d-today').textContent = todayCount;
+      .where('startTime','>=',firebase.firestore.Timestamp.fromDate(todayStart)).get();
+    document.getElementById('d-today').textContent = todaySnap.size;
 
-    // Total
     const totalSnap = await db.collection('visitor_sessions').get();
-    const totalCount = totalSnap.size;
-    document.getElementById('d-total').textContent = totalCount;
+    document.getElementById('d-total').textContent = totalSnap.size;
     allSessions = [];
     totalSnap.forEach(doc=>allSessions.push({id:doc.id,...doc.data()}));
 
-    // Avg duration
-    const durs = allSessions.filter(s=>s.durationMin>0).map(s=>s.durationMin);
+    const durs = allSessions.filter(s=>s.durationMin>0&&s.durationMin<600).map(s=>s.durationMin);
     const avgDur = durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : 0;
     document.getElementById('d-avgdur').textContent = avgDur;
     document.getElementById('s-avg').textContent = avgDur;
@@ -1006,7 +813,6 @@ async function loadDashboard(){
     const avgStop = allSessions.length ? Math.round(allSessions.reduce((a,b)=>a+(b.maxStop||0),0)/allSessions.length) : 0;
     document.getElementById('s-stop').textContent = avgStop;
 
-    // Guestbook count
     const gbSnap = await db.collection('messages').get();
     document.getElementById('d-guestbook').textContent = gbSnap.size;
     document.getElementById('gb-total').textContent = gbSnap.size;
@@ -1015,48 +821,43 @@ async function loadDashboard(){
     renderTopZones();
     renderDashLangs(allSessions);
     renderDashDevices(allSessions);
-  } catch(e){
-    console.error('Dashboard load error:',e);
-    showToast('Veri yükleme hatası: '+e.message);
-  }
+  } catch(e){console.error('Dashboard load error:',e);showToast('Veri yükleme hatası: '+e.message);}
 }
 
 function renderDailyChart(sessions){
-  const days = [];
+  const days=[];
   for(let i=6;i>=0;i--){
-    const d = new Date(); d.setDate(d.getDate()-i); d.setHours(0,0,0,0);
-    const label = d.toLocaleDateString('tr-TR',{weekday:'short',day:'numeric'});
-    const count = sessions.filter(s=>{
-      if(!s.startTime) return false;
-      const sd = new Date(s.startTime.seconds*1000); sd.setHours(0,0,0,0);
+    const d=new Date();d.setDate(d.getDate()-i);d.setHours(0,0,0,0);
+    const label=d.toLocaleDateString('tr-TR',{weekday:'short',day:'numeric'});
+    const count=sessions.filter(s=>{
+      if(!s.startTime)return false;
+      const sd=new Date(s.startTime.seconds*1000);sd.setHours(0,0,0,0);
       return sd.getTime()===d.getTime();
     }).length;
     days.push({label,count});
   }
-  const max = Math.max(...days.map(d=>d.count),1);
-  const el = document.getElementById('daily-chart');
-  el.innerHTML = days.map(d=>`
+  const max=Math.max(...days.map(d=>d.count),1);
+  document.getElementById('daily-chart').innerHTML=days.map(d=>`
     <div class="chart-bar-wrap">
       <div class="chart-bar-val">${d.count||''}</div>
       <div class="chart-bar" style="height:${Math.max(4,(d.count/max)*90)}px;"></div>
       <div class="chart-bar-label">${d.label}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 async function renderTopZones(){
-  if(!db) return;
-  const snap = await db.collection('zone_visits').get();
-  const zones = [];
+  if(!db)return;
+  const snap=await db.collection('zone_visits').get();
+  const zones=[];
   snap.forEach(doc=>zones.push({id:doc.id,...doc.data()}));
   zones.sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
-  const max = zones.length ? (zones[0].totalVisits||1) : 1;
-  const el = document.getElementById('top-zones');
+  const max=zones.length?(zones[0].totalVisits||1):1;
+  const el=document.getElementById('top-zones');
   if(!zones.length){el.innerHTML='<div class="empty-state"><div class="es-icon">📍</div>Henüz bölge verisi yok</div>';return;}
-  el.innerHTML = zones.slice(0,8).map(z=>{
-    const zone = ZONES.find(zz=>zz.id===z.id||zz.id===z.zoneId);
-    const name = zone?zone.name:z.id;
-    const color = zone?zone.color:'var(--gold)';
+  el.innerHTML=zones.slice(0,8).map(z=>{
+    const zone=ZONES.find(zz=>zz.id===z.id||zz.id===z.zoneId);
+    const name=zone?zone.name:z.id;
+    const color=zone?zone.color:'var(--gold)';
     return `<div class="zone-bar-row">
       <div class="zone-bar-name" style="color:${color};">● ${name}</div>
       <div class="zone-bar-track"><div class="zone-bar-fill" style="width:${Math.max(4,(z.totalVisits/max)*100)}%;background:linear-gradient(90deg,${color}88,${color});"></div></div>
@@ -1066,14 +867,14 @@ async function renderTopZones(){
 }
 
 function renderDashLangs(sessions){
-  const counts = {};
+  const counts={};
   sessions.forEach(s=>{if(s.lang)counts[s.lang]=(counts[s.lang]||0)+1;});
-  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  const total = sessions.length||1;
-  const el = document.getElementById('dash-langs');
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const total=sessions.length||1;
+  const el=document.getElementById('dash-langs');
   if(!sorted.length){el.innerHTML='<div class="empty-state">Veri yok</div>';return;}
-  el.innerHTML = sorted.slice(0,6).map(([lang,count])=>{
-    const m = LANG_META[lang]||{flag:'🌐',name:lang};
+  el.innerHTML=sorted.slice(0,6).map(([lang,count])=>{
+    const m=LANG_META[lang]||{flag:'🌐',name:lang};
     return `<div class="lang-row">
       <div class="lang-flag">${m.flag}</div>
       <div class="lang-name">${m.name}</div>
@@ -1084,14 +885,11 @@ function renderDashLangs(sessions){
 }
 
 function renderDashDevices(sessions){
-  const counts = {mobile:0,desktop:0,tablet:0};
-  sessions.forEach(s=>{
-    const dt = detectDevice(s.userAgent||'');
-    counts[dt.type]=(counts[dt.type]||0)+1;
-  });
-  const total = sessions.length||1;
-  const el = document.getElementById('dash-devices');
-  el.innerHTML = [
+  const counts={mobile:0,desktop:0,tablet:0};
+  sessions.forEach(s=>{const dt=detectDevice(s.userAgent||'');counts[dt.type]=(counts[dt.type]||0)+1;});
+  const total=sessions.length||1;
+  const el=document.getElementById('dash-devices');
+  el.innerHTML=[
     {type:'mobile',label:'Mobil',icon:'📱',color:'var(--blue)'},
     {type:'desktop',label:'Masaüstü',icon:'💻',color:'var(--gold)'},
     {type:'tablet',label:'Tablet',icon:'📟',color:'var(--green)'}
@@ -1104,21 +902,19 @@ function renderDashDevices(sessions){
 
 // ══════════ ZONE STATS ══════════
 async function loadZoneStats(){
-  if(!db) return;
+  if(!db)return;
   try{
-    const snap = await db.collection('zone_visits').get();
-    const zones = [];
+    const snap=await db.collection('zone_visits').get();
+    const zones=[];
     snap.forEach(doc=>zones.push({id:doc.id,...doc.data()}));
     zones.sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
-    zoneStatsCache = {};
+    zoneStatsCache={};
     zones.forEach(z=>zoneStatsCache[z.id||z.zoneId]=z);
+    const max=zones.length?(zones[0].totalVisits||1):1;
 
-    const max = zones.length?(zones[0].totalVisits||1):1;
-    // Bars
-    document.getElementById('zone-bars').innerHTML = zones.map(z=>{
+    document.getElementById('zone-bars').innerHTML=zones.map(z=>{
       const zone=ZONES.find(zz=>zz.id===z.id||zz.id===z.zoneId);
-      const name=zone?zone.name:z.id;
-      const color=zone?zone.color:'var(--gold)';
+      const name=zone?zone.name:z.id; const color=zone?zone.color:'var(--gold)';
       return `<div class="zone-bar-row">
         <div class="zone-bar-name" style="color:${color};">● ${name}</div>
         <div class="zone-bar-track"><div class="zone-bar-fill" style="width:${Math.max(4,(z.totalVisits/max)*100)}%;background:linear-gradient(90deg,${color}88,${color});"></div></div>
@@ -1126,13 +922,11 @@ async function loadZoneStats(){
       </div>`;
     }).join('')||'<div class="empty-state"><div class="es-icon">📍</div>Henüz bölge verisi yok</div>';
 
-    // Table
-    document.getElementById('zone-table-body').innerHTML = zones.map(z=>{
+    document.getElementById('zone-table-body').innerHTML=zones.map(z=>{
       const zone=ZONES.find(zz=>zz.id===z.id||zz.id===z.zoneId);
-      const name=zone?zone.name:z.id;
-      const color=zone?zone.color:'var(--gold)';
-      const avg = z.avgMinutes||0;
-      const badge = avg>10?'badge-green':avg>3?'badge-gold':'badge-blue';
+      const name=zone?zone.name:z.id; const color=zone?zone.color:'var(--gold)';
+      const avg=z.avgMinutes||0;
+      const badge=avg>10?'badge-green':avg>3?'badge-gold':'badge-blue';
       return `<tr>
         <td style="color:${color};">● ${name}</td>
         <td class="td-mono">${z.totalVisits||0}</td>
@@ -1142,6 +936,7 @@ async function loadZoneStats(){
       </tr>`;
     }).join('')||'<tr><td colspan="5" class="empty-state">Veri yok</td></tr>';
 
+    // Heatmap legend
     renderHeatmapLegend(zones);
   } catch(e){console.error(e);}
 }
@@ -1149,37 +944,29 @@ async function loadZoneStats(){
 // ══════════ HEATMAP ══════════
 async function loadHeatmap(){
   await loadZoneStats();
-  if(!heatMap) return;
-  const zones = Object.values(zoneStatsCache);
-  const max = zones.length?Math.max(...zones.map(z=>z.totalVisits||0),1):1;
-  // Clear old layers
-  heatMap.eachLayer(layer=>{
-    if(layer._isHeatLayer) heatMap.removeLayer(layer);
-  });
-  // Draw colored polygons by intensity
+  if(!heatMap)return;
+  const zones=Object.values(zoneStatsCache);
+  const max=zones.length?Math.max(...zones.map(z=>z.totalVisits||0),1):1;
+  heatMap.eachLayer(layer=>{if(layer._isHeatLayer)heatMap.removeLayer(layer);});
   ZONES.forEach(z=>{
-    const data = zoneStatsCache[z.id];
-    const intensity = data?(data.totalVisits||0)/max:0;
-    const alpha = 0.1 + intensity*0.7;
-    const poly = L.polygon(z.coords,{
-      color:z.color,weight:2,opacity:0.9,
-      fillColor:z.color,fillOpacity:alpha
-    }).addTo(heatMap);
-    poly._isHeatLayer = true;
-    const visits = data?data.totalVisits:0;
-    const avg = data?data.avgMinutes:0;
+    const data=zoneStatsCache[z.id];
+    const intensity=data?(data.totalVisits||0)/max:0;
+    const alpha=0.1+intensity*0.7;
+    const poly=L.polygon(z.coords,{color:z.color,weight:2,opacity:0.9,fillColor:z.color,fillOpacity:alpha}).addTo(heatMap);
+    poly._isHeatLayer=true;
+    const visits=data?data.totalVisits:0;
+    const avg=data?data.avgMinutes:0;
     poly.bindTooltip(`<div style="font-family:'Cinzel',serif;font-size:11px;text-align:center;"><b>${z.name}</b><br><span style="font-size:10px;">${visits} ziyaret · ort. ${avg} dk</span></div>`,{sticky:true});
   });
 }
 
 function renderHeatmapLegend(zones){
-  const sorted = [...zones].sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
-  const max = sorted.length?(sorted[0].totalVisits||1):1;
-  document.getElementById('heatmap-legend').innerHTML = sorted.map(z=>{
+  const sorted=[...zones].sort((a,b)=>(b.totalVisits||0)-(a.totalVisits||0));
+  const max=sorted.length?(sorted[0].totalVisits||1):1;
+  document.getElementById('heatmap-legend').innerHTML=sorted.map(z=>{
     const zone=ZONES.find(zz=>zz.id===z.id||zz.id===z.zoneId);
-    const name=zone?zone.name:z.id;
-    const color=zone?zone.color:'var(--gold)';
-    const pct = Math.round((z.totalVisits||0)/max*100);
+    const name=zone?zone.name:z.id; const color=zone?zone.color:'var(--gold)';
+    const pct=Math.round((z.totalVisits||0)/max*100);
     return `<div class="zone-bar-row">
       <div class="zone-bar-name" style="color:${color};">● ${name}</div>
       <div class="zone-bar-track"><div class="zone-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${color}44,${color});"></div></div>
@@ -1190,75 +977,55 @@ function renderHeatmapLegend(zones){
 
 // ══════════ ROUTES ══════════
 async function loadRoutes(){
-  if(!db||!routeMap) return;
-  // Build zone transition matrix from sessions (approximate by zone order)
-  const flows = {};
-  const zoneOrder = ['giris-avlu','medrese','darussifa-1','darussifa-2','darussifa','camii-avlu','camii','tabhane-sol','tabhane-sag','buyuk-avlu','imarethane'];
-  
+  if(!db||!routeMap)return;
+  const zoneOrder=['giris-avlu','medrese','darussifa-1','darussifa-2','darussifa','camii-avlu','camii','tabhane-sol','tabhane-sag','buyuk-avlu','imarethane'];
+  const flows={};
   zoneOrder.forEach((from,i)=>{
-    if(i<zoneOrder.length-1){
-      const to = zoneOrder[i+1];
-      const key = `${from}→${to}`;
-      flows[key] = (flows[key]||0)+1;
-    }
+    if(i<zoneOrder.length-1){const to=zoneOrder[i+1];const key=`${from}→${to}`;flows[key]=(flows[key]||0)+1;}
   });
-
-  // Draw route arrows on map
   routeMap.eachLayer(layer=>{if(layer._isRouteLayer)routeMap.removeLayer(layer);});
-
-  let routeLines = '';
+  let routeLines='';
   Object.entries(flows).forEach(([key,count])=>{
-    const [fromId,toId] = key.split('→');
-    const fromZone = ZONES.find(z=>z.id===fromId);
-    const toZone = ZONES.find(z=>z.id===toId);
-    if(!fromZone||!toZone) return;
-    const fromCenter = L.polygon(fromZone.coords).getBounds().getCenter();
-    const toCenter = L.polygon(toZone.coords).getBounds().getCenter();
-    const line = L.polyline([[fromCenter.lat,fromCenter.lng],[toCenter.lat,toCenter.lng]],{
-      color:'rgba(196,154,60,0.6)',weight:2+Math.min(count,5),
-      dashArray:'6,4',opacity:0.7
-    }).addTo(routeMap);
-    line._isRouteLayer = true;
-    routeLines += `<div class="zone-bar-row" style="font-size:11px;">
-      <div class="zone-bar-name" style="width:180px;">${fromZone.name} → ${toZone.name}</div>
-      <div class="zone-bar-val">${count} oturum</div>
-    </div>`;
+    const[fromId,toId]=key.split('→');
+    const fromZone=ZONES.find(z=>z.id===fromId);const toZone=ZONES.find(z=>z.id===toId);
+    if(!fromZone||!toZone)return;
+    const fromCenter=L.polygon(fromZone.coords).getBounds().getCenter();
+    const toCenter=L.polygon(toZone.coords).getBounds().getCenter();
+    const line=L.polyline([[fromCenter.lat,fromCenter.lng],[toCenter.lat,toCenter.lng]],{color:'rgba(196,154,60,0.6)',weight:2+Math.min(count,5),dashArray:'6,4',opacity:0.7}).addTo(routeMap);
+    line._isRouteLayer=true;
+    routeLines+=`<div class="zone-bar-row"><div class="zone-bar-name" style="width:220px;">${fromZone.name} → ${toZone.name}</div><div class="zone-bar-val">${count} oturum</div></div>`;
   });
-
-  const flowEl = document.getElementById('route-flows');
-  if(flowEl) flowEl.innerHTML = routeLines||'<div class="empty-state">Rota verisi analiz edilemedi</div>';
+  const flowEl=document.getElementById('route-flows');
+  if(flowEl)flowEl.innerHTML=routeLines||'<div class="empty-state">Rota verisi analiz edilemedi</div>';
 }
 
 // ══════════ SESSIONS ══════════
 async function loadSessions(){
-  if(!db) return;
+  if(!db)return;
   try{
-    const snap = await db.collection('visitor_sessions')
-      .orderBy('startTime','desc').limit(50).get();
-    const sessions = [];
+    const snap=await db.collection('visitor_sessions').orderBy('startTime','desc').limit(50).get();
+    const sessions=[];
     snap.forEach(doc=>sessions.push({id:doc.id,...doc.data()}));
-
-    document.getElementById('sessions-body').innerHTML = sessions.map(s=>{
-      const st = s.startTime?new Date(s.startTime.seconds*1000).toLocaleString('tr-TR'):'—';
-      const active = s.active;
+    document.getElementById('sessions-body').innerHTML=sessions.map(s=>{
+      const st=s.startTime?new Date(s.startTime.seconds*1000).toLocaleString('tr-TR'):'—';
+      const dur = s.durationMin>0&&s.durationMin<600 ? s.durationMin : 0;
       return `<tr>
-        <td class="td-mono">${s.id.slice(0,12)}…</td>
-        <td class="td-mono">${st}</td>
-        <td class="td-mono">${s.durationMin||0}</td>
+        <td class="td-mono" style="font-size:10px;">${s.id.slice(0,14)}…</td>
+        <td class="td-mono" style="font-size:10px;">${st}</td>
+        <td class="td-mono">${dur}</td>
         <td><span class="badge badge-gold">Durak ${s.maxStop||0}</span></td>
         <td>${LANG_META[s.lang]?LANG_META[s.lang].flag+' '+s.lang:s.lang||'—'}</td>
         <td>${s.locationGranted?'<span class="badge badge-green">✓ İzinli</span>':'<span class="badge badge-red">✗ Yok</span>'}</td>
-        <td>${active?'<span class="badge badge-green">● Aktif</span>':'<span class="badge">Tamamlandı</span>'}</td>
+        <td>${s.active?'<span class="badge badge-green">● Aktif</span>':'<span class="badge">Tamamlandı</span>'}</td>
       </tr>`;
     }).join('')||'<tr><td colspan="7" class="empty-state">Veri yok</td></tr>';
 
-    // Duration distribution
-    const allDurs = sessions.map(s=>s.durationMin||0);
-    const brackets = [{label:'0-5 dk',min:0,max:5},{label:'5-15 dk',min:5,max:15},{label:'15-30 dk',min:15,max:30},{label:'30-60 dk',min:30,max:60},{label:'60+ dk',min:60,max:99999}];
-    const distEl = document.getElementById('duration-dist');
-    const maxBracket = Math.max(...brackets.map(b=>allDurs.filter(d=>d>=b.min&&d<b.max).length),1);
-    distEl.innerHTML = brackets.map(b=>{
-      const count = allDurs.filter(d=>d>=b.min&&d<b.max).length;
+    const allDurs=sessions.filter(s=>s.durationMin>0&&s.durationMin<600).map(s=>s.durationMin);
+    const brackets=[{label:'0-5 dk',min:0,max:5},{label:'5-15 dk',min:5,max:15},{label:'15-30 dk',min:15,max:30},{label:'30-60 dk',min:30,max:60},{label:'60+ dk',min:60,max:99999}];
+    const distEl=document.getElementById('duration-dist');
+    const maxBracket=Math.max(...brackets.map(b=>allDurs.filter(d=>d>=b.min&&d<b.max).length),1);
+    distEl.innerHTML=brackets.map(b=>{
+      const count=allDurs.filter(d=>d>=b.min&&d<b.max).length;
       return `<div class="zone-bar-row">
         <div class="zone-bar-name">${b.label}</div>
         <div class="zone-bar-track"><div class="zone-bar-fill" style="width:${Math.max(4,count/maxBracket*100)}%;"></div></div>
@@ -1270,9 +1037,10 @@ async function loadSessions(){
 
 // ══════════ DEVICES ══════════
 async function loadDevices(){
-  if(!db||!allSessions.length) {await loadDashboard(); return;}
-  const counts = {mobile:0,desktop:0,tablet:0};
-  const os = {};
+  if(!db){ if(!allSessions.length){await loadDashboard();return;} }
+  if(!allSessions.length) await loadDashboard();
+  const counts={mobile:0,desktop:0,tablet:0};
+  const os={};
   allSessions.forEach(s=>{
     const d=detectDevice(s.userAgent||'');
     counts[d.type]=(counts[d.type]||0)+1;
@@ -1281,15 +1049,13 @@ async function loadDevices(){
   document.getElementById('dev-mobile').textContent=counts.mobile;
   document.getElementById('dev-desktop').textContent=counts.desktop;
   document.getElementById('dev-tablet').textContent=counts.tablet;
-  // PWA estimate: standalone sessions
-  const pwaCount = allSessions.filter(s=>(s.userAgent||'').includes('standalone')||false).length;
-  document.getElementById('dev-pwa').textContent = pwaCount||'—';
 
-  // Access type (QR vs web): sessions with UTM or referrer would be ideal
-  // Without real QR tracking, we label mobile sessions as "Mobil/QR Muhtemel"
-  const accessEl = document.getElementById('access-type');
-  const total = allSessions.length||1;
-  accessEl.innerHTML = [
+  // PWA: isPWA alanı varsa veya standalone UA
+  const pwaCount=allSessions.filter(s=>s.isPWA||((s.userAgent||'').includes('standalone'))).length;
+  document.getElementById('dev-pwa').textContent=pwaCount||'—';
+
+  const total=allSessions.length||1;
+  document.getElementById('access-type').innerHTML=[
     {label:'📱 QR / Mobil Erişim',count:counts.mobile,color:'var(--blue)'},
     {label:'💻 Web Tarayıcı',count:counts.desktop+counts.tablet,color:'var(--gold)'}
   ].map(a=>`<div class="zone-bar-row">
@@ -1298,47 +1064,44 @@ async function loadDevices(){
     <div class="zone-bar-val">${a.count} (%${Math.round(a.count/total*100)})</div>
   </div>`).join('');
 
-  // OS dist
-  const osEl = document.getElementById('os-dist');
-  const maxOs = Math.max(...Object.values(os),1);
-  osEl.innerHTML = Object.entries(os).sort((a,b)=>b[1]-a[1]).map(([o,c])=>`
+  const maxOs=Math.max(...Object.values(os),1);
+  document.getElementById('os-dist').innerHTML=Object.entries(os).sort((a,b)=>b[1]-a[1]).map(([o,c])=>`
     <div class="zone-bar-row">
       <div class="zone-bar-name">${o}</div>
       <div class="zone-bar-track"><div class="zone-bar-fill" style="width:${Math.round(c/maxOs*100)}%;"></div></div>
       <div class="zone-bar-val">${c}</div>
     </div>`).join('');
 
-  // Device table
-  document.getElementById('device-table-body').innerHTML = allSessions.slice(0,30).map(s=>{
+  // Cihaz tablosu — süre filtresi (0-600 dk)
+  document.getElementById('device-table-body').innerHTML=allSessions.slice(0,50).map(s=>{
     const d=detectDevice(s.userAgent||'');
     const st=s.startTime?new Date(s.startTime.seconds*1000).toLocaleString('tr-TR'):'—';
+    const dur=s.durationMin>0&&s.durationMin<600?s.durationMin:0;
     return `<tr>
       <td class="td-mono" style="font-size:10px;">${st}</td>
       <td><span class="badge badge-blue">${d.type}</span></td>
       <td>${d.os}</td>
       <td>${d.browser}</td>
-      <td class="td-mono">${s.durationMin||0}</td>
-      <td>${s.active?'<span class="badge badge-green">Aktif</span>':'<span class="badge">Bitti</span>'}</td>
+      <td class="td-mono">${dur}</td>
+      <td>${s.active?'<span class="badge badge-green">● Aktif</span>':'<span class="badge">Bitti</span>'}</td>
     </tr>`;
   }).join('');
 }
 
 // ══════════ LANGUAGES ══════════
 async function loadLanguages(){
-  if(!db||!allSessions.length) {await loadDashboard(); return;}
-  const counts = {};
-  const durByLang = {};
+  if(!allSessions.length) await loadDashboard();
+  const counts={};const durByLang={};
   allSessions.forEach(s=>{
     const l=s.lang||'tr';
     counts[l]=(counts[l]||0)+1;
     if(!durByLang[l])durByLang[l]=[];
-    if(s.durationMin)durByLang[l].push(s.durationMin);
+    if(s.durationMin>0&&s.durationMin<600)durByLang[l].push(s.durationMin);
   });
-  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  const total = allSessions.length||1;
-  const max = sorted.length?sorted[0][1]:1;
-
-  document.getElementById('lang-bars-detail').innerHTML = sorted.map(([lang,count])=>{
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const total=allSessions.length||1;
+  const max=sorted.length?sorted[0][1]:1;
+  document.getElementById('lang-bars-detail').innerHTML=sorted.map(([lang,count])=>{
     const m=LANG_META[lang]||{flag:'🌐',name:lang};
     return `<div class="lang-row">
       <div class="lang-flag">${m.flag}</div>
@@ -1347,120 +1110,162 @@ async function loadLanguages(){
       <div class="lang-count">${count}</div>
     </div>`;
   }).join('');
-
-  document.getElementById('lang-table-body').innerHTML = sorted.map(([lang,count])=>{
+  document.getElementById('lang-table-body').innerHTML=sorted.map(([lang,count])=>{
     const m=LANG_META[lang]||{flag:'🌐',name:lang};
     const durs=durByLang[lang]||[];
     const avg=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):0;
-    const pct=Math.round(count/total*100);
     return `<tr>
       <td>${m.flag} ${m.name}</td>
       <td class="td-mono">${lang}</td>
       <td class="td-mono">${count}</td>
       <td class="td-mono">${avg} dk</td>
-      <td><span class="badge badge-gold">%${pct}</span></td>
+      <td><span class="badge badge-gold">%${Math.round(count/total*100)}</span></td>
     </tr>`;
   }).join('');
 }
 
-// ══════════ BUTTON STATS ══════════
+// ══════════ BUTTON STATS — DÜZELTİLDİ ══════════
 async function loadButtonStats(){
-  if(!db) return;
+  if(!db)return;
   try{
-    const snap = await db.collection('button_clicks').get();
-    btnStatsCache = {};
-    snap.forEach(doc=>{btnStatsCache[doc.id]={...doc.data()};});
+    // 1. Önce 'button_clicks' koleksiyonunu dene
+    const snap=await db.collection('button_clicks').get();
+    btnStatsCache={};
 
-    let totalClicks = 0;
-    Object.values(btnStatsCache).forEach(b=>totalClicks+=(b.count||0));
-    document.getElementById('btn-total-badge').textContent = 'toplam: '+totalClicks;
+    if(!snap.empty){
+      snap.forEach(doc=>{
+        const data=doc.data();
+        // Format A: doc.id = "stop0_İLERİ →", data = {count: N}
+        // Format B: doc.id = "stop0", data = {"İLERİ →": N, ...}
+        if(data.count !== undefined){
+          btnStatsCache[doc.id] = {count: data.count, ...data};
+        } else {
+          // Her alan bir buton olabilir
+          Object.entries(data).forEach(([k,v])=>{
+            if(typeof v === 'number'){
+              btnStatsCache[doc.id+'_'+k] = {count: v};
+            }
+          });
+          btnStatsCache[doc.id] = data;
+        }
+      });
+    }
 
-    // Accordion by stop
-    const accordionEl = document.getElementById('button-accordion');
-    accordionEl.innerHTML = STOP_BUTTONS.map((sg,idx)=>{
-      const stopKey = sg.stop==='global'?'global':'stop'+sg.stop;
-      const buttons = sg.buttons.map(name=>{
-        const key = `${stopKey}_${name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]/g,'_')}`;
-        const data = btnStatsCache[key]||btnStatsCache[name]||{count:0};
-        const count = data.count||0;
+    // 2. 'interactions' koleksiyonunu da dene
+    let interSnap = null;
+    try{ interSnap = await db.collection('interactions').get(); } catch(e){}
+    if(interSnap && !interSnap.empty){
+      interSnap.forEach(doc=>{
+        const d=doc.data();
+        if(d.button&&d.stop!==undefined){
+          const key=`stop${d.stop}_${d.button}`;
+          btnStatsCache[key]={count:(btnStatsCache[key]?.count||0)+1};
+        }
+        if(d.count!==undefined) btnStatsCache[doc.id]={count:d.count};
+      });
+    }
+
+    let totalClicks=0;
+    Object.values(btnStatsCache).forEach(b=>{ if(b.count) totalClicks+=b.count; });
+    document.getElementById('btn-total-badge').textContent='toplam: '+totalClicks;
+
+    // Accordion
+    const accordionEl=document.getElementById('button-accordion');
+
+    if(totalClicks===0 && snap.empty){
+      accordionEl.innerHTML=`<div class="empty-state">
+        <div class="es-icon">🖱️</div>
+        Buton tıklama verisi henüz yok.<br>
+        <small style="color:var(--stone2);">Ziyaretçiler rehberi kullandıkça burada görünecek.</small>
+      </div>`;
+      document.getElementById('top-buttons-body').innerHTML='<tr><td colspan="4" class="empty-state">Veri yok</td></tr>';
+      return;
+    }
+
+    accordionEl.innerHTML=STOP_BUTTONS.map((sg,idx)=>{
+      const stopKey=sg.stop==='global'?'global':`stop${sg.stop}`;
+      const buttons=sg.buttons.map(name=>{
+        // Çeşitli key formatlarını dene
+        const safeName=name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ\s→←▼▶]/g,'_').replace(/\s+/g,'_');
+        const keysToTry=[
+          `${stopKey}_${safeName}`,
+          `${stopKey}_${name}`,
+          name,
+          safeName
+        ];
+        let count=0;
+        for(const k of keysToTry){
+          if(btnStatsCache[k]?.count){ count=btnStatsCache[k].count; break; }
+        }
         return `<div class="btn-stat">
           <div class="btn-stat-count">${count}</div>
-          <div>
-            <div class="btn-stat-name">${name}</div>
-          </div>
+          <div><div class="btn-stat-name">${name}</div></div>
         </div>`;
       }).join('');
       return `<div class="stop-group">
         <div class="stop-group-head" onclick="toggleAccordion(this,${idx})">
-          <span style="background:var(--gold3);color:#0f0a05;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-family:'JetBrains Mono',monospace;">${sg.stop}</span>
-          ${sg.name}
-          <span class="sg-arrow">▼</span>
+          <span style="background:var(--gold3);color:#0f0a05;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-family:'JetBrains Mono',monospace;flex-shrink:0;">${sg.stop}</span>
+          ${sg.name}<span class="sg-arrow">▼</span>
         </div>
-        <div class="stop-group-body" id="sg-body-${idx}">
-          <div class="btn-row">${buttons}</div>
-        </div>
+        <div class="stop-group-body" id="sg-body-${idx}"><div class="btn-row">${buttons}</div></div>
       </div>`;
     }).join('');
 
-    // Top buttons table
-    const allBtns = [];
+    // Top buttons
+    const allBtns=[];
     STOP_BUTTONS.forEach(sg=>{
-      const stopKey = sg.stop==='global'?'global':'stop'+sg.stop;
+      const stopKey=sg.stop==='global'?'global':`stop${sg.stop}`;
       sg.buttons.forEach(name=>{
-        const key = `${stopKey}_${name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]/g,'_')}`;
-        const data = btnStatsCache[key]||btnStatsCache[name]||{count:0};
-        allBtns.push({name,stop:sg.name,count:data.count||0});
+        const safeName=name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ\s→←▼▶]/g,'_').replace(/\s+/g,'_');
+        const keysToTry=[`${stopKey}_${safeName}`,`${stopKey}_${name}`,name,safeName];
+        let count=0;
+        for(const k of keysToTry){ if(btnStatsCache[k]?.count){count=btnStatsCache[k].count;break;} }
+        allBtns.push({name,stop:sg.name,count});
       });
     });
     allBtns.sort((a,b)=>b.count-a.count);
-    document.getElementById('top-buttons-body').innerHTML = allBtns.slice(0,10).map((b,i)=>`<tr>
+    document.getElementById('top-buttons-body').innerHTML=allBtns.filter(b=>b.count>0).slice(0,10).map((b,i)=>`<tr>
       <td class="td-mono">${i+1}</td>
       <td>${b.name}</td>
       <td>${b.stop}</td>
       <td class="td-mono" style="color:var(--gold);">${b.count}</td>
-    </tr>`).join('');
+    </tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--stone);padding:20px;">Henüz tıklama verisi yok</td></tr>';
+
   } catch(e){
     console.error('Button stats error:',e);
-    // Show placeholder if collection doesn't exist yet
-    document.getElementById('button-accordion').innerHTML = `<div class="empty-state">
+    document.getElementById('button-accordion').innerHTML=`<div class="empty-state">
       <div class="es-icon">🖱️</div>
-      Buton tıklama verisi henüz yok.<br>
-      <small style="color:var(--stone2);">rehber.html'e buton tracking kodu eklenince burada görünecek.</small>
+      Veri yüklenemedi: ${e.message}
     </div>`;
   }
 }
 
 function toggleAccordion(el,idx){
   el.classList.toggle('open');
-  const body = document.getElementById('sg-body-'+idx);
+  const body=document.getElementById('sg-body-'+idx);
   body.classList.toggle('open');
 }
 
 // ══════════ GUESTBOOK ══════════
 async function loadGuestbook(){
-  if(!db) return;
+  if(!db)return;
   try{
-    const snap = await db.collection('messages').orderBy('timestamp','desc').get();
-    const msgs = [];
+    const snap=await db.collection('messages').orderBy('timestamp','desc').get();
+    const msgs=[];
     snap.forEach(doc=>msgs.push({id:doc.id,...doc.data()}));
-
-    // Today
     const todayStart=new Date();todayStart.setHours(0,0,0,0);
     const todayCount=msgs.filter(m=>m.timestamp&&new Date(m.timestamp.seconds*1000)>=todayStart).length;
     document.getElementById('gb-today').textContent=todayCount;
-
-    // Cities
     const cities=new Set(msgs.filter(m=>m.city&&m.city!=='Belirtilmedi').map(m=>m.city));
     document.getElementById('gb-cities').textContent=cities.size;
-
     const el=document.getElementById('guestbook-list');
     if(!msgs.length){el.innerHTML='<div class="empty-state"><div class="es-icon">📖</div>Henüz yorum yok</div>';return;}
     el.innerHTML=msgs.map(m=>{
       const dt=m.timestamp?new Date(m.timestamp.seconds*1000).toLocaleString('tr-TR'):'—';
       return `<div style="border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
-        <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;">
-          <span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);">👤 ${m.user||'Anonim'}</span>
-          <span style="font-size:11px;color:var(--stone);">📍 ${m.city||'—'}</span>
+        <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-wrap:wrap;">
+          <span style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);">👤 ${esc(m.user||'Anonim')}</span>
+          <span style="font-size:11px;color:var(--stone);">📍 ${esc(m.city||'—')}</span>
           <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--stone2);">${dt}</span>
         </div>
         <div style="font-size:13px;color:var(--cream2);line-height:1.7;">${esc(m.text||'')}</div>
@@ -1479,9 +1284,7 @@ function timeSince(ms){
   return Math.floor(sec/3600)+'sa önce';
 }
 
-function isMobile(ua){
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-}
+function isMobile(ua){return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);}
 
 function detectDevice(ua){
   let type='desktop',os='Diğer',browser='Diğer';
@@ -1518,9 +1321,6 @@ style.textContent=`
 .leaflet-tooltip.zone-tooltip::before{display:none;}
 `;
 document.head.appendChild(style);
-
-// Clock start
-document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('tr-TR');
 </script>
 </body>
 </html>
