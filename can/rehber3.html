@@ -3230,14 +3230,12 @@ function get360ImagesForPlace(p) {
 }
 
 // ── Basit sürüklenebilir 360° viewer (CORS-free, <img> tabanlı) ──
-// ── Canvas 2D equirectangular 360° viewer (CORS-free) ──
-let pano360 = { animId:null, dragging:false, startX:0, startY:0,
-                lon:0, lat:0, baseLon:0, baseLat:0, fov:75,
-                img:null, canvas:null, ctx:null };
+// ── CSS background-image tabanlı 360° viewer (CORS-free, getImageData yok) ──
+let pano360 = { dragging:false, startX:0, startY:0,
+                posX:50, posY:50, baseX:0, baseY:0, wrap:null };
 
 function destroy360() {
-  if (pano360.animId) { cancelAnimationFrame(pano360.animId); pano360.animId = null; }
-  pano360.img = null; pano360.canvas = null; pano360.ctx = null;
+  pano360.wrap = null;
   const old = document.getElementById('pano360-inner');
   if (old) old.remove();
 }
@@ -3253,139 +3251,66 @@ function load360Image(idx) {
 
   const wrap = document.createElement('div');
   wrap.id = 'pano360-inner';
-  wrap.style.cssText = 'width:100%;height:100%;position:absolute;inset:0;cursor:grab;overflow:hidden;';
+  pano360.wrap = wrap;
+  // Görsel 3x genişlikte, sürükleyince kaydırılır
+  wrap.style.cssText = [
+    'position:absolute;inset:0;cursor:grab;overflow:hidden;',
+    'background-image:url("' + url + '");',
+    'background-repeat:repeat-x;',   // yatay döngü (360°)
+    'background-size:auto 100%;',    // yüksekliği doldur
+    'background-position:50% 50%;',
+  ].join('');
   panoEl.appendChild(wrap);
 
-  const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'width:100%;height:100%;display:block;';
-  wrap.appendChild(canvas);
-  pano360.canvas = canvas;
-  pano360.ctx = canvas.getContext('2d');
-  pano360.lon = 0; pano360.lat = 0; pano360.fov = 75;
-
-  const img = new Image();
-  img.onload = function() {
-    pano360.img = img;
-    loading.style.display = 'none';
-    resizeCanvas();
-    renderFrame();
-  };
-  img.onerror = function() {
+  // Görsel yüklenince loading'i kapat
+  const probe = new Image();
+  probe.onload  = () => { loading.style.display = 'none'; };
+  probe.onerror = () => {
     loading.innerHTML = '<span style="font-size:32px;">⚠️</span><span style="font-size:13px;color:rgba(255,255,255,0.6);">Görsel yüklenemedi</span>';
   };
-  img.src = url;
+  probe.src = url;  // crossOrigin YOK — sadece yüklendi mi diye kontrol
 
-  function resizeCanvas() {
-    canvas.width  = panoEl.clientWidth;
-    canvas.height = panoEl.clientHeight;
+  pano360.posX = 50; pano360.posY = 50;
+
+  function applyPos() {
+    // posX: 0-100 arası değil, serbest (repeat-x ile döngü)
+    wrap.style.backgroundPosition = pano360.posX + '% ' + pano360.posY + '%';
   }
 
-  // Equirectangular → perspektif projeksiyon (ray casting)
-  function renderFrame() {
-    if (!pano360.img || !pano360.canvas) return;
-    const W = canvas.width, H = canvas.height;
-    if (W === 0 || H === 0) return;
-
-    const iW = img.naturalWidth, iH = img.naturalHeight;
-    const fovRad = pano360.fov * Math.PI / 180;
-    const lonRad = pano360.lon * Math.PI / 180;
-    const latRad = Math.max(-85, Math.min(85, pano360.lat)) * Math.PI / 180;
-
-    // offscreen çizim için ImageData
-    const imgData = pano360.ctx.createImageData(W, H);
-    const data = imgData.data;
-
-    // Kaynak piksellere erişmek için offscreen canvas
-    const src = document.createElement('canvas');
-    src.width = iW; src.height = iH;
-    const sCtx = src.getContext('2d');
-    sCtx.drawImage(img, 0, 0);
-    const srcData = sCtx.getImageData(0, 0, iW, iH).data;
-
-    const halfW = W / 2, halfH = H / 2;
-    const f = halfH / Math.tan(fovRad / 2); // focal length
-
-    const cosLat = Math.cos(latRad), sinLat = Math.sin(latRad);
-    const cosLon = Math.cos(lonRad), sinLon = Math.sin(lonRad);
-
-    for (let py = 0; py < H; py++) {
-      for (let px = 0; px < W; px++) {
-        // Ekran koordinatından ray
-        const dx = (px - halfW) / f;
-        const dy = (py - halfH) / f;
-        const dz = 1.0;
-
-        // Kamera rotasyonu (lat, lon)
-        // Önce lat etrafında döndür
-        const dy2 = dy * cosLat - dz * sinLat;
-        const dz2 = dy * sinLat + dz * cosLat;
-        // Sonra lon etrafında döndür
-        const dx3 = dx * cosLon + dz2 * sinLon;
-        const dz3 = -dx * sinLon + dz2 * cosLon;
-        const dy3 = dy2;
-
-        // Spherical koordinatları
-        const theta = Math.atan2(dx3, dz3); // yatay açı
-        const phi   = Math.atan2(dy3, Math.sqrt(dx3*dx3 + dz3*dz3)); // dikey açı
-
-        // Equirectangular UV
-        let u = (theta / (2 * Math.PI) + 0.5);
-        let v = (phi / Math.PI + 0.5);
-        u = ((u % 1) + 1) % 1;
-        v = Math.max(0, Math.min(1, v));
-
-        // Kaynak piksel
-        const sx = Math.floor(u * (iW - 1));
-        const sy = Math.floor(v * (iH - 1));
-        const si = (sy * iW + sx) * 4;
-        const di = (py * W + px) * 4;
-
-        data[di]   = srcData[si];
-        data[di+1] = srcData[si+1];
-        data[di+2] = srcData[si+2];
-        data[di+3] = 255;
-      }
-    }
-    pano360.ctx.putImageData(imgData, 0, 0);
-  }
-
-  // Sürükle → yeniden çiz
-  function onDrag(dx, dy) {
-    pano360.lon = pano360.baseLon - dx * (pano360.fov / 75) * 0.25;
-    pano360.lat = Math.max(-85, Math.min(85, pano360.baseLat + dy * (pano360.fov / 75) * 0.18));
-    renderFrame();
-  }
-
+  // Mouse
   wrap.addEventListener('mousedown', e => {
     pano360.dragging = true;
     pano360.startX = e.clientX; pano360.startY = e.clientY;
-    pano360.baseLon = pano360.lon; pano360.baseLat = pano360.lat;
+    pano360.baseX = pano360.posX; pano360.baseY = pano360.posY;
     wrap.style.cursor = 'grabbing';
+    e.preventDefault();
   });
   window.addEventListener('mousemove', e => {
     if (!pano360.dragging) return;
-    onDrag(e.clientX - pano360.startX, e.clientY - pano360.startY);
+    const W = panoEl.clientWidth;
+    const H = panoEl.clientHeight;
+    // X: tam genişlik = ~50% kayma (background-size auto 100% ile görsel genişliği ≈ 2×W)
+    pano360.posX = pano360.baseX - (e.clientX - pano360.startX) / W * 25;
+    pano360.posY = Math.max(20, Math.min(80, pano360.baseY - (e.clientY - pano360.startY) / H * 30));
+    applyPos();
   });
-  window.addEventListener('mouseup', () => { pano360.dragging = false; wrap.style.cursor = 'grab'; });
+  window.addEventListener('mouseup', () => { pano360.dragging = false; if(pano360.wrap) pano360.wrap.style.cursor='grab'; });
 
+  // Touch
   wrap.addEventListener('touchstart', e => {
     if (e.touches.length !== 1) return;
     pano360.dragging = true;
     pano360.startX = e.touches[0].clientX; pano360.startY = e.touches[0].clientY;
-    pano360.baseLon = pano360.lon; pano360.baseLat = pano360.lat;
+    pano360.baseX = pano360.posX; pano360.baseY = pano360.posY;
   }, {passive:true});
   wrap.addEventListener('touchmove', e => {
     if (!pano360.dragging || e.touches.length !== 1) return;
-    onDrag(e.touches[0].clientX - pano360.startX, e.touches[0].clientY - pano360.startY);
+    const W = panoEl.clientWidth, H = panoEl.clientHeight;
+    pano360.posX = pano360.baseX - (e.touches[0].clientX - pano360.startX) / W * 25;
+    pano360.posY = Math.max(20, Math.min(80, pano360.baseY - (e.touches[0].clientY - pano360.startY) / H * 30));
+    applyPos();
   }, {passive:true});
   wrap.addEventListener('touchend', () => { pano360.dragging = false; });
-
-  wrap.addEventListener('wheel', e => {
-    pano360.fov = Math.max(30, Math.min(110, pano360.fov + e.deltaY * 0.05));
-    renderFrame();
-  }, {passive:true});
-
-  window.addEventListener('resize', () => { resizeCanvas(); renderFrame(); });
 
   // Counter ve dots güncelle
   document.getElementById('viewer360-counter').textContent = `${idx + 1} / ${current360Images.length}`;
