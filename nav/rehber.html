@@ -6235,5 +6235,67 @@ document.getElementById('evliya-chat-panel').addEventListener('click',function(e
     if (btn) btn.style.display = 'none';
   });
 </script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DÜZELTME: GPS olmadan da panelde görünme (v1.0)
+   goStop() her çağrıldığında visitor_locations'a yazar —
+   konum izni / GPS sinyali olmasa bile (PC dahil).
+═══════════════════════════════════════════════════════════════ */
+(function(){
+  // goStop() hazır olana kadar bekle
+  function _patchWhenReady(){
+    if(typeof goStop === 'undefined' || typeof finalizeSession === 'undefined'){
+      setTimeout(_patchWhenReady, 100);
+      return;
+    }
+
+    /* ── 1. goStop() sarmalayıcısı ── */
+    const _origGoStop = goStop;
+    goStop = function(n){
+      _origGoStop(n);
+      // GPS/zone olup olmadan her durak geçişinde yaz
+      if(TRACKING.active && TRACKING.sessionId && window.db){
+        try{
+          window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({
+            stop          : n,
+            currentPage   : n,
+            lang          : (typeof currentLang !== 'undefined' ? currentLang : 'tr'),
+            zone          : TRACKING.currentZone || null,
+            visitorId     : TRACKING.sessionId,
+            userAgent     : navigator.userAgent.slice(0, 120),
+            lastSeen      : firebase.firestore.FieldValue.serverTimestamp(),
+            startTime     : firebase.firestore.Timestamp.fromMillis(TRACKING.startTime),
+            source        : (function(){
+              const p = new URLSearchParams(window.location.search);
+              if(p.get('source')==='qr' || p.get('ref')==='qr') return 'qr';
+              if(!document.referrer || document.referrer==='')
+                return /Android|iPhone|iPod/i.test(navigator.userAgent) ? 'qr_probable' : 'direct';
+              return 'web';
+            })(),
+            isPWA : window.navigator.standalone === true ||
+                    window.matchMedia('(display-mode: standalone)').matches
+          }, {merge: true});
+        } catch(e){ console.warn('[LocFix] write error:', e); }
+      }
+    };
+
+    /* ── 2. finalizeSession() — zone yoksa da sil ── */
+    const _origFinalize = finalizeSession;
+    finalizeSession = function(){
+      _origFinalize();
+      if(TRACKING.sessionId && window.db){
+        try{
+          window.db.collection('visitor_locations').doc(TRACKING.sessionId).delete();
+        } catch(e){}
+      }
+    };
+
+    console.log('[LocFix] GPS-bağımsız takip aktif ✓');
+  }
+
+  _patchWhenReady();
+})();
+</script>
 </body>
 </html>
