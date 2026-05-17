@@ -3229,395 +3229,140 @@ function get360ImagesForPlace(p) {
   return null;
 }
 
-// ── YENİ 360° VIEWER STATE ──────────────────────────────────
-let pano360 = {
-  posX: 50,
-  posY: 65,
-  zoom: 130,
-
-  dragging: false,
-  dragMoved: false,
-
-  lastX: 0,
-  lastY: 0,
-
-  dragStartX: 0,
-  dragStartY: 0,
-
-  velX: 0,
-  velY: 0,
-
-  isPinching: false,
-  pinchDist: 0,
-
-  velRaf: null,
-  spinRaf: null,
-  spinAngle: 0,
-
-  imgEl: null,
-  wrapEl: null
-};
-
-const PANO_ZOOM_MIN = 100;
-const PANO_ZOOM_MAX = 280;
-const PANO_DRAG_THRESHOLD = 8;
-
-// ────────────────────────────────────────────────────────────
+// ── Basit sürüklenebilir 360° viewer (CORS-free, <img> tabanlı) ──
+// ── CSS background-image tabanlı 360° viewer (CORS-free, getImageData yok) ──
+let pano360 = { dragging:false, startX:0, startY:0,
+                posX:50, posY:50, baseX:0, baseY:0, wrap:null };
 
 function destroy360() {
-
-  if (pano360.velRaf) {
-    cancelAnimationFrame(pano360.velRaf);
-    pano360.velRaf = null;
-  }
-
-  if (pano360.spinRaf) {
-    cancelAnimationFrame(pano360.spinRaf);
-    pano360.spinRaf = null;
-  }
-
-  pano360.imgEl = null;
-  pano360.wrapEl = null;
-
+  pano360.wrap = null;
   const old = document.getElementById('pano360-inner');
   if (old) old.remove();
 }
 
-// ────────────────────────────────────────────────────────────
-
 function load360Image(idx) {
-
   const loading = document.getElementById('viewer360-loading');
   const panoEl  = document.getElementById('viewer360-pano');
-
   loading.style.display = 'flex';
-  loading.innerHTML =
-    '<span class="v360-spin">🔮</span><span>360° görsel yükleniyor…</span>';
-
+  loading.innerHTML = '<span class="v360-spin">🔮</span><span>360° görsel yükleniyor…</span>';
   destroy360();
 
   const url = current360Images[idx];
 
-  // RESET
-  pano360.posX = 50;
-  pano360.posY = 65;
-  pano360.zoom = 130;
-
-  pano360.velX = 0;
-  pano360.velY = 0;
-
-  pano360.dragging = false;
-  pano360.dragMoved = false;
-
-  // WRAP
   const wrap = document.createElement('div');
   wrap.id = 'pano360-inner';
-
-  wrap.style.cssText = `
-    position:absolute;
-    inset:0;
-    overflow:hidden;
-    touch-action:none;
-    background:#000;
-  `;
-
-  pano360.wrapEl = wrap;
-
-  // IMAGE LAYER
-  const img = document.createElement('div');
-
-  img.style.cssText = `
-    position:absolute;
-    inset:0;
-    background-image:url("${url}");
-    background-repeat:repeat-x;
-    background-size:${pano360.zoom}% 100%;
-    background-position:${pano360.posX}% ${pano360.posY}%;
-    cursor:grab;
-    will-change:background-position, background-size;
-  `;
-
-  pano360.imgEl = img;
-
-  wrap.appendChild(img);
+  pano360.wrap = wrap;
+  // Görsel 3x genişlikte, sürükleyince kaydırılır
+  wrap.style.cssText = [
+    'position:absolute;inset:0;cursor:grab;overflow:hidden;',
+    'background-image:url("' + url + '");',
+    'background-repeat:repeat-x;',   // yatay döngü (360°)
+    'background-size:auto 100%;',    // yüksekliği doldur
+    'background-position:50% 50%;',
+  ].join('');
   panoEl.appendChild(wrap);
 
-  // LOADING TEST
+  // Görsel yüklenince loading'i kapat
   const probe = new Image();
-
-  probe.onload = () => {
-    loading.style.display = 'none';
-  };
-
+  probe.onload  = () => { loading.style.display = 'none'; };
   probe.onerror = () => {
-    loading.innerHTML =
-      '<span style="font-size:32px;">⚠️</span>' +
-      '<span style="font-size:13px;color:rgba(255,255,255,0.6);">' +
-      'Görsel yüklenemedi</span>';
+    loading.innerHTML = '<span style="font-size:32px;">⚠️</span><span style="font-size:13px;color:rgba(255,255,255,0.6);">Görsel yüklenemedi</span>';
   };
+  probe.src = url;  // crossOrigin YOK — sadece yüklendi mi diye kontrol
 
-  probe.src = url;
+  pano360.posX = 50; pano360.posY = 50;
 
-  // APPLY
   function applyPos() {
-
-    if (!pano360.imgEl) return;
-
-    pano360.imgEl.style.backgroundPosition =
-      `${pano360.posX}% ${pano360.posY}%`;
-
-    pano360.imgEl.style.backgroundSize =
-      `${pano360.zoom}% 100%`;
+    // posX: 0-100 arası değil, serbest (repeat-x ile döngü)
+    wrap.style.backgroundPosition = pano360.posX + '% ' + pano360.posY + '%';
   }
 
-  applyPos();
-
-  // ── MOMENTUM ─────────────────────────────
-
-  function startMomentum() {
-
-    if (pano360.velRaf) {
-      cancelAnimationFrame(pano360.velRaf);
-    }
-
-    function animate() {
-
-      pano360.posX += pano360.velX;
-      pano360.posY += pano360.velY;
-
-      pano360.posY = Math.max(15, Math.min(85, pano360.posY));
-
-      pano360.velX *= 0.95;
-      pano360.velY *= 0.95;
-
-      applyPos();
-
-      if (
-        Math.abs(pano360.velX) < 0.01 &&
-        Math.abs(pano360.velY) < 0.01
-      ) {
-        pano360.velRaf = null;
-        return;
-      }
-
-      pano360.velRaf = requestAnimationFrame(animate);
-    }
-
-    pano360.velRaf = requestAnimationFrame(animate);
-  }
-
-  // ── MOUSE DOWN ───────────────────────────
-
-  img.addEventListener('mousedown', e => {
-
+  // Mouse
+  wrap.addEventListener('mousedown', e => {
     pano360.dragging = true;
-    pano360.dragMoved = false;
-
-    pano360.dragStartX = e.clientX;
-    pano360.dragStartY = e.clientY;
-
-    pano360.lastX = pano360.posX;
-    pano360.lastY = pano360.posY;
-
-    pano360.velX = 0;
-    pano360.velY = 0;
-
-    img.style.cursor = 'grabbing';
-
+    pano360.startX = e.clientX; pano360.startY = e.clientY;
+    pano360.baseX = pano360.posX; pano360.baseY = pano360.posY;
+    wrap.style.cursor = 'grabbing';
     e.preventDefault();
   });
-
-  // ── MOUSE MOVE ───────────────────────────
-
   window.addEventListener('mousemove', e => {
-
     if (!pano360.dragging) return;
-
     const W = panoEl.clientWidth;
     const H = panoEl.clientHeight;
-
-    const dx = e.clientX - pano360.dragStartX;
-    const dy = e.clientY - pano360.dragStartY;
-
-    if (
-      Math.abs(dx) > PANO_DRAG_THRESHOLD ||
-      Math.abs(dy) > PANO_DRAG_THRESHOLD
-    ) {
-      pano360.dragMoved = true;
-    }
-
-    pano360.posX =
-      pano360.lastX - (dx / W) * 45;
-
-    pano360.posY =
-      pano360.lastY - (dy / H) * 35;
-
-    pano360.posY =
-      Math.max(15, Math.min(85, pano360.posY));
-
-    pano360.velX = -(dx / W) * 1.2;
-    pano360.velY = -(dy / H) * 0.8;
-
+    // X: tam genişlik = ~50% kayma (background-size auto 100% ile görsel genişliği ≈ 2×W)
+    pano360.posX = pano360.baseX - (e.clientX - pano360.startX) / W * 25;
+    pano360.posY = Math.max(20, Math.min(80, pano360.baseY - (e.clientY - pano360.startY) / H * 30));
     applyPos();
   });
+  window.addEventListener('mouseup', () => { pano360.dragging = false; if(pano360.wrap) pano360.wrap.style.cursor='grab'; });
 
-  // ── MOUSE UP ─────────────────────────────
-
-  window.addEventListener('mouseup', () => {
-
-    if (!pano360.dragging) return;
-
-    pano360.dragging = false;
-
-    if (pano360.imgEl) {
-      pano360.imgEl.style.cursor = 'grab';
-    }
-
-    startMomentum();
-  });
-
-  // ── WHEEL ZOOM ───────────────────────────
-
-  wrap.addEventListener('wheel', e => {
-
-    e.preventDefault();
-
-    pano360.zoom += e.deltaY * -0.08;
-
-    pano360.zoom =
-      Math.max(
-        PANO_ZOOM_MIN,
-        Math.min(PANO_ZOOM_MAX, pano360.zoom)
-      );
-
-    applyPos();
-
-  }, { passive:false });
-
-  // ── TOUCH START ──────────────────────────
-
+  // Touch
   wrap.addEventListener('touchstart', e => {
-
-    // PINCH
-    if (e.touches.length === 2) {
-
-      pano360.isPinching = true;
-
-      const dx =
-        e.touches[0].clientX - e.touches[1].clientX;
-
-      const dy =
-        e.touches[0].clientY - e.touches[1].clientY;
-
-      pano360.pinchDist = Math.hypot(dx, dy);
-
-      return;
-    }
-
-    // DRAG
     if (e.touches.length !== 1) return;
-
     pano360.dragging = true;
-    pano360.dragMoved = false;
-
-    pano360.dragStartX = e.touches[0].clientX;
-    pano360.dragStartY = e.touches[0].clientY;
-
-    pano360.lastX = pano360.posX;
-    pano360.lastY = pano360.posY;
-
-    pano360.velX = 0;
-    pano360.velY = 0;
-
-  }, { passive:true });
-
-  // ── TOUCH MOVE ───────────────────────────
-
+    pano360.startX = e.touches[0].clientX; pano360.startY = e.touches[0].clientY;
+    pano360.baseX = pano360.posX; pano360.baseY = pano360.posY;
+  }, {passive:true});
   wrap.addEventListener('touchmove', e => {
-
-    // PINCH ZOOM
-    if (pano360.isPinching && e.touches.length === 2) {
-
-      const dx =
-        e.touches[0].clientX - e.touches[1].clientX;
-
-      const dy =
-        e.touches[0].clientY - e.touches[1].clientY;
-
-      const dist = Math.hypot(dx, dy);
-
-      const delta = dist - pano360.pinchDist;
-
-      pano360.zoom += delta * 0.15;
-
-      pano360.zoom =
-        Math.max(
-          PANO_ZOOM_MIN,
-          Math.min(PANO_ZOOM_MAX, pano360.zoom)
-        );
-
-      pano360.pinchDist = dist;
-
-      applyPos();
-
-      return;
-    }
-
-    // DRAG
     if (!pano360.dragging || e.touches.length !== 1) return;
-
-    const W = panoEl.clientWidth;
-    const H = panoEl.clientHeight;
-
-    const dx =
-      e.touches[0].clientX - pano360.dragStartX;
-
-    const dy =
-      e.touches[0].clientY - pano360.dragStartY;
-
-    pano360.posX =
-      pano360.lastX - (dx / W) * 45;
-
-    pano360.posY =
-      pano360.lastY - (dy / H) * 35;
-
-    pano360.posY =
-      Math.max(15, Math.min(85, pano360.posY));
-
-    pano360.velX = -(dx / W) * 1.2;
-    pano360.velY = -(dy / H) * 0.8;
-
+    const W = panoEl.clientWidth, H = panoEl.clientHeight;
+    pano360.posX = pano360.baseX - (e.touches[0].clientX - pano360.startX) / W * 25;
+    pano360.posY = Math.max(20, Math.min(80, pano360.baseY - (e.touches[0].clientY - pano360.startY) / H * 30));
     applyPos();
+  }, {passive:true});
+  wrap.addEventListener('touchend', () => { pano360.dragging = false; });
 
-  }, { passive:true });
-
-  // ── TOUCH END ────────────────────────────
-
-  wrap.addEventListener('touchend', () => {
-
-    pano360.dragging = false;
-    pano360.isPinching = false;
-
-    startMomentum();
-
-  });
-
-  // COUNTER
-  document.getElementById('viewer360-counter').textContent =
-    `${idx + 1} / ${current360Images.length}`;
-
-  document
-    .querySelectorAll('.v360-dot')
-    .forEach((d, i) =>
-      d.classList.toggle('active', i === idx)
-    );
-
-  document.getElementById('btn360-prev').disabled =
-    (idx === 0);
-
-  document.getElementById('btn360-next').disabled =
-    (idx === current360Images.length - 1);
+  // Counter ve dots güncelle
+  document.getElementById('viewer360-counter').textContent = `${idx + 1} / ${current360Images.length}`;
+  document.querySelectorAll('.v360-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+  document.getElementById('btn360-prev').disabled = (idx === 0);
+  document.getElementById('btn360-next').disabled = (idx === current360Images.length - 1);
 }
+
+function render360Dots() {
+  const container = document.getElementById('viewer360-dots');
+  container.innerHTML = '';
+  current360Images.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'v360-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => { current360Idx = i; load360Image(i); };
+    container.appendChild(dot);
+  });
+}
+
+function prev360() {
+  if (current360Idx > 0) { current360Idx--; load360Image(current360Idx); }
+}
+function next360() {
+  if (current360Idx < current360Images.length - 1) { current360Idx++; load360Image(current360Idx); }
+}
+
+function close360Viewer() {
+  document.getElementById('viewer360-overlay').classList.remove('open');
+  destroy360();
+  const loading = document.getElementById('viewer360-loading');
+  loading.style.display = 'flex';
+  loading.innerHTML = '<span class="v360-spin">🔮</span><span>360° görsel yükleniyor…</span>';
+}
+
+// Swipe desteği (sola/sağa kaydırma)
+(function(){
+  let tx = 0;
+  const ov = document.getElementById ? document.getElementById('viewer360-overlay') : null;
+  if (!ov) return;
+  ov.addEventListener('touchstart', function(e){
+    if(e.touches.length===1) tx = e.touches[0].clientX;
+  }, {passive:true});
+  ov.addEventListener('touchend', function(e){
+    if(e.changedTouches.length===1){
+      const dx = e.changedTouches[0].clientX - tx;
+      if(Math.abs(dx) > 50) {
+        if(dx < 0) next360();
+        else prev360();
+      }
+    }
+  }, {passive:true});
+})();
 window.addEventListener('load',()=>{
   loadVisited();
   createParticles();
