@@ -1535,25 +1535,34 @@ function startTour(){
   TRACKING.sessionId='sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
   TRACKING.startTime=Date.now();TRACKING.active=true;
   createSession();
-  // Konum kararı henüz verilmedi mi? Popup'ı hemen göster, karardan sonra tur başlasın
+  // Konum kararı: daha önce verilmedi mi?
   if(!sessionStorage.getItem('loc-perm-decided')){
-    const popup=document.getElementById('loc-permission-popup');
-    if(popup){
-      // Popup açılmadan önce metinleri seçili dile çevir
-      const LS=INTRO_LOC_STRINGS[currentLang]||INTRO_LOC_STRINGS['tr'];
-      const el_t=document.getElementById('loc-perm-title');
-      const el_x=document.getElementById('loc-perm-text');
-      const el_ok=document.getElementById('loc-perm-btn-ok');
-      const el_sk=document.getElementById('loc-perm-btn-skip');
-      if(el_t)el_t.textContent=LS.title;
-      if(el_x)el_x.innerHTML=LS.text;
-      if(el_ok)el_ok.textContent=LS.ok;
-      if(el_sk)el_sk.textContent=LS.skip;
-      popup.classList.add('open');
+    if(sessionStorage.getItem('loc-perm-wants-gps')){
+      // Kullanıcı intro popup'ında 'izin ver' dedi — popup tekrar gösterme, GPS'e git
+      sessionStorage.removeItem('loc-perm-wants-gps');
+      requestLocationPermission();
+    } else {
+      // Henüz hiç karar yok — popup'ı göster
+      const popup=document.getElementById('loc-permission-popup');
+      if(popup){
+        const LS=INTRO_LOC_STRINGS[currentLang]||INTRO_LOC_STRINGS['tr'];
+        const el_t=document.getElementById('loc-perm-title');
+        const el_x=document.getElementById('loc-perm-text');
+        const el_ok=document.getElementById('loc-perm-btn-ok');
+        const el_sk=document.getElementById('loc-perm-btn-skip');
+        if(el_t)el_t.textContent=LS.title;
+        if(el_x)el_x.innerHTML=LS.text;
+        if(el_ok)el_ok.textContent=LS.ok;
+        if(el_sk)el_sk.textContent=LS.skip;
+        popup.classList.add('open');
+      }
     }
-  } else {
-    // Daha önce karar verilmiş — direkt başlat
+  } else if(sessionStorage.getItem('loc-perm-decided')==='denied'){
+    // Daha önce reddedilmiş — direkt başlat
     afterLocationDecision();
+  } else {
+    // Daha önce onaylanmış — GPS'i yeniden başlat
+    requestLocationPermission();
   }
 }
 
@@ -4937,9 +4946,10 @@ const INTRO_LOC_STRINGS={
 
 function introAcceptLocation(){
   document.getElementById('intro-loc-popup').style.display='none';
-  sessionStorage.setItem('loc-perm-decided','granted');
-  // 20sn sayacı arka planda devam ediyor — sadece popup kapanır
+  // Kullanıcı intro'da 'izin ver' dedi — Başla'ya basınca popup tekrar çıkmasın
+  sessionStorage.setItem('loc-perm-wants-gps','1');
 }
+
 
 function introSkipLocation(){
   document.getElementById('intro-loc-popup').style.display='none';
