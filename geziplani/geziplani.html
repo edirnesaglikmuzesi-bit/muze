@@ -196,27 +196,56 @@ body {
 .content-area { padding: 30px 20px; line-height: 1.8; font-size: 18px; color: #2b2b2b; position: relative; z-index: 2; }
 @media (min-width: 768px) { .content-area { padding: 50px 100px; } }
 
-/* --- 5. 3D KABARTMA GÖRSEL --- */
-.small-img-wrapper { padding: 50px 15px; text-align: center; display: flex; justify-content: center; perspective: 1000px; }
-.small-img-wrapper img { 
-    width: 600px; height: 400px; object-fit: cover; border-radius: 6px; 
+/* --- 5. GALERİ BAŞLIK BANDI --- */
+.gallery-title-bar { background: var(--dark); border-top: 2px solid var(--gold); border-bottom: 2px solid var(--gold); padding: 28px 20px; text-align: center; position: relative; z-index: 2; }
+.gallery-title-bar h3 { font-family: 'Cinzel'; color: var(--gold); font-size: clamp(14px, 2.2vw, 20px); letter-spacing: 6px; margin: 0; }
+.gallery-title-bar p { font-family: 'Playfair Display'; font-style: italic; color: rgba(212,175,55,0.6); font-size: 14px; margin-top: 6px; letter-spacing: 2px; }
+
+/* --- 6. GALERİ SLİDER --- */
+.gallery-inner { padding: 0 0 40px; position: relative; z-index: 2; background: var(--parchment); }
+.slider-outer { position: relative; overflow: hidden; width: 100%; }
+.slider-track { display: flex; transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); }
+
+.slide-item {
+    min-width: 100%;
+    padding: 50px 15px 0;
+    display: flex; flex-direction: column; align-items: center;
+    perspective: 1000px; cursor: pointer; position: relative;
+}
+.slide-item img {
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover; border-radius: 6px;
     border: 1px solid rgba(212, 175, 55, 0.4); display: block; transition: var(--transition);
     box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3);
     transform: rotateX(2deg);
 }
-.small-img-wrapper img:hover {
+.slide-item img:hover {
     transform: scale(1.04) translateY(-15px) rotateX(0deg);
     box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px rgba(212, 175, 55, 0.3);
     border-color: var(--gold-bright);
 }
+@media (max-width: 768px) { .slide-item img { max-width: 100%; transform: none; } }
 
-/* --- 6. TABLO VE KART SONU (FOOTER) --- */
-.table-wrap { overflow-x: auto; margin: 35px 0; border: 1px solid var(--gold); border-radius: 8px; background: #fff; }
-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-th { background: var(--dark); color: var(--gold); padding: 18px; text-align: left; font-family: 'Cinzel'; }
-td { padding: 15px; border-bottom: 1px solid #eee; }
+.slide-caption { font-family: 'Cinzel'; font-size: 12px; color: rgba(15,26,36,0.45); letter-spacing: 3px; text-align: center; margin-top: 16px; padding-bottom: 5px; }
+.slide-counter { position: absolute; top: 62px; right: 20px; background: rgba(15,26,36,0.75); border: 1px solid var(--gold); color: var(--gold); font-family: 'Cinzel'; font-size: 12px; padding: 5px 12px; border-radius: 20px; letter-spacing: 2px; }
+@media (max-width: 768px) { .slide-counter { right: 16px; top: 18px; } }
 
-/* Kartın içindeki en alt kısım */
+.slider-arrow { position: absolute; top: 50%; transform: translateY(-60%); background: rgba(15,26,36,0.85); border: 2px solid var(--gold); color: var(--gold); cursor: pointer; z-index: 10; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; transition: all 0.3s ease; }
+.slider-arrow:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 20px rgba(212,175,55,0.6); }
+.slider-arrow.prev { left: 20px; }
+.slider-arrow.next { right: 20px; }
+@media (max-width: 768px) { .slider-arrow { width: 40px; height: 40px; font-size: 16px; } .slider-arrow.prev { left: 8px; } .slider-arrow.next { right: 8px; } }
+
+.thumb-nav { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; padding: 0 20px; }
+.thumb-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(212,175,55,0.2); border: 2px solid rgba(212,175,55,0.3); cursor: pointer; transition: all 0.3s ease; }
+.thumb-dot.active { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px rgba(212,175,55,0.7); transform: scale(1.4); }
+.thumb-dot:hover { background: rgba(212,175,55,0.55); }
+
+.swipe-hint { text-align: center; font-family: 'Cinzel'; font-size: 11px; color: rgba(15,26,36,0.35); letter-spacing: 2px; margin-top: 12px; padding-bottom: 5px; }
+
+/* --- 7. KART FOOTER --- */
 .card-footer { 
     padding: 40px; background: var(--dark); color: var(--gold); 
     text-align: center; font-family: 'Cinzel'; border-top: 2px solid var(--gold); 
@@ -231,32 +260,19 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
     padding: 30px; text-align: center; color: var(--gold); margin-bottom: 40px;
 }
 
-/* --- 7. MOBİL UYUMLULUK --- */
+/* --- 8. MOBİL UYUMLULUK --- */
 @media (max-width: 768px) {
-            .logo-img1, .logo-img2 { height: 45px; }
-            .menu-btn { padding: 8px 15px; font-size: 12px; }
+    .logo-img1, .logo-img2 { height: 45px; }
+    .menu-btn { padding: 8px 15px; font-size: 12px; }
     .nav { flex-direction: column; gap: 10px; padding: 10px 20px; }
     .banner-box { height: 250px; }
     .banner-overlay h1 { font-family: 'Cinzel'; font-size: clamp(24px, 5vw, 40px); letter-spacing: 12px; text-shadow: 3px 3px 15px #000; }
     .content-area { padding: 30px 20px; font-size: 16px; }
     .corner-frame { width: 45px; height: 45px; }
     body { padding-top: calc(var(--nav-height) + 20px); }
-    .small-img-wrapper img { width: 100%; height: auto; aspect-ratio: 3/2; transform: none; }
 }
-            .footer-title {
-            font-family: 'Cinzel', serif;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-
-        .footer-subtitle {
-            font-family: 'Cinzel', serif;
-            font-size: 17px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            margin-top: 8px;
-        }
+        .footer-title { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; }
+        .footer-subtitle { font-family: 'Cinzel', serif; font-size: 17px; font-weight: 300; letter-spacing: 1px; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -314,149 +330,150 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
         <img src="../assets/cornerleft.png" class="corner-frame b-l" alt="Süsleme">
         <img src="../assets/cornerright.png" class="corner-frame b-r" alt="Süsleme">
 
-        <div class="main-title">
-        <h2>MÜZE GEZİ REHBERİ: ŞİFA VE İLMİN MERKEZİ</h2>
-    </div>
+        <!-- ===== SLIDESHOW 1 ===== -->
+        <div class="gallery-title-bar">
+            <h3>SULTAN II. BAYEZİD KÜLLİYESİ SAĞLIK MÜZESİ</h3>
+            <p>Külliyeye Genel Bir Bakış &nbsp;·&nbsp; 2 Görsel</p>
+        </div>
+        <div class="gallery-inner">
+            <div class="slider-outer" id="sliderOuter1">
+                <div class="slider-track" id="sliderTrack1">
+                    <div class="slide-item">
+                        <img src="img/1.png" alt="Sultan II. Bayezid Külliyesi Sağlık Müzesi 1">
+                        <div class="slide-caption">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+                        <div class="slide-counter">1 / 2</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/2.png" alt="Sultan II. Bayezid Külliyesi Sağlık Müzesi 2">
+                        <div class="slide-caption">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
+                        <div class="slide-counter">2 / 2</div>
+                    </div>
+                </div>
+                <button class="slider-arrow prev" id="prevBtn1" aria-label="Önceki">&#8592;</button>
+                <button class="slider-arrow next" id="nextBtn1" aria-label="Sonraki">&#8594;</button>
+            </div>
+            <div class="thumb-nav" id="thumbNav1">
+                <div class="thumb-dot active" onclick="goTo1(0)"></div>
+                <div class="thumb-dot" onclick="goTo1(1)"></div>
+            </div>
+            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın →</p>
+        </div>
 
-      <div class="content-area" style="text-align: justify;">
+        <!-- ===== SLIDESHOW 2 ===== -->
+        <div class="gallery-title-bar">
+            <h3>KÜLLİYE BÖLÜMLERİ</h3>
+            <p>Külliyenin Farklı Bölümlerinden &nbsp;·&nbsp; 3 Görsel</p>
+        </div>
+        <div class="gallery-inner">
+            <div class="slider-outer" id="sliderOuter2">
+                <div class="slider-track" id="sliderTrack2">
+                    <div class="slide-item">
+                        <img src="img/3.png" alt="Külliye Bölümleri 1">
+                        <div class="slide-caption">Külliye Bölümleri</div>
+                        <div class="slide-counter">1 / 3</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/4.png" alt="Külliye Bölümleri 2">
+                        <div class="slide-caption">Külliye Bölümleri</div>
+                        <div class="slide-counter">2 / 3</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/5.png" alt="Külliye Bölümleri 3">
+                        <div class="slide-caption">Külliye Bölümleri</div>
+                        <div class="slide-counter">3 / 3</div>
+                    </div>
+                </div>
+                <button class="slider-arrow prev" id="prevBtn2" aria-label="Önceki">&#8592;</button>
+                <button class="slider-arrow next" id="nextBtn2" aria-label="Sonraki">&#8594;</button>
+            </div>
+            <div class="thumb-nav" id="thumbNav2">
+                <div class="thumb-dot active" onclick="goTo2(0)"></div>
+                <div class="thumb-dot" onclick="goTo2(1)"></div>
+                <div class="thumb-dot" onclick="goTo2(2)"></div>
+            </div>
+            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın →</p>
+        </div>
 
-<p style="text-align:center; font-weight:bold; color: var(--v-red); font-size:22px; margin-bottom: 5px;">
-    🏛️ SAĞLIK MÜZESİ GEZİ GÜZERGAHI
-</p>
-<p style="text-align:center; font-family:'Cinzel'; margin-bottom:25px; color: var(--gold); font-style: italic;">
-    “Adım adım bir şifa yolculuğu…”
-</p>
+        <!-- ===== SLIDESHOW 3 ===== -->
+        <div class="gallery-title-bar">
+            <h3>KÜLLİYEDEN KARELER</h3>
+            <p>Tarihi Yapıdan Seçme Görseller &nbsp;·&nbsp; 10 Görsel</p>
+        </div>
+        <div class="gallery-inner">
+            <div class="slider-outer" id="sliderOuter3">
+                <div class="slider-track" id="sliderTrack3">
+                    <div class="slide-item">
+                        <img src="img/6.png" alt="Külliyeden Kareler 1">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">1 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/7.png" alt="Külliyeden Kareler 2">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">2 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/8.png" alt="Külliyeden Kareler 3">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">3 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/9.png" alt="Külliyeden Kareler 4">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">4 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/10.png" alt="Külliyeden Kareler 5">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">5 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/11.png" alt="Külliyeden Kareler 6">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">6 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/12.png" alt="Külliyeden Kareler 7">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">7 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/13.png" alt="Külliyeden Kareler 8">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">8 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/14.png" alt="Külliyeden Kareler 9">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">9 / 10</div>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/15.png" alt="Külliyeden Kareler 10">
+                        <div class="slide-caption">Külliyeden Kareler</div>
+                        <div class="slide-counter">10 / 10</div>
+                    </div>
+                </div>
+                <button class="slider-arrow prev" id="prevBtn3" aria-label="Önceki">&#8592;</button>
+                <button class="slider-arrow next" id="nextBtn3" aria-label="Sonraki">&#8594;</button>
+            </div>
+            <div class="thumb-nav" id="thumbNav3">
+                <div class="thumb-dot active" onclick="goTo3(0)"></div>
+                <div class="thumb-dot" onclick="goTo3(1)"></div>
+                <div class="thumb-dot" onclick="goTo3(2)"></div>
+                <div class="thumb-dot" onclick="goTo3(3)"></div>
+                <div class="thumb-dot" onclick="goTo3(4)"></div>
+                <div class="thumb-dot" onclick="goTo3(5)"></div>
+                <div class="thumb-dot" onclick="goTo3(6)"></div>
+                <div class="thumb-dot" onclick="goTo3(7)"></div>
+                <div class="thumb-dot" onclick="goTo3(8)"></div>
+                <div class="thumb-dot" onclick="goTo3(9)"></div>
+            </div>
+            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın →</p>
+        </div>
 
-<h3>🎙️ GİRİŞ</h3>
-<p>
-    Müzemize hoş geldiniz. Bu rehber eşliğinde; müzede kendi gezi planınızı oluşturabilir, bölümleri daha bilinçli ve detaylı şekilde keşfedebilir, külliyenin genel yapısını ve işleyişini daha iyi anlayabilirsiniz.
-</p>
-<p>
-    Bu rehberin amacı ziyaretinizi daha verimli hale getirmek ve tarihi yapıyı anlamanızı kolaylaştırmaktır. 
-    <br><strong>➤ Şimdi birlikte adım adım müzemizi gezmeye başlayalım.</strong>
-</p>
+        </div><!-- /placeholder hidden -->
 
-<div class="small-img-wrapper">
-    <img src="../gezi/giris.jpg" alt="Müze Girişi">
-</div>
-
-<h3>🧭 GENEL YERLEŞİM VE YÖNLENDİRME</h3>
-<p>
-    Müzeye bilet gişesinden giriş yaptıktan sonra tam karşınızda müzenin kalbi olan <b>Darüşşifa</b> yer alır. Sağ tarafınızda ise <b>Tıp Medresesi</b> bulunur. 
-</p>
-<p>
-    Gezi sırasında üçüncü bölüm olan İmaret ve Müze Cafe’ye ulaşmak için Darüşşifa çıkışına ilerlenir, sağ taraftaki turnikeden geçilerek caminin bahçesine ulaşılır.
-</p>
-<p>➤ Bu alandaki yönlendirme tabelaları, gezi boyunca size rehberlik eder.</p>
-
-<div class="small-img-wrapper">
-    <img src="../gezi/yonlendirme.jpg" alt="Yönlendirme Tabelaları">
-</div>
-
-<h3>📍 GEZİ BAŞLANGIÇ ÖNERİSİ</h3>
-<p>
-    Müzede belirli bir gezi sırası zorunlu değildir. Ancak daha bilinçli bir başlangıç için ilk olarak Darüşşifa 1. avlusundaki <b>Sunum Odası</b> önerilir. Bu sayede külliyenin tarihini öğrenir ve sonraki bölümleri daha anlamlı gezebilirsiniz.
-</p>
-
-<h3>🎬 1. MÜZE SUNUM ODASI</h3>
-<p>
-    Bu bölümde külliyenin 500 yılı aşan hikayesini anlatan video izlenir ve ziyaretin temeli burada atılır.
-</p>
-
-<h4 style="margin-top:20px; color: var(--v-red);">📚 Video İçeriğinde:</h4>
-<ul style="list-style-type: none; padding-left: 0;">
-    <li style="margin-bottom: 10px;"><b>◈ Külliyenin Kuruluşu ve Yapım Aşamaları:</b> Sultan II. Bayezid’in emriyle 1484 yılında temeli atılmıştır. Yapı, Mimar Hayrettin yönetiminde dört yıl süren titiz bir çalışma ile tamamlanmıştır.</li>
-    <li style="margin-bottom: 10px;"><b>◈ Görkemli Açılış ve Hizmet Yılları:</b> 1488 yılında kapılarını açmıştır. Osmanlı’nın en parlak dönemlerinden imparatorluğun son yıllarına kadar kesintisiz hizmet vermiştir.</li>
-    <li style="margin-bottom: 10px;"><b>◈ Külliye Birimleri ve İşleyişi:</b> Darüşşifa, Tıp Medresesi, İmaret, Cami, Tabhane ve Hamam birimlerinin birbiriyle uyum içinde çalışan büyük bir sistem olduğu vurgulanır.</li>
-    <li style="margin-bottom: 10px;"><b>◈ Evliya Çelebi’nin Gözlemleri:</b> 1652 yılındaki ziyareti ve hastaların müzik/su sesiyle huzura kavuştuğu anlatılır.</li>
-    <li><b>◈ Tarihsel Önem:</b> Akıl hastalarına insancıl yaklaşım ve dünya tıp tarihindeki benzersiz konumu aktarılır.</li>
-</ul>
-
-<div class="small-img-wrapper">
-    <img src="../gezi/sunum_odasi.jpg" alt="Sunum Odası">
-</div>
-
-<h3>🎶 2. ŞİFAHANE (DARÜŞŞİFA) - AKUSTİK ŞİFA MERKEZİ</h3>
-<p>
-    Külliyenin en görkemli ve en önemli bölümüdür. Osmanlı’da akıl ve ruh hastalıklarının tedavi edildiği merkezdir. 
-    <strong>➤ Müzik, su sesi ve güzel kokularla tedavi uygulanan ilk merkezlerdendir.</strong>
-</p>
-
-<h4 style="margin-top:15px;">🏛️ Mimari Yapı</h4>
-<ul>
-    <li><b>Üç bölümlü bir sistem:</b> İlk iki avlu idari birimler, eczane, mutfak ve personel odalarından oluşurken; üçüncü bölüm yataklı tedavi alanıdır.</li>
-    <li><b>Sekizgen yapı ve akustik sistem:</b> Merkezi kubbe sayesinde ses tüm odalara eşit dağılır. Ortadaki şadırvanın su sesi, musiki ile birleşerek doğal terapi oluşturur.</li>
-</ul>
-
-<h4 style="margin-top:15px;">💊 Tedavi Yöntemleri</h4>
-<p>
-    Hastalar yalnızca ilaçlarla değil; 10 kişilik ekip tarafından icra edilen <b>musiki</b> ve gül, yasemin gibi <b>koku terapileriyle</b> tedavi edilirdi.
-</p>
-
-<h4 style="margin-top:15px;">🩺 Tıbbi Branşlar</h4>
-<p>Ruh sağlığı tedavileri, cerrahi müdahaleler ve göz hastalıkları tedavileri burada uzman hekimlerce gerçekleştirilirdi.</p>
-
-<div class="small-img-wrapper">
-    <img src="../gezi/darussifa.jpg" alt="Darüşşifa Görünümü">
-</div>
-
-<h3>📚 3. TIP MEDRESESİ (MEDRESETÜ’L-ETIBBA)</h3>
-<p>
-    Darüşşifa çıkışında sol tarafta yer alır. Dönemin hekimlerini yetiştiren, bir <b>“Tıp Fakültesi”</b> niteliğinde eğitim kurumudur.
-</p>
-
-<h4 style="margin-top:15px;">🎓 Eğitim Sistemi</h4>
-<p>
-    Uygulamalı eğitim modeli esastır. Talebeler teorik dersleri Başmüderris’ten medresede alır, öğrendiklerini ise Darüşşifa’da pratiğe dökerlerdi. Bu modern tıp eğitiminin temeli 500 yıl önce burada atılmıştır.
-</p>
-
-<h4 style="margin-top:15px;">🏫 Yapısal Özellikler</h4>
-<p>18 öğrenci hücresi ve 1 büyük dershaneden oluşur. Günümüzde dershane, kütüphane, müderris odası ve öğrenci odaları canlandırmalarla sergilenmektedir.</p>
-
-<div class="small-img-wrapper">
-    <img src="../gezi/medrese.jpg" alt="Tıp Medresesi">
-</div>
-
-<h3>🍲 4. İMARETHANE (AŞEVİ VE MUTFAK)</h3>
-<p>
-    Caminin ön bahçesini geçtikten sonra ulaşılır. Osmanlı’nın yardım ve paylaşma kültürünün en somut örneklerinden biridir.
-</p>
-<p>
-    <b>📍 Bu Bölümde:</b> Mankenler, panolar ve dev mutfak kazanları (Matbah-ı Amire) eşliğinde Osmanlı imaret sistemi anlatılır. Dev kazanlarda her gün binlerce kişilik yemek pişirilir, ücretsiz olarak hastalara, yolculara, fakirlere ve külliye çalışanlarına dağıtılırdı.
-</p>
-<p><i>Not: Yahya Baba Türbesi imaretin arka kısmındaki tarlada yer almaktadır.İsteyen ziyaretçilerimize bu türbe gezdirilmektedir.</i></p>
-
-<div class="small-img-wrapper">
-    <img src="../gezi/imaret.jpg" alt="İmaret ve Mutfak">
-</div>
-
-<h3>☕ 5. MÜZE CAFE</h3>
-<p>
-    Külliyenin Tabhane bölümünde yer alan bu alan, Osmanlı misafirperverliğinin bir simgesidir. Geçmişte hasta yakınları ve yolcuların ücretsiz dinlendiği bu yer, günümüzde ziyaretçiler için doğal şerbetler, çay ve kahve sunan bir dinlenme alanıdır.Burada doğal malzemelerden özel olarak hazırlanmış Osmanlı şerbetinin yanı sıra çay ve kahvenizi içebilirsiniz. Ayrıca Edirne ve Darüşşifa temalı hediyelik eşyalar buradan temin edilebilir.
-</p>
-
-<div class="small-img-wrapper">
-    <img src="../gezi/cafe.jpg" alt="Müze Cafe">
-</div>
-
-<h3>🕌 6. CAMİ</h3>
-<p>
-    Cami, müzeye bağlı bir birim olmayıp Diyanet İşleri Başkanlığı’na bağlı olarak hizmet veren müze dışında kalan Külliyenin ibadet bölümüdür. Osmanlı selatin camileri arasında önemli bir örnektir ve ilk <b>hünkar mahfili</b> uygulamalarından birine sahiptir. Halka açıktır ve müze ziyaretçileri tarafından gezilebilir.
-</p>
-
-<div class="small-img-wrapper">
-    <img src="../gezi/cami.jpg" alt="Sultan II. Bayezid Camii">
-</div>
-
-<h3>🌿 SONUÇ</h3>
-<p>
-    Bu külliye; sağlık, eğitim, sosyal yardım ve ibadet sistemlerinin kusursuz bir uyumla bir arada olduğu devasa bir yapıdır. 
-</p>
-<p style="font-weight: bold; border-left: 4px solid var(--gold); padding-left: 15px; margin-top: 20px;">
-    ➤ Bu nedenle burası sadece bir müze değil; bir medeniyetin yaşam modelidir.
-</p>
-
-</div>        <div class="card-footer">
+        <div class="card-footer">
             <p style="font-weight: bold; letter-spacing: 2px;">EDİRNE SAĞLIK MÜZESİ ZİYARETÇİ REHBERİ</p>
             <p style="font-size: 14px; margin-top: 10px;">1488'den Günümüze Sönmeyen Şifa Meşalesi</p>
         </div>
@@ -472,19 +489,62 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
     </div>
 
     <script>
+        // MENÜ
         const menuBtn = document.getElementById('menuBtn');
         const dropdown = document.getElementById('globalDropdown');
+        menuBtn.onclick = e => { e.stopPropagation(); dropdown.classList.toggle('active'); };
+        window.onclick = e => { if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) dropdown.classList.remove('active'); };
 
-        menuBtn.onclick = function(e) {
-            e.stopPropagation();
-            dropdown.classList.toggle('active');
-        };
+        // ===== SLIDER 1 (2 görsel) =====
+        let cur1 = 0;
+        const TOTAL1 = 2;
+        const track1 = document.getElementById('sliderTrack1');
+        const dots1 = document.querySelectorAll('#thumbNav1 .thumb-dot');
+        function goTo1(n) {
+            cur1 = ((n % TOTAL1) + TOTAL1) % TOTAL1;
+            track1.style.transform = `translateX(-${cur1 * 100}%)`;
+            dots1.forEach((d, i) => d.classList.toggle('active', i === cur1));
+        }
+        document.getElementById('prevBtn1').onclick = () => goTo1(cur1 - 1);
+        document.getElementById('nextBtn1').onclick = () => goTo1(cur1 + 1);
+        const so1 = document.getElementById('sliderOuter1');
+        let tx1 = 0;
+        so1.addEventListener('touchstart', e => { tx1 = e.changedTouches[0].screenX; }, { passive: true });
+        so1.addEventListener('touchend', e => { const d = tx1 - e.changedTouches[0].screenX; if (Math.abs(d) > 50) goTo1(d > 0 ? cur1 + 1 : cur1 - 1); }, { passive: true });
 
-        window.onclick = function(e) {
-            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        };
+        // ===== SLIDER 2 (3 görsel) =====
+        let cur2 = 0;
+        const TOTAL2 = 3;
+        const track2 = document.getElementById('sliderTrack2');
+        const dots2 = document.querySelectorAll('#thumbNav2 .thumb-dot');
+        function goTo2(n) {
+            cur2 = ((n % TOTAL2) + TOTAL2) % TOTAL2;
+            track2.style.transform = `translateX(-${cur2 * 100}%)`;
+            dots2.forEach((d, i) => d.classList.toggle('active', i === cur2));
+        }
+        document.getElementById('prevBtn2').onclick = () => goTo2(cur2 - 1);
+        document.getElementById('nextBtn2').onclick = () => goTo2(cur2 + 1);
+        const so2 = document.getElementById('sliderOuter2');
+        let tx2 = 0;
+        so2.addEventListener('touchstart', e => { tx2 = e.changedTouches[0].screenX; }, { passive: true });
+        so2.addEventListener('touchend', e => { const d = tx2 - e.changedTouches[0].screenX; if (Math.abs(d) > 50) goTo2(d > 0 ? cur2 + 1 : cur2 - 1); }, { passive: true });
+
+        // ===== SLIDER 3 (3 görsel) =====
+        let cur3 = 0;
+        const TOTAL3 = 10;
+        const track3 = document.getElementById('sliderTrack3');
+        const dots3 = document.querySelectorAll('#thumbNav3 .thumb-dot');
+        function goTo3(n) {
+            cur3 = ((n % TOTAL3) + TOTAL3) % TOTAL3;
+            track3.style.transform = `translateX(-${cur3 * 100}%)`;
+            dots3.forEach((d, i) => d.classList.toggle('active', i === cur3));
+        }
+        document.getElementById('prevBtn3').onclick = () => goTo3(cur3 - 1);
+        document.getElementById('nextBtn3').onclick = () => goTo3(cur3 + 1);
+        const so3 = document.getElementById('sliderOuter3');
+        let tx3 = 0;
+        so3.addEventListener('touchstart', e => { tx3 = e.changedTouches[0].screenX; }, { passive: true });
+        so3.addEventListener('touchend', e => { const d = tx3 - e.changedTouches[0].screenX; if (Math.abs(d) > 50) goTo3(d > 0 ? cur3 + 1 : cur3 - 1); }, { passive: true });
     </script>
 </body>
 </html>
