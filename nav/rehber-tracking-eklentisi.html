@@ -1,0 +1,181 @@
+<!-- ══════════════════════════════════════════════════════════════
+     ADMIN PANEL TRACKING KODU — rehber.html'e ekleyin
+     
+     Bu kodu mevcut </script> bloklarından hemen önce yapıştırın.
+     Firebase db zaten başlatılmış olduğu varsayılır.
+     ══════════════════════════════════════════════════════════════ -->
+
+<script>
+/* ──────────────────────────────────────────────────────────────
+   1. BUTON TIKLAMA TAKİBİ
+   Tüm butonlara otomatik event listener ekler.
+   Firebase'e "button_clicks" koleksiyonuna yazar.
+   
+   Her döküman ID formatı: "stop{N}_{butonAdi}" veya "global_{butonAdi}"
+   Döküman yapısı: { count: N, lastClicked: Timestamp, stopName: "..." }
+────────────────────────────────────────────────────────────────── */
+
+function _sanitizeKey(str) {
+  return str.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ\s]/g, '').replace(/\s+/g, '_').slice(0, 50);
+}
+
+function _trackButtonClick(buttonEl) {
+  if (!window.db) return;
+  
+  // Hangi durağı bul
+  const stopPage = buttonEl.closest('.stop-page');
+  let stopId = 'global';
+  let stopName = 'Genel';
+  if (stopPage) {
+    const stopNum = stopPage.id.replace('stop-', '');
+    stopId = 'stop' + stopNum;
+    // Durak adını title'dan al
+    const titleEl = stopPage.querySelector('.stop-main-title');
+    if (titleEl) stopName = titleEl.textContent.trim().slice(0, 40);
+  }
+  
+  // Buton adı
+  const btnText = (buttonEl.textContent || buttonEl.getAttribute('aria-label') || buttonEl.id || 'btn').trim().slice(0, 60);
+  const docId = `${stopId}_${_sanitizeKey(btnText)}`;
+  
+  // Firestore'a increment
+  const ref = window.db.collection('button_clicks').doc(docId);
+  window.db.runTransaction(async tx => {
+    const doc = await tx.get(ref);
+    if (doc.exists) {
+      tx.update(ref, {
+        count: (doc.data().count || 0) + 1,
+        lastClicked: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } else {
+      tx.set(ref, {
+        stopId, stopName, buttonLabel: btnText,
+        count: 1,
+        firstClicked: firebase.firestore.FieldValue.serverTimestamp(),
+        lastClicked: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  }).catch(e => console.warn('[BtnTrack] Hata:', e));
+}
+
+// DOMContentLoaded'da tüm butonları izle
+window.addEventListener('DOMContentLoaded', () => {
+  // Tüm mevcut butonlar
+  document.querySelectorAll('button, .btn-forward, .btn-back, .btn-start, .btn-menu, .btn-speaker, .btn-intro-lang, .lang-btn, .pg-btn').forEach(btn => {
+    btn.addEventListener('click', () => _trackButtonClick(btn), { passive: true });
+  });
+
+  // Dinamik butonlar için MutationObserver
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(m => {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          const btns = node.querySelectorAll ? node.querySelectorAll('button') : [];
+          btns.forEach(btn => {
+            if (!btn._btnTracked) {
+              btn._btnTracked = true;
+              btn.addEventListener('click', () => _trackButtonClick(btn), { passive: true });
+            }
+          });
+          if (node.tagName === 'BUTTON' && !node._btnTracked) {
+            node._btnTracked = true;
+            node.addEventListener('click', () => _trackButtonClick(node), { passive: true });
+          }
+        }
+      });
+    });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+
+
+/* ──────────────────────────────────────────────────────────────
+   2. QR KOD vs WEB ERİŞİM TAKİBİ
+   URL'de ?source=qr parametresi varsa QR erişimi sayılır.
+   Bu kodu mevcut createSession() fonksiyonuna ekleyin:
+   
+   Aşağıdaki satırı createSession() içindeki .set({...}) içine ekleyin:
+   source: _detectAccessSource(),
+────────────────────────────────────────────────────────────────── */
+
+function _detectAccessSource() {
+  const params = new URLSearchParams(window.location.search);
+  // QR koda ?source=qr ekleyerek ayrım yapabilirsiniz
+  if (params.get('source') === 'qr') return 'qr';
+  if (params.get('ref') === 'qr') return 'qr';
+  // Referrer yoksa doğrudan erişim (genellikle QR)
+  if (!document.referrer || document.referrer === '') {
+    // Mobil cihazsa büyük ihtimalle QR
+    const isMob = /Android|iPhone|iPod/i.test(navigator.userAgent);
+    return isMob ? 'qr_probable' : 'direct';
+  }
+  // Referrer varsa web erişimi
+  return 'web';
+}
+
+/* ──────────────────────────────────────────────────────────────
+   3. createSession() GÜNCELLEME
+   Mevcut createSession() fonksiyonundaki .set({...}) içine
+   aşağıdaki alanları ekleyin:
+   
+   source: _detectAccessSource(),
+   isPWA: window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches,
+   
+   Örnek güncellenmiş createSession():
+────────────────────────────────────────────────────────────────── */
+
+// Bu fonksiyon mevcut createSession()'ın yerini alır — eski kodla değiştirin
+function createSession_UPDATED() {
+  if (!window.db || !TRACKING.sessionId) return;
+  try {
+    window.db.collection('visitor_sessions').doc(TRACKING.sessionId).set({
+      startTime: firebase.firestore.FieldValue.serverTimestamp(),
+      lang: currentLang || 'tr',
+      maxStop: 0,
+      durationMin: 0,
+      locationGranted: false,
+      active: true,
+      userAgent: navigator.userAgent.slice(0, 120),
+      // YENİ ALANLAR:
+      source: _detectAccessSource(),
+      isPWA: window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches,
+      screenWidth: window.screen.width,
+      screenHeight: window.screen.height
+    });
+  } catch(e) { console.warn('[Session] Oluşturma hatası:', e); }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   4. DİL TAKİBİ — updateSessionField() ZATEN MEVCUT
+   Dil değişiminde şu kodu mevcut changeLang/setLang fonksiyonuna ekleyin:
+   
+   updateSessionField({ lang: newLang });
+   
+   Bu kod zaten çalışıyorsa ek bir şey yapmanıza gerek yok.
+   visitor_sessions koleksiyonundaki lang alanı otomatik güncellenir.
+────────────────────────────────────────────────────────────────── */
+
+/* ──────────────────────────────────────────────────────────────
+   5. GÜNLÜK ZİYARETÇİ SAYACI (opsiyonel)
+   Her gün için ayrı sayaç tutar — "daily_stats" koleksiyonu
+────────────────────────────────────────────────────────────────── */
+
+function _incrementDailyCounter() {
+  if (!window.db) return;
+  const today = new Date().toISOString().slice(0, 10); // "2025-05-17"
+  const ref = window.db.collection('daily_stats').doc(today);
+  window.db.runTransaction(async tx => {
+    const doc = await tx.get(ref);
+    if (doc.exists) {
+      tx.update(ref, { visitors: (doc.data().visitors || 0) + 1 });
+    } else {
+      tx.set(ref, { date: today, visitors: 1, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    }
+  }).catch(e => console.warn('[DailyCounter] Hata:', e));
+}
+
+// createSession çağrıldıktan sonra günlük sayacı artır:
+// _incrementDailyCounter(); // — mevcut startTour() fonksiyonuna ekleyin
+
+console.log('[AdminTracking] Tracking modülü yüklendi ✓');
+</script>
