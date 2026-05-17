@@ -845,13 +845,14 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 }
 .viewer360-close{
   width:48px;height:48px;
-  background:rgba(0,0,0,0.6);
+  background:rgba(180,20,20,0.75);
   border:1.5px solid rgba(255,255,255,0.3);
   color:white;border-radius:50%;
   font-size:20px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   -webkit-tap-highlight-color:transparent;
-  position:absolute;bottom:20px;right:16px;z-index:20;
+  flex-shrink:0;
+  margin-left:auto;
 }
 #viewer360-pano{
   flex:1;width:100%;
@@ -2176,8 +2177,8 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <button class="viewer360-nav-btn" id="btn360-prev" onclick="prev360()">‹</button>
     <div class="viewer360-dots" id="viewer360-dots"></div>
     <button class="viewer360-nav-btn" id="btn360-next" onclick="next360()">›</button>
+    <button class="viewer360-close" onclick="close360Viewer()">✕</button>
   </div>
-  <button class="viewer360-close" onclick="close360Viewer()">✕</button>
 </div>
 
 <!-- POPUP (quick info) -->
@@ -3253,6 +3254,7 @@ function load360Image(idx) {
   // Görsel
   const img = document.createElement('img');
   img.style.cssText = 'position:absolute;top:0;left:0;height:100%;width:auto;max-width:none;pointer-events:none;';
+  const PROXY = 'https://corsproxy.io/?url=';
   img.crossOrigin = 'anonymous';
   wrap.appendChild(img);
 
@@ -3288,7 +3290,7 @@ function load360Image(idx) {
   img.onerror = function() {
     loading.innerHTML = '<span style="font-size:32px;">⚠️</span><span style="font-size:13px;color:rgba(255,255,255,0.6);">Görsel yüklenemedi</span>';
   };
-  img.src = url;
+  img.src = PROXY + encodeURIComponent(url);
 
   // Sürükleme (mouse)
   wrap.addEventListener('mousedown', e => {
