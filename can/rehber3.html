@@ -3251,11 +3251,9 @@ function load360Image(idx) {
   wrap.style.cssText = 'width:100%;height:100%;position:absolute;inset:0;overflow:hidden;cursor:grab;user-select:none;';
   panoEl.appendChild(wrap);
 
-  // Görsel
+  // Görsel — crossOrigin yok, tarayıcı CORS kontrolü yapmadan yükler
   const img = document.createElement('img');
   img.style.cssText = 'position:absolute;top:0;left:0;height:100%;width:auto;max-width:none;pointer-events:none;';
-  const PROXY = 'https://corsproxy.io/?url=';
-  img.crossOrigin = 'anonymous';
   wrap.appendChild(img);
 
   // yaw/pitch sıfırla
@@ -3290,7 +3288,7 @@ function load360Image(idx) {
   img.onerror = function() {
     loading.innerHTML = '<span style="font-size:32px;">⚠️</span><span style="font-size:13px;color:rgba(255,255,255,0.6);">Görsel yüklenemedi</span>';
   };
-  img.src = PROXY + encodeURIComponent(url);
+  img.src = url;
 
   // Sürükleme (mouse)
   wrap.addEventListener('mousedown', e => {
