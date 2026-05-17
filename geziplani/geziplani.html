@@ -157,7 +157,7 @@ body {
             padding-left: 30px;
         }
 
-/* --- 3. BANNER (YAZILAR DÜZELTİLDİ) --- */
+/* --- 3. BANNER --- */
 .banner-container { max-width: 1240px; margin: 0 auto 40px; padding: 0 20px; }
 .banner-box { 
     position: relative; width: 100%; height: 400px; 
@@ -228,6 +228,29 @@ body {
 }
 @media (max-width: 768px) { .slide-item img { max-width: 100%; transform: none; } }
 
+/* Fullscreen zoom ikonu */
+.slide-item { position: relative; }
+.zoom-hint {
+    position: absolute;
+    bottom: 28px;
+    right: calc(50% - 250px + 10px);
+    background: rgba(15,26,36,0.75);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.slide-item:hover .zoom-hint { opacity: 1; }
+@media (max-width: 768px) {
+    .zoom-hint { right: 10px; bottom: 22px; }
+}
+
 .slide-caption { font-family: 'Cinzel'; font-size: 12px; color: rgba(15,26,36,0.45); letter-spacing: 3px; text-align: center; margin-top: 16px; padding-bottom: 5px; }
 .slide-counter { position: absolute; top: 62px; right: 20px; background: rgba(15,26,36,0.75); border: 1px solid var(--gold); color: var(--gold); font-family: 'Cinzel'; font-size: 12px; padding: 5px 12px; border-radius: 20px; letter-spacing: 2px; }
 @media (max-width: 768px) { .slide-counter { right: 16px; top: 18px; } }
@@ -252,7 +275,6 @@ body {
     position: relative; z-index: 2;
 }
 
-/* Sayfanın en altındaki ana footer */
 .site-footer-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; }
 .site-footer { 
     width: 100%; max-width: 1240px; background: var(--dark); 
@@ -273,10 +295,201 @@ body {
 }
         .footer-title { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; }
         .footer-subtitle { font-family: 'Cinzel', serif; font-size: 17px; font-weight: 300; letter-spacing: 1px; margin-top: 8px; }
+
+/* ============================================================
+   9. LIGHTBOX / TAM EKRAN OVERLAY
+   ============================================================ */
+#lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(8, 14, 20, 0.97);
+    /* arka plan deseni */
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(212,175,55,0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(212,175,55,0.04) 0%, transparent 50%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    /* kapatma animasyonu için */
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+#lightbox.lb-open {
+    display: flex;
+    opacity: 1;
+}
+#lightbox.lb-closing {
+    opacity: 0;
+}
+
+/* Köşe süsleme çerçevesi */
+#lightbox::before,
+#lightbox::after {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-color: rgba(212,175,55,0.25);
+    border-style: solid;
+    pointer-events: none;
+}
+#lightbox::before {
+    top: 16px; left: 16px;
+    border-width: 2px 0 0 2px;
+    border-radius: 4px 0 0 0;
+}
+#lightbox::after {
+    bottom: 16px; right: 16px;
+    border-width: 0 2px 2px 0;
+    border-radius: 0 0 4px 0;
+}
+
+/* Üst bilgi çubuğu */
+.lb-topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(212,175,55,0.15);
+    background: rgba(15,26,36,0.6);
+    backdrop-filter: blur(8px);
+    z-index: 2;
+}
+.lb-title {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: rgba(212,175,55,0.7);
+    letter-spacing: 4px;
+}
+.lb-counter-top {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 3px;
+}
+.lb-close-btn {
+    background: transparent;
+    border: 1px solid rgba(212,175,55,0.5);
+    color: var(--gold);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    line-height: 1;
+}
+.lb-close-btn:hover {
+    background: var(--gold);
+    color: var(--dark);
+    border-color: var(--gold);
+    transform: rotate(90deg);
+}
+
+/* Görsel alanı */
+.lb-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 90px 80px 90px;
+    position: relative;
+}
+@media (max-width: 600px) {
+    .lb-stage { padding: 80px 56px 80px; }
+}
+
+.lb-img-wrap {
+    position: relative;
+    max-width: min(90vw, 860px);
+    max-height: calc(100vh - 180px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#lbImg {
+    max-width: 100%;
+    max-height: calc(100vh - 180px);
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid rgba(212,175,55,0.3);
+    box-shadow:
+        0 0 0 1px rgba(212,175,55,0.08),
+        0 30px 80px rgba(0,0,0,0.7),
+        0 0 60px rgba(212,175,55,0.06);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+#lbImg.lb-fade {
+    opacity: 0;
+    transform: scale(0.97);
+}
+
+/* Altlık şerit */
+.lb-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 14px 28px;
+    border-top: 1px solid rgba(212,175,55,0.15);
+    background: rgba(15,26,36,0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 2;
+}
+.lb-caption-bottom {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: rgba(212,175,55,0.55);
+    letter-spacing: 3px;
+}
+.lb-esc-hint {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+}
+
+/* Lightbox ok butonları */
+.lb-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(15,26,36,0.85);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    cursor: pointer;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+.lb-arrow:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 25px rgba(212,175,55,0.5); }
+.lb-arrow.lb-prev { left: 16px; }
+.lb-arrow.lb-next { right: 16px; }
+@media (max-width: 600px) {
+    .lb-arrow { width: 42px; height: 42px; font-size: 18px; }
+    .lb-arrow.lb-prev { left: 8px; }
+    .lb-arrow.lb-next { right: 8px; }
+}
     </style>
 </head>
 <body>
 
+    <!-- ===== NAVİGASYON ===== -->
     <div class="nav-wrapper">
         <nav class="nav">
             <div class="logo-box">
@@ -313,6 +526,7 @@ body {
         </nav>
     </div>
 
+    <!-- ===== BANNER ===== -->
     <div class="banner-container">
         <div class="banner-box">
             <img src="../assets/banner.webp" alt="Külliye Manzarası">
@@ -323,6 +537,7 @@ body {
         </div>
     </div>
 
+    <!-- ===== KARTLAR ===== -->
     <div class="container">
     <div class="full-card">
         <img src="../assets/cornerleftup.png" class="corner-frame t-l" alt="Süsleme">
@@ -338,15 +553,17 @@ body {
         <div class="gallery-inner">
             <div class="slider-outer" id="sliderOuter1">
                 <div class="slider-track" id="sliderTrack1">
-                    <div class="slide-item">
+                    <div class="slide-item" onclick="lbOpen(0, 0)">
                         <img src="../img/1.webp" alt="Sultan II. Bayezid Külliyesi Sağlık Müzesi 1">
                         <div class="slide-caption">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
                         <div class="slide-counter">1 / 2</div>
+                        <span class="zoom-hint">⛶ Tam Ekran</span>
                     </div>
-                    <div class="slide-item">
+                    <div class="slide-item" onclick="lbOpen(0, 1)">
                         <img src="../img/2.webp" alt="Sultan II. Bayezid Külliyesi Sağlık Müzesi 2">
                         <div class="slide-caption">Sultan II. Bayezid Külliyesi Sağlık Müzesi</div>
                         <div class="slide-counter">2 / 2</div>
+                        <span class="zoom-hint">⛶ Tam Ekran</span>
                     </div>
                 </div>
                 <button class="slider-arrow prev" id="prevBtn1" aria-label="Önceki">&#8592;</button>
@@ -356,7 +573,7 @@ body {
                 <div class="thumb-dot active" onclick="goTo1(0)"></div>
                 <div class="thumb-dot" onclick="goTo1(1)"></div>
             </div>
-            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın →</p>
+            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın &nbsp;·&nbsp; Tam ekran için görsele tıklayın →</p>
         </div>
 
         <!-- ===== SLIDESHOW 2 ===== -->
@@ -367,20 +584,23 @@ body {
         <div class="gallery-inner">
             <div class="slider-outer" id="sliderOuter2">
                 <div class="slider-track" id="sliderTrack2">
-                    <div class="slide-item">
+                    <div class="slide-item" onclick="lbOpen(1, 0)">
                         <img src="../img/3.webp" alt="Külliye Bölümleri 1">
                         <div class="slide-caption">Külliye Bölümleri</div>
                         <div class="slide-counter">1 / 3</div>
+                        <span class="zoom-hint">⛶ Tam Ekran</span>
                     </div>
-                    <div class="slide-item">
+                    <div class="slide-item" onclick="lbOpen(1, 1)">
                         <img src="../img/4.webp" alt="Külliye Bölümleri 2">
                         <div class="slide-caption">Külliye Bölümleri</div>
                         <div class="slide-counter">2 / 3</div>
+                        <span class="zoom-hint">⛶ Tam Ekran</span>
                     </div>
-                    <div class="slide-item">
+                    <div class="slide-item" onclick="lbOpen(1, 2)">
                         <img src="../img/5.webp" alt="Külliye Bölümleri 3">
                         <div class="slide-caption">Külliye Bölümleri</div>
                         <div class="slide-counter">3 / 3</div>
+                        <span class="zoom-hint">⛶ Tam Ekran</span>
                     </div>
                 </div>
                 <button class="slider-arrow prev" id="prevBtn2" aria-label="Önceki">&#8592;</button>
@@ -391,7 +611,7 @@ body {
                 <div class="thumb-dot" onclick="goTo2(1)"></div>
                 <div class="thumb-dot" onclick="goTo2(2)"></div>
             </div>
-            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın →</p>
+            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın &nbsp;·&nbsp; Tam ekran için görsele tıklayın →</p>
         </div>
 
         <!-- ===== SLIDESHOW 3 ===== -->
@@ -402,21 +622,21 @@ body {
         <div class="gallery-inner">
             <div class="slider-outer" id="sliderOuter3">
                 <div class="slider-track" id="sliderTrack3">
-                    <div class="slide-item"><img src="../img/6.webp" alt="Külliyeden Kareler 1"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">1 / 15</div></div>
-                    <div class="slide-item"><img src="../img/7.webp" alt="Külliyeden Kareler 2"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">2 / 15</div></div>
-                    <div class="slide-item"><img src="../img/8.webp" alt="Külliyeden Kareler 3"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">3 / 15</div></div>
-                    <div class="slide-item"><img src="../img/9.webp" alt="Külliyeden Kareler 4"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">4 / 15</div></div>
-                    <div class="slide-item"><img src="../img/10.webp" alt="Külliyeden Kareler 5"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">5 / 15</div></div>
-                    <div class="slide-item"><img src="../img/11.webp" alt="Külliyeden Kareler 6"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">6 / 15</div></div>
-                    <div class="slide-item"><img src="../img/12.webp" alt="Külliyeden Kareler 7"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">7 / 15</div></div>
-                    <div class="slide-item"><img src="../img/13.webp" alt="Külliyeden Kareler 8"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">8 / 15</div></div>
-                    <div class="slide-item"><img src="../img/14.webp" alt="Külliyeden Kareler 9"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">9 / 15</div></div>
-                    <div class="slide-item"><img src="../img/15.webp" alt="Külliyeden Kareler 10"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">10 / 15</div></div>
-                    <div class="slide-item"><img src="../img/16.webp" alt="Külliyeden Kareler 11"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">11 / 15</div></div>
-                    <div class="slide-item"><img src="../img/17.webp" alt="Külliyeden Kareler 12"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">12 / 15</div></div>
-                    <div class="slide-item"><img src="../img/18.webp" alt="Külliyeden Kareler 13"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">13 / 15</div></div>
-                    <div class="slide-item"><img src="../img/19.webp" alt="Külliyeden Kareler 14"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">14 / 15</div></div>
-                    <div class="slide-item"><img src="../img/20.webp" alt="Külliyeden Kareler 15"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">15 / 15</div></div>
+                    <div class="slide-item" onclick="lbOpen(2, 0)"><img src="../img/6.webp" alt="Külliyeden Kareler 1"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">1 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 1)"><img src="../img/7.webp" alt="Külliyeden Kareler 2"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">2 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 2)"><img src="../img/8.webp" alt="Külliyeden Kareler 3"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">3 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 3)"><img src="../img/9.webp" alt="Külliyeden Kareler 4"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">4 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 4)"><img src="../img/10.webp" alt="Külliyeden Kareler 5"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">5 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 5)"><img src="../img/11.webp" alt="Külliyeden Kareler 6"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">6 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 6)"><img src="../img/12.webp" alt="Külliyeden Kareler 7"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">7 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 7)"><img src="../img/13.webp" alt="Külliyeden Kareler 8"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">8 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 8)"><img src="../img/14.webp" alt="Külliyeden Kareler 9"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">9 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 9)"><img src="../img/15.webp" alt="Külliyeden Kareler 10"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">10 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 10)"><img src="../img/16.webp" alt="Külliyeden Kareler 11"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">11 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 11)"><img src="../img/17.webp" alt="Külliyeden Kareler 12"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">12 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 12)"><img src="../img/18.webp" alt="Külliyeden Kareler 13"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">13 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 13)"><img src="../img/19.webp" alt="Külliyeden Kareler 14"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">14 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
+                    <div class="slide-item" onclick="lbOpen(2, 14)"><img src="../img/20.webp" alt="Külliyeden Kareler 15"><div class="slide-caption">Külliyeden Kareler</div><div class="slide-counter">15 / 15</div><span class="zoom-hint">⛶ Tam Ekran</span></div>
                 </div>
                 <button class="slider-arrow prev" id="prevBtn3" aria-label="Önceki">&#8592;</button>
                 <button class="slider-arrow next" id="nextBtn3" aria-label="Sonraki">&#8594;</button>
@@ -438,10 +658,8 @@ body {
                 <div class="thumb-dot" onclick="goTo3(13)"></div>
                 <div class="thumb-dot" onclick="goTo3(14)"></div>
             </div>
-            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın →</p>
+            <p class="swipe-hint">← Kaydırın veya ok tuşlarını kullanın &nbsp;·&nbsp; Tam ekran için görsele tıklayın →</p>
         </div>
-
-        </div><!-- /placeholder hidden -->
 
         <div class="card-footer">
             <p style="font-weight: bold; letter-spacing: 2px;">EDİRNE SAĞLIK MÜZESİ ZİYARETÇİ REHBERİ</p>
@@ -450,6 +668,7 @@ body {
     </div>
 </div>
 
+    <!-- ===== FOOTER ===== -->
     <div class="site-footer-wrapper">
         <footer class="site-footer">
         <div class="footer-title">T.C. TRAKYA ÜNİVERSİTESİ</div>
@@ -458,14 +677,82 @@ body {
         </footer>
     </div>
 
+    <!-- ============================================================
+         LIGHTBOX HTML
+         ============================================================ -->
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Tam ekran görsel">
+        <!-- Üst çubuk -->
+        <div class="lb-topbar">
+            <span class="lb-title">SULTAN II. BAYEZİD KÜLLİYESİ SAĞLIK MÜZESİ</span>
+            <span class="lb-counter-top" id="lbCounterTop">1 / 1</span>
+            <button class="lb-close-btn" id="lbCloseBtn" aria-label="Kapat">&#x2715;</button>
+        </div>
+
+        <!-- Görsel -->
+        <div class="lb-stage">
+            <button class="lb-arrow lb-prev" id="lbPrev" aria-label="Önceki görsel">&#8592;</button>
+            <div class="lb-img-wrap">
+                <img id="lbImg" src="" alt="Tam ekran görsel">
+            </div>
+            <button class="lb-arrow lb-next" id="lbNext" aria-label="Sonraki görsel">&#8594;</button>
+        </div>
+
+        <!-- Alt çubuk -->
+        <div class="lb-bottom">
+            <span class="lb-caption-bottom" id="lbCaption"></span>
+            <span class="lb-esc-hint">ESC ile kapatın</span>
+        </div>
+    </div>
+
     <script>
-        // MENÜ
+        /* ====================================================
+           MENÜ
+           ==================================================== */
         const menuBtn = document.getElementById('menuBtn');
         const dropdown = document.getElementById('globalDropdown');
         menuBtn.onclick = e => { e.stopPropagation(); dropdown.classList.toggle('active'); };
         window.onclick = e => { if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) dropdown.classList.remove('active'); };
 
-        // ===== SLIDER 1 (2 görsel) =====
+        /* ====================================================
+           SLIDER VERİLERİ
+           Her slaytshow için { src, caption } dizisi
+           ==================================================== */
+        const SLIDERS = [
+            // Slider 0 — 2 görsel
+            [
+                { src: '../img/1.webp', caption: 'Sultan II. Bayezid Külliyesi Sağlık Müzesi' },
+                { src: '../img/2.webp', caption: 'Sultan II. Bayezid Külliyesi Sağlık Müzesi' },
+            ],
+            // Slider 1 — 3 görsel
+            [
+                { src: '../img/3.webp', caption: 'Külliye Bölümleri' },
+                { src: '../img/4.webp', caption: 'Külliye Bölümleri' },
+                { src: '../img/5.webp', caption: 'Külliye Bölümleri' },
+            ],
+            // Slider 2 — 15 görsel
+            [
+                { src: '../img/6.webp',  caption: 'Külliyeden Kareler' },
+                { src: '../img/7.webp',  caption: 'Külliyeden Kareler' },
+                { src: '../img/8.webp',  caption: 'Külliyeden Kareler' },
+                { src: '../img/9.webp',  caption: 'Külliyeden Kareler' },
+                { src: '../img/10.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/11.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/12.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/13.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/14.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/15.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/16.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/17.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/18.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/19.webp', caption: 'Külliyeden Kareler' },
+                { src: '../img/20.webp', caption: 'Külliyeden Kareler' },
+            ],
+        ];
+
+        /* ====================================================
+           SLIDER FONKSİYONLARI  (1, 2, 3)
+           ==================================================== */
+        // Slider 1
         let cur1 = 0;
         const TOTAL1 = 2;
         const track1 = document.getElementById('sliderTrack1');
@@ -475,14 +762,14 @@ body {
             track1.style.transform = `translateX(-${cur1 * 100}%)`;
             dots1.forEach((d, i) => d.classList.toggle('active', i === cur1));
         }
-        document.getElementById('prevBtn1').onclick = () => goTo1(cur1 - 1);
-        document.getElementById('nextBtn1').onclick = () => goTo1(cur1 + 1);
+        document.getElementById('prevBtn1').onclick = e => { e.stopPropagation(); goTo1(cur1 - 1); };
+        document.getElementById('nextBtn1').onclick = e => { e.stopPropagation(); goTo1(cur1 + 1); };
         const so1 = document.getElementById('sliderOuter1');
         let tx1 = 0;
         so1.addEventListener('touchstart', e => { tx1 = e.changedTouches[0].screenX; }, { passive: true });
         so1.addEventListener('touchend', e => { const d = tx1 - e.changedTouches[0].screenX; if (Math.abs(d) > 50) goTo1(d > 0 ? cur1 + 1 : cur1 - 1); }, { passive: true });
 
-        // ===== SLIDER 2 (3 görsel) =====
+        // Slider 2
         let cur2 = 0;
         const TOTAL2 = 3;
         const track2 = document.getElementById('sliderTrack2');
@@ -492,14 +779,14 @@ body {
             track2.style.transform = `translateX(-${cur2 * 100}%)`;
             dots2.forEach((d, i) => d.classList.toggle('active', i === cur2));
         }
-        document.getElementById('prevBtn2').onclick = () => goTo2(cur2 - 1);
-        document.getElementById('nextBtn2').onclick = () => goTo2(cur2 + 1);
+        document.getElementById('prevBtn2').onclick = e => { e.stopPropagation(); goTo2(cur2 - 1); };
+        document.getElementById('nextBtn2').onclick = e => { e.stopPropagation(); goTo2(cur2 + 1); };
         const so2 = document.getElementById('sliderOuter2');
         let tx2 = 0;
         so2.addEventListener('touchstart', e => { tx2 = e.changedTouches[0].screenX; }, { passive: true });
         so2.addEventListener('touchend', e => { const d = tx2 - e.changedTouches[0].screenX; if (Math.abs(d) > 50) goTo2(d > 0 ? cur2 + 1 : cur2 - 1); }, { passive: true });
 
-        // ===== SLIDER 3 (3 görsel) =====
+        // Slider 3
         let cur3 = 0;
         const TOTAL3 = 15;
         const track3 = document.getElementById('sliderTrack3');
@@ -509,12 +796,92 @@ body {
             track3.style.transform = `translateX(-${cur3 * 100}%)`;
             dots3.forEach((d, i) => d.classList.toggle('active', i === cur3));
         }
-        document.getElementById('prevBtn3').onclick = () => goTo3(cur3 - 1);
-        document.getElementById('nextBtn3').onclick = () => goTo3(cur3 + 1);
+        document.getElementById('prevBtn3').onclick = e => { e.stopPropagation(); goTo3(cur3 - 1); };
+        document.getElementById('nextBtn3').onclick = e => { e.stopPropagation(); goTo3(cur3 + 1); };
         const so3 = document.getElementById('sliderOuter3');
         let tx3 = 0;
         so3.addEventListener('touchstart', e => { tx3 = e.changedTouches[0].screenX; }, { passive: true });
         so3.addEventListener('touchend', e => { const d = tx3 - e.changedTouches[0].screenX; if (Math.abs(d) > 50) goTo3(d > 0 ? cur3 + 1 : cur3 - 1); }, { passive: true });
+
+        /* ====================================================
+           LIGHTBOX
+           ==================================================== */
+        const lb          = document.getElementById('lightbox');
+        const lbImg       = document.getElementById('lbImg');
+        const lbCounterTop = document.getElementById('lbCounterTop');
+        const lbCaption   = document.getElementById('lbCaption');
+        const lbCloseBtn  = document.getElementById('lbCloseBtn');
+        const lbPrev      = document.getElementById('lbPrev');
+        const lbNext      = document.getElementById('lbNext');
+
+        let lbSliderIdx = 0;   // hangi slider (0/1/2)
+        let lbImgIdx    = 0;   // o slider içindeki kaçıncı görsel
+
+        function lbSetImage(idx) {
+            const list = SLIDERS[lbSliderIdx];
+            lbImgIdx = ((idx % list.length) + list.length) % list.length;
+            const item = list[lbImgIdx];
+
+            // Geçiş animasyonu
+            lbImg.classList.add('lb-fade');
+            setTimeout(() => {
+                lbImg.src = item.src;
+                lbImg.alt = item.caption;
+                lbCaption.textContent = item.caption;
+                lbCounterTop.textContent = `${lbImgIdx + 1} / ${list.length}`;
+                lbImg.classList.remove('lb-fade');
+            }, 200);
+        }
+
+        function lbOpen(sliderIdx, imgIdx) {
+            lbSliderIdx = sliderIdx;
+            // Hemen göster (fade yok açılışta)
+            const item = SLIDERS[sliderIdx][imgIdx];
+            lbImg.src = item.src;
+            lbImg.alt = item.caption;
+            lbImgIdx = imgIdx;
+            lbCaption.textContent = item.caption;
+            lbCounterTop.textContent = `${imgIdx + 1} / ${SLIDERS[sliderIdx].length}`;
+
+            document.body.style.overflow = 'hidden';
+            lb.classList.add('lb-open');
+            lb.focus();
+        }
+
+        function lbClose() {
+            lb.classList.add('lb-closing');
+            setTimeout(() => {
+                lb.classList.remove('lb-open', 'lb-closing');
+                document.body.style.overflow = '';
+                lbImg.src = '';
+            }, 320);
+        }
+
+        // Butonlar
+        lbCloseBtn.onclick = lbClose;
+        lbPrev.onclick = () => lbSetImage(lbImgIdx - 1);
+        lbNext.onclick = () => lbSetImage(lbImgIdx + 1);
+
+        // Arka plana tıklayarak kapat (görsele değil overlay'e tıklandığında)
+        lb.addEventListener('click', e => {
+            if (e.target === lb) lbClose();
+        });
+
+        // Klavye desteği
+        document.addEventListener('keydown', e => {
+            if (!lb.classList.contains('lb-open')) return;
+            if (e.key === 'Escape')     lbClose();
+            if (e.key === 'ArrowLeft')  lbSetImage(lbImgIdx - 1);
+            if (e.key === 'ArrowRight') lbSetImage(lbImgIdx + 1);
+        });
+
+        // Mobil swipe (lightbox içinde)
+        let lbTx = 0;
+        lb.addEventListener('touchstart', e => { lbTx = e.changedTouches[0].screenX; }, { passive: true });
+        lb.addEventListener('touchend', e => {
+            const d = lbTx - e.changedTouches[0].screenX;
+            if (Math.abs(d) > 50) lbSetImage(d > 0 ? lbImgIdx + 1 : lbImgIdx - 1);
+        }, { passive: true });
     </script>
 </body>
 </html>
