@@ -1535,34 +1535,25 @@ function startTour(){
   TRACKING.sessionId='sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
   TRACKING.startTime=Date.now();TRACKING.active=true;
   createSession();
-  // Konum kararı: daha önce verilmedi mi?
+  // Konum kararı henüz verilmedi mi? Popup'ı hemen göster, karardan sonra tur başlasın
   if(!sessionStorage.getItem('loc-perm-decided')){
-    if(sessionStorage.getItem('loc-perm-wants-gps')){
-      // Kullanıcı intro popup'ında 'izin ver' dedi — popup tekrar gösterme, GPS'e git
-      sessionStorage.removeItem('loc-perm-wants-gps');
-      requestLocationPermission();
-    } else {
-      // Henüz hiç karar yok — popup'ı göster
-      const popup=document.getElementById('loc-permission-popup');
-      if(popup){
-        const LS=INTRO_LOC_STRINGS[currentLang]||INTRO_LOC_STRINGS['tr'];
-        const el_t=document.getElementById('loc-perm-title');
-        const el_x=document.getElementById('loc-perm-text');
-        const el_ok=document.getElementById('loc-perm-btn-ok');
-        const el_sk=document.getElementById('loc-perm-btn-skip');
-        if(el_t)el_t.textContent=LS.title;
-        if(el_x)el_x.innerHTML=LS.text;
-        if(el_ok)el_ok.textContent=LS.ok;
-        if(el_sk)el_sk.textContent=LS.skip;
-        popup.classList.add('open');
-      }
+    const popup=document.getElementById('loc-permission-popup');
+    if(popup){
+      // Popup açılmadan önce metinleri seçili dile çevir
+      const LS=INTRO_LOC_STRINGS[currentLang]||INTRO_LOC_STRINGS['tr'];
+      const el_t=document.getElementById('loc-perm-title');
+      const el_x=document.getElementById('loc-perm-text');
+      const el_ok=document.getElementById('loc-perm-btn-ok');
+      const el_sk=document.getElementById('loc-perm-btn-skip');
+      if(el_t)el_t.textContent=LS.title;
+      if(el_x)el_x.innerHTML=LS.text;
+      if(el_ok)el_ok.textContent=LS.ok;
+      if(el_sk)el_sk.textContent=LS.skip;
+      popup.classList.add('open');
     }
-  } else if(sessionStorage.getItem('loc-perm-decided')==='denied'){
-    // Daha önce reddedilmiş — direkt başlat
-    afterLocationDecision();
   } else {
-    // Daha önce onaylanmış — GPS'i yeniden başlat
-    requestLocationPermission();
+    // Daha önce karar verilmiş — direkt başlat
+    afterLocationDecision();
   }
 }
 
@@ -1593,16 +1584,10 @@ function goStop(n){
     TRACKING.lastStop=n;
     updateSessionField({maxStop:n,lang:currentLang||'tr'});
   }
-  // Anlık konum güncellemesi — GPS olsun olmasın visitor_locations'ı güncelle
-  if(TRACKING.active&&window.db&&TRACKING.sessionId){
-    if(TRACKING.currentZone){
-      refreshVisitorLocation(TRACKING.currentZone);
-    } else {
-      window.db.collection('visitor_locations').doc(TRACKING.sessionId)
-        .update({stop:n,lang:currentLang||'tr',lastSeen:firebase.firestore.FieldValue.serverTimestamp()})
-        .catch(()=>{});
-    }
-    if(n > 0) history.pushState({stop: n}, '', window.location.href);
+  // Anlık konum güncellemesi için currentPage'i visitor_locations'a yaz
+  if(TRACKING.active&&TRACKING.currentZone){
+    refreshVisitorLocation(TRACKING.currentZone);
+     if(n > 0) history.pushState({stop: n}, '', window.location.href);
   }
 }
 
@@ -4629,7 +4614,7 @@ function loadMessages(){
 /* ────────────────────────────────────────
    TRACKING
 ──────────────────────────────────────── */
-const TRACKING={sessionId:null,locationGranted:false,watchId:null,currentZone:null,startTime:Date.now(),zoneEntryTime:null,lastStop:0,active:false,_heartbeat:null};
+const TRACKING={sessionId:null,locationGranted:false,watchId:null,currentZone:null,startTime:Date.now(),zoneEntryTime:null,lastStop:0,active:false};
 
 /* ── KVKK I18N ── */
 const KVKK_I18N = {
@@ -4946,10 +4931,9 @@ const INTRO_LOC_STRINGS={
 
 function introAcceptLocation(){
   document.getElementById('intro-loc-popup').style.display='none';
-  // Kullanıcı intro'da 'izin ver' dedi — Başla'ya basınca popup tekrar çıkmasın
-  sessionStorage.setItem('loc-perm-wants-gps','1');
+  sessionStorage.setItem('loc-perm-decided','granted');
+  // 20sn sayacı arka planda devam ediyor — sadece popup kapanır
 }
-
 
 function introSkipLocation(){
   document.getElementById('intro-loc-popup').style.display='none';
@@ -5098,51 +5082,9 @@ function onLocationUpdate(lat,lon){
   } else {if(zoneId)refreshVisitorLocation(zoneId);}
 }
 
-function createSession(){
-  if(!window.db||!TRACKING.sessionId)return;
-  try{
-    // visitor_sessions'a yaz
-    window.db.collection('visitor_sessions').doc(TRACKING.sessionId).set({
-      startTime:firebase.firestore.FieldValue.serverTimestamp(),
-      lang:currentLang||'tr',maxStop:0,durationMin:0,
-      locationGranted:false,active:true,
-      userAgent:navigator.userAgent.slice(0,120)
-    });
-    // ★ GPS olmadan da hemen visitor_locations'a yaz — panel aktif görebilsin
-    window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({
-      zone:null,stop:0,lang:currentLang||'tr',
-      visitorId:TRACKING.sessionId,
-      userAgent:navigator.userAgent.slice(0,120),
-      lastSeen:firebase.firestore.FieldValue.serverTimestamp(),
-      startTime:firebase.firestore.Timestamp.fromMillis(TRACKING.startTime)
-    });
-    // ★ 30sn'de bir heartbeat — lastSeen güncellenir, panel "aktif" görür
-    if(TRACKING._heartbeat) clearInterval(TRACKING._heartbeat);
-    TRACKING._heartbeat=setInterval(()=>{
-      if(!TRACKING.active||!window.db||!TRACKING.sessionId)return;
-      window.db.collection('visitor_locations').doc(TRACKING.sessionId)
-        .update({lastSeen:firebase.firestore.FieldValue.serverTimestamp(),
-                 stop:currentStop||0,lang:currentLang||'tr'})
-        .catch(()=>{});
-    },30000);
-  }catch(e){}
-}
+function createSession(){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).set({startTime:firebase.firestore.FieldValue.serverTimestamp(),lang:currentLang||'tr',maxStop:0,durationMin:0,locationGranted:false,active:true,userAgent:navigator.userAgent.slice(0,80)});}catch(e){}}
 function updateSessionField(data){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update(data);}catch(e){}}
-function finalizeSession(){
-  if(!window.db||!TRACKING.sessionId||!TRACKING.active)return;
-  TRACKING.active=false;
-  // ★ Heartbeat'i durdur
-  if(TRACKING._heartbeat){clearInterval(TRACKING._heartbeat);TRACKING._heartbeat=null;}
-  const d=Math.round((Date.now()-TRACKING.startTime)/60000);
-  try{
-    window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update({
-      endTime:firebase.firestore.FieldValue.serverTimestamp(),
-      durationMin:d,active:false,maxStop:TRACKING.lastStop
-    });
-    // ★ GPS olsun olmasın visitor_locations'tan her zaman sil
-    removeVisitorLocation();
-  }catch(e){}
-}
+function finalizeSession(){if(!window.db||!TRACKING.sessionId||!TRACKING.active)return;TRACKING.active=false;const d=Math.round((Date.now()-TRACKING.startTime)/60000);try{window.db.collection('visitor_sessions').doc(TRACKING.sessionId).update({endTime:firebase.firestore.FieldValue.serverTimestamp(),durationMin:d,active:false,maxStop:TRACKING.lastStop});if(TRACKING.currentZone)removeVisitorLocation();}catch(e){}}
 function upsertVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).set({zone:zoneId,stop:currentStop||0,currentPage:currentStop||0,lang:currentLang||'tr',visitorId:TRACKING.sessionId,lastSeen:firebase.firestore.FieldValue.serverTimestamp(),startTime:firebase.firestore.Timestamp.fromMillis(TRACKING.startTime)},{merge:true});}catch(e){}}
 function refreshVisitorLocation(zoneId){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).update({lastSeen:firebase.firestore.FieldValue.serverTimestamp(),stop:currentStop||0,zone:zoneId,currentPage:currentStop||0,lang:currentLang||'tr'});}catch(e){}}
 function removeVisitorLocation(){if(!window.db||!TRACKING.sessionId)return;try{window.db.collection('visitor_locations').doc(TRACKING.sessionId).delete();}catch(e){}}
@@ -6037,15 +5979,7 @@ document.getElementById('evliya-chat-panel').addEventListener('click',function(e
 <script>
   // ── Service Worker Kaydı + Otomatik Güncelleme Tespiti ──
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', async () => {
-      // sw.js dosyası sunucuda var mı önce kontrol et — yoksa kayıt denenmez
-      try {
-        const probe = await fetch('./sw.js', { method: 'HEAD' });
-        if (!probe.ok) return; // 404 veya başka hata — sessizce çık
-      } catch (e) {
-        return; // Ağ erişimi yok — sessizce çık
-      }
-
+    window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
         .then(reg => {
           console.log('[PWA] Service Worker kayıtlı:', reg.scope);
