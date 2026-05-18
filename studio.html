@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ali İhsan Tufan Karaoke Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#06000f;--bg2:#0d0120;--bg3:#14023a;--bg4:#1a0450;
+  --border:rgba(120,60,200,.15);--border2:rgba(168,85,247,.35);
+  --purple:#a855f7;--purple2:#c084fc;--cyan:#22d3ee;--orange:#fb923c;
+  --pink:#f472b6;--yellow:#fbbf24;--green:#34d399;--red:#f87171;
+  --text:#f0e8ff;--text2:#b09cc0;--text3:#6b5580;
+  --fn:'Tajawal',sans-serif;--fd:'Cinzel',serif;
+}
+html,body{height:100%;height:100dvh;background:var(--bg);color:var(--text);font-family:var(--fn);overflow:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(168,85,247,.1) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(34,211,238,.07) 0%,transparent 50%),radial-gradient(circle at 50% 50%,rgba(244,114,182,.05) 0%,transparent 60%);pointer-events:none;z-index:0;}
+
+/* ── UPLOAD ── */
+#sec-upload{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;z-index:20;background:var(--bg);}
+.ubox{width:100%;max-width:340px;border:1px solid var(--border2);border-radius:22px;padding:44px 24px;text-align:center;background:linear-gradient(160deg,var(--bg2),var(--bg3));cursor:pointer;position:relative;overflow:hidden;}
+.ubox::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(168,85,247,.18),transparent 70%);pointer-events:none;}
+.u-em{font-size:54px;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(168,85,247,.7));}
+.u-t1{font-family:var(--fd);font-size:15px;color:var(--purple2);margin-bottom:6px;}
+.u-t2{font-size:11px;color:var(--text3);margin-bottom:22px;}
+.btn-pick{display:inline-block;padding:12px 32px;background:linear-gradient(135deg,var(--purple),#6d28d9);color:#fff;border:none;border-radius:24px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fd);box-shadow:0 4px 20px rgba(168,85,247,.45);}
+#up-err{color:var(--red);font-size:11px;margin-top:10px;display:none;}
+
+/* ── LOADING ── */
+#sec-load{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:var(--bg);z-index:20;}
+.spin{width:44px;height:44px;border-radius:50%;border:3px solid var(--border2);border-top-color:var(--purple);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#load-txt{font-size:12px;color:var(--text3);letter-spacing:.1em;}
+
+/* ── APP ── */
+#app{position:fixed;inset:0;display:none;flex-direction:column;max-width:480px;margin:0 auto;z-index:1;}
+
+/* ── STUDIO HEADER ── */
+.studio-hdr{flex-shrink:0;padding:10px 12px 8px;background:linear-gradient(180deg,rgba(13,1,32,.98),rgba(10,0,24,.95));position:relative;}
+.studio-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),var(--pink),transparent);opacity:.65;}
+.studio-card{background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(34,211,238,.07));border:1px solid rgba(168,85,247,.38);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:11px;position:relative;overflow:hidden;box-shadow:0 0 30px rgba(168,85,247,.13),inset 0 1px 0 rgba(255,255,255,.06);}
+.studio-card::before{content:'';position:absolute;top:-40%;right:-20%;width:150px;height:150px;background:radial-gradient(circle,rgba(168,85,247,.1),transparent 70%);pointer-events:none;}
+.stu-ico{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;box-shadow:0 0 18px rgba(168,85,247,.55),0 0 36px rgba(34,211,238,.15);}
+.stu-txt{flex:1;min-width:0;}
+.stu-name{font-family:var(--fd);font-size:13px;letter-spacing:.06em;background:linear-gradient(90deg,var(--purple2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stu-sub{font-family:var(--fd);font-size:8.5px;letter-spacing:.18em;color:var(--text3);text-transform:uppercase;margin-top:1px;}
+.stu-eq{display:flex;align-items:flex-end;gap:2px;height:16px;margin-left:4px;flex-shrink:0;}
+.eq-b{width:3px;border-radius:2px;background:linear-gradient(to top,var(--purple),var(--cyan));animation:eqb var(--d,.6s) ease-in-out infinite alternate;}
+@keyframes eqb{0%{height:3px;opacity:.4}100%{height:100%;opacity:1}}
+.hdr-st{font-size:9px;color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);padding:2px 9px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-left:4px;}
+.hdr-st.live{color:var(--red);border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.08);}
+
+/* ── WAVE ── */
+.wave-wrap{flex-shrink:0;background:rgba(13,1,32,.9);border-bottom:1px solid var(--border);padding:7px 12px 0;}
+.wave-top{display:flex;justify-content:space-between;margin-bottom:4px;}
+.w-fname{font-size:10px;color:var(--text3);max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.w-time{font-size:13px;color:var(--cyan);letter-spacing:.04em;font-weight:700;}
+#wave-box{position:relative;height:56px;border-radius:8px;overflow:hidden;cursor:pointer;background:#060010;border:1px solid var(--border);}
+#cv-m,#cv-v,#cv-s{position:absolute;inset:0;width:100%;height:100%;}
+#cv-v,#cv-s{pointer-events:none;}
+#ph{position:absolute;top:0;bottom:0;width:2px;background:var(--purple);left:0;pointer-events:none;box-shadow:0 0 8px var(--purple);}
+#prog-wrap{margin-top:4px;height:15px;border-radius:6px;overflow:hidden;cursor:pointer;background:var(--bg3);position:relative;}
+#cv-p{position:absolute;inset:0;width:100%;height:100%;}
+.wave-bot{display:flex;justify-content:space-between;padding:2px 0 6px;}
+.wave-bot span{font-size:9px;color:var(--text3);}
+
+/* ── TRANSPORT ── */
+.transport{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:6px 12px;background:rgba(13,1,32,.95);border-bottom:1px solid var(--border);}
+.tbtn{width:40px;height:40px;border-radius:50%;background:rgba(20,2,58,.8);border:1px solid var(--border2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;flex-shrink:0;}
+.tbtn:active{transform:scale(.88);}
+.tbtn.play{width:50px;height:50px;font-size:21px;background:linear-gradient(145deg,var(--purple),#6d28d9);border-color:var(--purple);color:#fff;box-shadow:0 0 22px rgba(168,85,247,.45);}
+.tbtn.play:active{box-shadow:none;}
+.tbtn.rec.on{background:var(--red);border-color:var(--red);animation:rpulse 1s ease-in-out infinite;}
+@keyframes rpulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.5)}50%{box-shadow:0 0 0 10px transparent}}
+.rec-dot{width:11px;height:11px;border-radius:50%;background:var(--red);}
+.tbtn.rec.on .rec-dot{background:#fff;}
+.gap{flex:1;}
+.tbtn-sm{height:28px;padding:0 10px;border-radius:14px;background:rgba(20,2,58,.8);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:10px;font-family:var(--fn);}
+.noise-btn{height:28px;padding:0 10px;border-radius:14px;background:rgba(20,2,58,.8);border:1px solid var(--border);color:var(--text3);cursor:pointer;font-size:10px;font-family:var(--fn);transition:all .2s;white-space:nowrap;}
+.noise-btn.on{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.4);color:var(--green);}
+
+/* ── MIC BAR ── */
+.mic-bar{flex-shrink:0;display:none;align-items:center;gap:8px;padding:4px 12px;background:rgba(248,113,113,.06);border-bottom:1px solid rgba(248,113,113,.2);}
+.mic-bar.show{display:flex;}
+.mic-lw{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+#mic-lvl{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:3px;transition:width .08s;}
+.mic-lbl{font-size:10px;color:var(--red);}
+.mic-bdg{font-size:10px;color:var(--purple2);}
+
+/* ── SCROLL BODY ── */
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 30px;display:flex;flex-direction:column;gap:14px;}
+.scroll-body::-webkit-scrollbar{width:3px;}
+.scroll-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--text3);display:flex;align-items:center;gap:8px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);}
+
+/* ── PRESET GRID — 3D colorful ── */
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;perspective:700px;}
+.prst{padding:11px 10px 10px;border-radius:14px;background:rgba(20,2,58,.75);border:1px solid rgba(255,255,255,.07);cursor:pointer;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,border-color .18s,background .18s;text-align:center;position:relative;overflow:hidden;user-select:none;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.prst::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);}
+.prst:active{transform:scale(.92) rotateX(5deg);}
+.prst.sel{border-color:var(--c1,#a855f7);background:linear-gradient(150deg,rgba(20,2,58,.92),rgba(30,4,70,.85));box-shadow:0 0 22px var(--glow,rgba(168,85,247,.4)),0 6px 18px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);transform:translateY(-4px) scale(1.03);}
+.prst.sel::before{background:linear-gradient(90deg,transparent,var(--c1,#a855f7),transparent);opacity:.7;}
+.p-num{position:absolute;top:6px;left:8px;font-size:7.5px;color:var(--text3);font-family:var(--fd);}
+.prst.sel .p-num{color:var(--c1);opacity:.8;}
+.p-dot{position:absolute;top:7px;right:7px;width:5px;height:5px;border-radius:50%;background:var(--c1,#a855f7);opacity:0;box-shadow:0 0 7px var(--c1);}
+.prst.sel .p-dot{opacity:1;}
+.p-em{font-size:22px;display:block;margin-bottom:4px;transition:filter .2s;}
+.prst.sel .p-em{filter:drop-shadow(0 0 8px var(--glow,rgba(168,85,247,.6)));}
+.p-name{font-family:var(--fd);font-size:9.5px;color:var(--text);letter-spacing:.03em;line-height:1.3;}
+.prst.sel .p-name{color:var(--c1);}
+.p-desc{font-size:8px;color:var(--text3);margin-top:3px;line-height:1.4;}
+.prst.sel .p-desc{color:var(--c2);opacity:.75;}
+
+/* AI PRESET card */
+.prst-ai{grid-column:1/-1;animation:ai-glow 3s ease-in-out infinite alternate;}
+@keyframes ai-glow{0%{border-color:rgba(139,92,246,.5);box-shadow:0 0 12px rgba(139,92,246,.2);}50%{border-color:rgba(34,211,238,.6);box-shadow:0 0 20px rgba(34,211,238,.25);}100%{border-color:rgba(244,114,182,.5);box-shadow:0 0 12px rgba(244,114,182,.2);}}
+.prst-ai .p-name{background:linear-gradient(90deg,var(--purple2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:11px;}
+.prst-ai.loading{opacity:.7;pointer-events:none;}
+.prst-ai .p-em{font-size:26px;}
+
+/* ── SLIDER BLOCKS ── */
+.sl-block{background:rgba(20,2,58,.75);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px;position:relative;overflow:visible;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.sl-block::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:.45;pointer-events:none;border-radius:14px 14px 0 0;}
+.sl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.sl-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);}
+.sl-numbox{display:flex;align-items:baseline;gap:4px;}
+.sl-num{font-family:var(--fd);font-size:38px;line-height:1;color:var(--purple2);letter-spacing:-2px;min-width:54px;text-align:right;}
+.sl-unit{font-size:10px;color:var(--text3);}
+input.big-r{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:4px;background:rgba(168,85,247,.22);outline:none;cursor:pointer;margin-bottom:10px;display:block;}
+input.big-r::-webkit-slider-runnable-track{-webkit-appearance:none;height:8px;border-radius:4px;background:rgba(168,85,247,.22);}
+input.big-r::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--purple2),var(--purple));cursor:pointer;box-shadow:0 0 14px rgba(168,85,247,.6),0 3px 8px rgba(0,0,0,.6);margin-top:-13px;}
+input.big-r::-moz-range-track{height:8px;border-radius:4px;background:rgba(168,85,247,.22);}
+input.big-r::-moz-range-thumb{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--purple2),var(--purple));cursor:pointer;border:none;}
+.sl-marks,.sl-marks-3{display:flex;justify-content:space-between;}
+.sl-marks span,.sl-marks-3 span{font-size:8px;color:var(--text3);}
+
+/* ── ACTION BAR ── */
+.action-bar{flex-shrink:0;display:flex;gap:7px;padding:7px 12px;border-top:1px solid var(--border2);background:rgba(10,0,24,.97);align-items:center;}
+.btn-new{height:38px;padding:0 12px;border-radius:19px;background:transparent;border:1px solid var(--border2);color:var(--text2);cursor:pointer;font-size:11px;font-family:var(--fn);}
+.btn-wav{height:40px;padding:0 14px;border-radius:20px;background:linear-gradient(135deg,var(--purple),#6d28d9);border:none;color:#fff;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--fd);box-shadow:0 4px 16px rgba(168,85,247,.35);white-space:nowrap;}
+.btn-mp3{height:40px;padding:0 16px;border-radius:20px;background:linear-gradient(135deg,var(--orange),#c2410c);border:none;color:#fff;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--fd);box-shadow:0 4px 16px rgba(251,146,60,.3);white-space:nowrap;margin-left:auto;}
+.btn-wav:disabled,.btn-mp3:disabled{opacity:.28;cursor:not-allowed;box-shadow:none;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg4);border:1px solid var(--border2);color:var(--purple2);padding:9px 18px;border-radius:16px;font-size:12px;opacity:0;transition:all .25s;pointer-events:none;z-index:999;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.6);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- UPLOAD -->
+<div id="sec-upload">
+  <div class="ubox" id="drop-zone">
+    <span class="u-em">🎙</span>
+    <div class="u-t1">Müzik Dosyası Yükle</div>
+    <div class="u-t2">MP3 · WAV · OGG · M4A</div>
+    <button class="btn-pick" id="choose-btn">Dosya Seç</button>
+    <input type="file" id="file-inp" accept="audio/*" style="display:none">
+    <div id="up-err"></div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="sec-load"><div class="spin"></div><div id="load-txt">Yükleniyor...</div></div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="studio-hdr">
+    <div class="studio-card">
+      <div class="stu-ico">🎙</div>
+      <div class="stu-txt">
+        <div class="stu-name">Ali İhsan Tufan</div>
+        <div class="stu-sub">Karaoke Studio · v10</div>
+      </div>
+      <div class="stu-eq">
+        <div class="eq-b" style="--d:.5s"></div>
+        <div class="eq-b" style="--d:.7s"></div>
+        <div class="eq-b" style="--d:.35s"></div>
+        <div class="eq-b" style="--d:.9s"></div>
+        <div class="eq-b" style="--d:.55s"></div>
+      </div>
+      <div class="hdr-st" id="hdr-st">Hazır</div>
+    </div>
+  </div>
+
+  <!-- WAVE -->
+  <div class="wave-wrap">
+    <div class="wave-top">
+      <span class="w-fname" id="w-fname">—</span>
+      <span class="w-time" id="w-time">0:00.0</span>
+    </div>
+    <div id="wave-box">
+      <canvas id="cv-m"></canvas><canvas id="cv-v"></canvas><canvas id="cv-s"></canvas>
+      <div id="ph"></div>
+    </div>
+    <div id="prog-wrap"><canvas id="cv-p"></canvas></div>
+    <div class="wave-bot"><span>0:00</span><span id="w-tot">—</span></div>
+  </div>
+
+  <!-- MIC BAR -->
+  <div class="mic-bar" id="mic-bar">
+    <span class="mic-lbl">● REC</span>
+    <div class="mic-lw"><div id="mic-lvl"></div></div>
+    <span id="rec-bdg" class="mic-bdg"></span>
+    <span id="rec-tmr" class="mic-lbl" style="min-width:36px;">0:00</span>
+  </div>
+
+  <!-- TRANSPORT -->
+  <div class="transport">
+    <button class="tbtn" id="btn-rst">⏮</button>
+    <button class="tbtn play" id="btn-play"><span id="ic-play">▶</span></button>
+    <div class="gap"></div>
+    <button class="noise-btn" id="btn-noise">🎙 Temizle</button>
+    <button class="tbtn rec" id="btn-rec"><div class="rec-dot"></div></button>
+    <button class="tbtn-sm" id="btn-clr" style="display:none;">Sil</button>
+  </div>
+
+  <!-- SCROLL BODY -->
+  <div class="scroll-body">
+
+    <!-- PRESETS (merged with mic models) -->
+    <div class="sec-lbl">🎚 Preset &amp; Vokal Modeli</div>
+    <div class="preset-grid" id="preset-grid">
+
+      <div class="prst sel" data-p="ferdi" style="--c1:#a855f7;--c2:#7c3aed;--glow:rgba(168,85,247,.45)">
+        <div class="p-num">01</div><div class="p-dot"></div>
+        <span class="p-em">🎼</span>
+        <div class="p-name">Klasik Ferdi Hall</div>
+        <div class="p-desc">Hall 4.2s · Tape echo · Evrensel</div>
+      </div>
+
+      <div class="prst" data-p="acili" style="--c1:#f472b6;--c2:#be185d;--glow:rgba(244,114,182,.45)">
+        <div class="p-num">02</div><div class="p-dot"></div>
+        <span class="p-em">💔</span>
+        <div class="p-name">Acılı Arabesk</div>
+        <div class="p-desc">Hall 5.5s · Uzun yankı · Dramatik</div>
+      </div>
+
+      <div class="prst" data-p="kaset" style="--c1:#fb923c;--c2:#c2410c;--glow:rgba(251,146,60,.45)">
+        <div class="p-num">03</div><div class="p-dot"></div>
+        <span class="p-em">📼</span>
+        <div class="p-name">Kaset Dönemi</div>
+        <div class="p-desc">Tape delay · High cut · 80'ler</div>
+      </div>
+
+      <div class="prst" data-p="sahne" style="--c1:#22d3ee;--c2:#0891b2;--glow:rgba(34,211,238,.45)">
+        <div class="p-num">04</div><div class="p-dot"></div>
+        <span class="p-em">🎭</span>
+        <div class="p-name">Canlı Sahne</div>
+        <div class="p-desc">Hall %35 · Short delay · Konser</div>
+      </div>
+
+      <div class="prst" data-p="gece" style="--c1:#818cf8;--c2:#1e3a8a;--glow:rgba(129,140,248,.45)">
+        <div class="p-num">05</div><div class="p-dot"></div>
+        <span class="p-em">🌙</span>
+        <div class="p-name">Derin Gece</div>
+        <div class="p-desc">Low-mid dolgun · Hüzünlü parça</div>
+      </div>
+
+      <div class="prst" data-p="temiz" style="--c1:#34d399;--c2:#059669;--glow:rgba(52,211,153,.45)">
+        <div class="p-num">06</div><div class="p-dot"></div>
+        <span class="p-em">✨</span>
+        <div class="p-name">Net ve Temiz</div>
+        <div class="p-desc">Plate reverb · DeEsser · Stüdyo</div>
+      </div>
+
+      <div class="prst" data-p="buyuk" style="--c1:#60a5fa;--c2:#2563eb;--glow:rgba(96,165,250,.45)">
+        <div class="p-num">07</div><div class="p-dot"></div>
+        <span class="p-em">🏟️</span>
+        <div class="p-name">Büyük Salon</div>
+        <div class="p-desc">Hall 6s · Stereo wide · Ultra</div>
+      </div>
+
+      <div class="prst" data-p="yakin" style="--c1:#2dd4bf;--c2:#0f766e;--glow:rgba(45,212,191,.45)">
+        <div class="p-num">08</div><div class="p-dot"></div>
+        <span class="p-em">🎤</span>
+        <div class="p-name">Yakın Mikrofon</div>
+        <div class="p-desc">Az reverb · Mid sıcak · Samimi</div>
+      </div>
+
+      <div class="prst" data-p="azeri" style="--c1:#fbbf24;--c2:#d97706;--glow:rgba(251,191,36,.45)">
+        <div class="p-num">09</div><div class="p-dot"></div>
+        <span class="p-em">🎻</span>
+        <div class="p-name">Azeri Arabesk</div>
+        <div class="p-desc">High boost · Ping Pong · Parlak</div>
+      </div>
+
+      <div class="prst" data-p="final" style="--c1:#f87171;--c2:#dc2626;--glow:rgba(248,113,113,.45)">
+        <div class="p-num">10</div><div class="p-dot"></div>
+        <span class="p-em">🔥</span>
+        <div class="p-name">Ultra Duygusal Final</div>
+        <div class="p-desc">Hall yüksek · Stereo geniş</div>
+      </div>
+
+      <div class="prst" data-p="ftayfur" style="--c1:#d97706;--c2:#92400e;--glow:rgba(217,119,6,.45)">
+        <div class="p-num">11</div><div class="p-dot"></div>
+        <span class="p-em">🎵</span>
+        <div class="p-name">Ferdi Tayfur</div>
+        <div class="p-desc">FL Studio · Pre 28ms · Kaset tonu</div>
+      </div>
+
+      <div class="prst" data-p="yalnizlik" style="--c1:#9333ea;--c2:#4c1d95;--glow:rgba(147,51,234,.5)">
+        <div class="p-num">12</div><div class="p-dot"></div>
+        <span class="p-em">🌑</span>
+        <div class="p-name">Yalnızlık Gecesi</div>
+        <div class="p-desc">5.8s decay · TRT arabesk · Derin</div>
+      </div>
+
+      <div class="prst" data-p="kasetmaster" style="--c1:#b45309;--c2:#78350f;--glow:rgba(180,83,9,.45)">
+        <div class="p-num">13</div><div class="p-dot"></div>
+        <span class="p-em">🎙️</span>
+        <div class="p-name">Kaset Arabesk Master</div>
+        <div class="p-desc">Emmoğlu · Hatıran Yeter tonu</div>
+      </div>
+
+      <div class="prst" data-p="normal" style="--c1:#10b981;--c2:#047857;--glow:rgba(16,185,129,.45)">
+        <div class="p-num">14</div><div class="p-dot"></div>
+        <span class="p-em">✅</span>
+        <div class="p-name">Normal / Temiz</div>
+        <div class="p-desc">Minimum efekt · Referans vokal</div>
+      </div>
+
+      <!-- AI PRESET — full width -->
+      <div class="prst prst-ai" data-p="ai" id="prst-ai">
+        <div class="p-num">AI</div><div class="p-dot"></div>
+        <span class="p-em">🤖</span>
+        <div class="p-name">AI Preset — Akıllı Analiz</div>
+        <div class="p-desc">Yapay zeka müziğinizi analiz eder, size özel en iyi preset ayarını oluşturur</div>
+      </div>
+
+    </div>
+
+    <!-- VOKAL SES -->
+    <div class="sec-lbl">🎤 Vokal Ses</div>
+    <div class="sl-block">
+      <div class="sl-head">
+        <div class="sl-title">Vokal Seviyesi</div>
+        <div class="sl-numbox"><span class="sl-num" id="sv-v">10</span><span class="sl-unit">/ 10</span></div>
+      </div>
+      <input class="big-r" type="range" id="sl-vocal" min="0" max="200" value="100">
+      <div class="sl-marks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+    </div>
+
+    <!-- MÜZİK SES -->
+    <div class="sec-lbl">🎵 Müzik Ses</div>
+    <div class="sl-block">
+      <div class="sl-head">
+        <div class="sl-title">Müzik Seviyesi</div>
+        <div class="sl-numbox"><span class="sl-num" id="sv-m">10</span><span class="sl-unit">/ 10</span></div>
+      </div>
+      <input class="big-r" type="range" id="sl-music" min="0" max="200" value="100">
+      <div class="sl-marks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+    </div>
+
+    <!-- SES SYNC -->
+    <div class="sec-lbl">⟺ Ses Senkronu</div>
+    <div class="sl-block">
+      <div class="sl-head">
+        <div class="sl-title">Senkron Gecikmesi</div>
+        <div class="sl-numbox"><span class="sl-num" id="sv-sync" style="font-size:24px;min-width:80px;">0.000</span><span class="sl-unit">sn</span></div>
+      </div>
+      <input class="big-r" type="range" id="sl-sync" min="-200" max="200" value="0" step="1">
+      <div class="sl-marks-3"><span>◀ Erken</span><span>|</span><span>Geç ▶</span></div>
+    </div>
+
+  </div><!-- /scroll-body -->
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <button class="btn-new" id="btn-new">↺ Yeni</button>
+    <button class="btn-wav" id="btn-save" disabled>⬇ WAV</button>
+    <button class="btn-mp3" id="btn-mp3" disabled>⬇ MP3</button>
+  </div>
+
+</div><!-- /app -->
+<div id="toast"></div>
+
+<script>
+/* ═══ STATE ═══ */
+var A=null, nodes={};
+var origBuf=null, instrBuf=null, vocalBuf=null;
+var mSrc=null, vSrc=null;
+var isPlaying=false, pausedAt=0, startAt=0, dur=0, raf=null;
+var micStream=null, micSrc=null, scriptProc=null;
+var micAnalyser=null, micAnalyserData=null;
+var modelNodes=[], modelOscillators=[];
+var recPCM=[], recSampleRate=44100;
+var isRecording=false, recStartTs=0, recTmr=null, recPlayStart=0;
+var currentModel='sicak';
+var noiseReducOn=false;
+
+/* ═══ REVERB TYPES ═══ */
+var RV={
+  hall:     {dur:7,  dec:1.1},
+  hall55:   {dur:9,  dec:0.9},
+  hall6:    {dur:10, dec:0.8},
+  plate:    {dur:1.8,dec:3.5},
+  salon:    {dur:2.5,dec:2.0},
+  tape:     {dur:1.4,dec:2.8},
+  ferdi_rv: {dur:8.5,dec:0.95},
+  yalniz_rv:{dur:11, dec:0.72}
+};
+
+/* ═══ 14 PRESETS (Arabesk + Mic Model birleşik) ═══ */
+var PRESETS={
+  ferdi:{rv:'hall',rvW:.26,dT:.30,dFb:.38,dW:.14,
+    bass:2,bassF:200,mid:-2,midF:1500,treble:2,trebleF:8000,
+    cT:-22,cR:4,cAtk:.003,cRel:.25,deG:-5,deF:6000,wide:.12,
+    model:'sicak',preDly:0},
+  acili:{rv:'hall55',rvW:.42,dT:.32,dFb:.22,dW:.12,
+    bass:3,bassF:200,mid:2,midF:900,treble:-1,trebleF:8000,
+    cT:-26,cR:3,cAtk:.003,cRel:.30,deG:-5,deF:5800,wide:.18,
+    model:'duygusal',preDly:0},
+  kaset:{rv:'tape',rvW:.20,dT:.28,dFb:.45,dW:.22,
+    bass:4,bassF:250,mid:3,midF:800,treble:-4,trebleF:7500,
+    cT:-20,cR:5,cAtk:.005,cRel:.20,deG:-4,deF:5500,wide:.10,
+    model:'kaset',preDly:0},
+  sahne:{rv:'hall',rvW:.35,dT:.12,dFb:.28,dW:.15,
+    bass:1,bassF:200,mid:0,midF:3500,treble:1,trebleF:8000,
+    cT:-18,cR:6,cAtk:.003,cRel:.18,deG:-6,deF:6500,wide:.14,
+    model:'sahne',preDly:0},
+  gece:{rv:'hall',rvW:.38,dT:.30,dFb:.45,dW:.18,
+    bass:5,bassF:250,mid:4,midF:900,treble:-3,trebleF:7000,
+    cT:-28,cR:4,cAtk:.004,cRel:.35,deG:-5,deF:5500,wide:.16,
+    model:'gece',preDly:0},
+  temiz:{rv:'plate',rvW:.22,dT:.10,dFb:.18,dW:.10,
+    bass:-1,bassF:200,mid:0,midF:1500,treble:4,trebleF:9000,
+    cT:-18,cR:3,cAtk:.003,cRel:.20,deG:-8,deF:7000,wide:.16,
+    model:'parlak',preDly:0},
+  buyuk:{rv:'hall6',rvW:.50,dT:.40,dFb:.50,dW:.20,
+    bass:2,bassF:200,mid:1,midF:1200,treble:0,trebleF:8000,
+    cT:-24,cR:4,cAtk:.003,cRel:.28,deG:-5,deF:6000,wide:.35,
+    model:'hall',preDly:0},
+  yakin:{rv:'plate',rvW:.12,dT:.06,dFb:.12,dW:.06,
+    bass:1,bassF:200,mid:4,midF:1000,treble:0,trebleF:8000,
+    cT:-16,cR:5,cAtk:.004,cRel:.22,deG:-6,deF:6500,wide:.06,
+    model:'yakin',preDly:0},
+  azeri:{rv:'salon',rvW:.32,dT:.25,dFb:.40,dW:.22,
+    bass:1,bassF:200,mid:2,midF:2000,treble:5,trebleF:9000,
+    cT:-20,cR:4,cAtk:.003,cRel:.20,deG:-7,deF:7500,wide:.28,
+    model:'azeri',preDly:0},
+  final:{rv:'hall6',rvW:.60,dT:.35,dFb:.55,dW:.22,
+    bass:3,bassF:200,mid:3,midF:1200,treble:1,trebleF:8000,
+    cT:-22,cR:5,cAtk:.003,cRel:.25,deG:-6,deF:6200,wide:.40,
+    model:'duygusal',preDly:0},
+  /* 11: Ferdi Tayfur — FL Studio Fruity Reeverb 2 referans */
+  ftayfur:{rv:'ferdi_rv',rvW:.24,dT:.28,dFb:.16,dW:.10,
+    bass:2,bassF:140,mid:-2,midF:320,treble:0,trebleF:8000,
+    cT:-18,cR:3.5,cAtk:.012,cRel:.12,deG:1.5,deF:4500,wide:.15,
+    model:'sicak',preDly:0.028},
+  /* 12: Yalnızlık Gecesi */
+  yalnizlik:{rv:'yalniz_rv',rvW:.30,dT:.32,dFb:.20,dW:.11,
+    bass:3,bassF:150,mid:-2.5,midF:350,treble:0,trebleF:8000,
+    cT:-20,cR:4,cAtk:.008,cRel:.18,deG:1,deF:4000,wide:.18,
+    model:'gece',preDly:0.035},
+  /* 13: Kaset Arabesk Master */
+  kasetmaster:{rv:'tape',rvW:.21,dT:.18,dFb:.14,dW:.09,
+    bass:2,bassF:120,mid:-1.5,midF:500,treble:-2,trebleF:7200,
+    cT:-20,cR:4,cAtk:.015,cRel:.14,deG:1.5,deF:2500,wide:.10,
+    model:'kaset',preDly:0.022},
+  /* 14: Normal */
+  normal:{rv:'plate',rvW:.06,dT:.08,dFb:.04,dW:.02,
+    bass:0,bassF:200,mid:0,midF:1500,treble:0,trebleF:8000,
+    cT:-35,cR:1.3,cAtk:.003,cRel:.25,deG:0,deF:8000,wide:.03,
+    model:'normal',preDly:0}
+};
+var activeP=PRESETS.ferdi;
+
+/* ═══ AUDIO GRAPH ═══ */
+function buildGraph(){
+  A=new(window.AudioContext||window.webkitAudioContext)();
+  var n=nodes;
+  n.musicDelay=mk('delay',{delayTime:0,maxDelay:2});
+  n.vocalDelay=mk('delay',{delayTime:0,maxDelay:2});
+  n.musicGain=mk('gain',{gain:1});
+  n.vocalGain=mk('gain',{gain:1});
+  n.panner=A.createStereoPanner();
+  /* EQ — 3 bands with adjustable center freq */
+  n.bass=mkBQ('lowshelf',200,0,0);
+  n.mid=mkBQ('peaking',1500,1.2,0);
+  n.treble=mkBQ('highshelf',8000,0,0);
+  /* Extra presence/deess band */
+  n.deess=mkBQ('peaking',6500,8,0);
+  /* Compressor */
+  n.comp=A.createDynamicsCompressor();
+  n.comp.threshold.value=-22;n.comp.knee.value=10;
+  n.comp.ratio.value=4;n.comp.attack.value=0.003;n.comp.release.value=0.25;
+  /* Limiter */
+  n.lim=A.createDynamicsCompressor();
+  n.lim.threshold.value=-1;n.lim.knee.value=0;
+  n.lim.ratio.value=20;n.lim.attack.value=0.001;n.lim.release.value=0.1;
+  /* Delay loop */
+  n.delNode=A.createDelay(2);n.delNode.delayTime.value=0.3;
+  n.delFB=mk('gain',{gain:0.35});
+  n.delWet=mk('gain',{gain:0});
+  /* Predelay for reverb */
+  n.preDelay=A.createDelay(0.1);n.preDelay.delayTime.value=0;
+  /* Reverb */
+  n.dry=mk('gain',{gain:1});
+  n.conv=A.createConvolver();
+  n.wet=mk('gain',{gain:0});
+  /* Stereo widener */
+  n.widDly=A.createDelay(0.04);n.widDly.delayTime.value=0.025;
+  n.widWet=mk('gain',{gain:0});
+  /* Master */
+  n.master=mk('gain',{gain:.85});
+  n.analyser=A.createAnalyser();n.analyser.fftSize=1024;
+  n.specData=new Uint8Array(n.analyser.frequencyBinCount);
+
+  /* ROUTE */
+  ch(n.musicDelay,n.musicGain,n.panner);
+  ch(n.vocalDelay,n.vocalGain,n.panner);
+  ch(n.panner,n.bass,n.mid,n.treble,n.deess,n.comp);
+  /* delay loop */
+  n.comp.connect(n.delNode);n.delNode.connect(n.delFB);n.delFB.connect(n.delNode);
+  n.delNode.connect(n.delWet);
+  /* dry + delay → master */
+  n.comp.connect(n.dry);n.delWet.connect(n.dry);
+  ch(n.dry,n.master);
+  /* predelay → reverb */
+  n.comp.connect(n.preDelay);n.preDelay.connect(n.conv);
+  ch(n.conv,n.wet,n.master);
+  /* widener */
+  n.master.connect(n.widDly);n.widDly.connect(n.widWet);
+  /* → analyser → dest */
+  n.master.connect(n.analyser);n.widWet.connect(n.analyser);
+  ch(n.analyser,n.lim,A.destination);
+}
+function mk(t,p){var n=A['create'+t[0].toUpperCase()+t.slice(1)]();for(var k in p)if(n[k]&&n[k].value!==undefined)n[k].value=p[k];else n[k]=p[k];return n;}
+function mkBQ(t,f,Q,g){var n=A.createBiquadFilter();n.type=t;n.frequency.value=f;n.Q.value=Q;n.gain.value=g;return n;}
+function ch(){for(var i=0;i<arguments.length-1;i++)arguments[i].connect(arguments[i+1]);}
+
+function genIR(d,dec){
+  var sr=A.sampleRate,len=Math.max(1,Math.round(sr*d));
+  var b=A.createBuffer(2,len,sr);
+  for(var c=0;c<2;c++){var ch2=b.getChannelData(c);for(var i=0;i<len;i++)ch2[i]=(Math.random()*2-1)*Math.pow(1-i/len,dec);}
+  return b;
+}
+
+function applyPG(p){
+  if(!A||!nodes.conv)return;
+  var rv=RV[p.rv]||RV.hall;
+  try{nodes.conv.buffer=genIR(rv.dur,rv.dec);}catch(e){}
+  nodes.wet.gain.value=p.rvW;
+  nodes.dry.gain.value=1;
+  nodes.preDelay.delayTime.value=p.preDly||0;
+  nodes.delNode.delayTime.value=p.dT;
+  nodes.delFB.gain.value=p.dFb;
+  nodes.delWet.gain.value=p.dW;
+  nodes.bass.frequency.value=p.bassF||200;
+  nodes.bass.gain.value=p.bass;
+  nodes.mid.frequency.value=p.midF||1500;
+  nodes.mid.gain.value=p.mid;
+  nodes.treble.frequency.value=p.trebleF||8000;
+  nodes.treble.gain.value=p.treble;
+  nodes.comp.threshold.value=p.cT;
+  nodes.comp.ratio.value=p.cR;
+  nodes.comp.attack.value=p.cAtk||0.003;
+  nodes.comp.release.value=p.cRel||0.25;
+  nodes.deess.gain.value=p.deG;
+  nodes.deess.frequency.value=p.deF;
+  nodes.widWet.gain.value=p.wide;
+}
+
+/* ═══ PRESET SELECT ═══ */
+function selPreset(name){
+  var p=PRESETS[name];if(!p)return;
+  activeP=p;currentModel=p.model||'sicak';
+  document.querySelectorAll('.prst').forEach(function(b){b.classList.remove('sel');});
+  var btn=document.querySelector('.prst[data-p="'+name+'"]');if(btn)btn.classList.add('sel');
+  if(A)applyPG(p);
+  var nm=btn?btn.querySelector('.p-name').textContent:'';
+  toast(nm+' aktif ✓');
+}
+
+/* ═══ AI PRESET ═══ */
+async function generateAIPreset(){
+  if(!origBuf){toast('Önce müzik dosyası yükleyin');return;}
+  var card=document.getElementById('prst-ai');
+  card.classList.add('loading');
+  card.querySelector('.p-em').textContent='⏳';
+  card.querySelector('.p-desc').textContent='AI analiz ediyor...';
+  setSt('● AI','live');
+  var fname=document.getElementById('w-fname').textContent;
+  var durStr=fmtT(dur);
+  var prompt='Sen bir Türk arabesk müzik mixing uzmanısın.\n'
+    +'Ses dosyası: "'+fname+'", Süre: '+durStr+'\n'
+    +'Arabesk karaoke kaydı için ideal mixing preset ayarlarını önerin.\n'
+    +'SADECE JSON döndür, başka hiçbir şey yazma:\n'
+    +'{"rvType":"hall55","rvW":0.30,"dT":0.28,"dFb":0.22,"dW":0.12,'
+    +'"bass":2,"bassF":200,"mid":-1,"midF":1200,"treble":1,"trebleF":8000,'
+    +'"cT":-22,"cR":4,"deG":-5,"deF":6200,"wide":0.18,'
+    +'"preDly":0.02,"model":"sicak",'
+    +'"name":"Önerilen Preset","desc":"Kısa açıklama"}';
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        messages:[{role:'user',content:prompt}]})
+    });
+    var data=await resp.json();
+    var txt=data.content.map(function(i){return i.text||'';}).join('');
+    var clean=txt.replace(/```json|```/g,'').trim();
+    var ai=JSON.parse(clean);
+    /* build a temporary preset from AI response */
+    var aiP={
+      rv:ai.rvType||'hall55',rvW:+(ai.rvW||0.30),
+      dT:+(ai.dT||0.28),dFb:+(ai.dFb||0.22),dW:+(ai.dW||0.12),
+      bass:+(ai.bass||0),bassF:+(ai.bassF||200),
+      mid:+(ai.mid||0),midF:+(ai.midF||1500),
+      treble:+(ai.treble||0),trebleF:+(ai.trebleF||8000),
+      cT:+(ai.cT||-22),cR:+(ai.cR||4),cAtk:0.003,cRel:0.25,
+      deG:+(ai.deG||0),deF:+(ai.deF||6000),
+      wide:+(ai.wide||0.15),preDly:+(ai.preDly||0),
+      model:ai.model||'sicak'
+    };
+    PRESETS['ai_result']=aiP;
+    activeP=aiP;currentModel=aiP.model;
+    if(A)applyPG(aiP);
+    card.querySelector('.p-em').textContent='✅';
+    card.querySelector('.p-name').textContent=ai.name||'AI Preset';
+    card.querySelector('.p-desc').textContent=ai.desc||'Yapay zeka presetiniz hazır';
+    document.querySelectorAll('.prst').forEach(function(b){b.classList.remove('sel');});
+    card.classList.add('sel');
+    setSt('Hazır','');
+    toast('🤖 '+(ai.name||'AI Preset')+' uygulandı!');
+  }catch(err){
+    card.querySelector('.p-em').textContent='🤖';
+    card.querySelector('.p-desc').textContent='Yapay zeka sesi analiz eder, size özel preset oluşturur';
+    setSt('Hazır','');
+    toast('❌ AI preset hatası. İnternet bağlantısını kontrol edin.');
+  }
+  card.classList.remove('loading');
+}
+
+/* ═══ MİKROFON ═══ */
+function micErrMsg(err){
+  if(!err)return'Mikrofon erişilemiyor';
+  var n=err.name||'';
+  if(n==='NotAllowedError'||n==='PermissionDeniedError')return'❌ Mikrofon izni reddedildi.\nTarayıcı ayarlarından izin verin.';
+  if(n==='NotFoundError')return'❌ Mikrofon bulunamadı.';
+  if(n==='NotSupportedError'||n==='SecurityError')return'❌ HTTPS bağlantısı gerekiyor.\nDosyayı bir web sunucusundan açın.';
+  if(n==='NotReadableError')return'❌ Mikrofon başka uygulama tarafından kullanılıyor.';
+  return'❌ Mikrofon: '+(err.message||n);
+}
+function showMicModal(msg){
+  var old=document.getElementById('mic-modal');if(old)old.remove();
+  var m=document.createElement('div');m.id='mic-modal';
+  m.style.cssText='position:fixed;inset:0;background:rgba(6,0,15,.93);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;';
+  m.innerHTML='<div style="background:rgba(20,2,58,.95);border:1px solid rgba(168,85,247,.4);border-radius:20px;padding:28px 22px;max-width:320px;width:100%;text-align:center;box-shadow:0 0 40px rgba(168,85,247,.2);">'
+    +'<div style="font-size:44px;margin-bottom:12px;filter:drop-shadow(0 0 12px rgba(168,85,247,.7))">🎙</div>'
+    +'<div style="font-family:Cinzel,serif;font-size:13px;color:#c084fc;margin-bottom:10px;letter-spacing:.05em;">Mikrofon Erişimi</div>'
+    +'<div style="font-size:12px;color:#f0e8ff;line-height:1.7;margin-bottom:14px;white-space:pre-line;">'+msg+'</div>'
+    +'<div style="font-size:10px;color:#6b5580;line-height:1.6;margin-bottom:20px;background:rgba(168,85,247,.06);border-radius:10px;padding:10px;">📱 Mobilde: Adres çubuğundaki kilit simgesine tıklayıp <strong>Mikrofon → İzin Ver</strong> seçin.</div>'
+    +'<button onclick="document.getElementById(\'mic-modal\').remove()" style="padding:11px 30px;background:linear-gradient(135deg,#a855f7,#6d28d9);border:none;border-radius:22px;color:#fff;font-weight:700;font-size:13px;font-family:Cinzel,serif;cursor:pointer;box-shadow:0 4px 16px rgba(168,85,247,.4);">Tamam</button>'
+    +'</div>';
+  document.body.appendChild(m);
+}
+function getGUM(){
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)
+    return navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+  var legacy=navigator.getUserMedia||navigator.webkitGetUserMedia||navigator.mozGetUserMedia;
+  if(legacy) return function(c){return new Promise(function(res,rej){legacy.call(navigator,c,res,rej);});};
+  return null;
+}
+function doStartRec(stream){
+  micStream=stream;
+  micSrc=A.createMediaStreamSource(stream);
+  micAnalyser=A.createAnalyser();micAnalyser.fftSize=256;
+  micAnalyserData=new Uint8Array(micAnalyser.frequencyBinCount);
+  micSrc.connect(micAnalyser);
+  /* Build mic chain with optional noise reduction */
+  var mOut=buildLiveModel(currentModel,micSrc,noiseReducOn);
+  /* Fade-in: 0→1 in 0.3s — kalan transient klikler için ek güvence */
+  var fadeIn=A.createGain();fadeIn.gain.setValueAtTime(0,A.currentTime);fadeIn.gain.linearRampToValueAtTime(1,A.currentTime+0.3);
+  modelNodes.push(fadeIn);mOut.connect(fadeIn);
+  scriptProc=A.createScriptProcessor(4096,2,2);
+  recPCM=[];recSampleRate=A.sampleRate;
+  fadeIn.connect(scriptProc);
+  var sil=A.createGain();sil.gain.value=0;
+  scriptProc.connect(sil);sil.connect(A.destination);
+  try{scriptProc.disconnect(A.destination);}catch(e){}
+  scriptProc.onaudioprocess=function(e){
+    if(!isRecording)return;
+    var L=e.inputBuffer.getChannelData(0);
+    var R=e.inputBuffer.numberOfChannels>1?e.inputBuffer.getChannelData(1):L;
+    var c=new Float32Array(L.length*2);
+    for(var i=0;i<L.length;i++){c[i*2]=L[i];c[i*2+1]=R[i];}
+    recPCM.push(c);
+  };
+  isRecording=true;recStartTs=Date.now();
+  if(!isPlaying)playA();
+  document.getElementById('btn-rec').classList.add('on');
+  document.getElementById('mic-bar').classList.add('show');
+  document.getElementById('rec-bdg').textContent=modelLabel(currentModel)+(noiseReducOn?' 🟢':'');
+  setSt('● REC','live');
+  recTmr=setInterval(tickT,500);
+}
+function startRec(){
+  if(isRecording)return;
+  if(!origBuf){toast('Önce müzik dosyası yükleyin');return;}
+  ensureCtx();
+  var gum=getGUM();
+  if(!gum){showMicModal('❌ Tarayıcınız mikrofonu desteklemiyor veya HTTPS bağlantısı gerekiyor.');return;}
+  /* autoGainControl ve echoCancellation tarayıcı düzeyinde 5-10s kalibrasyon yapar →
+     ilk 8 saniyelik cızırtının asıl nedeni bu. Uygulama içi noise reduction zaten mevcut. */
+  var constraints={audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false,sampleRate:{ideal:44100}}};
+  gum(constraints).then(function(stream){
+    doStartRec(stream);
+  }).catch(function(err){
+    if(err&&(err.name==='OverconstrainedError'||err.name==='ConstraintNotSatisfiedError')){
+      gum({audio:true}).then(function(s){doStartRec(s);}).catch(function(e2){showMicModal(micErrMsg(e2));});
+    }else{showMicModal(micErrMsg(err));}
+  });
+}
+function stopRec(){
+  if(!isRecording)return;
+  isRecording=false;clearInterval(recTmr);
+  modelOscillators.forEach(function(o){try{o.stop();}catch(e){}});modelOscillators=[];
+  modelNodes.forEach(function(n){try{n.disconnect();}catch(e){}});modelNodes=[];
+  if(scriptProc){try{scriptProc.disconnect();}catch(e){}scriptProc=null;}
+  if(micSrc){try{micSrc.disconnect();}catch(e){}micSrc=null;}
+  if(micStream){micStream.getTracks().forEach(function(t){t.stop();});micStream=null;}
+  document.getElementById('btn-rec').classList.remove('on');
+  document.getElementById('mic-bar').classList.remove('show');
+  setSt('Hazır','');pauseA();
+  if(!recPCM.length){toast('Kayıt boş');return;}
+  var tf=0;recPCM.forEach(function(c){tf+=c.length/2;});
+  var ob=A.createBuffer(2,tf,recSampleRate);
+  var oL=ob.getChannelData(0),oR=ob.getChannelData(1),pos=0;
+  recPCM.forEach(function(c){for(var i=0;i<c.length/2;i++){oL[pos]=c[i*2];oR[pos]=c[i*2+1];pos++;}});
+  placeVocal(ob);
+  document.getElementById('btn-clr').style.display='';
+  document.getElementById('btn-save').disabled=false;
+  document.getElementById('btn-mp3').disabled=false;
+  drawVocalWave();
+  toast('Kayıt tamam! Sync ayarla ve indir.');
+}
+
+/* ── 14 Arabesk mic model zinciri (+ noise reduction) ── */
+function buildLiveModel(model,src,noiseReduc){
+  modelNodes=[];modelOscillators=[];var n2=[];
+  function bq(t,f,Q,g){var x=A.createBiquadFilter();x.type=t;x.frequency.value=f;x.Q.value=Q||0;x.gain.value=g||0;n2.push(x);return x;}
+  function gn(v){var x=A.createGain();x.gain.value=v;n2.push(x);return x;}
+  /* HPF always on, stronger when noise reduction active */
+  var hpFreq=noiseReduc?120:80;
+  var hp=bq('highpass',hpFreq,.7);
+  src.connect(hp);
+  var last=hp;
+
+  if(model==='sicak'){
+    var lm=bq('lowshelf',350,0,4);var m=bq('peaking',900,1,3);
+    last.connect(lm);lm.connect(m);last=m;
+  }else if(model==='hall'){
+    var air=bq('highshelf',8000,0,2);
+    last.connect(air);last=air;
+  }else if(model==='kaset'){
+    var mi=bq('peaking',800,1,5);var lp=bq('lowpass',8000,0);
+    last.connect(mi);mi.connect(lp);last=lp;
+  }else if(model==='duygusal'){
+    var md=bq('peaking',1200,1.5,4);
+    last.connect(md);last=md;
+  }else if(model==='gece'){
+    var bass=bq('lowshelf',250,0,5);var dkTop=bq('highshelf',6000,0,-2);
+    last.connect(bass);bass.connect(dkTop);last=dkTop;
+  }else if(model==='sahne'){
+    var pr=bq('peaking',3500,1.2,3);
+    var co=A.createDynamicsCompressor();co.threshold.value=-18;co.ratio.value=6;co.attack.value=0.003;n2.push(co);
+    last.connect(pr);pr.connect(co);last=co;
+  }else if(model==='parlak'){
+    var air2=bq('highshelf',10000,0,3);var pr2=bq('peaking',4000,1,2);
+    last.connect(air2);air2.connect(pr2);last=pr2;
+  }else if(model==='azeri'){
+    var hi=bq('highshelf',8000,0,5);var mz=bq('peaking',2500,1,2);
+    last.connect(hi);hi.connect(mz);last=mz;
+  }else if(model==='yakin'){
+    var m2=bq('peaking',1000,1,5);var lp2=bq('highshelf',9000,0,-1);
+    last.connect(m2);m2.connect(lp2);last=lp2;
+  }else if(model==='normal'){
+    /* Gerçek bypass — sadece HPF, sıfır EQ/renklendirme */
+  }else{
+    var g=gn(1);last.connect(g);last=g;
+  }
+
+  /* Noise reduction extra processing */
+  if(noiseReduc){
+    /* Noise gate via fast compressor */
+    var gate=A.createDynamicsCompressor();
+    gate.threshold.value=-50;gate.knee.value=0;gate.ratio.value=20;
+    gate.attack.value=0.002;gate.release.value=0.06;n2.push(gate);
+    /* De-esser */
+    var de=bq('peaking',7500,6,-8);
+    last.connect(gate);gate.connect(de);last=de;
+  }
+  modelNodes=n2;return last;
+}
+
+function modelLabel(m){
+  var map={sicak:'Sıcak',hall:'Hall',kaset:'Kaset',duygusal:'Duygusal',gece:'Gece',sahne:'Sahne',parlak:'Parlak',azeri:'Azeri',yakin:'Yakın',normal:'Normal'};
+  return map[m]||m;
+}
+function placeVocal(raw){
+  var sr=instrBuf.sampleRate,tot=instrBuf.length;
+  var out=A.createBuffer(2,tot,sr);
+  var off=Math.max(0,Math.round(recPlayStart*sr));
+  var cl=Math.min(raw.length,tot-off);
+  for(var c=0;c<2;c++){var s=raw.getChannelData(Math.min(c,raw.numberOfChannels-1)),d=out.getChannelData(c);for(var i=0;i<cl;i++)d[off+i]=s[i];}
+  vocalBuf=out;
+}
+
+/* ═══ PLAYBACK ═══ */
+function ensureCtx(){
+  if(!A){buildGraph();applyPG(activeP);}
+  if(A.state==='suspended')A.resume();
+}
+function playA(){
+  if(!instrBuf)return;stopNodes();
+  var when=A.currentTime+0.04,off=Math.max(0,Math.min(pausedAt,dur-.05));
+  mSrc=A.createBufferSource();mSrc.buffer=instrBuf;mSrc.connect(nodes.musicDelay);
+  mSrc.onended=function(){if(isPlaying){isPlaying=false;pausedAt=0;upBtn(false);}};
+  if(vocalBuf){vSrc=A.createBufferSource();vSrc.buffer=vocalBuf;vSrc.connect(nodes.vocalDelay);vSrc.start(when,off);}
+  mSrc.start(when,off);startAt=when-off;isPlaying=true;upBtn(true);
+  if(isRecording)recPlayStart=off;
+}
+function pauseA(){if(!isPlaying)return;pausedAt=Math.min(A.currentTime-startAt,dur);stopNodes();isPlaying=false;upBtn(false);}
+function stopNodes(){
+  [[mSrc,function(){mSrc=null;}],[vSrc,function(){vSrc=null;}]].forEach(function(p){
+    if(p[0]){p[0].onended=null;try{p[0].stop();}catch(e){}try{p[0].disconnect();}catch(e){}p[1]();}
+  });
+}
+function stopA(){stopNodes();isPlaying=false;pausedAt=0;upBtn(false);}
+function upBtn(p){document.getElementById('ic-play').textContent=p?'⏸':'▶';}
+
+/* ═══ FILE LOAD ═══ */
+function loadFile(file){
+  stopA();
+  document.getElementById('sec-upload').style.display='none';
+  document.getElementById('sec-load').style.display='flex';
+  document.getElementById('app').style.display='none';
+  var r=new FileReader();
+  r.onload=function(ev){
+    document.getElementById('load-txt').textContent='Çözümleniyor...';
+    ensureCtx();
+    A.decodeAudioData(ev.target.result,function(buf){
+      origBuf=buf;dur=buf.duration;
+      document.getElementById('load-txt').textContent='Hazırlanıyor...';
+      setTimeout(function(){
+        splitBufs(buf);vocalBuf=null;recPCM=[];
+        document.getElementById('w-fname').textContent=file.name;
+        document.getElementById('w-tot').textContent=fmtT(dur);
+        pausedAt=0;
+        document.getElementById('btn-save').disabled=true;
+        document.getElementById('btn-mp3').disabled=true;
+        document.getElementById('btn-clr').style.display='none';
+        resetSliders();
+        document.getElementById('sec-load').style.display='none';
+        document.getElementById('app').style.display='flex';
+        setSt('Hazır','');
+        requestAnimationFrame(function(){resizeCvs();drawMusicWave();startAnim();});
+        selPreset('ferdi');
+      },30);
+    },function(){
+      document.getElementById('sec-upload').style.display='flex';
+      document.getElementById('sec-load').style.display='none';
+      var e=document.getElementById('up-err');e.style.display='block';e.textContent='Dosya oynatılamıyor.';
+    });
+  };
+  r.readAsArrayBuffer(file);
+}
+function resetSliders(){
+  document.getElementById('sl-vocal').value=100;if(nodes.vocalGain)nodes.vocalGain.gain.value=1;document.getElementById('sv-v').textContent='10';
+  document.getElementById('sl-music').value=100;if(nodes.musicGain)nodes.musicGain.gain.value=1;document.getElementById('sv-m').textContent='10';
+  document.getElementById('sl-sync').value=0;document.getElementById('sv-sync').textContent='0.000';
+}
+function splitBufs(buf){
+  var len=buf.length,sr=buf.sampleRate;
+  instrBuf=A.createBuffer(2,len,sr);
+  var L=buf.getChannelData(0),R=buf.numberOfChannels>1?buf.getChannelData(1):L;
+  var iL=instrBuf.getChannelData(0),iR=instrBuf.getChannelData(1);
+  for(var i=0;i<len;i++){iL[i]=L[i];iR[i]=R[i];}
+}
+
+/* ═══ MIX BUFFER ═══ */
+function buildMixBuf(){
+  if(!instrBuf)return null;
+  var mv=+document.getElementById('sl-music').value/100;
+  var vv=+document.getElementById('sl-vocal').value/100;
+  var syncSmp=Math.round(+document.getElementById('sl-sync').value/100*instrBuf.sampleRate);
+  var len=instrBuf.length,out=A.createBuffer(2,len,instrBuf.sampleRate);
+  var iL=instrBuf.getChannelData(0),iR=instrBuf.getChannelData(1);
+  var oL=out.getChannelData(0),oR=out.getChannelData(1);
+  for(var i=0;i<len;i++){oL[i]=iL[i]*mv;oR[i]=iR[i]*mv;}
+  if(vocalBuf){
+    var vL=vocalBuf.getChannelData(0),vR=vocalBuf.getChannelData(1);
+    for(var i=0;i<len;i++){var vi=i-syncSmp;if(vi>=0&&vi<vocalBuf.length){oL[i]+=vL[vi]*vv;oR[i]+=vR[vi]*vv;}}
+  }
+  return out;
+}
+
+/* ═══ WAV DOWNLOAD ═══ */
+document.getElementById('btn-save').onclick=function(){
+  var out=buildMixBuf();if(!out)return;
+  var wav=encodeWav(out);
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([wav],{type:'audio/wav'}));
+  a.download=(document.getElementById('w-fname').textContent||'track').replace(/\.[^.]+$/,'')+'_karaoke.wav';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);toast('WAV indiriliyor…');
+};
+
+/* ═══ MP3 DOWNLOAD ═══ */
+document.getElementById('btn-mp3').onclick=function(){
+  var out=buildMixBuf();if(!out)return;
+  if(typeof lamejs==='undefined'){toast('❌ MP3 encoder yüklenmedi. WAV indirin.');return;}
+  toast('MP3 encode ediliyor…');
+  setTimeout(function(){
+    try{
+      var sr=out.sampleRate;
+      var L=out.getChannelData(0),R=out.getChannelData(1);
+      function f32to16(f32){
+        var i16=new Int16Array(f32.length);
+        for(var i=0;i<f32.length;i++){var s=Math.max(-1,Math.min(1,f32[i]));i16[i]=s<0?s*32768:s*32767;}
+        return i16;
+      }
+      var lInt=f32to16(L),rInt=f32to16(R);
+      var enc=new lamejs.Mp3Encoder(2,sr,192);
+      var mp3=[],blk=1152;
+      for(var i=0;i<lInt.length;i+=blk){
+        var lC=lInt.subarray(i,i+blk),rC=rInt.subarray(i,i+blk);
+        var buf=enc.encodeBuffer(lC,rC);if(buf.length>0)mp3.push(new Int8Array(buf));
+      }
+      var fin=enc.flush();if(fin.length>0)mp3.push(new Int8Array(fin));
+      var blob=new Blob(mp3,{type:'audio/mp3'});
+      var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+      a.download=(document.getElementById('w-fname').textContent||'track').replace(/\.[^.]+$/,'')+'_karaoke.mp3';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);toast('MP3 indiriliyor…');
+    }catch(err){toast('❌ MP3 hatası: '+err.message);}
+  },50);
+};
+
+function encodeWav(buf){
+  var nc=buf.numberOfChannels,sr=buf.sampleRate,len=buf.length;
+  var ba=nc*2,ds=len*ba,ab=new ArrayBuffer(44+ds),v=new DataView(ab);
+  function ws(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));}
+  ws(0,'RIFF');v.setUint32(4,36+ds,true);ws(8,'WAVE');ws(12,'fmt ');
+  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,nc,true);
+  v.setUint32(24,sr,true);v.setUint32(28,sr*ba,true);v.setUint16(32,ba,true);
+  v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,ds,true);
+  var off=44;
+  for(var i=0;i<len;i++)for(var c=0;c<nc;c++){var s=Math.max(-1,Math.min(1,buf.getChannelData(c)[i]));v.setInt16(off,s<0?s*32768:s*32767,true);off+=2;}
+  return ab;
+}
+
+/* ═══ CANVAS ═══ */
+function resizeCvs(){
+  var wb=document.getElementById('wave-box'),dpr=window.devicePixelRatio||1;
+  ['cv-m','cv-v','cv-s'].forEach(function(id){
+    var c=document.getElementById(id);c.width=wb.offsetWidth*dpr;c.height=56*dpr;c.style.width=wb.offsetWidth+'px';c.style.height='56px';
+  });
+  var pw=document.getElementById('prog-wrap'),pc=document.getElementById('cv-p');
+  pc.width=pw.offsetWidth*dpr;pc.height=15*dpr;pc.style.width=pw.offsetWidth+'px';pc.style.height='15px';
+}
+function drawMusicWave(){
+  var cv=document.getElementById('cv-m'),dpr=window.devicePixelRatio||1;
+  var W=cv.width/dpr,H=cv.height/dpr,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);ctx.scale(dpr,dpr);
+  if(!origBuf)return;
+  var data=origBuf.getChannelData(0),step=Math.max(1,Math.floor(data.length/W));
+  /* gradient wave */
+  var grad=ctx.createLinearGradient(0,0,W,0);
+  grad.addColorStop(0,'rgba(168,85,247,.6)');grad.addColorStop(.5,'rgba(34,211,238,.5)');grad.addColorStop(1,'rgba(244,114,182,.5)');
+  ctx.strokeStyle=grad;ctx.lineWidth=1;ctx.beginPath();
+  for(var x=0;x<W;x++){
+    var mn=1,mx=-1;for(var j=0;j<step;j++){var v=data[x*step+j]||0;if(v<mn)mn=v;if(v>mx)mx=v;}
+    var y1=((1-mx)*.5)*H,y2=((1-mn)*.5)*H;ctx.moveTo(x+.5,y1);ctx.lineTo(x+.5,Math.max(y2,y1+1));
+  }
+  ctx.stroke();ctx.globalAlpha=1;
+}
+function drawVocalWave(){
+  var cv=document.getElementById('cv-v'),dpr=window.devicePixelRatio||1;
+  var W=cv.width/dpr,H=cv.height/dpr,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  if(!vocalBuf)return;
+  var data=vocalBuf.getChannelData(0),step=Math.max(1,Math.floor(data.length/W));
+  ctx.strokeStyle='#34d399';ctx.lineWidth=1.5;ctx.globalAlpha=.8;ctx.beginPath();
+  for(var x=0;x<W;x++){
+    var mn=1,mx=-1;for(var j=0;j<step;j++){var v=data[x*step+j]||0;if(v<mn)mn=v;if(v>mx)mx=v;}
+    var y1=((1-mx)*.5)*H,y2=((1-mn)*.5)*H;ctx.moveTo(x+.5,y1);ctx.lineTo(x+.5,Math.max(y2,y1+1));
+  }
+  ctx.stroke();ctx.globalAlpha=1;
+}
+function startAnim(){
+  if(raf)cancelAnimationFrame(raf);
+  var pc=document.getElementById('cv-p'),sc=document.getElementById('cv-s'),dpr=window.devicePixelRatio||1;
+  function frame(){
+    raf=requestAnimationFrame(frame);if(!dur)return;
+    var pos=isPlaying&&A?Math.min(A.currentTime-startAt,dur):pausedAt,frac=pos/dur;
+    document.getElementById('w-time').textContent=fmtT(pos);
+    var wb=document.getElementById('wave-box');document.getElementById('ph').style.left=(frac*wb.offsetWidth)+'px';
+    /* progress bar */
+    var PW=pc.width/dpr,PH=pc.height/dpr,pc2=pc.getContext('2d');
+    pc2.clearRect(0,0,pc.width,pc.height);
+    pc2.fillStyle='#0a0018';pc2.fillRect(0,0,pc.width,pc.height);
+    var pg=pc2.createLinearGradient(0,0,PW*dpr,0);
+    pg.addColorStop(0,'rgba(168,85,247,.3)');pg.addColorStop(1,'rgba(34,211,238,.3)');
+    pc2.fillStyle=pg;pc2.fillRect(0,0,frac*PW*dpr,PH*dpr);
+    var lg=pc2.createLinearGradient(0,0,0,PH*dpr);lg.addColorStop(0,'rgba(168,85,247,1)');lg.addColorStop(1,'rgba(34,211,238,1)');
+    pc2.fillStyle=lg;pc2.fillRect(frac*PW*dpr-1.5,0,3,PH*dpr);
+    /* spectrum */
+    var SW=sc.width/dpr,SH=sc.height/dpr,sc2=sc.getContext('2d');
+    sc2.clearRect(0,0,sc.width,sc.height);
+    if(nodes.analyser&&isPlaying){
+      nodes.analyser.getByteFrequencyData(nodes.specData);
+      var fd=nodes.specData,bins=Math.min(fd.length,70);
+      for(var bi=0;bi<bins;bi++){
+        var bv=fd[bi]/255,bh=bv*SH*.7,hu=260+bi*1.4;
+        sc2.fillStyle='hsla('+hu+',80%,65%,'+(.08+bv*.35)+')';
+        sc2.fillRect(bi*(SW/bins),SH-bh,Math.max((SW/bins)-1,1),bh);
+      }
+    }
+    if(isRecording&&micAnalyser){
+      micAnalyser.getByteTimeDomainData(micAnalyserData);
+      var rms=0;for(var i=0;i<micAnalyserData.length;i++){var v2=(micAnalyserData[i]-128)/128;rms+=v2*v2;}
+      rms=Math.sqrt(rms/micAnalyserData.length);
+      document.getElementById('mic-lvl').style.width=Math.min(100,Math.round(rms*400))+'%';
+      sc2.strokeStyle='rgba(52,211,153,.6)';sc2.lineWidth=1.5;sc2.beginPath();
+      var l2=micAnalyserData.length;
+      for(var i2=0;i2<l2;i2++){var xi=i2/l2*SW,yi=(micAnalyserData[i2]/255)*SH;if(i2===0)sc2.moveTo(xi,yi);else sc2.lineTo(xi,yi);}
+      sc2.stroke();
+    }
+  }frame();
+}
+
+/* ═══ HELPERS ═══ */
+function fmtT(s){s=Math.max(0,s);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')+'.'+Math.floor((s%1)*10);}
+function setSt(txt,cls){var el=document.getElementById('hdr-st');el.textContent=txt;el.className='hdr-st'+(cls?' '+cls:'');}
+function tickT(){var s=Math.floor((Date.now()-recStartTs)/1000),m=Math.floor(s/60);s=s%60;document.getElementById('rec-tmr').textContent=m+':'+(s<10?'0':'')+s;}
+function mapTo10(v,mn,mx){return Math.max(1,Math.min(10,Math.round(((v-mn)/(mx-mn))*9)+1));}
+var toastT;
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show');},2800);}
+
+/* ═══ EVENTS ═══ */
+document.getElementById('choose-btn').onclick=function(e){e.stopPropagation();document.getElementById('file-inp').click();};
+document.getElementById('drop-zone').onclick=function(){document.getElementById('file-inp').click();};
+var dz=document.getElementById('drop-zone');
+dz.addEventListener('dragover',function(e){e.preventDefault();});
+dz.addEventListener('drop',function(e){e.preventDefault();var f=e.dataTransfer.files[0];if(f)loadFile(f);});
+document.getElementById('file-inp').onchange=function(e){if(e.target.files[0])loadFile(e.target.files[0]);};
+
+document.getElementById('btn-play').onclick=function(){ensureCtx();if(isPlaying)pauseA();else playA();};
+document.getElementById('btn-rst').onclick=function(){var wp=isPlaying;if(isPlaying)pauseA();pausedAt=0;if(wp)playA();};
+document.getElementById('btn-rec').onclick=function(){ensureCtx();if(isRecording)stopRec();else startRec();};
+document.getElementById('btn-clr').onclick=function(){
+  vocalBuf=null;var cv=document.getElementById('cv-v');cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
+  document.getElementById('btn-save').disabled=true;document.getElementById('btn-mp3').disabled=true;
+  document.getElementById('btn-clr').style.display='none';
+  if(vSrc){try{vSrc.stop();}catch(e){}vSrc=null;}toast('Vokal kaydı silindi');
+};
+document.getElementById('btn-new').onclick=function(){
+  stopA();origBuf=null;instrBuf=null;vocalBuf=null;recPCM=[];
+  document.getElementById('file-inp').value='';
+  document.getElementById('up-err').style.display='none';
+  document.getElementById('btn-clr').style.display='none';
+  document.getElementById('btn-save').disabled=true;
+  document.getElementById('btn-mp3').disabled=true;
+  document.getElementById('app').style.display='none';
+  document.getElementById('sec-upload').style.display='flex';
+  setSt('Hazır','');
+};
+/* Noise reduction toggle */
+document.getElementById('btn-noise').onclick=function(){
+  noiseReducOn=!noiseReducOn;
+  this.classList.toggle('on',noiseReducOn);
+  this.textContent=noiseReducOn?'🟢 Temiz':'🎙 Temizle';
+  toast(noiseReducOn?'🟢 Ses temizleme aktif':'Ses temizleme kapalı');
+};
+/* Seek */
+function seekFrac(frac){var wp=isPlaying;if(isPlaying)pauseA();pausedAt=frac*dur;if(wp)playA();}
+document.getElementById('wave-box').onclick=function(e){if(!origBuf)return;var r=this.getBoundingClientRect();seekFrac((e.clientX-r.left)/r.width);};
+document.getElementById('prog-wrap').onclick=function(e){if(!origBuf)return;var r=this.getBoundingClientRect();seekFrac((e.clientX-r.left)/r.width);};
+/* Sliders */
+document.getElementById('sl-vocal').oninput=function(){
+  var v=+this.value;if(nodes.vocalGain)nodes.vocalGain.gain.value=v/100;
+  document.getElementById('sv-v').textContent=mapTo10(v,0,200);
+};
+document.getElementById('sl-music').oninput=function(){
+  var v=+this.value;if(nodes.musicGain)nodes.musicGain.gain.value=v/100;
+  document.getElementById('sv-m').textContent=mapTo10(v,0,200);
+};
+document.getElementById('sl-sync').oninput=function(){
+  var v=+this.value/100;
+  document.getElementById('sv-sync').textContent=(v>=0?'':'')+v.toFixed(3);
+  if(!nodes.vocalDelay)return;
+  if(v>=0){nodes.vocalDelay.delayTime.value=v;nodes.musicDelay.delayTime.value=0;}
+  else{nodes.vocalDelay.delayTime.value=0;nodes.musicDelay.delayTime.value=-v;}
+};
+/* Preset grid — handles AI preset too */
+document.getElementById('preset-grid').onclick=function(e){
+  var btn=e.target.closest('.prst');if(!btn||!btn.dataset.p)return;
+  var p=btn.dataset.p;
+  if(p==='ai'){generateAIPreset();return;}
+  selPreset(p);
+};
+window.addEventListener('resize',function(){
+  if(origBuf)requestAnimationFrame(function(){resizeCvs();drawMusicWave();if(vocalBuf)drawVocalWave();});
+});
+</script>
+</body>
+</html>
