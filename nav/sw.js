@@ -8,7 +8,7 @@
 //      Geri kalanı otomatik — kullanıcı banner görür, yeniler.
 // ═══════════════════════════════════════════════════
 
-const CACHE_NAME = 'saglik-muzesi-v4.0';
+const CACHE_NAME = 'saglik-muzesi-v1.2';
 
 // Önbelleğe alınacak dosyalar
 const STATIC_ASSETS = [
