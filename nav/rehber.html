@@ -6413,7 +6413,7 @@ function openHaritaPopup() {
   window._haritaSetLangHook = function() { _haritaUpdateZoneLabels(); };
 
   // Harita boyutunu yenile (display:none'dan açılırken)
-  setTimeout(() => { if (_haritaMap) _haritaMap.invalidateSize(); }, 200);
+  setTimeout(() => { if (_haritaMap) _haritaMap.invalidateSize(); }, 400);
 
   // ── Canlı konum takibini başlat ──────────────────────────────────────
   if (!navigator.geolocation) {
