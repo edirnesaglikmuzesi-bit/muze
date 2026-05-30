@@ -1,14 +1,14 @@
 // ═══════════════════════════════════════════════════
 //  Sultan II. Bayezid Külliyesi Sağlık Müzesi
 //  Service Worker — PWA Offline Desteği
-//  Versiyon: 1.2.0
+//  Versiyon: 4.0.0
 //
 //  ⚠️  GÜNCELLEME YAPTIĞINIZDA SADECE ŞU SATIRI DEĞİŞTİRİN:
 //      CACHE_NAME sayısını bir artırın → v3, v4, v5 ...
 //      Geri kalanı otomatik — kullanıcı banner görür, yeniler.
 // ═══════════════════════════════════════════════════
 
-const CACHE_NAME = 'saglik-muzesi-v1.1';
+const CACHE_NAME = 'saglik-muzesi-v4.0';
 
 // Önbelleğe alınacak dosyalar
 const STATIC_ASSETS = [
