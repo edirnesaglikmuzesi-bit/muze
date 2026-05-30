@@ -155,7 +155,10 @@ html,body{
 
 .intro-img-wrap{
   position:relative;z-index:3;
-  width:min(264px,66vw);height:min(264px,66vw);
+  width:min(264px,66vw);
+  height:min(264px,66vw);
+  aspect-ratio:1/1;
+  flex-shrink:0;
   border-radius:50%;
   overflow:hidden;
   border:2px solid var(--gold3);
@@ -209,11 +212,8 @@ html,body{
 /* başlık altı altın ayraç */
 .intro-title::after{
   content:'';display:block;
-  width:128px;height:18px;margin:14px auto 0;
-  background:
-    radial-gradient(circle at center,var(--gold3) 0 2.6px,transparent 3px) center/16px 16px repeat-x,
-    linear-gradient(90deg,transparent,rgba(184,137,58,0.7) 22%,rgba(184,137,58,0.7) 78%,transparent);
-  background-position:center;
+  width:128px;height:2px;margin:14px auto 0;
+  background:linear-gradient(90deg,transparent,rgba(184,137,58,0.7) 22%,rgba(184,137,58,0.7) 78%,transparent);
   -webkit-mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
           mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
 }
@@ -229,14 +229,14 @@ html,body{
 .btn-start{
   position:relative;z-index:3;
   font-family:var(--font-head);
-  font-size:14px;letter-spacing:0.20em;font-weight:700;
+  font-size:12px;letter-spacing:0.20em;font-weight:700;
   color:#2a1707;
   background:
     linear-gradient(180deg,rgba(255,255,255,0.32),transparent 42%),
     linear-gradient(135deg,#e3bd5e,#b8893a 52%,#8a5e22);
   border:1px solid rgba(255,233,160,0.65);
   border-radius:44px;
-  padding:17px 44px;cursor:pointer;
+  padding:11px 40px;cursor:pointer;
   text-transform:uppercase;
   box-shadow:
     0 0 0 1px rgba(20,11,3,0.6),
@@ -276,7 +276,7 @@ html,body{
   color:rgba(236,202,122,0.82);
   border:1px solid rgba(184,137,58,0.42);
   border-radius:44px;
-  padding:13px 34px;cursor:pointer;margin-top:16px;
+  padding:10px 30px;cursor:pointer;margin-top:16px;
   text-transform:uppercase;
   transition:all 0.3s ease;
 }
@@ -621,7 +621,7 @@ html,body{
    MENU OVERLAY — Kapı / Yan Panel
 ────────────────────────────────────────────── */
 #menu-overlay{
-  position:fixed;inset:0;z-index:500;
+  position:fixed;inset:0;z-index:1300;
   background:rgba(8,4,1,0.72);
   backdrop-filter:blur(3px);
   display:none;
@@ -629,7 +629,7 @@ html,body{
 #menu-overlay.open{display:block;}
 
 #menu-panel{
-  position:fixed;top:0;left:0;bottom:0;z-index:501;
+  position:fixed;top:0;left:0;bottom:0;z-index:1301;
   width:min(310px,86vw);
   background:
     radial-gradient(ellipse 80% 30% at 50% 0%,rgba(255,228,150,0.08),transparent 70%),
@@ -648,7 +648,7 @@ html,body{
 }
 
 .menu-header{
-  padding:24px 20px 16px;
+  padding:24px 52px 16px 20px;
   border-bottom:1px solid rgba(184,137,58,0.26);
   font-family:var(--font-head);
   position:relative;
@@ -663,10 +663,13 @@ html,body{
   text-shadow:0 1px 8px rgba(210,168,71,0.35);
 }
 .menu-close{
-  float:right;background:transparent;border:none;
-  color:var(--gold3);font-size:24px;cursor:pointer;margin-top:-3px;
-  width:32px;height:32px;border-radius:8px;
+  position:absolute;top:16px;right:16px;z-index:10;
+  background:transparent;border:none;
+  color:var(--gold3);font-size:24px;cursor:pointer;
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
   transition:background 0.2s;
+  -webkit-tap-highlight-color:transparent;
 }
 .menu-close:active{background:rgba(184,137,58,0.15);}
 
@@ -1055,6 +1058,144 @@ html,body{
 .embed-iframe{flex:1;border:none;width:100%;}
 
 /* ──────────────────────────────────────────────
+   HAKKINDA EKRANI
+────────────────────────────────────────────── */
+#screen-about{background:var(--wall2);}
+#screen-about.active{flex-direction:column;}
+.about-scroll{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:30px 22px 60px;
+  background:
+    radial-gradient(ellipse 120% 40% at 50% 0%,rgba(255,228,150,0.07),transparent 60%),
+    linear-gradient(180deg,var(--wall1),var(--wall2) 30%,var(--wall3));
+}
+.about-hero{text-align:center;margin-bottom:26px;}
+.about-hero-emblem{
+  font-size:30px;color:var(--gold3);
+  text-shadow:0 0 22px rgba(236,202,122,0.4);
+  margin-bottom:14px;
+}
+.about-hero-title{
+  font-family:var(--font-deco);
+  font-size:21px;line-height:1.4;color:var(--gold-pale);
+  letter-spacing:0.04em;margin:0 0 10px;font-weight:700;
+  text-shadow:0 2px 14px rgba(0,0,0,0.5);
+}
+.about-hero-sub{
+  font-family:var(--font-head);
+  font-size:12.5px;color:var(--stone);
+  letter-spacing:0.22em;text-transform:uppercase;
+}
+.about-card{
+  background:
+    radial-gradient(ellipse 90% 22% at 50% 0%,rgba(255,228,150,0.05),transparent 70%),
+    linear-gradient(160deg,rgba(42,26,10,0.85),rgba(27,16,6,0.92));
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:24px 22px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,228,150,0.05);
+  margin-bottom:30px;
+}
+.about-card p{
+  font-size:14px;line-height:1.95;
+  color:rgba(246,230,171,0.84);
+  margin:0 0 15px;text-align:justify;
+}
+.about-card p:last-child{margin-bottom:0;}
+.about-card strong{color:var(--gold3);font-weight:600;}
+.about-lead{
+  font-family:var(--font-head);
+  font-size:15px !important;
+  color:var(--gold3) !important;
+  letter-spacing:0.02em;line-height:1.7 !important;
+  text-align:center !important;
+  padding-bottom:6px;
+}
+.about-closing{
+  color:var(--gold-pale) !important;
+  font-style:italic;
+  border-top:1px solid var(--border);
+  padding-top:16px;margin-top:4px;
+  text-align:center !important;
+}
+.about-credits-head{
+  text-align:center;
+}
+.about-credits-head span{
+  font-family:var(--font-deco);
+  font-size:14px;color:var(--gold3);
+  letter-spacing:0.20em;
+}
+.about-credit-card{
+  background:linear-gradient(160deg,rgba(42,26,10,0.7),rgba(27,16,6,0.85));
+  border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  border-radius:14px;
+  padding:18px 20px;
+  margin-bottom:16px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
+}
+.about-credit-role{
+  font-family:var(--font-head);
+  font-size:10px;color:var(--stone);
+  letter-spacing:0.16em;margin-bottom:8px;
+}
+.about-credit-name{
+  font-family:var(--font-deco);
+  font-size:19px;color:var(--gold-pale);
+  letter-spacing:0.03em;margin-bottom:3px;font-weight:700;
+}
+.about-credit-title{
+  font-family:var(--font-head);
+  font-size:11.5px;color:var(--gold3);
+  letter-spacing:0.10em;margin-bottom:11px;
+}
+.about-credit-desc{
+  font-size:13px;line-height:1.75;
+  color:rgba(246,230,171,0.78);
+}
+.about-credit-mail{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:14px;
+  background:rgba(184,137,58,0.10);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:9px 15px;
+  font-family:var(--font-head);
+  font-size:12px;color:var(--gold3);
+  letter-spacing:0.04em;text-decoration:none;
+  transition:background 0.2s,border-color 0.2s;
+}
+.about-credit-mail:active{background:rgba(184,137,58,0.22);}
+.about-footer-emblem{
+  text-align:center;
+  font-size:18px;color:rgba(196,154,60,0.4);
+  margin-top:28px;
+}
+.about-topbar{justify-content:center;}
+.about-topbar .embed-title{font-size:14px;letter-spacing:0.12em;}
+.about-close-btn{
+  display:block;width:100%;margin-top:34px;
+  padding:15px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,0.28),transparent 42%),
+    linear-gradient(135deg,#d2a847,#b8893a 55%,#8a5e22);
+  color:#2a1707;
+  border:1px solid rgba(255,233,160,0.55);
+  border-radius:12px;
+  font-family:var(--font-head);
+  font-size:13px;font-weight:700;letter-spacing:0.14em;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.4);
+  text-shadow:0 1px 0 rgba(255,240,200,0.4);
+}
+.about-close-btn:active{transform:scale(0.98);}
+@media(max-width:380px){
+  .about-hero-title{font-size:18px;}
+  .about-card p{font-size:13.5px;}
+}
+
+/* ──────────────────────────────────────────────
    UTILITY — Ornament Ayraç
 ────────────────────────────────────────────── */
 .ornament-line{
@@ -1254,7 +1395,15 @@ html,body{
   color:rgba(246,230,171,0.94);
   border-radius:15px 15px 15px 5px;
   box-shadow:0 3px 12px rgba(0,0,0,0.3);
+  text-align:justify;
+  text-justify:inter-word;
+  hyphens:auto;
+  -webkit-hyphens:auto;
 }
+/* Cevap içindeki paragraf araları */
+.chat-msg.bot .chat-bubble br + br{line-height:2.2;}
+.chat-msg.bot .chat-bubble p{margin:0 0 10px;}
+.chat-msg.bot .chat-bubble p:last-child{margin-bottom:0;}
 .chat-msg.user .chat-bubble{
   background:linear-gradient(135deg,rgba(138,42,16,0.78),rgba(78,20,4,0.7));
   border:1px solid rgba(200,90,60,0.4);
@@ -1672,7 +1821,7 @@ html,body{
     width: 260px;
     line-height: 1.5;
   ">📲 TAM EKRAN DENEYİMİ İÇİN<br>REHBERİ ANA EKRANA EKLE</button>
-  <div id="app-version-badge" style="font-family:'Lora',serif;font-size:11px;color:rgba(196,154,60,0.45);margin-top:8px;letter-spacing:0.5px;text-align:center;width:260px;">Versiyon: 1.1</div>
+  <div id="app-version-badge" style="font-family:'Lora',serif;font-size:11px;color:rgba(196,154,60,0.45);margin-top:8px;letter-spacing:0.5px;text-align:center;width:260px;">Versiyon: 4.0</div>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -2293,6 +2442,60 @@ html,body{
   <iframe class="embed-iframe" id="defter-iframe" src="" height="100%" title="Ziyaretçi Defteri"></iframe>
 </div>
 
+<!-- ══ HAKKINDA EKRANI ══ -->
+<div id="screen-about" class="screen">
+  <div class="embed-topbar about-topbar">
+    <div class="embed-title">◈ HAKKINDA</div>
+  </div>
+  <div class="about-scroll">
+
+    <!-- Başlık bloğu -->
+    <div class="about-hero">
+      <div class="about-hero-emblem">◈</div>
+      <h1 class="about-hero-title">Sultan II. Bayezid Külliyesi<br>Sağlık Müzesi</h1>
+      <div class="about-hero-sub">İnteraktif Rehber Uygulaması</div>
+      <div class="ornament-line"><span>◈</span></div>
+    </div>
+
+    <!-- Anlatı bloğu -->
+    <div class="about-card">
+      <p class="about-lead">Bu interaktif rehber uygulaması, Edirne'nin tarihî mirasına duyulan içten bir bağlılığın ürünü olarak hazırlanmıştır.</p>
+
+      <p>Uzun yıllar Edirne'de yaşamış biri olarak, bu şehrin tarihî dokusu ve kendine özgü kimliği benim için her zaman ayrı bir değer taşımıştır. T.C. Trakya Üniversitesi Sultan II. Bayezid Külliyesi Sağlık Müzesi ise, kültürel mirasımızın en kıymetli halkalarından biri olarak gönlümde özel bir yer tutmaktadır. Yüzyıllar boyunca şifa veren bu mekânın hikâyesini, bugünün ziyaretçilerine modern bir anlatımla ulaştırmak, bu çalışmanın temel amacı olmuştur.</p>
+
+      <p>Projenin doğuşu, Müze Müdürümüz Sayın <strong>Enver Şengül</strong> ile geçmiş yıllara dayanan tanışıklığımıza uzanır. Bir sohbetimiz sırasında ortaya çıkan bu fikir; kendisinin derin tarihî birikimi, sağladığı materyal desteği ve değerli yönlendirmeleri ile bilgisayar alanındaki deneyimimin ve araştırmacı bakış açımın bir araya gelmesiyle hayat buldu.</p>
+
+      <p>Çalışma, aşamalı bir yolculuğun ürünüdür. Önce müzeyi tanıtan bir web sayfası hazırlandı; ardından ziyaretçilerin müzeyi adım adım keşfedebileceği bu interaktif rehber uygulaması geliştirildi. Uygulama; sesli anlatım, konum algılama ve yapay zekâ destekli rehberlik gibi özelliklerle ziyaretçinin müze içindeki deneyimini zenginleştirmek üzere tasarlanmıştır.</p>
+
+      <p class="about-closing">Bu eserin, Sultan II. Bayezid Külliyesi Sağlık Müzesi'ni ziyaret eden herkese hem bilgi hem de unutulmaz bir keşif duygusu kazandırmasını dileriz.</p>
+    </div>
+
+    <!-- Emeği geçenler -->
+    <div class="about-credits-head">
+      <span>EMEĞİ GEÇENLER</span>
+    </div>
+    <div class="ornament-line"><span>✦</span></div>
+
+    <div class="about-credit-card">
+      <div class="about-credit-role">PROJE DANIŞMANLIĞI &amp; TARİHÎ KATKI</div>
+      <div class="about-credit-name">Enver Şengül</div>
+      <div class="about-credit-title">Müze Müdürü</div>
+      <div class="about-credit-desc">Tarihî bilgi birikimi, materyal desteği ve yönlendirmeleriyle bu çalışmanın her aşamasına değer katmıştır.</div>
+    </div>
+
+    <div class="about-credit-card">
+      <div class="about-credit-role">TASARIM &amp; GELİŞTİRME</div>
+      <div class="about-credit-name">İbrahim Kahraman</div>
+      <div class="about-credit-title">Araştırma · Tasarım · Geliştirme</div>
+      <div class="about-credit-desc">Web sayfası ve interaktif rehber uygulamasının araştırması, tasarımı ve geliştirilmesi.</div>
+      <a class="about-credit-mail" href="mailto:ibmkahraman@hotmail.com">✉ ibmkahraman@hotmail.com</a>
+    </div>
+
+    <button class="about-close-btn" onclick="closeAbout()">KAPAT</button>
+    <div class="about-footer-emblem">◈</div>
+  </div>
+</div>
+
 <!-- ══ MENU OVERLAY ══ -->
 <div id="menu-overlay" onclick="closeMenu()">
   <div id="menu-panel" onclick="event.stopPropagation()">
@@ -2329,6 +2532,7 @@ html,body{
       </div>
       <span style="font-size:10px;background:var(--gold);color:var(--ink);border-radius:4px;padding:2px 6px;font-family:var(--font-head);letter-spacing:0.05em;flex-shrink:0;">YENİ</span>
     </div>
+    <div class="menu-item" onclick="closeMenu(true);openAbout()"><span class="mi-icon">◈</span><span class="mi-name">Hakkında</span></div>
     <div style="height:1px;background:rgba(196,154,60,0.15);margin:8px 0;"></div>
     <div class="menu-item" onclick="exitApp()" style="background:linear-gradient(90deg,rgba(180,30,30,0.10),transparent);border-left:3px solid #c0392b;">
       <span class="mi-icon" style="color:#e74c3c;">✕</span><span class="mi-name" id="menu-exit-label" style="color:#e74c3c;">Çıkış</span>
@@ -2476,13 +2680,13 @@ html,body{
   flex-shrink: 0;
 }
 
-/* Konu grup butonları — bronz rozet */
+/* Konu grup butonları — iki sütun ızgara, iki yana yasla */
 .evliya-topic-groups {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 4px 0 2px;
-  max-height: 220px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  padding: 4px 2px 2px;
+  max-height: 360px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -2490,31 +2694,69 @@ html,body{
 .evliya-topic-groups::-webkit-scrollbar { width: 4px; }
 .evliya-topic-groups::-webkit-scrollbar-thumb { background: rgba(184,137,58,0.4); border-radius:2px; }
 
+/* Başlık satırı — tüm sütunları kaplasın */
+.evliya-topic-heading {
+  grid-column: 1 / -1;
+  font-size: 10px;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(210,168,71,0.65);
+  text-align: center;
+  padding: 2px 0 3px;
+  border-bottom: 1px solid rgba(184,137,58,0.22);
+  margin-bottom: 1px;
+}
+
 .evliya-group-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: linear-gradient(135deg, rgba(184,137,58,0.16), rgba(184,137,58,0.07));
-  border: 1px solid rgba(184,137,58,0.40);
-  border-radius: 22px;
+  justify-content: flex-start;
+  gap: 7px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, rgba(184,137,58,0.14) 0%, rgba(20,11,3,0.55) 100%);
+  border: 1px solid rgba(184,137,58,0.38);
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   font-family: 'Cinzel', serif;
   color: #ecca7a;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   transition: all 0.18s ease;
-  white-space: nowrap;
+  overflow: hidden;
+  min-height: 44px;
+  position: relative;
+}
+.evliya-group-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
 }
 .evliya-group-btn:hover, .evliya-group-btn:active {
-  background: linear-gradient(135deg, rgba(184,137,58,0.32), rgba(184,137,58,0.16));
-  border-color: rgba(236,202,122,0.65);
+  background: linear-gradient(135deg, rgba(184,137,58,0.30) 0%, rgba(30,16,4,0.70) 100%);
+  border-color: rgba(236,202,122,0.60);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.4), 0 0 12px rgba(210,168,71,0.20);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.45), 0 0 10px rgba(210,168,71,0.18);
+  color: #f6e6ab;
 }
-.evliya-group-btn .eg-icon { font-size: 15px; }
-.evliya-group-btn .eg-label { font-family: inherit; }
+.evliya-group-btn .eg-icon {
+  font-size: 17px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.evliya-group-btn .eg-label {
+  font-family: inherit;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+  white-space: normal;
+  word-break: break-word;
+}
 
 /* Alt soru listesi */
 .evliya-sub-questions {
@@ -2565,21 +2807,34 @@ html,body{
 .evliya-back-bar {
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-top: 10px;
   margin-bottom: 8px;
 }
 .evliya-back-btn {
-  background: none;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
   font-size: 12px;
   font-family: 'Cinzel', serif;
-  color: rgba(236,202,122,0.85);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 3px 6px 3px 0;
-  transition: color 0.15s;
+  font-weight: 700;
+  color: #ecca7a;
+  letter-spacing: 0.06em;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, rgba(184,137,58,0.16) 0%, rgba(20,11,3,0.55) 100%);
+  border: 1px solid rgba(184,137,58,0.45);
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: all 0.18s ease;
 }
-.evliya-back-btn:hover { color: #f6e6ab; }
+.evliya-back-btn:hover, .evliya-back-btn:active {
+  color: #f6e6ab;
+  background: linear-gradient(135deg, rgba(184,137,58,0.30) 0%, rgba(30,16,4,0.70) 100%);
+  border-color: rgba(236,202,122,0.65);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(0,0,0,0.45), 0 0 10px rgba(210,168,71,0.18);
+}
 </style>
 
 <!-- ══ LOC TOAST ══ -->
@@ -3038,6 +3293,22 @@ function showScreen(name){
 }
 
 /* ════════════════════════════════════════════
+   HAKKINDA EKRANI
+════════════════════════════════════════════ */
+let _aboutReturn='tour';
+function openAbout(){
+  const cur=document.querySelector('.screen.active');
+  _aboutReturn=cur?cur.id.replace('screen-',''):'tour';
+  if(_aboutReturn==='about')_aboutReturn='tour';
+  showScreen('about');
+  const sc=document.querySelector('.about-scroll');
+  if(sc)sc.scrollTop=0;
+}
+function closeAbout(){
+  showScreen(_aboutReturn||'tour');
+}
+
+/* ════════════════════════════════════════════
    FAB SEKANS YÖNETİCİSİ
    7sn → etiket+FAB görünür (gif gizli)
    9sn → gif görünür
@@ -3045,6 +3316,20 @@ function showScreen(name){
    15sn → gif+balon kaybolur, sadece etiket kalır
    Yeni turda sıfırlanır
 ════════════════════════════════════════════ */
+/* Evliya sohbet paneli açık mı? */
+function isEvliyaChatPanelOpen(){
+  const p=document.getElementById('evliya-chat-panel');
+  return !!(p&&p.classList.contains('open'));
+}
+/* Menü açık mı? */
+function isMenuOpen(){
+  const m=document.getElementById('menu-overlay');
+  return !!(m&&m.classList.contains('open'));
+}
+/* Sohbet paneli VEYA menü açıksa hiçbir FAB balonu gösterilmemeli. */
+function isEvliyaChatOpen(){
+  return isEvliyaChatPanelOpen()||isMenuOpen();
+}
 function resetFabSequence(){
   ['_fabT1','_fabT2','_fabT3','_fabT4','_fabT5',
    '_fabStopT1','_fabStopT2','_fabStopT3','_fabStopT4'].forEach(k=>{clearTimeout(window[k]);window[k]=null;});
@@ -3071,7 +3356,7 @@ function startFabSequence(){
     requestAnimationFrame(()=>requestAnimationFrame(()=>{fab.style.opacity='1';}));
   },7000);
 
-  // T+9sn: Evliya gif dairesi yumuşakça belirir
+  // T+13sn: Evliya gif dairesi yumuşakça belirir
   window._fabT2=setTimeout(()=>{
     const fabCircle=document.getElementById('evliya-fab');
     if(fabCircle){
@@ -3084,6 +3369,7 @@ function startFabSequence(){
 
   // T+12sn: konuşma balonu çıkar
   window._fabT3=setTimeout(()=>{
+    if(isEvliyaChatOpen())return;
     const bubble=document.getElementById('fab-info-bubble');
     if(bubble){
       const L=INTRO_FAB_BUBBLES[currentLang]||INTRO_FAB_BUBBLES['tr'];
@@ -3117,6 +3403,8 @@ function showStopFabHint(n){
   const bubble=document.getElementById('fab-info-bubble');
   // FAB henüz görünür değilse çıkma
   if(!fab||fab.style.display==='none'||fab.style.opacity==='0')return;
+  // Sohbet paneli açıksa balon gösterme
+  if(isEvliyaChatOpen())return;
   // Dura ait ipucu metnini seç
   const hints=(typeof FAB_STOP_HINTS_I18N!=='undefined'&&FAB_STOP_HINTS_I18N[currentLang])||
               (typeof FAB_STOP_HINTS!=='undefined'&&FAB_STOP_HINTS)||null;
@@ -3135,6 +3423,7 @@ function showStopFabHint(n){
   },1200);
   // 3sn sonra balon çıkar
   window._fabStopT2=setTimeout(()=>{
+    if(isEvliyaChatOpen())return;
     if(bubble){bubble.textContent=hint;bubble.classList.add('show');}
   },3000);
   // 10sn sonra balon kaybolur
@@ -3285,6 +3574,8 @@ function showFabHint(n){
   const bubble=document.getElementById('fab-info-bubble');
   if(!bubble)return;
   bubble.classList.remove('show');
+  // Sohbet paneli açıksa balon gösterme
+  if(isEvliyaChatOpen())return;
   // Mevcut dile göre ipucu seç, yoksa Türkçe'ye dön
   const hints=(FAB_STOP_HINTS_I18N[currentLang])||FAB_STOP_HINTS;
   const hint=hints[n]||FAB_STOP_HINTS[n];
@@ -3292,6 +3583,7 @@ function showFabHint(n){
   bubble.textContent=hint;
   // Kısa gecikmeyle göster (sayfa geçiş animasyonu bitmesini bekle)
   fabBubbleTimer=setTimeout(()=>{
+    if(isEvliyaChatOpen())return;
     bubble.classList.add('show');
     fabBubbleTimer=setTimeout(()=>bubble.classList.remove('show'),5000);
   },600);
@@ -3356,6 +3648,16 @@ function openMenu() {
     const fab=document.getElementById('evliya-fab-wrap');
     if(fab)fab.style.display='none';
 
+    // Evliya konuşma balonu kapat + bekleyen FAB sekans zamanlayıcılarını iptal et
+    const bubble=document.getElementById('fab-info-bubble');
+    if(bubble){bubble.classList.remove('show');}
+    if(typeof resetFabSequence==='function'){resetFabSequence();}
+    if(typeof fabBubbleTimer!=='undefined')clearTimeout(fabBubbleTimer);
+
+    // Evliya chat panel kapat
+    const chatPanel=document.getElementById('evliya-chat-panel');
+    if(chatPanel){chatPanel.classList.remove('open');}
+
     const stopAudio = document.getElementById('stop-audio');
     const introAudio = document.getElementById('intro-audio');
     [stopAudio, introAudio].forEach(audio => {
@@ -3383,6 +3685,9 @@ function closeMenu(keepAudioMuted) {
         // _fabT2===null ise zaten display:'flex' ayarlı, dokunma
       }
     }
+    // Menü kapanınca konuşma balonu ASLA yeniden çıkmasın
+    const _bubble=document.getElementById('fab-info-bubble');
+    if(_bubble)_bubble.classList.remove('show');
 
     if(keepAudioMuted)return;
 
@@ -7434,9 +7739,17 @@ function openEvliyaChat(){
   }
   evliyaRenderGroups();
   evliyaBackToGroups();
-  // FAB balonu gizle
+  // FAB balonu gizle + bekleyen tüm balon zamanlayıcılarını iptal et
   const bubble=document.getElementById('fab-info-bubble');
   if(bubble)bubble.classList.remove('show');
+  ['_fabT3','_fabT4','_fabStopT2','_fabStopT3'].forEach(k=>{if(window[k]){clearTimeout(window[k]);window[k]=null;}});
+  if(typeof fabBubbleTimer!=='undefined')clearTimeout(fabBubbleTimer);
+  // KVKK banner'ı sohbet panelinin üstüne binmesin — geçici gizle
+  const kvkkBanner=document.getElementById('kvkk-banner');
+  if(kvkkBanner&&kvkkBanner.classList.contains('show')){
+    kvkkBanner._wasShownBeforeChat=true;
+    kvkkBanner.classList.remove('show');
+  }
 }
 
 function closeEvliyaChat(){
@@ -7448,16 +7761,51 @@ function closeEvliyaChat(){
   const stopAudio=document.getElementById('stop-audio');const introAudio=document.getElementById('intro-audio');
   if(stopAudio&&stopAudio._wasPlaying){stopAudio.play().catch(()=>{});stopAudio._wasPlaying=false;}
   if(introAudio&&introAudio._wasPlaying){introAudio.play().catch(()=>{});introAudio._wasPlaying=false;}
+  // Sohbet açılırken gizlenen KVKK banner'ını geri getir (henüz kabul edilmediyse)
+  const kvkkBanner=document.getElementById('kvkk-banner');
+  if(kvkkBanner&&kvkkBanner._wasShownBeforeChat){
+    kvkkBanner._wasShownBeforeChat=false;
+    if(!sessionStorage.getItem('kvkk-accepted')){
+      kvkkBanner.classList.add('show');
+    }
+  }
 }
 
 function evliyaQuick(text){document.getElementById('evliya-chat-input').value=text;sendEvliyaMsg();}
+
+/* Bot cevabını okunaklı paragraflara böl: önce satır sonlarına saygı,
+   yoksa metni ~3 cümlede bir paragrafa ayır. */
+function _escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function _formatEvliyaAnswer(text){
+  const safe=_escapeHtml(text);
+  // Zaten satır sonu varsa, onları paragraf olarak kullan
+  if(/\n/.test(safe)){
+    return safe.split(/\n{2,}|\n/).map(p=>p.trim()).filter(Boolean)
+      .map(p=>`<p>${p}</p>`).join('');
+  }
+  // Cümlelere ayır (. ! ? : ve tırnak/parantez sonrası), kısaltma noktalarını kır
+  const sentences=safe.match(/[^.!?:]+[.!?:]+["”»)\]]?\s*|[^.!?:]+$/g)||[safe];
+  const paras=[]; let buf=[];
+  sentences.forEach(s=>{
+    buf.push(s.trim());
+    // Her 3 cümlede bir paragraf kapat
+    if(buf.length>=3){paras.push(buf.join(' '));buf=[];}
+  });
+  if(buf.length)paras.push(buf.join(' '));
+  // Tek paragraf kaldıysa olduğu gibi göster
+  if(paras.length<=1)return `<p>${safe}</p>`;
+  return paras.map(p=>`<p>${p}</p>`).join('');
+}
 
 function addEvliyaMsg(role,text){
   const container=document.getElementById('evliya-chat-messages');
   const isBot=role==='bot';
   const div=document.createElement('div');div.className='chat-msg '+(isBot?'bot':'user');
   const avatarEl=isBot?`<div class="chat-msg-avatar"><img src="assets/img/evliya.gif" alt="Evliya" onerror="this.style.display='none';this.parentElement.textContent='🎭'"></div>`:`<div class="chat-msg-avatar" style="background:linear-gradient(135deg,#6b1500,#a02010);">👤</div>`;
-  div.innerHTML=avatarEl+`<div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  const body=isBot?_formatEvliyaAnswer(text):_escapeHtml(text).replace(/\n/g,'<br>');
+  div.innerHTML=avatarEl+`<div class="chat-bubble">${body}</div>`;
   container.appendChild(div);container.scrollTop=container.scrollHeight;return div;
 }
 
@@ -8410,16 +8758,25 @@ const EVLIYA_CHAT_NAME = {
 };
 
 /* ── Konu gruplarını çiz ── */
+const EVLIYA_GROUP_HEADING = {
+  tr:'Konu Seçin', en:'Choose a Topic', de:'Thema wählen', fr:'Choisir un sujet',
+  it:'Scegli argomento', es:'Elige un tema', ru:'Выберите тему', ar:'اختر موضوعاً',
+  bg:'Изберете тема', el:'Επιλέξτε θέμα', zh:'选择主题', ro:'Alegeți subiect', ja:'テーマを選ぶ'
+};
 function evliyaRenderGroups(){
   const el = document.getElementById('evliya-topic-groups');
   if(!el) return;
   const sorular = getEvliyaSorular();
-  el.innerHTML = sorular.map(g =>
-    `<button class="evliya-group-btn" onclick="evliyaOpenGroup('${g.id}')">
-      <span class="eg-icon">${g.icon}</span>
-      <span class="eg-label">${g.baslik.replace(/^.+?\s/,'')}</span>
-    </button>`
-  ).join('');
+  const L = (typeof currentLang !== 'undefined' ? currentLang : 'tr');
+  const heading = EVLIYA_GROUP_HEADING[L] || EVLIYA_GROUP_HEADING['tr'];
+  el.innerHTML =
+    `<div class="evliya-topic-heading">${heading}</div>` +
+    sorular.map(g =>
+      `<button class="evliya-group-btn" onclick="evliyaOpenGroup('${g.id}')">
+        <span class="eg-icon">${g.icon}</span>
+        <span class="eg-label">${g.baslik.replace(/^.+?\s/,'')}</span>
+      </button>`
+    ).join('');
 }
 
 /* ── Bir grubun sorularını göster ── */
@@ -8439,7 +8796,7 @@ function evliyaOpenGroup(groupId){
 
 /* ── Geri dön ── */
 function evliyaBackToGroups(){
-  document.getElementById('evliya-topic-groups').style.display = 'flex';
+  document.getElementById('evliya-topic-groups').style.display = 'grid';
   document.getElementById('evliya-back-bar').style.display = 'none';
   document.getElementById('evliya-sub-questions').style.display = 'none';
   const L = (typeof currentLang !== 'undefined' ? currentLang : 'tr');
