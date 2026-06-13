@@ -1,0 +1,100 @@
+rules_version = '2';
+
+// ═══════════════════════════════════════════════════════════════
+//  Sultan II. Bayezid Külliyesi Sağlık Müzesi — Firestore Kuralları
+//
+//  KULLANIM:
+//   1. Firebase Console → Firestore Database → Rules sekmesi
+//   2. Aşağıdaki tüm metni yapıştırın
+//   3. "Yayınla / Publish" butonuna basın
+//
+//  MANTIK:
+//   - Ziyaretçi (rehber.html / ziyaretci-defteri.html) anonim olarak
+//     veri YAZAR. Auth yok, bu yüzden yazma açık ama BİÇİM doğrulanır.
+//   - Panel (panel.html) veriyi OKUR. Panelde gerçek auth olmadığından
+//     okuma da açıktır; gerçek koruma için aşağıdaki "SIKI MOD" notuna bakın.
+//   - SİLME yalnızca canlı konum kaydı için açıktır (ziyaretçi turu
+//     bitirince kendi konumunu siler). Diğer her şeyde silme KAPALI.
+// ═══════════════════════════════════════════════════════════════
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Yardımcı: gelen veri makul boyutta mı? (spam/abuse freni) ──
+    function smallString(v) {
+      return v is string && v.size() <= 2000;
+    }
+
+    // ── 1. ZİYARETÇİ OTURUMLARI ──
+    // rehber.html: createSession (set), updateSessionField (update),
+    //              finalizeSession (update). Silme yok.
+    match /visitor_sessions/{sessionId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+
+    // ── 2. CANLI KONUM ──
+    // rehber.html: upsert (set merge), refresh (update), remove (delete).
+    // Ziyaretçi kendi oturum kaydını silebilmeli (tur bitince temizlik).
+    match /visitor_locations/{sessionId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // ── 3. BÖLGE ZİYARETLERİ (transaction: read+write) ──
+    // rehber.html: recordZoneVisit — toplam ziyaret / ort. süre artırır.
+    match /zone_visits/{zoneId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+
+    // ── 4. BUTON TIKLAMALARI (transaction: read+write) ──
+    // rehber.html: trackButtonClick — count artırır.
+    match /button_clicks/{docId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+
+    // ── 5. GÖNÜL DEFTERİ / MESAJLAR ──
+    // rehber.html + ziyaretci-defteri.html: add. Okuma herkese açık.
+    // Yazarken alan boyutları sınırlanır; silme/düzenleme KAPALI
+    // (yorumlar değiştirilemez — yalnızca panelden Firebase Console ile yönetilir).
+    match /messages/{msgId} {
+      allow read: if true;
+      allow create: if smallString(request.resource.data.text)
+                    && (!('user' in request.resource.data) || smallString(request.resource.data.user))
+                    && (!('city' in request.resource.data) || smallString(request.resource.data.city));
+      allow update, delete: if false;
+    }
+
+    // ── Diğer her şey kapalı ──
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ⚠️  SIKI MOD (önerilir — panel verisini gizlemek için)
+//
+//  Yukarıdaki kurallarda OKUMA herkese açık çünkü panel.html'de
+//  gerçek kimlik doğrulama yok (sadece tarayıcı tarafı şifre).
+//  İstatistiklerin dışarıya kapalı olmasını istiyorsanız:
+//
+//   1. Firebase Console → Authentication → Sign-in method →
+//      "Anonymous" VEYA "Email/Password" yöntemini açın.
+//   2. panel.html'e Firebase Auth ile giriş ekleyin (örn. admin e-postası).
+//   3. Bu dosyadaki tüm "allow read: if true;" satırlarını şununla değiştirin:
+//
+//          allow read: if request.auth != null;
+//
+//   4. Ziyaretçi YAZMA satırları "if true" kalabilir (anonim yazma),
+//      ya da ziyaretçilere de anonim auth verip "if request.auth != null"
+//      yaparak tamamen kilitleyebilirsiniz.
+//
+//  Bu değişiklik panel okumasını yalnızca giriş yapmış admin'e açar;
+//  ziyaretçi yazması etkilenmez.
+// ═══════════════════════════════════════════════════════════════
