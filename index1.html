@@ -2464,16 +2464,19 @@ __spaReady(function () {
         {
             id:  'list-duyurular',
             page: 'duyurular',
+            textCol: 'DUYURU METNİ',
             url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSK4ZrgBAtrvd2_p-mBl1X7glrAZ6Aktr2WYD5aZca-6JMPD-4HlltJzu5TUiQ1dPDPGVWjVsvFb4XK/pub?gid=0&single=true&output=csv'
         },
         {
             id:  'list-haberler',
             page: 'haberler',
+            textCol: 'HABER METNİ',
             url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSK4ZrgBAtrvd2_p-mBl1X7glrAZ6Aktr2WYD5aZca-6JMPD-4HlltJzu5TUiQ1dPDPGVWjVsvFb4XK/pub?gid=257303850&single=true&output=csv'
         },
         {
             id:  'list-basinda',
             page: 'basin',
+            textCol: 'BAŞLIK',
             url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSK4ZrgBAtrvd2_p-mBl1X7glrAZ6Aktr2WYD5aZca-6JMPD-4HlltJzu5TUiQ1dPDPGVWjVsvFb4XK/pub?gid=1094339763&single=true&output=csv'
         }
     ];
@@ -2493,10 +2496,16 @@ __spaReady(function () {
             var p1 = +dmy[1], p2 = +dmy[2], yr = +dmy[3];
             if (p1 > 12) { d = p1; mo = p2; }
             else if (p2 > 12) { mo = p1; d = p2; }
-            else { d = p1; mo = p2; }
+            else { d = p1; mo = p2; } // GG.AA.YYYY varsayımı
             y = yr;
         } else {
-            return false;
+            // Fallback: JS Date doğrudan parse etsin (örn. "June 12, 2026")
+            var fallback = new Date(String(dateStr).trim());
+            if (!isNaN(fallback.getTime())) {
+                d = fallback.getDate(); mo = fallback.getMonth() + 1; y = fallback.getFullYear();
+            } else {
+                return false;
+            }
         }
         var pub = new Date(y, mo - 1, d);
         if (isNaN(pub.getTime())) return false;
@@ -2628,21 +2637,32 @@ __spaReady(function () {
                     el.innerHTML = '<li><span class="ann-text-small">Kayıt bulunamadı.</span></li>';
                     return;
                 }
-                rows.forEach(function (row, idx) {
-                    var li = document.createElement('li');
-                    var tarih = row['TARİH'] || '';
-                    li.innerHTML =
-                        '<span class="ann-date-small">' + tarih + '</span>' +
-                        '<span class="ann-text-small">'  + (row['DUYURU METNİ'] || '') + '</span>';
+                // BOM veya görünmez karakter içerebilecek sütun adlarını normalize et
+                var normalizeRowKeys = function(r) {
+                    var out = {};
+                    Object.keys(r).forEach(function(k) { out[k.replace(/^\uFEFF/, '').trim()] = r[k]; });
+                    return out;
+                };
 
-                    // Yayın tarihinden itibaren 4 gün boyunca "YENİ" rozeti göster
+                rows.forEach(function (row, idx) {
+                    row = normalizeRowKeys(row);
+                    var li = document.createElement('li');
+                    // TARİH sütununu BOM-safe al
+                    var tarih = row['TARİH'] || row['TARIH'] || '';
+                    // Metin sütununu önce sheet'e özgü addan, sonra yaygın adlardan al
+                    var metin = row[sheet.textCol] || row['DUYURU METNİ'] || row['HABER METNİ'] || row['BAŞLIK'] || row['BASLIK'] || row['METİN'] || row['METIN'] || '';
+
+                    // Rozeti innerHTML içine göm (appendChild yerine — daha güvenli)
+                    var badgeHtml = '';
                     if (isWithinDays(tarih, 4)) {
                         li.classList.add('has-new-badge');
-                        var badge = document.createElement('span');
-                        badge.className = 'new-badge';
-                        badge.textContent = 'YENİ!';
-                        li.appendChild(badge);
+                        badgeHtml = '<span class="new-badge">YENİ!</span>';
                     }
+
+                    li.innerHTML =
+                        '<span class="ann-date-small">' + tarih + '</span>' +
+                        '<span class="ann-text-small">'  + metin + '</span>' +
+                        badgeHtml;
 
                     // Tıklanınca detayı açılır pencerede göster
                     li.classList.add('feed-clickable');
