@@ -2483,15 +2483,27 @@ __spaReady(function () {
         if (!dateStr) return false;
         var s = String(dateStr).trim().replace(/\s+/g, '');
         var d, mo, y;
-        // ISO: YYYY-AA-GG (veya . / ile)
+        // ISO: YYYY-AA-GG (nokta, tire veya eğik çizgi ayraçlı)
         var iso = s.match(/^(\d{4})[.\/-](\d{1,2})[.\/-](\d{1,2})$/);
-        // GG.AA.YYYY (nokta, tire veya eğik çizgi ayraçlı)
+        // GG.AA.YYYY (nokta, tire veya eğik çizgi ayraçlı) — Türkçe format
         var dmy = s.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
-        if (iso) { y = +iso[1]; mo = +iso[2]; d = +iso[3]; }
-        else if (dmy) { d = +dmy[1]; mo = +dmy[2]; y = +dmy[3]; }
-        else return false;
+        if (iso) {
+            y = +iso[1]; mo = +iso[2]; d = +iso[3];
+        } else if (dmy) {
+            var p1 = +dmy[1], p2 = +dmy[2], yr = +dmy[3];
+            // Google Sheets bazen AA/GG/YYYY (Amerikan) formatında CSV çıkarır.
+            // Eğer birinci parça 12'den büyükse kesinlikle gün, ikinci parça ay.
+            // Eğer ikinci parça 12'den büyükse kesinlikle gün, birinci parça ay (AA/GG/YYYY).
+            // Aksi halde Türkçe format (GG.AA.YYYY) kabul et.
+            if (p1 > 12) { d = p1; mo = p2; }        // GG.AA.YYYY — gün kesinlikle p1
+            else if (p2 > 12) { mo = p1; d = p2; }   // AA/GG/YYYY — Amerikan (Google Sheets)
+            else { d = p1; mo = p2; }                  // Belirsiz → Türkçe formatı kabul et
+            y = yr;
+        } else {
+            return false;
+        }
         var pub = new Date(y, mo - 1, d);
-        if (isNaN(pub)) return false;
+        if (isNaN(pub.getTime())) return false;
         var today = new Date();
         // Gün bazında karşılaştırma (saat etkisini kaldır)
         pub.setHours(0, 0, 0, 0);
