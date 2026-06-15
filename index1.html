@@ -2130,7 +2130,7 @@ __spaReady(function(){
             <div class="c-f b-l"></div><div class="c-f b-r"></div>
             <h3>ZİYARET BİLGİLERİ</h3>
             <div class="card-content">
-                <ul>
+                <ul id="ziyaret-bilgileri">
                     <li style="font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); margin-bottom:10px;">Gün ve Saatler</li>
                     <li>Pazartesi <span style="float:right;">Kapalı</span></li>
                     <li style="margin-bottom:15px;">Salı-Çarşamba-Pazar <span style="float:right;">09:30 – 18:00</span></li>
@@ -2140,7 +2140,7 @@ __spaReady(function(){
                     <li>Yabancı Ziyaretçi <span style="float:right;">200 TL</span></li>
                     <li style="font-style:italic; font-size:0.88em; opacity:0.7; margin-bottom:10px;">* Müze Kart geçerli değildir.</li>
 
-                    <li>
+                    <li id="ziyaret-ucretsiz-wrap">
                         <details>
                             <summary>
                                 <div class="summary-row" style="border:none; margin:0; padding:0;">
@@ -2148,7 +2148,7 @@ __spaReady(function(){
                                     <span class="summary-arrow">▼</span>
                                 </div>
                             </summary>
-                            <ul style="list-style:none; padding: 10px 0 0 10px; font-size:0.93em; line-height:1.7;">
+                            <ul id="ziyaret-ucretsiz-liste" style="list-style:none; padding: 10px 0 0 10px; font-size:0.93em; line-height:1.7;">
                                 <li>• 17 yaş ve altındaki Türkiye Cumhuriyeti vatandaşı gençler ve çocuklar ile bu yaş grubundaki öğrenci gruplarına refakat eden öğretmenler.</li>
                                 <li>• Trakya Üniversitesi öğrencileri, çalışanları, personel yakınları ve mezunları.</li>
                                 <li>• 65 yaş ve üstü Türkiye Cumhuriyeti vatandaşları.</li>
@@ -2649,6 +2649,98 @@ __spaReady(function () {
             }
         });
     });
+
+    /* --------------------------------------------------
+       3.5. ZİYARET BİLGİLERİ (Google Sheets'ten)
+       Sheet sütunları:  TUR | ETIKET | DEGER
+       TUR değerleri:
+         baslik   -> kalın başlık satırı (DEGER boş bırakılır)
+         satir    -> "ETIKET .... DEGER" (ör. Pazartesi | Kapalı)
+         not      -> italik küçük not (ETIKET'e yazılır, DEGER boş)
+         ucretsiz -> Ücretsiz Giriş Listesi maddesi (ETIKET'e yazılır)
+
+       NOT: Tabloda "not" satırı yoksa sabit "* Müze Kart..." notu korunur.
+            Tabloda "ucretsiz" satırı yoksa sabit Ücretsiz Giriş Listesi korunur.
+            Yani yalnızca saat/ücret satırlarını düzenlemen yeterlidir.
+    -------------------------------------------------- */
+    (function loadZiyaretBilgileri() {
+        // ►► Google Sheets sekmesinin CSV bağlantısı:
+        var ZIYARET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSK4ZrgBAtrvd2_p-mBl1X7glrAZ6Aktr2WYD5aZca-6JMPD-4HlltJzu5TUiQ1dPDPGVWjVsvFb4XK/pub?gid=1789820162&single=true&output=csv';
+        if (!ZIYARET_URL) return; // Boşsa statik (yedek) içerik korunur
+
+        var mainUl = document.getElementById('ziyaret-bilgileri');
+        if (!mainUl || typeof Papa === 'undefined') return;
+
+        function esc(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Tabloda "not"/"ucretsiz" yoksa kullanılacak SABİT yedek içerik
+        var SABIT_NOT =
+            '<li style="font-style:italic; font-size:0.88em; opacity:0.7; margin-bottom:10px;">* Müze Kart geçerli değildir.</li>';
+        var SABIT_UCRETSIZ = [
+            '17 yaş ve altındaki Türkiye Cumhuriyeti vatandaşı gençler ve çocuklar ile bu yaş grubundaki öğrenci gruplarına refakat eden öğretmenler.',
+            'Trakya Üniversitesi öğrencileri, çalışanları, personel yakınları ve mezunları.',
+            '65 yaş ve üstü Türkiye Cumhuriyeti vatandaşları.',
+            'Gaziler, şehit ve gazilerin eş ve çocukları.',
+            'T.C. Vatandaşı Engelliler ile bir refakatçisi.',
+            'Er ve erbaşlar.',
+            'ICOM, ICOMOS ve UNESCO kartı sahipleri.',
+            'Basın kimlik kartı sahipleri.',
+            'Kültür ve Turizm Bakanlığı personeli ve emeklileri ile refakatindeki eş ve çocukları.',
+            'Kamu kurum ve kuruluşlarının davetlisi olarak ülkemizde bulunan yabancı resmi konuklar ve refakatçileri.',
+            'Kültür ve Turizm Bakanlığı kokartına haiz profesyonel turist rehberleri, seyahat acentesi sahip veya sorumlu müdürleri.',
+            'NOT: Diğer üniversite öğrencileri ve akademisyenlerine %50 indirim uygulanır. Ders amaçlı hocalarıyla birlikte gelen üniversite öğrenci gruplarının ücretsiz girişleri için Trakya Üniversitesi Rektörlüğü\u2019nden önceden izin almaları gerekir.'
+        ].map(function (t) { return '<li>• ' + t + '</li>'; }).join('');
+
+        Papa.parse(ZIYARET_URL, {
+            download: true, header: true, skipEmptyLines: true,
+            complete: function (res) {
+                var rows = res.data || [];
+                if (!rows.length) return;
+
+                var satirHtml = '';
+                var notHtml = '';
+                var ucretsizHtml = '';
+
+                rows.forEach(function (r) {
+                    var tur    = (r['TUR'] || r['TÜR'] || '').toString().trim().toLowerCase();
+                    var etiket = (r['ETIKET'] || r['ETİKET'] || '').toString().trim();
+                    var deger  = (r['DEGER'] || r['DEĞER'] || '').toString().trim();
+                    if (!tur && !etiket) return;
+
+                    if (tur === 'baslik') {
+                        satirHtml += '<li style="font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); margin-bottom:10px;">' + esc(etiket) + '</li>';
+                    } else if (tur === 'not') {
+                        notHtml += '<li style="font-style:italic; font-size:0.88em; opacity:0.7; margin-bottom:10px;">' + esc(etiket) + '</li>';
+                    } else if (tur === 'ucretsiz' || tur === 'ücretsiz') {
+                        ucretsizHtml += '<li>• ' + esc(etiket) + '</li>';
+                    } else { // satir (varsayılan)
+                        satirHtml += '<li>' + esc(etiket) +
+                                     (deger ? ' <span style="float:right;">' + esc(deger) + '</span>' : '') +
+                                     '</li>';
+                    }
+                });
+
+                if (!satirHtml) return; // güvenlik: hiç satır yoksa statik içeriği bırak
+
+                // Tabloda yoksa sabit içerikleri kullan
+                if (!notHtml) notHtml = SABIT_NOT;
+                if (!ucretsizHtml) ucretsizHtml = SABIT_UCRETSIZ;
+
+                var detailsHtml =
+                    '<li><details><summary>' +
+                    '<div class="summary-row" style="border:none; margin:0; padding:0;">' +
+                    '<span>Ücretsiz Giriş Listesi</span><span class="summary-arrow">▼</span></div>' +
+                    '</summary><ul style="list-style:none; padding: 10px 0 0 10px; font-size:0.93em; line-height:1.7;">' +
+                    ucretsizHtml + '</ul></details></li>';
+
+                mainUl.innerHTML = satirHtml + notHtml + detailsHtml;
+            },
+            error: function () { /* hata olursa statik içerik kalır */ }
+        });
+    })();
 
     /* --------------------------------------------------
        4. ZİYARETÇİ SAYACI
@@ -12043,21 +12135,29 @@ td { padding: 15px; border-bottom: 1px solid #eee; }
         });
 
         // FULLSCREEN
-        var srcs = Array.from({length: 22}, (_, i) => \`assets/oduller/img/cat_8_ (\${i + 1}).webp\`);
         var caps = Array.from({length: 22}, (_, i) => \`Ödül Töreni — Fotoğraf \${i + 1}\`);
         var fi = 0;
 
+        // Görselleri slider DOM'undan al (yol/encoding sorunlarını tamamen önler)
+        function odFsImages() {
+            return Array.from(document.querySelectorAll('#sliderTrack .slide-item img'));
+        }
+        function fsShow(idx) {
+            var imgs = odFsImages();
+            if (!imgs.length) return;
+            fi = ((idx % imgs.length) + imgs.length) % imgs.length;
+            var srcEl = imgs[fi];
+            document.getElementById('fsImg').src = srcEl.currentSrc || srcEl.src;
+            document.getElementById('fsCaption').textContent = caps[fi] || ('Fotoğraf ' + (fi + 1));
+        }
+
         function openFS(idx) {
-            fi = idx;
-            document.getElementById('fsImg').src = srcs[idx];
-            document.getElementById('fsCaption').textContent = caps[idx];
+            fsShow(idx);
             document.getElementById('fsOverlay').classList.add('on');
         }
         function closeFS() { document.getElementById('fsOverlay').classList.remove('on'); }
         function fsMove(dir) {
-            fi = ((fi + dir) + TOTAL) % TOTAL;
-            document.getElementById('fsImg').src = srcs[fi];
-            document.getElementById('fsCaption').textContent = caps[fi];
+            fsShow(fi + dir);
             goTo(fi);
         }
         document.getElementById('fsOverlay').addEventListener('click', function(e) {
