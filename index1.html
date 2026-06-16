@@ -2484,37 +2484,37 @@ __spaReady(function () {
     // Tarih "GG.AA.YYYY" formatından, yayın gününden itibaren N gün içinde mi?
     function isWithinDays(dateStr, n) {
         if (!dateStr) return false;
-        var s = String(dateStr).trim().replace(/\s+/g, '');
+        var raw = String(dateStr).trim();
+        // Tüm boşluk ve görünmez karakterleri temizle
+        var s = raw.replace(/[\s\u00A0\uFEFF]+/g, '');
         var d, mo, y;
-        // ISO: YYYY-AA-GG (nokta, tire veya eğik çizgi ayraçlı)
         var iso = s.match(/^(\d{4})[.\/-](\d{1,2})[.\/-](\d{1,2})$/);
-        // GG.AA.YYYY veya AA/GG/YYYY (Google Sheets Amerikan formatı)
         var dmy = s.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
         if (iso) {
             y = +iso[1]; mo = +iso[2]; d = +iso[3];
         } else if (dmy) {
             var p1 = +dmy[1], p2 = +dmy[2], yr = +dmy[3];
-            if (p1 > 12) { d = p1; mo = p2; }
+            if (p1 > 12)      { d = p1; mo = p2; }
             else if (p2 > 12) { mo = p1; d = p2; }
-            else { d = p1; mo = p2; } // GG.AA.YYYY varsayımı
+            else               { d = p1; mo = p2; }
             y = yr;
         } else {
-            // Fallback: JS Date doğrudan parse etsin (örn. "June 12, 2026")
-            var fallback = new Date(String(dateStr).trim());
-            if (!isNaN(fallback.getTime())) {
-                d = fallback.getDate(); mo = fallback.getMonth() + 1; y = fallback.getFullYear();
+            // Fallback: JS Date parse
+            var fb = new Date(raw);
+            if (!isNaN(fb.getTime())) {
+                d = fb.getDate(); mo = fb.getMonth() + 1; y = fb.getFullYear();
             } else {
+                console.warn('[isWithinDays] parse edilemedi:', JSON.stringify(raw));
                 return false;
             }
         }
         var pub = new Date(y, mo - 1, d);
         if (isNaN(pub.getTime())) return false;
         var today = new Date();
-        // Gün bazında karşılaştırma (saat etkisini kaldır)
         pub.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
         var diffDays = Math.floor((today - pub) / 86400000);
-        // Yayın günü (0) dahil n gün boyunca görünür: 0,1,2,3 -> 4. gün sonunda kaybolur
+        console.log('[isWithinDays] raw=' + JSON.stringify(raw) + ' parsed=' + d + '/' + mo + '/' + y + ' diffDays=' + diffDays + ' n=' + n + ' result=' + (diffDays >= 0 && diffDays < n));
         return diffDays >= 0 && diffDays < n;
     }
 
@@ -2663,7 +2663,7 @@ __spaReady(function () {
 
                     // Rozeti innerHTML içine göm (appendChild yerine — daha güvenli)
                     var badgeHtml = '';
-                    if (isWithinDays(tarih, 4) || idx === 0) {
+                    if (isWithinDays(tarih, 4)) {
                         li.classList.add('has-new-badge');
                         badgeHtml = '<span class="new-badge">YENİ!</span>';
                     }
