@@ -2485,36 +2485,37 @@ __spaReady(function () {
     function isWithinDays(dateStr, n) {
         if (!dateStr) return false;
         var raw = String(dateStr).trim();
-        // Tüm boşluk ve görünmez karakterleri temizle
-        var s = raw.replace(/[\s\u00A0\uFEFF]+/g, '');
+        // Tüm görünmez/özel karakterleri sayı ve ayraç dışında sil
+        // Sonra sadece rakamları çıkar — format ne olursa olsun
+        var digits = raw.replace(/[^\d]/g, ' ').trim().split(/\s+/);
         var d, mo, y;
-        var iso = s.match(/^(\d{4})[.\/-](\d{1,2})[.\/-](\d{1,2})$/);
-        var dmy = s.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
-        if (iso) {
-            y = +iso[1]; mo = +iso[2]; d = +iso[3];
-        } else if (dmy) {
-            var p1 = +dmy[1], p2 = +dmy[2], yr = +dmy[3];
-            if (p1 > 12)      { d = p1; mo = p2; }
-            else if (p2 > 12) { mo = p1; d = p2; }
-            else               { d = p1; mo = p2; }
-            y = yr;
-        } else {
-            // Fallback: JS Date parse
-            var fb = new Date(raw);
-            if (!isNaN(fb.getTime())) {
-                d = fb.getDate(); mo = fb.getMonth() + 1; y = fb.getFullYear();
+        if (digits.length === 3) {
+            var a = +digits[0], b = +digits[1], c = +digits[2];
+            if (c > 31) {
+                // c = yıl (YYYY-MM-DD veya GG.AA.YYYY)
+                if (a > 31) { y = a; mo = b; d = c; }  // YYYY-MM-DD gibi ama c>31 olamaz, bu dal çalışmaz
+                else { y = c; // GG.AA.YYYY
+                    if (a > 12) { d = a; mo = b; }
+                    else if (b > 12) { d = b; mo = a; }
+                    else { d = a; mo = b; }
+                }
+            } else if (a > 31) {
+                // YYYY-MM-DD
+                y = a; mo = b; d = c;
             } else {
-                console.warn('[isWithinDays] parse edilemedi:', JSON.stringify(raw));
-                return false;
+                // belirsiz: GG.AA.YYYY varsay
+                y = c; d = a; mo = b;
             }
+        } else {
+            return false;
         }
+        if (!y || !mo || !d) return false;
         var pub = new Date(y, mo - 1, d);
         if (isNaN(pub.getTime())) return false;
         var today = new Date();
         pub.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
         var diffDays = Math.floor((today - pub) / 86400000);
-        console.log('[isWithinDays] raw=' + JSON.stringify(raw) + ' parsed=' + d + '/' + mo + '/' + y + ' diffDays=' + diffDays + ' n=' + n + ' result=' + (diffDays >= 0 && diffDays < n));
         return diffDays >= 0 && diffDays < n;
     }
 
