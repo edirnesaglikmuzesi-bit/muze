@@ -2483,11 +2483,13 @@ __spaReady(function () {
 
     // Tarih "GG.AA.YYYY" formatından, yayın gününden itibaren N gün içinde mi?
     function isWithinDays(dateStr, n) {
-        if (!dateStr) return false;
+        if (!dateStr) { console.warn('[rozet] tarih BOŞ'); return false; }
         var raw = String(dateStr).trim();
+        console.log('[rozet] ham tarih:', JSON.stringify(raw), 'charCodes:', Array.from(raw).map(function(c){return c.charCodeAt(0);}));
         // Tüm görünmez/özel karakterleri sayı ve ayraç dışında sil
         // Sonra sadece rakamları çıkar — format ne olursa olsun
         var digits = raw.replace(/[^\d]/g, ' ').trim().split(/\s+/);
+        console.log('[rozet] digits:', digits);
         var d, mo, y;
         if (digits.length === 3) {
             var a = +digits[0], b = +digits[1], c = +digits[2];
@@ -2507,15 +2509,17 @@ __spaReady(function () {
                 y = c; d = a; mo = b;
             }
         } else {
+            console.warn('[rozet] digits.length !== 3, değer:', digits.length, digits);
             return false;
         }
-        if (!y || !mo || !d) return false;
+        if (!y || !mo || !d) { console.warn('[rozet] y/mo/d parse edilemedi', y, mo, d); return false; }
         var pub = new Date(y, mo - 1, d);
-        if (isNaN(pub.getTime())) return false;
+        if (isNaN(pub.getTime())) { console.warn('[rozet] geçersiz tarih'); return false; }
         var today = new Date();
         pub.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
         var diffDays = Math.floor((today - pub) / 86400000);
+        console.log('[rozet] pub:', pub.toISOString(), 'today:', today.toISOString(), 'diff:', diffDays, 'sonuç:', diffDays >= 0 && diffDays < n);
         return diffDays >= 0 && diffDays < n;
     }
 
@@ -2648,8 +2652,25 @@ __spaReady(function () {
                 rows.forEach(function (row, idx) {
                     row = normalizeRowKeys(row);
                     var li = document.createElement('li');
-                    // TARİH sütununu BOM-safe al
-                    var tarih = row['TARİH'] || row['TARIH'] || '';
+                    // TARİH sütununu BOM-safe + büyük/küçük harf + aksanlı harf toleranslı al
+                    var tarih = (function() {
+                        // Önce direkt dene
+                        if (row['TARİH']) return row['TARİH'];
+                        if (row['TARIH']) return row['TARIH'];
+                        if (row['Tarih']) return row['Tarih'];
+                        if (row['tarih']) return row['tarih'];
+                        // Bulunamazsa tüm anahtarları normalize ederek ara
+                        var keys = Object.keys(row);
+                        for (var ki = 0; ki < keys.length; ki++) {
+                            var k = keys[ki];
+                            var kn = k.toLowerCase()
+                                      .replace(/\u0131/g,'i') // ı → i
+                                      .replace(/\u0130/g,'i') // İ → i
+                                      .replace(/[^a-z]/g,'');
+                            if (kn === 'tarih') return row[k];
+                        }
+                        return '';
+                    })();
                     // Metin sütununu önce sheet'e özgü addan, sonra yaygın adlardan al
                     // Hiçbiri eşleşmezse TARİH dışındaki ilk dolu sütunu al
                     var metin = row[sheet.textCol] || row['DUYURU METNİ'] || row['HABER METNİ'] || row['BAŞLIK'] || row['BASLIK'] || row['METİN'] || row['METIN'] || row['TITLE'] || row['TEXT'] || '';
