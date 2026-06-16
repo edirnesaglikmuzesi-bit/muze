@@ -2488,7 +2488,14 @@ __spaReady(function () {
         console.log('[rozet] ham tarih:', JSON.stringify(raw), 'charCodes:', Array.from(raw).map(function(c){return c.charCodeAt(0);}));
         // Tüm görünmez/özel karakterleri sayı ve ayraç dışında sil
         // Sonra sadece rakamları çıkar — format ne olursa olsun
-        var digits = raw.replace(/[^\d]/g, ' ').trim().split(/\s+/);
+        // NOT: rerunScripts ortamında \d ve \s kaçışları çalışmıyor — charCode kullan
+        var parts = [], cur = '';
+        for (var ci = 0; ci <= raw.length; ci++) {
+            var cc = ci < raw.length ? raw.charCodeAt(ci) : -1;
+            if (cc >= 48 && cc <= 57) { cur += raw[ci]; }
+            else { if (cur) { parts.push(cur); cur = ''; } }
+        }
+        var digits = parts;
         console.log('[rozet] digits:', digits);
         var d, mo, y;
         if (digits.length === 3) {
