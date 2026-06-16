@@ -2489,7 +2489,14 @@ __spaReady(function () {
         var raw = String(dateStr).trim();
         // Tüm görünmez/özel karakterleri sayı ve ayraç dışında sil
         // Sonra sadece rakamları çıkar — format ne olursa olsun
-        var digits = raw.replace(/[^\d]/g, ' ').trim().split(/\s+/);
+        // rerunScripts ortamında \d \s kaçışları çalışmıyor — charCode kullan
+        var parts = [], cur = '';
+        for (var ci = 0; ci <= raw.length; ci++) {
+            var cc = ci < raw.length ? raw.charCodeAt(ci) : -1;
+            if (cc >= 48 && cc <= 57) { cur += raw[ci]; }
+            else { if (cur) { parts.push(cur); cur = ''; } }
+        }
+        var digits = parts;
         var d, mo, y;
         if (digits.length === 3) {
             var a = +digits[0], b = +digits[1], c = +digits[2];
