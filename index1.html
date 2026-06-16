@@ -498,6 +498,12 @@ body {
         }
 
         /* YENİ rozeti — yayın tarihinden itibaren 4 gün görünür, yanıp söner */
+        .ann-date-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
         .new-badge {
             display: inline-block;
             vertical-align: middle;
@@ -515,8 +521,6 @@ body {
             box-shadow: 0 0 10px rgba(212,175,55,0.75), inset 0 0 4px rgba(255,255,255,0.5);
             animation: newBadgeShine 1.8s linear infinite, newBadgeGlow 1.3s ease-in-out infinite;
             pointer-events: none;
-            margin-left: 6px;
-            vertical-align: middle;
         }
         @keyframes newBadgeShine {
             0%   { background-position: 220% 0; }
@@ -735,8 +739,6 @@ body {
             font-size: 9px;
             font-style: italic;
             opacity: 0.55;
-            margin-left: 6px;
-            vertical-align: middle;
         }
 
         /* Aktif ziyaretçi */
@@ -2680,8 +2682,7 @@ __spaReady(function () {
                     }
 
                     li.innerHTML =
-                        '<span class="ann-date-small">' + tarih + '</span>' +
-                        badgeHtml +
+                        '<span class="ann-date-row"><span class="ann-date-small">' + tarih + '</span>' + badgeHtml + '</span>' +
                         '<span class="ann-text-small">'  + metin + '</span>';
 
                     // Tıklanınca detayı açılır pencerede göster
