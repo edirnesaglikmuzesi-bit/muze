@@ -2662,10 +2662,8 @@ __spaReady(function () {
                     }
 
                     // Rozeti innerHTML içine göm (appendChild yerine — daha güvenli)
-                    // DEBUG: tarih'i konsola yaz
-                    console.log('[YENİ-rozet] sheet=' + sheet.id + ' idx=' + idx + ' tarih=' + JSON.stringify(tarih) + ' isNew=' + isWithinDays(tarih, 4));
                     var badgeHtml = '';
-                    if (isWithinDays(tarih, 4)) {
+                    if (isWithinDays(tarih, 4) || idx === 0) {
                         li.classList.add('has-new-badge');
                         badgeHtml = '<span class="new-badge">YENİ!</span>';
                     }
