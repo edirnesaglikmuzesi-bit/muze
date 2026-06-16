@@ -501,10 +501,8 @@ body {
 
         /* YENİ rozeti — yayın tarihinden itibaren 4 gün görünür, yanıp söner */
         .new-badge {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 8px;
+            display: inline-block;
+            align-self: flex-start;
             background: linear-gradient(135deg, #b8860b 0%, #f5d77a 28%, #fff6d2 50%, #f5d77a 72%, #b8860b 100%);
             background-size: 220% 100%;
             color: #4a2f00;
@@ -519,6 +517,7 @@ body {
             box-shadow: 0 0 10px rgba(212,175,55,0.75), inset 0 0 4px rgba(255,255,255,0.5);
             animation: newBadgeShine 1.8s linear infinite, newBadgeGlow 1.3s ease-in-out infinite;
             pointer-events: none;
+            margin-top: 3px;
         }
         @keyframes newBadgeShine {
             0%   { background-position: 220% 0; }
@@ -2651,9 +2650,20 @@ __spaReady(function () {
                     // TARİH sütununu BOM-safe al
                     var tarih = row['TARİH'] || row['TARIH'] || '';
                     // Metin sütununu önce sheet'e özgü addan, sonra yaygın adlardan al
-                    var metin = row[sheet.textCol] || row['DUYURU METNİ'] || row['HABER METNİ'] || row['BAŞLIK'] || row['BASLIK'] || row['METİN'] || row['METIN'] || '';
+                    // Hiçbiri eşleşmezse TARİH dışındaki ilk dolu sütunu al
+                    var metin = row[sheet.textCol] || row['DUYURU METNİ'] || row['HABER METNİ'] || row['BAŞLIK'] || row['BASLIK'] || row['METİN'] || row['METIN'] || row['TITLE'] || row['TEXT'] || '';
+                    if (!metin) {
+                        var skipCols = ['TARİH','TARIH','DETAYLAR','LİNK','LINK'];
+                        Object.keys(row).forEach(function(k) {
+                            if (!metin && skipCols.indexOf(k.trim()) === -1 && String(row[k]).trim()) {
+                                metin = String(row[k]).trim();
+                            }
+                        });
+                    }
 
                     // Rozeti innerHTML içine göm (appendChild yerine — daha güvenli)
+                    // DEBUG: tarih'i konsola yaz
+                    console.log('[YENİ-rozet] sheet=' + sheet.id + ' idx=' + idx + ' tarih=' + JSON.stringify(tarih) + ' isNew=' + isWithinDays(tarih, 4));
                     var badgeHtml = '';
                     if (isWithinDays(tarih, 4)) {
                         li.classList.add('has-new-badge');
