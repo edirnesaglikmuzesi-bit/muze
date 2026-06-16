@@ -476,7 +476,6 @@ body {
             gap: 2px;
             position: relative;
         }
-        .dynamic-feed li.has-new-badge { padding-right: 54px !important; }
         .dynamic-feed li:last-child { border-bottom: none !important; }
 
         /* Tıklanabilir besleme öğesi */
@@ -488,7 +487,6 @@ body {
             border-radius: 6px;
             transition: background 0.2s ease, transform 0.15s ease;
         }
-        .dynamic-feed li.feed-clickable.has-new-badge { padding-right: 54px !important; }
         .dynamic-feed li.feed-clickable:hover {
             background: rgba(212,175,55,0.10);
             transform: translateX(2px);
@@ -502,7 +500,7 @@ body {
         /* YENİ rozeti — yayın tarihinden itibaren 4 gün görünür, yanıp söner */
         .new-badge {
             display: inline-block;
-            align-self: flex-start;
+            vertical-align: middle;
             background: linear-gradient(135deg, #b8860b 0%, #f5d77a 28%, #fff6d2 50%, #f5d77a 72%, #b8860b 100%);
             background-size: 220% 100%;
             color: #4a2f00;
@@ -517,7 +515,8 @@ body {
             box-shadow: 0 0 10px rgba(212,175,55,0.75), inset 0 0 4px rgba(255,255,255,0.5);
             animation: newBadgeShine 1.8s linear infinite, newBadgeGlow 1.3s ease-in-out infinite;
             pointer-events: none;
-            margin-top: 3px;
+            margin-left: 6px;
+            vertical-align: middle;
         }
         @keyframes newBadgeShine {
             0%   { background-position: 220% 0; }
@@ -644,6 +643,7 @@ body {
             line-height: 1.3;
             color: #333;
             text-align: justify;
+            text-align-last: left;
             display: block;
         }
 
@@ -735,7 +735,8 @@ body {
             font-size: 9px;
             font-style: italic;
             opacity: 0.55;
-            margin-top: 3px;
+            margin-left: 6px;
+            vertical-align: middle;
         }
 
         /* Aktif ziyaretçi */
@@ -2680,8 +2681,8 @@ __spaReady(function () {
 
                     li.innerHTML =
                         '<span class="ann-date-small">' + tarih + '</span>' +
-                        '<span class="ann-text-small">'  + metin + '</span>' +
-                        badgeHtml;
+                        badgeHtml +
+                        '<span class="ann-text-small">'  + metin + '</span>';
 
                     // Tıklanınca detayı açılır pencerede göster
                     li.classList.add('feed-clickable');
